@@ -13,6 +13,8 @@
 /.zed
 /auth.json
 /node_modules
+/bookandgo-frontend/node_modules
+/bookandgo-frontend/dist
 /public/build
 /public/hot
 /public/storage
