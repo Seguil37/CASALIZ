@@ -139,24 +139,24 @@ const RegisterPage = () => {
                 Soy Cliente
               </h3>
               <p className="text-gray-600 mb-6">
-                Explora y reserva experiencias únicas alrededor del mundo
+                Solicita asesoría para diseño, licencias o supervisión de tus obras
               </p>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                  Reserva tours y experiencias
+                  Agenda una reunión técnica
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                  Guarda tus favoritos
+                  Recibe propuestas personalizadas
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                  Gestiona tus reservas
+                  Da seguimiento a tu proyecto
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                  Deja reseñas y calificaciones
+                  Comparte feedback con el equipo
                 </li>
               </ul>
             </button>
@@ -173,24 +173,24 @@ const RegisterPage = () => {
                 Soy Proveedor
               </h3>
               <p className="text-gray-600 mb-6">
-                Ofrece tus tours y llega a miles de viajeros
+                Ofrece tus servicios especializados y coordina con clientes y proyectos
               </p>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-                  Crea y gestiona tus tours
+                  Gestiona portafolio y propuestas
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-                  Administra reservas
+                  Administra entregables y cronogramas
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-                  Panel de estadísticas
+                  Panel de seguimiento
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
-                  Aumenta tus ventas
+                  Mejora la coordinación con clientes
                 </li>
               </ul>
             </button>
@@ -247,8 +247,8 @@ const RegisterPage = () => {
             </h2>
             <p className="text-gray-600 text-center max-w-xl">
               {userType === 'agency'
-                ? 'Únete a nuestra red de agencias de viajes'
-                : 'Únete a Book&Go y descubre experiencias únicas'}
+                ? 'Colabora con el equipo CASALIZ como aliado técnico'
+                : 'Crea tu cuenta y gestiona tus proyectos con nosotros'}
             </p>
           </div>
         </div>
@@ -577,12 +577,12 @@ const TermsAndConditionsStep = ({ formData, onBack, isAgency, onSubmit, loading,
           <div className="border border-gray-200 rounded-xl p-6 max-h-64 overflow-y-auto mb-6">
             <div className="space-y-4 text-sm text-gray-600">
               <p className="font-semibold text-gray-900">1. Aceptación de términos</p>
-              <p>Al crear una cuenta en Book&Go, aceptas nuestros términos y condiciones.</p>
+              <p>Al crear una cuenta en CASALIZ, aceptas nuestros términos y condiciones.</p>
 
               {isAgency && (
                 <>
-                  <p className="font-semibold text-gray-900">2. Verificación de agencias</p>
-                  <p>Tu cuenta de agencia será revisada por nuestro equipo antes de ser activada completamente.</p>
+                  <p className="font-semibold text-gray-900">2. Verificación de colaboradores</p>
+                  <p>Tu cuenta será revisada por nuestro equipo antes de habilitar acceso a los proyectos.</p>
                 </>
               )}
 
@@ -592,8 +592,8 @@ const TermsAndConditionsStep = ({ formData, onBack, isAgency, onSubmit, loading,
               <p className="font-semibold text-gray-900">{isAgency ? '4' : '3'}. Privacidad</p>
               <p>Tus datos serán protegidos según nuestra política de privacidad.</p>
 
-              <p className="font-semibold text-gray-900">{isAgency ? '5' : '4'}. Pagos</p>
-              <p>Todos los pagos se procesan de forma segura a través de nuestros partners de pago.</p>
+              <p className="font-semibold text-gray-900">{isAgency ? '5' : '4'}. Confidencialidad</p>
+              <p>Protegemos la información de cada proyecto y evitamos compartirla sin autorización.</p>
             </div>
           </div>
 
@@ -605,7 +605,7 @@ const TermsAndConditionsStep = ({ formData, onBack, isAgency, onSubmit, loading,
               className="w-5 h-5 mt-0.5 text-yellow-500 focus:ring-yellow-500 rounded"
             />
             <span className="text-sm text-gray-700">
-              Acepto los términos y condiciones, la política de privacidad y el acuerdo de la comunidad de Book&Go.
+              Acepto los términos y condiciones, la política de privacidad y el acuerdo de la comunidad de CASALIZ.
             </span>
           </label>
 

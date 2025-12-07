@@ -71,7 +71,7 @@ const LoginPage = () => {
             Bienvenido de nuevo
           </h2>
           <p className="text-gray-600">
-            Inicia sesión para acceder a tus reservas y experiencias
+            Ingresa para continuar gestionando tus proyectos y servicios
           </p>
         </div>
 

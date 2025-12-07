@@ -1,4 +1,4 @@
-// src/features/booking/pages/ProfilePage.jsx
+// src/features/profile/pages/ProfilePage.jsx
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -386,31 +386,28 @@ const ProfilePage = () => {
               
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Reservas realizadas</span>
-                  <span className="text-2xl font-bold text-gray-900">{user?.total_bookings || 0}</span>
+                  <span className="text-gray-600">Proyectos gestionados</span>
+                  <span className="text-2xl font-bold text-gray-900">{user?.total_projects || 0}</span>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Total gastado</span>
-                  <span className="text-2xl font-bold text-gray-900">S/. {user?.total_spent || 0}</span>
+                  <span className="text-gray-600">Solicitudes enviadas</span>
+                  <span className="text-2xl font-bold text-gray-900">{user?.total_requests || 0}</span>
                 </div>
               </div>
 
               <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                <span className="text-gray-600">Nivel de viajero</span>
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 text-yellow-500 fill-current"
-                      />
-                    ))}
-                  </div>
-                  <span className="ml-2 text-gray-900 font-bold">
-                    {user?.rating ? parseFloat(user.rating).toFixed(1) : 'N/A'}
-                  </span>
+                <span className="text-gray-600">Nivel de colaboración</span>
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-500 fill-current" />
+                  ))}
                 </div>
+                <span className="ml-2 text-gray-900 font-bold">
+                  {user?.rating ? parseFloat(user.rating).toFixed(1) : 'N/A'}
+                </span>
               </div>
+            </div>
 
               {/* Actividad Reciente */}
               <div className="pt-6">

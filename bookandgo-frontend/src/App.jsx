@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import useAuthStore from './store/authStore';
@@ -12,27 +12,15 @@ import ScrollToTop from './shared/components/ScrollToTop';
 import MainLayout from './shared/components/Layout/MainLayout';
 
 // Pages
-import HomePage from './features/tours/pages/HomePage';
-import ToursPage from './features/tours/pages/ToursPage';
-import TourDetailPage from './features/tours/pages/TourDetailPage';
+import HomePage from './features/home/pages/HomePage';
+import ServicesPage from './features/services/pages/ServicesPage';
+import ProjectsPage from './features/projects/pages/ProjectsPage';
+import ProjectDetailPage from './features/projects/pages/ProjectDetailPage';
+import AboutPage from './features/about/pages/AboutPage';
+import ContactPage from './features/contact/pages/ContactPage';
 import LoginPage from './features/auth/pages/LoginPage';
 import RegisterPage from './features/auth/pages/RegisterPage';
 import ProfilePage from './features/profile/pages/ProfilePage';
-import CartPage from './features/booking/pages/CartPage';
-import BookingPage from './features/booking/pages/BookingPage';
-import CheckoutPage from './features/booking/pages/CheckoutPage';
-import BookingSuccessPage from './features/booking/pages/BookingSuccessPage';
-import MyBookingsPage from './features/customer/pages/MyBookingsPage';
-import FavoritesPage from './features/customer/pages/FavoritesPage';
-import ContactPage from './features/contact/pages/ContactPage';
-
-// Agency Pages
-import AgencyDashboard from './features/agency/pages/AgencyDashboard';
-import CreateTourPage from './features/agency/pages/CreateTourPage';
-import EditTourPage from './features/agency/pages/EditTourPage';
-import MyToursPage from './features/agency/pages/MyToursPage';
-import AgencyBookingsPage from './features/agency/pages/AgencyBookingsPage';
-
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,18 +31,11 @@ const queryClient = new QueryClient({
   },
 });
 
-// Protected Route
-const ProtectedRoute = ({ children, allowedRoles = [] }) => {
-  const { isAuthenticated, user } = useAuthStore();
-
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <LoginPage />;
   }
-
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-    return <Navigate to="/" replace />;
-  }
-
   return children;
 };
 
@@ -71,106 +52,19 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<MainLayout />}>
-            {/* Public Routes */}
             <Route index element={<HomePage />} />
-            <Route path="tours" element={<ToursPage />} />
-            <Route path="tours/:id" element={<TourDetailPage />} />
+            <Route path="servicios" element={<ServicesPage />} />
+            <Route path="proyectos" element={<ProjectsPage />} />
+            <Route path="proyectos/:id" element={<ProjectDetailPage />} />
+            <Route path="nosotros" element={<AboutPage />} />
+            <Route path="contacto" element={<ContactPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
-            <Route path="cart" element={<CartPage />} />
-            <Route path="contacto" element={<ContactPage />} />
-
-            {/* Customer Routes */}
             <Route
               path="profile"
               element={
-                <ProtectedRoute allowedRoles={['customer', 'agency', 'admin']}>
+                <ProtectedRoute>
                   <ProfilePage />
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Agency Routes */}
-            <Route
-              path="agency/dashboard"
-              element={
-                <ProtectedRoute allowedRoles={['agency']}>
-                  <AgencyDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/tours"
-              element={
-                <ProtectedRoute allowedRoles={['agency']}>
-                  <MyToursPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/tours/create"
-              element={
-                <ProtectedRoute allowedRoles={['agency']}>
-                  <CreateTourPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/tours/:id/edit"
-              element={
-                <ProtectedRoute allowedRoles={['agency']}>
-                  <EditTourPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/bookings"
-              element={
-                <ProtectedRoute allowedRoles={['agency']}>
-                  <AgencyBookingsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="booking/:id"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <BookingPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="checkout"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <CheckoutPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="booking/success"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <BookingSuccessPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="profile/bookings"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <MyBookingsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="favorites"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <FavoritesPage />
                 </ProtectedRoute>
               }
             />
