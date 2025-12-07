@@ -1,46 +1,47 @@
 // src/features/tours/components/PopularCountriesSection.jsx
+// Rebranding BookandGo → CASALIZ Arquitectos Ingenieros
 
 import { useEffect, useRef } from 'react';
-import { Globe, Star } from 'lucide-react';
+import { Building2, Star } from 'lucide-react';
 
 const PopularCountriesSection = () => {
   const scrollRef = useRef(null);
 
   const countries = [
     {
-      name: 'Perú',
-      image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=600',
-      tours: 567,
+      name: 'Diseño arquitectónico',
+      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      tours: 120,
+      rating: 4.9,
+    },
+    {
+      name: 'Expedientes técnicos',
+      image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800',
+      tours: 210,
       rating: 4.8,
     },
     {
-      name: 'México',
-      image: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=600',
-      tours: 423,
+      name: 'Licencias de edificación',
+      image: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=800',
+      tours: 165,
       rating: 4.7,
     },
     {
-      name: 'Argentina',
-      image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600',
-      tours: 389,
+      name: 'Regularización de construcciones',
+      image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800',
+      tours: 140,
+      rating: 4.8,
+    },
+    {
+      name: 'Remodelaciones y ampliaciones',
+      image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=800',
+      tours: 95,
       rating: 4.6,
     },
     {
-      name: 'Colombia',
-      image: 'https://images.unsplash.com/photo-1568632234157-ce7aecd03d0d?w=600',
-      tours: 356,
-      rating: 4.7,
-    },
-    {
-      name: 'Chile',
-      image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
-      tours: 298,
-      rating: 4.6,
-    },
-    {
-      name: 'Brasil',
-      image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600',
-      tours: 445,
+      name: 'Supervisión de obra',
+      image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800',
+      tours: 180,
       rating: 4.7,
     },
   ];
@@ -94,14 +95,14 @@ const PopularCountriesSection = () => {
         {/* Título */}
         <div className="flex items-center justify-between mb-12 animate-fade-in">
           <div className="flex items-center gap-3">
-            <Globe className="w-8 h-8 text-yellow-500" />
+            <Building2 className="w-8 h-8 text-primary" />
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900">
-              Países más populares
+              Servicios y especialidades
             </h2>
           </div>
-          <div className="hidden md:flex items-center gap-2 text-yellow-500">
+          <div className="hidden md:flex items-center gap-2 text-primary">
             <Star className="w-5 h-5 fill-current" />
-            <span className="font-semibold">Explora todos los destinos</span>
+            <span className="font-semibold">Conoce cómo impulsamos tus proyectos</span>
           </div>
         </div>
 
@@ -143,14 +144,14 @@ const PopularCountriesSection = () => {
                         <span className="font-bold text-gray-900">{country.rating}</span>
                       </div>
                       <div className="text-sm text-gray-600">
-                        {country.tours} experiencias
+                        {country.tours} proyectos gestionados
                       </div>
                     </div>
                   </div>
                   
                   {/* Botón de acción (aparece al hover) */}
-                  <button className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100">
-                    Explorar destinos
+                  <button className="w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+                    Explorar servicio
                   </button>
                 </div>
               </div>

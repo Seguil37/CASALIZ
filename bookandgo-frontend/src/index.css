@@ -19,11 +19,11 @@
 @layer utilities {
   /* Gradientes personalizados */
   .gradient-primary {
-    background: linear-gradient(135deg, #FFFF00 0%, #FFA500 100%);
+    background: linear-gradient(135deg, #FF7A00 0%, #FF9A3A 100%);
   }
 
   .gradient-secondary {
-    background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+    background: linear-gradient(135deg, #0F3B63 0%, #164d82 100%);
   }
 
   /* Animaciones personalizadas */

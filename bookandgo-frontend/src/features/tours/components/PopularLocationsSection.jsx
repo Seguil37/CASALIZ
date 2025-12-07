@@ -1,5 +1,6 @@
 // src/features/tours/components/PopularLocationsSection.jsx
 
+// Rebranding BookandGo → CASALIZ Arquitectos Ingenieros
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, TrendingUp, Loader2, Star } from 'lucide-react';
@@ -24,7 +25,7 @@ const PopularLocationsSection = () => {
 
       const tours = response.data.data || response.data;
 
-      // Agrupar tours por ciudad
+      // Agrupar proyectos por ciudad
       const locationCounts = {};
       const locationImages = {};
 
@@ -40,13 +41,13 @@ const PopularLocationsSection = () => {
         }
       });
 
-      // Convertir a array y ordenar por cantidad de experiencias
+      // Convertir a array y ordenar por cantidad de proyectos
       const sortedLocations = Object.entries(locationCounts)
         .map(([name, count]) => ({
           name,
           experiences: count,
           image: locationImages[name] || getDefaultImage(name),
-          rating: (Math.random() * 2 + 3).toFixed(1), // Rating aleatorio entre 3.0 y 5.0
+          rating: (Math.random() * 2 + 3).toFixed(1), // Indicador referencial
         }))
         .sort((a, b) => b.experiences - a.experiences)
         .slice(0, 9); // Mostrar top 9
@@ -105,7 +106,7 @@ const PopularLocationsSection = () => {
       <section className="py-20 bg-white">
         <div className="container-custom">
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+            <Loader2 className="w-12 h-12 text-primary animate-spin" />
           </div>
         </div>
       </section>
@@ -122,9 +123,9 @@ const PopularLocationsSection = () => {
       <div className="container-custom">
         {/* Título */}
         <div className="flex items-center gap-3 mb-12 animate-fade-in">
-          <TrendingUp className="w-8 h-8 text-yellow-500" />
+          <TrendingUp className="w-8 h-8 text-primary" />
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900">
-            Lugares más visitados
+            Ubicaciones de proyectos destacados
           </h2>
         </div>
 
@@ -151,27 +152,27 @@ const PopularLocationsSection = () => {
                 
                 {/* Badge de rating */}
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                  <Star className="w-4 h-4 text-primary fill-current" />
                   <span className="text-sm font-bold text-gray-900">{location.rating}</span>
                 </div>
               </div>
 
               {/* Contenido */}
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-yellow-500 transition-colors">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">
                   {location.name}
                 </h3>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-gray-600">
-                    <MapPin className="w-4 h-4 text-yellow-500" />
+                    <MapPin className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium">
-                      {location.experiences} {location.experiences === 1 ? 'experiencia' : 'experiencias'}
+                      {location.experiences} {location.experiences === 1 ? 'proyecto' : 'proyectos'}
                     </span>
                   </div>
-                  
+
                   {/* Indicador de hover */}
-                  <div className="flex items-center gap-1 text-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-sm font-semibold">Ver tours</span>
+                  <div className="flex items-center gap-1 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-sm font-semibold">Ver proyectos</span>
                     <svg
                       className="w-4 h-4 group-hover:translate-x-1 transition-transform"
                       fill="none"
@@ -196,7 +197,7 @@ const PopularLocationsSection = () => {
         <div className="text-center mt-12">
           <Link
             to="/tours"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Ver todos los destinos
             <svg
