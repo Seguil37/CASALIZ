@@ -12,7 +12,7 @@ const FeaturedToursSection = () => {
     const fetchFeaturedTours = async () => {
       try {
         const response = await api.get('/tours/featured');
-        setTours(response.data.slice(0, 8)); // Mostrar solo 8 tours
+        setTours(response.data.slice(0, 8)); // Mostrar solo 8 proyectos destacados
       } catch (error) {
         console.error('Error fetching tours:', error);
       } finally {
@@ -23,111 +23,112 @@ const FeaturedToursSection = () => {
     fetchFeaturedTours();
   }, []);
 
+  // Rebranding BookandGo → CASALIZ Arquitectos Ingenieros
   // Data de ejemplo por si falla el backend
   const exampleTours = [
     {
       id: 1,
-      title: 'RUTA AL VALLE DEL COLCA Y DOMA...',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
-      duration_days: 0,
-      duration_hours: 9,
-      rating: 4.5,
-      total_reviews: 50,
-      price: 500,
-      discount_price: 420,
-      location_city: 'Arequipa',
-    },
-    {
-      id: 2,
-      title: 'CAMINO INCA CLÁSICO 4 DÍAS',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800',
+      title: 'Vivienda unifamiliar moderna',
+      category: { name: 'Residencial' },
+      featured_image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
       duration_days: 4,
       duration_hours: 0,
       rating: 4.9,
-      total_reviews: 87,
-      price: 650,
-      discount_price: 580,
+      total_reviews: 32,
+      price: 12000,
+      discount_price: null,
+      location_city: 'Cusco',
+    },
+    {
+      id: 2,
+      title: 'Edificio multifamiliar en Wanchaq',
+      category: { name: 'Multifamiliar' },
+      featured_image: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=800',
+      duration_days: 6,
+      duration_hours: 0,
+      rating: 4.8,
+      total_reviews: 28,
+      price: 45000,
+      discount_price: 42000,
       location_city: 'Cusco',
     },
     {
       id: 3,
-      title: 'EXCURSIÓN A LAS ISLAS BALLESTAS',
-      category: { name: 'Naturaleza' },
-      featured_image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
-      duration_days: 0,
-      duration_hours: 6,
+      title: 'Centro comercial en desarrollo',
+      category: { name: 'Comercial' },
+      featured_image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      duration_days: 3,
+      duration_hours: 0,
       rating: 4.7,
-      total_reviews: 62,
-      price: 280,
-      discount_price: 240,
-      location_city: 'Paracas',
+      total_reviews: 41,
+      price: 38000,
+      discount_price: 35000,
+      location_city: 'Arequipa',
     },
     {
       id: 4,
-      title: 'TOUR POR LA LÍNEA DE NAZCA',
-      category: { name: 'Cultura' },
-      featured_image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
-      duration_days: 0,
-      duration_hours: 4,
+      title: 'Regularización Ley 30830',
+      category: { name: 'Regularización' },
+      featured_image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800',
+      duration_days: 2,
+      duration_hours: 0,
       rating: 4.6,
-      total_reviews: 41,
-      price: 350,
-      discount_price: null,
-      location_city: 'Nazca',
+      total_reviews: 22,
+      price: 8500,
+      discount_price: 8000,
+      location_city: 'Lima',
     },
     {
       id: 5,
-      title: 'MONTAÑA DE 7 COLORES FULL DAY',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800',
-      duration_days: 0,
-      duration_hours: 12,
+      title: 'Ampliación y remodelación de vivienda',
+      category: { name: 'Remodelación' },
+      featured_image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800',
+      duration_days: 1,
+      duration_hours: 0,
       rating: 4.8,
-      total_reviews: 93,
-      price: 420,
-      discount_price: 380,
+      total_reviews: 54,
+      price: 9500,
+      discount_price: 9000,
       location_city: 'Cusco',
     },
     {
       id: 6,
-      title: 'LAGO TITICACA - ISLAS UROS Y TAQUILE',
-      category: { name: 'Cultura' },
-      featured_image: 'https://images.unsplash.com/photo-1589986966641-e8c2c7a35fbb?w=800',
-      duration_days: 1,
+      title: 'Licencia de obra en distrito metropolitano',
+      category: { name: 'Licencias' },
+      featured_image: 'https://images.unsplash.com/photo-1503389152951-9f343605f61e?w=800',
+      duration_days: 2,
       duration_hours: 0,
       rating: 4.7,
-      total_reviews: 76,
-      price: 380,
-      discount_price: 340,
-      location_city: 'Puno',
+      total_reviews: 38,
+      price: 6800,
+      discount_price: 6400,
+      location_city: 'Lima',
     },
     {
       id: 7,
-      title: 'CANOPY EN EL VALLE SAGRADO',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800',
-      duration_days: 0,
-      duration_hours: 4,
+      title: 'Edificio corporativo en Miraflores',
+      category: { name: 'Corporativo' },
+      featured_image: 'https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?w=800',
+      duration_days: 5,
+      duration_hours: 0,
       rating: 4.9,
-      total_reviews: 58,
-      price: 290,
+      total_reviews: 33,
+      price: 52000,
       discount_price: null,
-      location_city: 'Cusco',
+      location_city: 'Lima',
     },
     {
       id: 8,
-      title: 'TOUR POR LA CIUDAD DE LIMA',
-      category: { name: 'Cultura' },
-      featured_image: 'https://images.unsplash.com/photo-1568992688045-55c1a3d0dd0c?w=800',
-      duration_days: 0,
-      duration_hours: 5,
+      title: 'Complejo turístico convertido en ecohotel',
+      category: { name: 'Hospitality' },
+      featured_image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      duration_days: 4,
+      duration_hours: 0,
       rating: 4.5,
-      total_reviews: 43,
-      price: 180,
-      discount_price: 150,
-      location_city: 'Lima',
+      total_reviews: 29,
+      price: 28000,
+      discount_price: 25000,
+      location_city: 'Sacred Valley',
     },
   ];
 
@@ -139,7 +140,7 @@ const FeaturedToursSection = () => {
         <div className="container-custom">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
-            <p className="mt-4 text-gray-600">Cargando experiencias...</p>
+            <p className="mt-4 text-gray-600">Cargando proyectos...</p>
           </div>
         </div>
       </section>
@@ -152,14 +153,14 @@ const FeaturedToursSection = () => {
         {/* Título */}
         <div className="flex items-center justify-between mb-12 animate-fade-in">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-yellow-500" />
+            <Sparkles className="w-8 h-8 text-primary" />
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900">
-              Experiencias más buscadas
+              Proyectos destacados
             </h2>
           </div>
           <Link
             to="/tours"
-            className="hidden md:flex items-center gap-2 text-yellow-500 hover:text-yellow-600 font-semibold"
+            className="hidden md:flex items-center gap-2 text-primary hover:text-secondary font-semibold"
           >
             Ver todas
             <svg
@@ -195,9 +196,9 @@ const FeaturedToursSection = () => {
         <div className="text-center mt-12 md:hidden">
           <Link
             to="/tours"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-primary hover:bg-secondary text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Ver todas las experiencias
+            Ver todos los proyectos
             <svg
               className="w-5 h-5"
               fill="none"

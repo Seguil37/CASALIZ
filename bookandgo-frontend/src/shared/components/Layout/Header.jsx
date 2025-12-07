@@ -29,11 +29,11 @@ const Header = () => {
           {/* Logo y Buscador */}
           <div className="flex items-center gap-8 flex-1">
             <Link to="/" className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 w-12 h-12 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-black text-gray-900">B&G</span>
+              <div className="bg-gradient-to-r from-primary to-secondary w-12 h-12 rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-xl font-black text-white">CAS</span>
               </div>
               <span className="text-2xl font-black text-gray-900 hidden sm:block">
-                BOOK<span className="text-yellow-500">&</span>GO
+                CASALIZ <span className="text-primary">Arquitectos</span>
               </span>
             </Link>
 
@@ -42,15 +42,15 @@ const Header = () => {
               <div className="relative w-full">
                 <input
                   type="text"
-                  placeholder="¿A dónde quieres ir?"
+                  placeholder="¿Qué tipo de proyecto necesitas?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-primary focus:outline-none transition-all"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary hover:bg-primary/90 text-white font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
                 >
                   Buscar
                 </button>
@@ -66,10 +66,10 @@ const Header = () => {
                 to="/contacto"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-gray-600 hover:text-yellow-500 transition-colors"
+                className="flex items-center gap-1 text-gray-600 hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4" />
-                <span className="hidden lg:inline">Contactanos</span>
+                <span className="hidden lg:inline">Contáctanos</span>
               </Link>
             </div>
 
@@ -77,9 +77,9 @@ const Header = () => {
             {!isAuthenticated || user?.role === 'customer' ? (
               <Link
                 to="/register?role=agency"
-                className="hidden md:block text-gray-700 hover:text-yellow-500 font-semibold transition-colors"
+                className="hidden md:block text-gray-700 hover:text-primary font-semibold transition-colors"
               >
-                Hazte Proveedor
+                Únete a nuestro equipo
               </Link>
             ) : null}
 
@@ -90,7 +90,7 @@ const Header = () => {
             >
               <ShoppingCart className="w-6 h-6 text-gray-700" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
                   {cartCount}
                 </span>
               )}
@@ -107,7 +107,7 @@ const Header = () => {
                       className="w-8 h-8 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
                       <span className="text-sm font-bold text-gray-900">
                         {user?.name?.charAt(0).toUpperCase()}
                       </span>
@@ -176,7 +176,7 @@ const Header = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
+                className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
               >
                 <User className="w-5 h-5" />
                 <span className="hidden md:block">Iniciar Sesión</span>
@@ -202,10 +202,10 @@ const Header = () => {
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
-              placeholder="¿A dónde quieres ir?"
+              placeholder="Describe tu proyecto o ubicación"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-yellow-500 focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-primary focus:outline-none"
             />
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           </form>
@@ -216,7 +216,7 @@ const Header = () => {
           <div className="lg:hidden pb-4 animate-fade-in">
             <div className="flex flex-col gap-2">
               <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg">
-                <Phone className="w-4 h-4 text-yellow-500" />
+                <Phone className="w-4 h-4 text-primary" />
                 <span>+51 990 179 027</span>
               </a>
               <Link
@@ -226,8 +226,8 @@ const Header = () => {
                 className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <Mail className="w-4 h-4 text-yellow-500" />
-                <span>Contactanos</span>
+                <Mail className="w-4 h-4 text-primary" />
+                <span>Contáctanos</span>
               </Link>
               {!isAuthenticated && (
                 <Link
@@ -235,7 +235,7 @@ const Header = () => {
                   className="px-4 py-2 hover:bg-gray-50 rounded-lg"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Hazte Proveedor
+                  Únete al equipo CASALIZ
                 </Link>
               )}
             </div>

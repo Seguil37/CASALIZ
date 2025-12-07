@@ -8,20 +8,20 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#FFFF00',
-          dark: '#FFD700',
-          light: '#FFDB58',
+          DEFAULT: '#FF7A00',
+          dark: '#e56c00',
+          light: '#FFF6EC',
         },
         secondary: {
-          DEFAULT: '#FFA500',
-          dark: '#FF8C00',
+          DEFAULT: '#0F3B63',
+          dark: '#0c2f4e',
         },
         accent: {
-          yellow: '#FFFF00',
-          gold: '#FFD700',
-          mustard: '#FFDB58',
-          orange: '#FFA500',
-          darkOrange: '#FF8C00',
+          orange: '#FF7A00',
+          orangeDark: '#e56c00',
+          blue: '#0F3B63',
+          blueSoft: '#F3F7FB',
+          orangeSoft: '#FFF6EC',
           white: '#FFFFFF',
           black: '#000000',
           gray: {

@@ -29,18 +29,18 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto space-y-12">
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-xl">
-            <Mail className="w-10 h-10 text-gray-900" />
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-xl">
+              <Mail className="w-10 h-10 text-gray-900" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-yellow-600 uppercase tracking-wide">Estamos aquí para ayudarte</p>
+              <h1 className="text-4xl font-black text-gray-900">Contáctanos</h1>
+              <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
+                Escríbenos, llama o comunícate con el equipo de CASALIZ Arquitectos Ingenieros. Estamos listos para guiarte en diseño, licencias y regularización de tus obras.
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-yellow-600 uppercase tracking-wide">Estamos aquí para ayudarte</p>
-            <h1 className="text-4xl font-black text-gray-900">Contáctanos</h1>
-            <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
-              Escríbenos, llama o comunícate con cualquiera de los dueños de Book&Go. Estamos listos para resolver tus dudas y colaborar contigo.
-            </p>
-          </div>
-        </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white rounded-2xl shadow-xl p-6 space-y-4 border border-orange-100">
@@ -52,10 +52,10 @@ const ContactPage = () => {
               <p className="text-gray-600 mt-1">Envíanos un correo y responderemos en menos de 24 horas.</p>
             </div>
             <a
-              href="mailto:info@bookandgo.com"
+              href="mailto:contacto@casaliz.com"
               className="inline-flex items-center gap-2 text-orange-500 font-semibold hover:text-orange-600"
             >
-              info@bookandgo.com
+              contacto@casaliz.com
             </a>
           </div>
 

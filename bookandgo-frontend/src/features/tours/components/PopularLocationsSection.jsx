@@ -124,7 +124,7 @@ const PopularLocationsSection = () => {
         <div className="flex items-center gap-3 mb-12 animate-fade-in">
           <TrendingUp className="w-8 h-8 text-yellow-500" />
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900">
-            Lugares más visitados
+            Ubicaciones de proyectos
           </h2>
         </div>
 
@@ -165,13 +165,13 @@ const PopularLocationsSection = () => {
                   <div className="flex items-center gap-2 text-gray-600">
                     <MapPin className="w-4 h-4 text-yellow-500" />
                     <span className="text-sm font-medium">
-                      {location.experiences} {location.experiences === 1 ? 'experiencia' : 'experiencias'}
+                      {location.experiences} {location.experiences === 1 ? 'proyecto' : 'proyectos'}
                     </span>
                   </div>
                   
                   {/* Indicador de hover */}
                   <div className="flex items-center gap-1 text-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-sm font-semibold">Ver tours</span>
+                    <span className="text-sm font-semibold">Ver proyectos</span>
                     <svg
                       className="w-4 h-4 group-hover:translate-x-1 transition-transform"
                       fill="none"
@@ -198,7 +198,7 @@ const PopularLocationsSection = () => {
             to="/tours"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Ver todos los destinos
+            Ver todas las ubicaciones
             <svg
               className="w-5 h-5"
               fill="none"

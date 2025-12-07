@@ -1,36 +1,36 @@
 // src/features/tours/components/WhyUsSection.jsx
 
-import { Shield, Gift, Calendar, Award, Users, Clock } from 'lucide-react';
+import { Shield, ClipboardList, Building2, FileCheck, HardHat, Users } from 'lucide-react';
 
 const WhyUsSection = () => {
   const features = [
     {
-      icon: Shield,
-      title: 'Tus Mejores Aliados',
+      icon: ClipboardList,
+      title: 'Asesoría inicial y diagnóstico',
       description:
-        'Trabajamos con las agencias más confiables y verificadas del Perú. Tu seguridad y satisfacción son nuestra prioridad.',
-      color: 'from-blue-500 to-blue-600',
+        'Revisamos documentación, normativas locales y el contexto del predio para definir el alcance real del proyecto.',
+      color: 'from-primary to-secondary',
     },
     {
-      icon: Gift,
-      title: 'Gana Recompensas',
+      icon: Building2,
+      title: 'Diseño arquitectónico & expediente técnico',
       description:
-        'Acumula puntos con cada reserva y canjéalos por descuentos exclusivos en tus próximas aventuras.',
-      color: 'from-yellow-400 to-orange-500',
+        'Desarrollamos propuestas funcionales y completas, listas para ser presentadas a la municipalidad o entidad competente.',
+      color: 'from-secondary to-primary',
     },
     {
-      icon: Calendar,
-      title: 'Planifica a tu Manera',
+      icon: FileCheck,
+      title: 'Licencias y regularización',
       description:
-        'Reserva con flexibilidad, modifica tus planes cuando lo necesites y disfruta sin preocupaciones.',
-      color: 'from-purple-500 to-pink-500',
+        'Gestionamos licencias de obra, declaratoria de fábrica y regularización (Ley 30830) con seguimiento de observaciones.',
+      color: 'from-primary to-orange-500',
     },
   ];
 
   const stats = [
-    { icon: Award, value: '95%', label: 'Clientes satisfechos' },
-    { icon: Users, value: '50K+', label: 'Viajeros felices' },
-    { icon: Clock, value: '24/7', label: 'Soporte disponible' },
+    { icon: Shield, value: '15+', label: 'Años de experiencia acumulada' },
+    { icon: HardHat, value: '200+', label: 'Expedientes y licencias aprobadas' },
+    { icon: Users, value: '350+', label: 'Clientes que confían en CASALIZ' },
   ];
 
   return (
@@ -39,9 +39,9 @@ const WhyUsSection = () => {
         {/* Título */}
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-4">
-            ¿Por qué reservar con nosotros?
+            Nuestro proceso de trabajo
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto rounded-full"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
         </div>
 
         {/* Cards */}
@@ -64,7 +64,7 @@ const WhyUsSection = () => {
                 </div>
 
                 {/* Título */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-yellow-500 transition-colors">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors">
                   {feature.title}
                 </h3>
 
@@ -72,7 +72,7 @@ const WhyUsSection = () => {
                 <p className="text-gray-600 leading-relaxed">{feature.description}</p>
 
                 {/* Línea decorativa */}
-                <div className="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-500 rounded-full"></div>
+                <div className="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 rounded-full"></div>
               </div>
             );
           })}
@@ -85,10 +85,10 @@ const WhyUsSection = () => {
             return (
               <div
                 key={index}
-                className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-8 text-center animate-fade-in"
+                className="bg-gradient-to-br from-accent.orangeSoft to-accent.blueSoft rounded-2xl p-8 text-center animate-fade-in"
                 style={{ animationDelay: `${0.6 + index * 0.1}s` }}
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Icon className="w-8 h-8 text-white" />
                 </div>
                 <div className="text-4xl font-black text-gray-900 mb-2">{stat.value}</div>
