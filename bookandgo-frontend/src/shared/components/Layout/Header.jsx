@@ -126,18 +126,27 @@ const Header = () => {
                   >
                     Mi Perfil
                   </Link>
-                  <Link
-                    to="/profile/bookings"
-                    className="block px-4 py-3 hover:bg-gray-50 transition-colors"
-                  >
-                    Mis Reservas
-                  </Link>
-                  <Link
-                    to="/favorites"
-                    className="block px-4 py-3 hover:bg-gray-50 transition-colors"
-                  >
-                    Favoritos
-                  </Link>
+
+                  {/* Mis Reservas - Solo para clientes */}
+                  {user?.role === 'customer' && (
+                    <Link
+                      to="/profile/bookings"
+                      className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+                    >
+                      Mis Reservas
+                    </Link>
+                  )}
+
+                  {/* Favoritos - Solo para clientes */}
+                  {user?.role === 'customer' && (
+                    <Link
+                      to="/favorites"
+                      className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+                    >
+                      Favoritos
+                    </Link>
+                  )}
+
                   {user?.role === 'agency' && (
                     <Link
                       to="/agency/dashboard"
@@ -146,6 +155,16 @@ const Header = () => {
                       Dashboard Agencia
                     </Link>
                   )}
+
+                  {user?.role === 'customer' && (
+                    <Link
+                      to="/customer/dashboard"
+                      className="block px-4 py-3 hover:bg-gray-50 transition-colors border-t"
+                    >
+                      Dashboard
+                    </Link>
+                  )}
+
                   <button
                     onClick={logout}
                     className="block w-full text-left px-4 py-3 hover:bg-red-50 text-red-600 rounded-b-xl transition-colors border-t"

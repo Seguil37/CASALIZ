@@ -530,3 +530,26 @@ html {
       transform: rotate(360deg);
     }
   }
+
+  /* --------------------------------------------------
+   AJUSTE RÁPIDO: más ancho + algo más bajo
+   -------------------------------------------------- */
+
+/* 1. Un poco más ancho en desktop */
+@media (min-width: 1280px) {
+  .container-custom {
+    max-width: 1400px;   /* +80 px de ancho */
+  }
+}
+
+/* 2. Empuja el contenido hacia abajo sin tocar el header */
+.page-wrapper {
+  padding-top: 3rem;   /* ya tenía 2 rem, ahora 3 rem */
+  min-height: calc(100vh - 80px);
+}
+
+@media (min-width: 1024px) {
+  .page-wrapper {
+    padding-top: 4rem; /* en desktop 4 rem */
+  }
+}
