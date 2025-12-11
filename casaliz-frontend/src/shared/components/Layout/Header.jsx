@@ -2,16 +2,14 @@
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, ShoppingCart, Menu, X, MapPin, Phone, Mail } from 'lucide-react';
+import { Search, User, Menu, X, Mail } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
-import useCartStore from '../../../store/cartStore';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuthStore();
-  const { items } = useCartStore();
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -20,8 +18,6 @@ const Header = () => {
       navigate(`/tours?search=${searchQuery}`);
     }
   };
-
-  const cartCount = items.length;
 
   return (
     <header className="bg-[#f8f5ef] shadow-md sticky top-0 z-50">
@@ -95,19 +91,6 @@ const Header = () => {
                 <span className="hidden lg:inline">Contactanos</span>
               </Link>
             </div>
-
-            {/* Carrito */}
-            <Link
-              to="/cart"
-              className="relative p-2 hover:bg-white rounded-full transition-all"
-            >
-              <ShoppingCart className="w-6 h-6 text-[#233274]" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-[#f8f5ef] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
 
             {/* Usuario */}
             {isAuthenticated ? (
