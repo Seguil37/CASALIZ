@@ -1,6 +1,6 @@
 // src/features/agency/components/TourImages.jsx
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
 
 const TourImages  = ({ formData, updateFormData, errors = {} }) => {
@@ -11,6 +11,13 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
 
   const [newImageUrl, setNewImageUrl] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    setImageUrls([
+      formData.featured_image || '',
+      ...(formData.images || []),
+    ].filter(Boolean));
+  }, [formData.featured_image, formData.images]);
 
   const handleAddImage = () => {
     if (!newImageUrl.trim()) {
