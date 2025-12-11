@@ -6,31 +6,31 @@ const WhyUsSection = () => {
   const features = [
     {
       icon: Shield,
-      title: 'Tus Mejores Aliados',
+      title: 'Tu proyecto, nuestra prioridad',
       description:
-        'Trabajamos con las agencias más confiables y verificadas del Perú. Tu seguridad y satisfacción son nuestra prioridad.',
+        'Acompañamos cada etapa: idea, diseño, planos y obra. Nos enfocamos en que el resultado se ajuste a tu estilo, presupuesto y necesidades reales.',
       color: 'from-[#233274] to-[#1a2555]',
     },
     {
       icon: Gift,
-      title: 'Gana Recompensas',
+      title: 'Diseño funcional y estético',
       description:
-        'Acumula puntos con cada reserva y canjéalos por descuentos exclusivos en tus próximas aventuras.',
+        'Creamos espacios que se ven bien, se sienten bien y funcionan mejor: iluminación, circulación, materiales y cada detalle pensado para el uso diario.',
       color: 'from-[#e15f0b] to-[#d14a00]',
     },
     {
       icon: Calendar,
-      title: 'Planifica a tu Manera',
+      title: 'Gestión integral y transparente',
       description:
-        'Reserva con flexibilidad, modifica tus planes cuando lo necesites y disfruta sin preocupaciones.',
+        'Coordinamos con ingenieros, proveedores y constructores. Tú ves el avance, nosotros nos encargamos de la complejidad técnica.',
       color: 'from-[#233274] to-[#3a4c9c]',
     },
   ];
 
   const stats = [
-    { icon: Award, value: '95%', label: 'Clientes satisfechos' },
-    { icon: Users, value: '50K+', label: 'Viajeros felices' },
-    { icon: Clock, value: '24/7', label: 'Soporte disponible' },
+    { icon: Award, value: '98%', label: 'Proyectos entregados a tiempo' },
+    { icon: Users, value: '120+', label: 'Proyectos diseñados y ejecutados' },
+    { icon: Clock, value: '10+ años', label: 'Experiencia en arquitectura y construcción' },
   ];
 
   return (
@@ -39,7 +39,7 @@ const WhyUsSection = () => {
         {/* Título */}
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-4">
-            ¿Por qué reservar con nosotros?
+            ¿Por qué diseñar tu proyecto con Casaliz?
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] mx-auto rounded-full"></div>
         </div>

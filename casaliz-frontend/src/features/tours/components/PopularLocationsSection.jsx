@@ -64,15 +64,11 @@ const PopularLocationsSection = () => {
   // Función para obtener imagen por defecto según la ciudad
   const getDefaultImage = (cityName) => {
     const defaultImages = {
-      'Cusco': 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800',
-      'Lima': 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?w=800',
-      'Arequipa': 'https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?w=800',
-      'Paracas': 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
-      'Iquitos': 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800',
-      'Puno': 'https://images.unsplash.com/photo-1589986966641-e8c2c7a35fbb?w=800',
-      'Huaraz': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
-      'Trujillo': 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800',
-      'Chiclayo': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+      'Miraflores': 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      'San Isidro': 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=800',
+      'Barranco': 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      'Surco': 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=800',
+      'La Molina': 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800',
     };
 
     return defaultImages[cityName] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
@@ -81,21 +77,21 @@ const PopularLocationsSection = () => {
   // Datos de fallback
   const fallbackLocations = [
     {
-      name: 'Cusco',
-      image: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800',
-      experiences: 145,
+      name: 'Miraflores',
+      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      experiences: 24,
+      rating: 4.9,
+    },
+    {
+      name: 'San Isidro',
+      image: 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=800',
+      experiences: 18,
       rating: 4.8,
     },
     {
-      name: 'Lima',
-      image: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?w=800',
-      experiences: 98,
-      rating: 4.6,
-    },
-    {
-      name: 'Arequipa',
-      image: 'https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?w=800',
-      experiences: 67,
+      name: 'Barranco',
+      image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800',
+      experiences: 15,
       rating: 4.7,
     },
   ];
@@ -124,7 +120,7 @@ const PopularLocationsSection = () => {
         <div className="flex items-center gap-3 mb-12 animate-fade-in">
           <TrendingUp className="w-8 h-8 text-[#e15f0b]" />
           <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
-            Lugares más visitados
+            Zonas donde más diseñamos
           </h2>
         </div>
 
@@ -165,13 +161,13 @@ const PopularLocationsSection = () => {
                   <div className="flex items-center gap-2 text-[#9a98a0]">
                     <MapPin className="w-4 h-4 text-[#e15f0b]" />
                     <span className="text-sm font-medium">
-                      {location.experiences} {location.experiences === 1 ? 'experiencia' : 'experiencias'}
+                      {location.experiences} {location.experiences === 1 ? 'proyecto' : 'proyectos'}
                     </span>
                   </div>
                   
                   {/* Indicador de hover */}
                   <div className="flex items-center gap-1 text-[#e15f0b] opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-sm font-semibold">Ver tours</span>
+                    <span className="text-sm font-semibold">Ver proyectos</span>
                     <svg
                       className="w-4 h-4 group-hover:translate-x-1 transition-transform"
                       fill="none"
@@ -198,7 +194,7 @@ const PopularLocationsSection = () => {
             to="/tours"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Ver todos los destinos
+            Ver todos los proyectos
             <svg
               className="w-5 h-5"
               fill="none"

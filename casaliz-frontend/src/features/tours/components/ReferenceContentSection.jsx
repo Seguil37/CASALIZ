@@ -5,77 +5,50 @@ import { Link } from 'react-router-dom';
 import { Landmark, MapPin, Globe2, Star } from 'lucide-react';
 
 const ReferenceContentSection = () => {
-  const [activeTab, setActiveTab] = useState('attractions');
+  const [activeTab, setActiveTab] = useState('guides');
 
   const tabs = [
     {
-      id: 'attractions',
-      label: 'Atracciones Turísticas',
+      id: 'guides',
+      label: 'Guías para clientes',
       icon: Landmark,
     },
     {
-      id: 'destinations',
-      label: 'Destinos Populares',
+      id: 'permits',
+      label: 'Normativas y trámites',
       icon: MapPin,
     },
     {
-      id: 'countries',
-      label: 'Países Populares',
+      id: 'trends',
+      label: 'Tendencias y materiales',
       icon: Globe2,
     },
   ];
 
   const content = {
-    attractions: [
-      { name: 'Machu Picchu', count: 45, rating: 4.9 },
-      { name: 'Líneas de Nazca', count: 23, rating: 4.6 },
-      { name: 'Lago Titicaca', count: 31, rating: 4.7 },
-      { name: 'Cañón del Colca', count: 28, rating: 4.8 },
-      { name: 'Islas Ballestas', count: 19, rating: 4.5 },
-      { name: 'Chan Chan', count: 12, rating: 4.4 },
-      { name: 'Kuelap', count: 15, rating: 4.6 },
-      { name: 'Sacsayhuamán', count: 38, rating: 4.7 },
-      { name: 'Valle Sagrado', count: 42, rating: 4.8 },
-      { name: 'Paracas', count: 27, rating: 4.6 },
-      { name: 'Huacachina', count: 18, rating: 4.5 },
-      { name: 'Montaña de 7 Colores', count: 56, rating: 4.9 },
-      { name: 'Sillustani', count: 14, rating: 4.5 },
-      { name: 'Gocta', count: 11, rating: 4.6 },
-      { name: 'Reserva Nacional de Tambopata', count: 22, rating: 4.7 },
+    guides: [
+      { name: 'Cómo preparar tu terreno antes de diseñar tu casa', count: 12, rating: 4.9 },
+      { name: 'Checklist para definir el programa arquitectónico', count: 18, rating: 4.8 },
+      { name: 'Guía para elegir materiales según tu presupuesto', count: 10, rating: 4.7 },
+      { name: 'Cómo planificar una remodelación sin estrés', count: 16, rating: 4.8 },
+      { name: 'Errores comunes al diseñar cocinas y baños', count: 14, rating: 4.7 },
+      { name: 'Qué esperar en cada etapa del proyecto', count: 9, rating: 4.8 },
     ],
-    destinations: [
-      { name: 'Cusco', count: 145, rating: 4.8 },
-      { name: 'Lima', count: 98, rating: 4.6 },
-      { name: 'Arequipa', count: 67, rating: 4.7 },
-      { name: 'Paracas', count: 52, rating: 4.5 },
-      { name: 'Iquitos', count: 41, rating: 4.6 },
-      { name: 'Puno', count: 38, rating: 4.7 },
-      { name: 'Huaraz', count: 34, rating: 4.8 },
-      { name: 'Trujillo', count: 29, rating: 4.5 },
-      { name: 'Chiclayo', count: 25, rating: 4.6 },
-      { name: 'Ayacucho', count: 21, rating: 4.5 },
-      { name: 'Cajamarca', count: 19, rating: 4.6 },
-      { name: 'Máncora', count: 33, rating: 4.7 },
-      { name: 'Puerto Maldonado', count: 28, rating: 4.6 },
-      { name: 'Huancayo', count: 17, rating: 4.5 },
-      { name: 'Tarapoto', count: 24, rating: 4.6 },
+    permits: [
+      { name: 'Guía básica de licencias y permisos municipales', count: 11, rating: 4.8 },
+      { name: 'Requisitos para habilitación urbana y saneamiento', count: 8, rating: 4.7 },
+      { name: 'Documentos clave para iniciar obra', count: 13, rating: 4.8 },
+      { name: 'Cómo coordinar con tu junta de propietarios', count: 7, rating: 4.6 },
+      { name: 'Supervisión de seguridad y defensa civil', count: 6, rating: 4.7 },
+      { name: 'Cronograma de trámites para proyectos comerciales', count: 5, rating: 4.6 },
     ],
-    countries: [
-      { name: 'Perú', count: 567, rating: 4.8 },
-      { name: 'México', count: 423, rating: 4.7 },
-      { name: 'Argentina', count: 389, rating: 4.6 },
-      { name: 'Colombia', count: 356, rating: 4.7 },
-      { name: 'Chile', count: 298, rating: 4.6 },
-      { name: 'Brasil', count: 445, rating: 4.7 },
-      { name: 'Ecuador', count: 234, rating: 4.6 },
-      { name: 'Bolivia', count: 189, rating: 4.5 },
-      { name: 'Uruguay', count: 145, rating: 4.6 },
-      { name: 'Paraguay', count: 98, rating: 4.5 },
-      { name: 'Venezuela', count: 167, rating: 4.6 },
-      { name: 'Costa Rica', count: 278, rating: 4.7 },
-      { name: 'Panamá', count: 156, rating: 4.6 },
-      { name: 'Guatemala', count: 134, rating: 4.5 },
-      { name: 'Cuba', count: 201, rating: 4.6 },
+    trends: [
+      { name: 'Tendencias en diseño de interiores 2024', count: 15, rating: 4.9 },
+      { name: 'Materiales sostenibles para fachadas y pisos', count: 12, rating: 4.8 },
+      { name: 'Cómo optimizar tu presupuesto sin sacrificar calidad', count: 14, rating: 4.8 },
+      { name: 'Iluminación natural: estrategias y ejemplos', count: 9, rating: 4.7 },
+      { name: 'Diseño biofílico para oficinas', count: 11, rating: 4.7 },
+      { name: 'Colores y texturas para espacios comerciales', count: 10, rating: 4.6 },
     ],
   };
 
@@ -84,7 +57,7 @@ const ReferenceContentSection = () => {
       <div className="container-custom">
         {/* Título */}
         <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-8 text-center animate-fade-in">
-          Contenido Referencial
+          Contenido para ayudarte a tomar mejores decisiones
         </h2>
 
         {/* Tabs */}
@@ -115,7 +88,7 @@ const ReferenceContentSection = () => {
           {content[activeTab].map((item, index) => (
             <Link
               key={index}
-              to={`/tours?${activeTab === 'countries' ? 'country' : 'location'}=${item.name}`}
+              to={`/tours?tema=${encodeURIComponent(item.name)}`}
               className="group bg-[#f8f5ef] rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-[#f8f5ef] hover:border-[#e15f0b]"
               style={{ animationDelay: `${index * 0.02}s` }}
             >
@@ -130,7 +103,7 @@ const ReferenceContentSection = () => {
               </div>
 
               <p className="text-sm text-[#9a98a0]">
-                {item.count} {item.count === 1 ? 'tour' : 'tours'} y actividades
+                {item.count} {item.count === 1 ? 'recurso' : 'recursos'} destacados
               </p>
 
               {/* Indicador de hover */}
@@ -145,7 +118,7 @@ const ReferenceContentSection = () => {
             to="/tours"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Explorar todos los destinos
+            Ver todos los recursos
             <svg
               className="w-5 h-5"
               fill="none"
