@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // <--- IMPORTACIÓN AÑADIDA
-import { Sparkles, Star, MapPin, Clock, Users, Heart } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import TourCard from './TourCard';
 import api from '../../../shared/utils/api';
 
@@ -27,107 +27,115 @@ const FeaturedToursSection = () => {
   const exampleTours = [
     {
       id: 1,
-      title: 'RUTA AL VALLE DEL COLCA Y DOMA...',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
-      duration_days: 0,
-      duration_hours: 9,
-      rating: 4.5,
-      total_reviews: 50,
-      price: 500,
-      discount_price: 420,
-      location_city: 'Arequipa',
+      title: 'Casa Miraflores 03',
+      category: { name: 'Residencial' },
+      featured_image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      surface_area: '145 m²',
+      status: 'Construido',
+      year: '2023',
+      rating: 4.9,
+      total_reviews: 32,
+      price: 320000,
+      discount_price: 295000,
+      location_city: 'Miraflores, Lima',
     },
     {
       id: 2,
-      title: 'CAMINO INCA CLÁSICO 4 DÍAS',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=800',
-      duration_days: 4,
-      duration_hours: 0,
-      rating: 4.9,
-      total_reviews: 87,
-      price: 650,
-      discount_price: 580,
-      location_city: 'Cusco',
+      title: 'Oficinas Torre Central',
+      category: { name: 'Oficinas' },
+      featured_image: 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=800',
+      surface_area: '2,400 m²',
+      status: 'En construcción',
+      year: '2025',
+      rating: 4.8,
+      total_reviews: 21,
+      price: 1450000,
+      discount_price: 1375000,
+      location_city: 'San Isidro, Lima',
     },
     {
       id: 3,
-      title: 'EXCURSIÓN A LAS ISLAS BALLESTAS',
-      category: { name: 'Naturaleza' },
-      featured_image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800',
-      duration_days: 0,
-      duration_hours: 6,
+      title: 'Loft Barranco',
+      category: { name: 'Interiorismo' },
+      featured_image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800',
+      surface_area: '98 m²',
+      status: 'Construido',
+      year: '2022',
       rating: 4.7,
-      total_reviews: 62,
-      price: 280,
-      discount_price: 240,
-      location_city: 'Paracas',
+      total_reviews: 18,
+      price: 185000,
+      discount_price: 172000,
+      location_city: 'Barranco, Lima',
     },
     {
       id: 4,
-      title: 'TOUR POR LA LÍNEA DE NAZCA',
-      category: { name: 'Cultura' },
-      featured_image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800',
-      duration_days: 0,
-      duration_hours: 4,
+      title: 'Centro Comercial Aurora',
+      category: { name: 'Comercial' },
+      featured_image: 'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?w=800',
+      surface_area: '6,800 m²',
+      status: 'En diseño',
+      year: '2026',
       rating: 4.6,
-      total_reviews: 41,
-      price: 350,
+      total_reviews: 12,
+      price: 2250000,
       discount_price: null,
-      location_city: 'Nazca',
+      location_city: 'Surco, Lima',
     },
     {
       id: 5,
-      title: 'MONTAÑA DE 7 COLORES FULL DAY',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800',
-      duration_days: 0,
-      duration_hours: 12,
+      title: 'Casa de playa Asia Norte',
+      category: { name: 'Residencial' },
+      featured_image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      surface_area: '320 m²',
+      status: 'En construcción',
+      year: '2024',
       rating: 4.8,
-      total_reviews: 93,
-      price: 420,
-      discount_price: 380,
-      location_city: 'Cusco',
+      total_reviews: 27,
+      price: 480000,
+      discount_price: 455000,
+      location_city: 'Asia, Cañete',
     },
     {
       id: 6,
-      title: 'LAGO TITICACA - ISLAS UROS Y TAQUILE',
-      category: { name: 'Cultura' },
-      featured_image: 'https://images.unsplash.com/photo-1589986966641-e8c2c7a35fbb?w=800',
-      duration_days: 1,
-      duration_hours: 0,
+      title: 'Clínica Santa Elena',
+      category: { name: 'Salud' },
+      featured_image: 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?w=800',
+      surface_area: '4,200 m²',
+      status: 'En diseño',
+      year: '2025',
       rating: 4.7,
-      total_reviews: 76,
-      price: 380,
-      discount_price: 340,
-      location_city: 'Puno',
+      total_reviews: 19,
+      price: 1675000,
+      discount_price: 1580000,
+      location_city: 'La Molina, Lima',
     },
     {
       id: 7,
-      title: 'CANOPY EN EL VALLE SAGRADO',
-      category: { name: 'Aventura' },
-      featured_image: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800',
-      duration_days: 0,
-      duration_hours: 4,
+      title: 'Coworking Prado',
+      category: { name: 'Oficinas' },
+      featured_image: 'https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?w=800',
+      surface_area: '1,150 m²',
+      status: 'Construido',
+      year: '2021',
       rating: 4.9,
-      total_reviews: 58,
-      price: 290,
+      total_reviews: 44,
+      price: 620000,
       discount_price: null,
-      location_city: 'Cusco',
+      location_city: 'San Borja, Lima',
     },
     {
       id: 8,
-      title: 'TOUR POR LA CIUDAD DE LIMA',
-      category: { name: 'Cultura' },
-      featured_image: 'https://images.unsplash.com/photo-1568992688045-55c1a3d0dd0c?w=800',
-      duration_days: 0,
-      duration_hours: 5,
+      title: 'Hotel Boutique Andes',
+      category: { name: 'Hospitality' },
+      featured_image: 'https://images.unsplash.com/photo-1501117716987-c8e1ecb210af?w=800',
+      surface_area: '3,100 m²',
+      status: 'En construcción',
+      year: '2024',
       rating: 4.5,
-      total_reviews: 43,
-      price: 180,
-      discount_price: 150,
-      location_city: 'Lima',
+      total_reviews: 25,
+      price: 1380000,
+      discount_price: 1295000,
+      location_city: 'Cusco',
     },
   ];
 
@@ -139,7 +147,7 @@ const FeaturedToursSection = () => {
         <div className="container-custom">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#e15f0b] border-t-transparent"></div>
-            <p className="mt-4 text-[#9a98a0]">Cargando experiencias...</p>
+            <p className="mt-4 text-[#9a98a0]">Cargando proyectos...</p>
           </div>
         </div>
       </section>
@@ -154,14 +162,14 @@ const FeaturedToursSection = () => {
           <div className="flex items-center gap-3">
             <Sparkles className="w-8 h-8 text-[#e15f0b]" />
             <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
-              Experiencias más buscadas
+              Proyectos destacados
             </h2>
           </div>
           <Link
             to="/tours"
             className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold"
           >
-            Ver todas
+            Ver todos
             <svg
               className="w-5 h-5"
               fill="none"
@@ -197,7 +205,7 @@ const FeaturedToursSection = () => {
             to="/tours"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Ver todas las experiencias
+            Ver todos los proyectos
             <svg
               className="w-5 h-5"
               fill="none"

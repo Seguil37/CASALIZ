@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, MapPin, Clock, Users, Heart } from 'lucide-react';
+import { Star, MapPin, Heart, Building2, Calendar, Ruler } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import useFavoriteStore from '../../../store/favoriteStore';
 
@@ -56,6 +56,15 @@ const TourCard = ({ tour }) => {
       }
     }
   };
+
+  const surfaceArea =
+    tour.surface_area ||
+    tour.area ||
+    (tour.duration_hours ? `${tour.duration_hours} m²` : null) ||
+    (tour.duration_days ? `${tour.duration_days} m²` : null);
+
+  const projectStatus = tour.status || tour.project_status || 'En diseño';
+  const projectYear = tour.year || tour.project_year || '2024';
 
   return (
     <Link
@@ -119,21 +128,19 @@ const TourCard = ({ tour }) => {
 
         {/* Características */}
         <div className="flex items-center gap-4 text-[#9a98a0] text-sm mb-4">
-          {tour.duration_days > 0 && (
+          {surfaceArea && (
             <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              <span>{tour.duration_days} {tour.duration_days === 1 ? 'día' : 'días'}</span>
-            </div>
-          )}
-          {tour.duration_hours > 0 && (
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              <span>{tour.duration_hours} {tour.duration_hours === 1 ? 'hora' : 'horas'}</span>
+              <Ruler className="w-4 h-4" />
+              <span>{surfaceArea}</span>
             </div>
           )}
           <div className="flex items-center gap-1">
-            <Users className="w-4 h-4" />
-            <span>Grupos</span>
+            <Building2 className="w-4 h-4" />
+            <span>{projectStatus}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Calendar className="w-4 h-4" />
+            <span>{projectYear}</span>
           </div>
         </div>
 
@@ -164,10 +171,10 @@ const TourCard = ({ tour }) => {
                 </span>
               )}
             </div>
-            <span className="text-xs text-[#9a98a0]">por persona</span>
+            <span className="text-xs text-[#9a98a0]">presupuesto estimado</span>
           </div>
           <button className="bg-[#e15f0b] hover:bg-[#d14a00] text-[#233274] font-bold py-2 px-4 rounded-lg transition-colors text-sm cursor-pointer">
-            Ver más
+            Ver proyecto
           </button>
         </div>
       </div>

@@ -38,11 +38,11 @@ const HeroSection = () => {
         <div className="animate-fade-in">
           {/* Logo y título principal */}
           <div className="mb-6">
-            <h1 className="text-6xl lg:text-8xl font-black text-[#f8f5ef] mb-2 tracking-tight">
-              BOOK<span className="text-[#e15f0b]">&</span>GO
+            <h1 className="text-5xl lg:text-7xl font-black text-[#f8f5ef] mb-4 tracking-tight">
+              Diseñamos espacios que hablan por ti.
             </h1>
-            <p className="text-xl lg:text-2xl text-[#e15f0b] font-semibold tracking-wide">
-              Un click, mil destinos
+            <p className="text-xl lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide">
+              Arquitectura, interiorismo y gestión de proyectos para viviendas, oficinas y espacios comerciales.
             </p>
           </div>
 
@@ -52,16 +52,16 @@ const HeroSection = () => {
             className="max-w-5xl mx-auto mt-12 bg-[#f8f5ef] rounded-2xl shadow-2xl p-4 lg:p-6 animate-slide-up"
           >
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-              {/* ¿A dónde vas? */}
+              {/* ¿Qué necesitas? */}
               <div className="relative">
                 <label className="block text-left text-sm font-semibold text-[#233274] mb-2">
-                  ¿A dónde vas?
+                  ¿Qué necesitas?
                 </label>
                 <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Destino, ciudad o tour"
+                    placeholder="Diseño arquitectónico, planos, remodelación, interiorismo…"
                     value={searchData.destination}
                     onChange={(e) =>
                       setSearchData({ ...searchData, destination: e.target.value })
@@ -71,15 +71,16 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              {/* Check In */}
+              {/* Tipo de proyecto */}
               <div className="relative">
                 <label className="block text-left text-sm font-semibold text-[#233274] mb-2">
-                  Check In
+                  Tipo de proyecto
                 </label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
-                    type="date"
+                    type="text"
+                    placeholder="Residencial, comercial, oficina, edificio…"
                     value={searchData.checkIn}
                     onChange={(e) =>
                       setSearchData({ ...searchData, checkIn: e.target.value })
@@ -89,15 +90,16 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              {/* Check Out */}
+              {/* Ubicación del proyecto */}
               <div className="relative">
                 <label className="block text-left text-sm font-semibold text-[#233274] mb-2">
-                  Check Out
+                  Ubicación del proyecto
                 </label>
                 <div className="relative">
                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
-                    type="date"
+                    type="text"
+                    placeholder="Ciudad o distrito"
                     value={searchData.checkOut}
                     onChange={(e) =>
                       setSearchData({ ...searchData, checkOut: e.target.value })
@@ -114,7 +116,7 @@ const HeroSection = () => {
                   className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
                 >
                   <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  Buscar
+                  Buscar soluciones
                 </button>
               </div>
             </div>
@@ -122,8 +124,14 @@ const HeroSection = () => {
 
           {/* Tags populares */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <span className="text-[#f8f5ef] text-sm font-medium">Búsquedas populares:</span>
-            {['Machu Picchu', 'Lima', 'Cusco', 'Arequipa', 'Paracas'].map((tag) => (
+            <span className="text-[#f8f5ef] text-sm font-medium">Proyectos populares:</span>
+            {[
+              'Casa Miraflores',
+              'Oficina abierta',
+              'Remodelación integral',
+              'Interiorismo boutique',
+              'Edificio mixto',
+            ].map((tag) => (
               <button
                 key={tag}
                 onClick={() => {
@@ -139,9 +147,9 @@ const HeroSection = () => {
           {/* Indicadores de confianza */}
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
             {[
-              { icon: Star, text: 'Más de 10,000 experiencias', count: '10K+' },
-              { icon: Star, text: 'Viajeros satisfechos', count: '50K+' },
-              { icon: Star, text: 'Guías certificados', count: '500+' },
+              { icon: Star, text: 'Clientes que confían en Casaliz', count: '98%' },
+              { icon: Star, text: 'Proyectos diseñados y construidos', count: '120+' },
+              { icon: Star, text: 'Años de experiencia combinada', count: '10+' },
             ].map((item, index) => {
               const Icon = item.icon;
               return (

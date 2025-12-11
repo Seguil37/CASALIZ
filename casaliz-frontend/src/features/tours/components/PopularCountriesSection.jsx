@@ -8,40 +8,28 @@ const PopularCountriesSection = () => {
 
   const countries = [
     {
-      name: 'Perú',
-      image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=600',
-      tours: 567,
+      name: 'Vivienda unifamiliar',
+      image: 'https://images.unsplash.com/photo-1505693415763-3ed5e04ba4cd?w=600',
+      tours: 45,
+      rating: 4.9,
+    },
+    {
+      name: 'Departamentos y multifamiliares',
+      image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600',
+      tours: 32,
       rating: 4.8,
     },
     {
-      name: 'México',
-      image: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=600',
-      tours: 423,
+      name: 'Oficinas y espacios corporativos',
+      image: 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=600',
+      tours: 28,
       rating: 4.7,
     },
     {
-      name: 'Argentina',
-      image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600',
-      tours: 389,
+      name: 'Locales comerciales',
+      image: 'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?w=600',
+      tours: 19,
       rating: 4.6,
-    },
-    {
-      name: 'Colombia',
-      image: 'https://images.unsplash.com/photo-1568632234157-ce7aecd03d0d?w=600',
-      tours: 356,
-      rating: 4.7,
-    },
-    {
-      name: 'Chile',
-      image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600',
-      tours: 298,
-      rating: 4.6,
-    },
-    {
-      name: 'Brasil',
-      image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600',
-      tours: 445,
-      rating: 4.7,
     },
   ];
 
@@ -96,12 +84,12 @@ const PopularCountriesSection = () => {
           <div className="flex items-center gap-3">
             <Globe className="w-8 h-8 text-[#e15f0b]" />
             <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
-              Países más populares
+              Tipos de proyectos más solicitados
             </h2>
           </div>
           <div className="hidden md:flex items-center gap-2 text-[#e15f0b]">
             <Star className="w-5 h-5 fill-current" />
-            <span className="font-semibold">Explora todos los destinos</span>
+            <span className="font-semibold">Explora proyectos de este tipo</span>
           </div>
         </div>
 
@@ -143,14 +131,14 @@ const PopularCountriesSection = () => {
                         <span className="font-bold text-[#233274]">{country.rating}</span>
                       </div>
                       <div className="text-sm text-[#9a98a0]">
-                        {country.tours} experiencias
+                        {country.tours} proyectos
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Botón de acción (aparece al hover) */}
                   <button className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100">
-                    Explorar destinos
+                    Explorar proyectos de este tipo
                   </button>
                 </div>
               </div>
