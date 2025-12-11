@@ -43,6 +43,16 @@ class User extends Authenticatable
         return $this->hasMany(ProjectReview::class);
     }
 
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoriteProjects()
+    {
+        return $this->belongsToMany(Project::class, 'favorites');
+    }
+
     public function isClient(): bool
     {
         return $this->role === 'client';

@@ -14,11 +14,11 @@ class ProjectPolicy
 
     public function update(User $user, Project $project): bool
     {
-        return $user->isAdmin() || $user->id === $project->created_by;
+        return $user->isAdmin();
     }
 
     public function delete(User $user, Project $project): bool
     {
-        return $user->isAdmin() || $user->id === $project->created_by;
+        return $user->isAdmin();
     }
 }

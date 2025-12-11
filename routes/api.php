@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SystemSettingsController;
+use App\Http\Controllers\Api\UserController;
 
 Route::prefix('v1')->group(function () {
     // Autenticación
@@ -28,7 +30,7 @@ Route::prefix('v1')->group(function () {
 
     // Rutas protegidas
     Route::middleware('auth:sanctum')->group(function () {
-        Route::middleware('can:create,App\Models\Project')->group(function () {
+        Route::middleware('can:create,App\\Models\\Project')->group(function () {
             Route::post('/projects', [ProjectController::class, 'store']);
         });
 
@@ -42,5 +44,21 @@ Route::prefix('v1')->group(function () {
 
         Route::post('/reviews', [ReviewController::class, 'store']);
         Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
+
+        Route::middleware('can:viewAny,App\\Models\\User')->group(function () {
+            Route::get('/users', [UserController::class, 'index']);
+        });
+
+        Route::middleware('can:create,App\\Models\\User')->group(function () {
+            Route::post('/users', [UserController::class, 'store']);
+        });
+
+        Route::middleware('can:update,user')->group(function () {
+            Route::put('/users/{user}', [UserController::class, 'update']);
+        });
+
+        Route::get('/favorites', [FavoriteController::class, 'index']);
+        Route::post('/favorites', [FavoriteController::class, 'store']);
+        Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy']);
     });
 });
