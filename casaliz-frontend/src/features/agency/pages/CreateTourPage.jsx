@@ -26,6 +26,11 @@ const CreateTourPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
+  const openPreview = (url) => {
+    if (!url || !url.trim()) return;
+    window.open(url.trim(), '_blank', 'noopener,noreferrer');
+  };
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -235,13 +240,33 @@ const CreateTourPage = () => {
             <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Imagen principal</label>
-                <input
-                  type="text"
-                  value={formData.hero_image}
-                  onChange={(e) => handleChange('hero_image', e.target.value)}
-                  className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="URL de la imagen principal"
-                />
+                <div className="flex items-start gap-3">
+                  <input
+                    type="text"
+                    value={formData.hero_image}
+                    onChange={(e) => handleChange('hero_image', e.target.value)}
+                    className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="URL de la imagen principal"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => openPreview(formData.hero_image)}
+                    disabled={!formData.hero_image.trim()}
+                    className="px-3 py-2 rounded-xl border border-[#ebe7df] text-[#233274] hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Ver
+                  </button>
+                </div>
+                {formData.hero_image.trim() && (
+                  <div className="mt-3">
+                    <p className="text-xs text-[#9a98a0] mb-1">PrevisualizaciA3n</p>
+                    <img
+                      src={formData.hero_image.trim()}
+                      alt="PrevisualizaciA3n de la imagen principal"
+                      className="w-full max-w-sm max-h-48 object-contain rounded-lg border border-[#ebe7df] bg-white"
+                    />
+                  </div>
+                )}
                 <p className="text-xs text-[#9a98a0] mt-1">Usaremos esta imagen en las vistas destacadas del proyecto.</p>
               </div>
               <div className="bg-[#f8f5ef] rounded-xl border border-dashed border-[#d5d1c9] p-4 flex items-center gap-3">
@@ -272,13 +297,33 @@ const CreateTourPage = () => {
                   <div key={index} className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-[#fdfaf5] p-4 rounded-xl border border-[#ebe7df]">
                     <div className="md:col-span-3">
                       <label className="block text-sm font-semibold text-[#233274] mb-1">URL de la imagen *</label>
-                      <input
-                        type="text"
-                        value={image.path}
-                        onChange={(e) => handleImageChange(index, 'path', e.target.value)}
-                        className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                        placeholder="https://..."
-                      />
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="text"
+                          value={image.path}
+                          onChange={(e) => handleImageChange(index, 'path', e.target.value)}
+                          className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                          placeholder="https://..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() => openPreview(image.path)}
+                          disabled={!image.path.trim()}
+                          className="px-3 py-2 rounded-xl border border-[#ebe7df] text-[#233274] hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          Ver
+                        </button>
+                      </div>
+                      {image.path.trim() && (
+                        <div className="mt-2">
+                          <p className="text-xs text-[#9a98a0] mb-1">PrevisualizaciA3n</p>
+                          <img
+                            src={image.path.trim()}
+                            alt={image.caption || `Imagen ${index + 1}`}
+                            className="w-full h-32 object-contain rounded-lg border border-[#ebe7df] bg-white"
+                          />
+                        </div>
+                      )}
                     </div>
                     <div className="md:col-span-2">
                       <label className="block text-sm font-semibold text-[#233274] mb-1">Leyenda</label>

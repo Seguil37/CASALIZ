@@ -57,7 +57,11 @@ class ProjectController extends Controller
         }
 
         return response()->json(
-            $project->load(['featuredImages', 'reviews.user'])
+            $project->load([
+                'images' => fn ($query) => $query->orderBy('position'),
+                'featuredImages',
+                'reviews.user',
+            ])
         );
     }
 
