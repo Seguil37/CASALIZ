@@ -6,5 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class SystemSettings extends Model
 {
-    //
+    protected $fillable = [
+        'key',
+        'value',
+        'type',
+        'group',
+        'description',
+        'is_public',
+    ];
+
+    protected $casts = [
+        'is_public' => 'boolean',
+    ];
 }
