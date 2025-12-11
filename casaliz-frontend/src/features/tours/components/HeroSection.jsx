@@ -27,7 +27,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70 z-10"></div>
         <img
-          src="https://images.pexels.com/photos/1146708/pexels-photo-1146708.jpeg"
+          src="https://scontent-lim1-1.xx.fbcdn.net/v/t39.30808-6/471261672_921713853272572_2849473084232492966_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=aO-qf6JFBE0Q7kNvwF2trnQ&_nc_oc=AdmNQcTEwlsSJhTw9l-3M7LbJPiL5iqNNAgVjwF-l-UG5XJhkIcmzhClMRWEuDzO0wY&_nc_zt=23&_nc_ht=scontent-lim1-1.xx&_nc_gid=UTAzAimmvmz_EEiBKXBcpA&oh=00_AflrXZ1VKzXVMcFBU1hU8YCQVh-My9zK4w7em0uq2vQQuw&oe=69401BA1"
           alt="Travel Background"
           className="w-full h-full object-cover animate-slow-zoom"
         />
