@@ -14,11 +14,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['customer', 'agency', 'admin'])->default('customer');
+            $table->enum('role', ['master_admin', 'admin', 'client'])->default('client');
             $table->string('phone')->nullable();
             $table->string('avatar')->nullable();
             $table->text('bio')->nullable();
             $table->string('country')->nullable();
+            $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->boolean('is_active')->default(true);
             $table->rememberToken();

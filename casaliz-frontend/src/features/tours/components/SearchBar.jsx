@@ -1,6 +1,5 @@
 // src/features/tours/components/SearchBar.jsx
-
-import { MapPin, Calendar, Search, Sparkles } from 'lucide-react';
+import { MapPin, Search, Sparkles, Home } from 'lucide-react';
 
 const SearchBar = ({ filters, onFilterChange, onSearch }) => {
   const handleSubmit = (e) => {
@@ -8,60 +7,57 @@ const SearchBar = ({ filters, onFilterChange, onSearch }) => {
     onSearch();
   };
 
+  const setLocation = (city) => {
+    onFilterChange('city', city);
+    onSearch();
+  };
+
   return (
     <form onSubmit={handleSubmit} className="w-full">
       <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-2 md:p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-          {/* ¿A dónde vas? */}
           <div className="relative">
-            <label className="block text-xs font-semibold text-[#233274] mb-1.5">
-              ¿A dónde vas?
-            </label>
+            <label className="block text-xs font-semibold text-[#233274] mb-1.5">Ciudad</label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-[#e15f0b] w-4 h-4" />
               <input
                 type="text"
-                placeholder="Destino o atracción"
-                value={filters.location}
-                onChange={(e) => onFilterChange('location', e.target.value)}
+                placeholder="Ciudad o distrito"
+                value={filters.city}
+                onChange={(e) => onFilterChange('city', e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border-2 border-[#9a98a0] rounded-lg focus:border-[#e15f0b] focus:outline-none transition-all text-sm"
               />
             </div>
           </div>
 
-          {/* Check In */}
           <div className="relative">
-            <label className="block text-xs font-semibold text-[#233274] mb-1.5">
-              Check In
-            </label>
+            <label className="block text-xs font-semibold text-[#233274] mb-1.5">Estado/Provincia</label>
             <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-[#e15f0b] w-4 h-4" />
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-[#e15f0b] w-4 h-4" />
               <input
-                type="date"
-                value={filters.checkIn}
-                onChange={(e) => onFilterChange('checkIn', e.target.value)}
+                type="text"
+                placeholder="Provincia"
+                value={filters.state}
+                onChange={(e) => onFilterChange('state', e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border-2 border-[#9a98a0] rounded-lg focus:border-[#e15f0b] focus:outline-none transition-all text-sm"
               />
             </div>
           </div>
 
-          {/* Check Out */}
           <div className="relative">
-            <label className="block text-xs font-semibold text-[#233274] mb-1.5">
-              Check Out
-            </label>
+            <label className="block text-xs font-semibold text-[#233274] mb-1.5">Tipo de proyecto</label>
             <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-[#e15f0b] w-4 h-4" />
+              <Home className="absolute left-3 top-1/2 -translate-y-1/2 text-[#e15f0b] w-4 h-4" />
               <input
-                type="date"
-                value={filters.checkOut}
-                onChange={(e) => onFilterChange('checkOut', e.target.value)}
+                type="text"
+                placeholder="Casa, departamento, condominio..."
+                value={filters.type}
+                onChange={(e) => onFilterChange('type', e.target.value)}
                 className="w-full pl-10 pr-4 py-2.5 border-2 border-[#9a98a0] rounded-lg focus:border-[#e15f0b] focus:outline-none transition-all text-sm"
               />
             </div>
           </div>
 
-          {/* Botón Buscar */}
           <div className="flex items-end">
             <button
               type="submit"
@@ -72,16 +68,15 @@ const SearchBar = ({ filters, onFilterChange, onSearch }) => {
             </button>
           </div>
         </div>
-        
-        {/* Búsquedas populares */}
+
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <Sparkles className="w-4 h-4 text-[#e15f0b]" />
-          <span className="text-xs text-[#9a98a0]">Popular:</span>
-          {['Cusco', 'Lima', 'Machu Picchu', 'Valle Sagrado'].map((tag) => (
+          <span className="text-xs text-[#9a98a0]">Ciudades frecuentes:</span>
+          {['Lima', 'Arequipa', 'Cusco', 'Trujillo'].map((tag) => (
             <button
               key={tag}
               type="button"
-              onClick={() => onFilterChange('location', tag)}
+              onClick={() => setLocation(tag)}
               className="text-xs px-3 py-1 bg-[#f8f5ef] hover:bg-[#f8f5ef] text-[#d14a00] rounded-full transition-colors"
             >
               {tag}
