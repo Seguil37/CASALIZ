@@ -15,57 +15,57 @@ const TourPricing = ({ formData, updateFormData, errors = {} }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">
+      <h2 className="text-xl font-bold text-[#233274] mb-6">
         Precios y Duración
       </h2>
 
       {/* Precios */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#233274] mb-2">
             Precio Regular (S/.) *
           </label>
           <div className="relative">
-            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
             <input
               type="number"
               name="price"
               value={formData.price}
               onChange={handleNumberChange}
-              className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
               placeholder="650.00"
               min="0"
               step="0.01"
               required
             />
             {errors.price && (
-            <p className="mt-1 text-sm text-red-600">{errors.price}</p>
+            <p className="mt-1 text-sm text-[#d14a00]">{errors.price}</p>
             )}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Precio con Descuento (S/.) <span className="text-gray-400">(Opcional)</span>
+          <label className="block text-sm font-semibold text-[#233274] mb-2">
+            Precio con Descuento (S/.) <span className="text-[#9a98a0]">(Opcional)</span>
           </label>
           <div className="relative">
-            <TrendingDown className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <TrendingDown className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
             <input
               type="number"
               name="discount_price"
               value={formData.discount_price}
               onChange={handleNumberChange}
-              className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
               placeholder="580.00"
               min="0"
               step="0.01"
             />
             {errors.discount_price && (
-            <p className="mt-1 text-sm text-red-600">{errors.discount_price}</p>
+            <p className="mt-1 text-sm text-[#d14a00]">{errors.discount_price}</p>
             )}
           </div>
           {formData.discount_price && formData.price && (
-            <p className="text-sm text-green-600 mt-1">
+            <p className="text-sm text-[#233274] mt-1">
               Descuento: {Math.round(((formData.price - formData.discount_price) / formData.price) * 100)}%
             </p>
           )}
@@ -74,50 +74,50 @@ const TourPricing = ({ formData, updateFormData, errors = {} }) => {
 
       {/* Duración */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-[#233274] mb-2">
           Duración del Tour *
         </label>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs text-gray-600 mb-1">Días</label>
+            <label className="block text-xs text-[#9a98a0] mb-1">Días</label>
             <div className="relative">
-              <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
               <input
                 type="number"
                 name="duration_days"
                 value={formData.duration_days}
                 onChange={handleNumberChange}
-                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none"
+                className="w-full pl-12 pr-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
                 placeholder="4"
                 min="0"
               />
               {errors.price && (
-            <p className="mt-1 text-sm text-red-600">{errors.duration_days}</p>
+            <p className="mt-1 text-sm text-[#d14a00]">{errors.duration_days}</p>
             )}
             </div>
           </div>
 
           <div>
-            <label className="block text-xs text-gray-600 mb-1">Horas</label>
+            <label className="block text-xs text-[#9a98a0] mb-1">Horas</label>
             <div className="relative">
-              <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Clock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
               <input
                 type="number"
                 name="duration_hours"
                 value={formData.duration_hours}
                 onChange={handleNumberChange}
-                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none"
+                className="w-full pl-12 pr-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
                 placeholder="8"
                 min="0"
                 max="23"
               />
               {errors.price && (
-            <p className="mt-1 text-sm text-red-600">{errors.duration_hours}</p>
+            <p className="mt-1 text-sm text-[#d14a00]">{errors.duration_hours}</p>
             )}
             </div>
           </div>
         </div>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm text-[#9a98a0] mt-2">
           Si el tour dura días completos, ingresa 0 en horas
         </p>
       </div>
@@ -125,45 +125,45 @@ const TourPricing = ({ formData, updateFormData, errors = {} }) => {
       {/* Capacidad de personas */}
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#233274] mb-2">
             Mínimo de Personas *
           </label>
           <div className="relative">
-            <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
             <input
               type="number"
               name="min_people"
               value={formData.min_people}
               onChange={handleNumberChange}
-              className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
               placeholder="1"
               min="1"
               required
             />
             {errors.price && (
-            <p className="mt-1 text-sm text-red-600">{errors.min_people}</p>
+            <p className="mt-1 text-sm text-[#d14a00]">{errors.min_people}</p>
             )}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-[#233274] mb-2">
             Máximo de Personas *
           </label>
           <div className="relative">
-            <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
             <input
               type="number"
               name="max_people"
               value={formData.max_people}
               onChange={handleNumberChange}
-              className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
               placeholder="16"
               min="1"
               required
             />
             {errors.price && (
-            <p className="mt-1 text-sm text-red-600">{errors.max_people}</p>
+            <p className="mt-1 text-sm text-[#d14a00]">{errors.max_people}</p>
             )}
           </div>
         </div>
@@ -171,7 +171,7 @@ const TourPricing = ({ formData, updateFormData, errors = {} }) => {
 
       {/* Nivel de dificultad */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-[#233274] mb-2">
           Nivel de Dificultad *
         </label>
         <div className="grid grid-cols-3 gap-4">
@@ -181,7 +181,7 @@ const TourPricing = ({ formData, updateFormData, errors = {} }) => {
               className={`relative flex items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
                 formData.difficulty_level === level
                   ? 'border-primary bg-primary/10'
-                  : 'border-gray-200 hover:border-gray-300'
+                  : 'border-[#9a98a0] hover:border-[#9a98a0]'
               }`}
             >
               <input
@@ -193,7 +193,7 @@ const TourPricing = ({ formData, updateFormData, errors = {} }) => {
                 className="sr-only"
               />
               {errors.price && (
-            <p className="mt-1 text-sm text-red-600">{errors.difficulty_level}</p>
+            <p className="mt-1 text-sm text-[#d14a00]">{errors.difficulty_level}</p>
             )}
               <div className="text-center">
                 <div className="text-2xl mb-1">
@@ -201,7 +201,7 @@ const TourPricing = ({ formData, updateFormData, errors = {} }) => {
                   {level === 'moderate' && '💪'}
                   {level === 'hard' && '🔥'}
                 </div>
-                <p className="font-semibold text-gray-900 capitalize">
+                <p className="font-semibold text-[#233274] capitalize">
                   {level === 'easy' && 'Fácil'}
                   {level === 'moderate' && 'Moderado'}
                   {level === 'hard' && 'Difícil'}

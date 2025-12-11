@@ -60,7 +60,7 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Método de Pago */}
       <div>
-        <h3 className="text-lg font-bold text-gray-900 mb-4">
+        <h3 className="text-lg font-bold text-[#233274] mb-4">
           Método de Pago
         </h3>
 
@@ -75,12 +75,12 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
               onChange={(e) => setPaymentMethod(e.target.value)}
               className="w-5 h-5 text-primary"
             />
-            <CreditCard className="w-6 h-6 text-gray-600" />
+            <CreditCard className="w-6 h-6 text-[#9a98a0]" />
             <div className="flex-1">
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-[#233274]">
                 Tarjeta de Crédito/Débito
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#9a98a0]">
                 Visa, Mastercard, American Express
               </p>
             </div>
@@ -96,12 +96,12 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
               onChange={(e) => setPaymentMethod(e.target.value)}
               className="w-5 h-5 text-primary"
             />
-            <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">
+            <div className="w-6 h-6 bg-[#233274] rounded flex items-center justify-center text-[#f8f5ef] font-bold text-xs">
               P
             </div>
             <div className="flex-1">
-              <p className="font-semibold text-gray-900">PayPal</p>
-              <p className="text-sm text-gray-600">Pago rápido y seguro</p>
+              <p className="font-semibold text-[#233274]">PayPal</p>
+              <p className="text-sm text-[#9a98a0]">Pago rápido y seguro</p>
             </div>
           </label>
         </div>
@@ -111,7 +111,7 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
       {paymentMethod === 'card' && (
         <div className="space-y-6">
           {/* Tarjeta Visual */}
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#1a2555] to-[#233274] rounded-2xl p-6 text-[#f8f5ef] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-40 h-40 bg-primary/20 rounded-full blur-3xl"></div>
 
             <div className="relative z-10">
@@ -146,10 +146,10 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+            <div className="bg-[#f8f5ef] border-l-4 border-[#d14a00] p-4 rounded-lg">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-red-700 text-sm">{error}</p>
+                <AlertCircle className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
+                <p className="text-[#d14a00] text-sm">{error}</p>
               </div>
             </div>
           )}
@@ -157,7 +157,7 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
           {/* Campos */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#233274] mb-2">
                 Número de Tarjeta *
               </label>
               <input
@@ -165,14 +165,14 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
                 value={cardData.cardNumber}
                 onChange={handleCardNumberChange}
                 placeholder="1234 5678 9012 3456"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none font-mono"
+                className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none font-mono"
                 maxLength="19"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-[#233274] mb-2">
                 Nombre del Titular *
               </label>
               <input
@@ -182,14 +182,14 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
                   setCardData({ ...cardData, cardName: e.target.value.toUpperCase() })
                 }
                 placeholder="JUAN PÉREZ"
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none uppercase"
+                className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none uppercase"
                 required
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#233274] mb-2">
                   Fecha de Vencimiento *
                 </label>
                 <input
@@ -197,14 +197,14 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
                   value={cardData.expiryDate}
                   onChange={handleExpiryChange}
                   placeholder="MM/AA"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none font-mono"
+                  className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none font-mono"
                   maxLength="5"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-[#233274] mb-2">
                   CVV *
                 </label>
                 <input
@@ -214,7 +214,7 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
                     setCardData({ ...cardData, cvv: e.target.value.replace(/\D/g, '') })
                   }
                   placeholder="123"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none font-mono"
+                  className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none font-mono"
                   maxLength="4"
                   required
                 />
@@ -230,20 +230,20 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
               onChange={(e) => setSaveCard(e.target.checked)}
               className="w-5 h-5 text-primary rounded"
             />
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-[#233274]">
               Guardar tarjeta para futuras compras
             </span>
           </label>
 
           {/* Seguridad */}
-          <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+          <div className="bg-[#f8f5ef] border-l-4 border-[#233274] p-4 rounded-lg">
             <div className="flex items-start gap-3">
-              <Lock className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <Lock className="w-5 h-5 text-[#233274] flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-semibold text-green-900 mb-1">
+                <p className="text-sm font-semibold text-[#1a2555] mb-1">
                   Pago 100% Seguro
                 </p>
-                <p className="text-sm text-green-700">
+                <p className="text-sm text-[#233274]">
                   Tus datos están protegidos con encriptación SSL de 256 bits
                 </p>
               </div>
@@ -254,18 +254,18 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
 
       {/* PayPal Info */}
       {paymentMethod === 'paypal' && (
-        <div className="bg-blue-50 rounded-xl p-8 text-center">
-          <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4">
+        <div className="bg-[#f8f5ef] rounded-xl p-8 text-center">
+          <div className="w-20 h-20 bg-[#233274] rounded-full flex items-center justify-center text-[#f8f5ef] text-4xl font-bold mx-auto mb-4">
             P
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">
+          <h3 className="text-xl font-bold text-[#233274] mb-2">
             Pagar con PayPal
           </h3>
-          <p className="text-gray-600 mb-4">
+          <p className="text-[#9a98a0] mb-4">
             Serás redirigido a PayPal para completar tu pago de forma segura
           </p>
-          <div className="bg-white rounded-lg p-4 inline-block">
-            <p className="text-sm text-gray-500">
+          <div className="bg-[#f8f5ef] rounded-lg p-4 inline-block">
+            <p className="text-sm text-[#9a98a0]">
               ⚠️ Esto es una simulación - No se procesará ningún pago real
             </p>
           </div>
@@ -276,11 +276,11 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex items-center justify-center gap-2 bg-gradient-primary hover:bg-gradient-secondary text-gray-900 font-bold px-6 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full flex items-center justify-center gap-2 bg-gradient-primary hover:bg-gradient-secondary text-[#233274] font-bold px-6 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? (
           <>
-            <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-[#233274] border-t-transparent rounded-full animate-spin" />
             Procesando...
           </>
         ) : (
@@ -292,10 +292,10 @@ const PaymentForm = ({ onSubmit, loading, error }) => {
       </button>
 
       {/* Disclaimer */}
-      <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg">
+      <div className="bg-[#f8f5ef] border-l-4 border-[#e15f0b] p-4 rounded-lg">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-orange-700">
+          <AlertCircle className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-[#d14a00]">
             <strong>Importante:</strong> Este es un sistema de pagos simulado. No se realizarán
             cargos reales a tu tarjeta. Puedes usar cualquier número de tarjeta para probar.
           </p>

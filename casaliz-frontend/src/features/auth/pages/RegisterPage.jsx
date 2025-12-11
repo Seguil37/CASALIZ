@@ -112,16 +112,16 @@ const RegisterPage = () => {
   // PASO 0: Selector de tipo de usuario
   if (step === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] via-[#f8f5ef] to-[#e15f0b] py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 animate-fade-in">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl mb-6 shadow-xl">
-              <UserPlus className="w-12 h-12 text-gray-900" />
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl mb-6 shadow-xl">
+              <UserPlus className="w-12 h-12 text-[#233274]" />
             </div>
-            <h2 className="text-4xl font-black text-gray-900 mb-2">
+            <h2 className="text-4xl font-black text-[#233274] mb-2">
               ¿Cómo deseas registrarte?
             </h2>
-            <p className="text-gray-600">
+            <p className="text-[#9a98a0]">
               Elige el tipo de cuenta que mejor se adapte a tus necesidades
             </p>
           </div>
@@ -130,32 +130,32 @@ const RegisterPage = () => {
             {/* Opción Cliente */}
             <button
               onClick={() => handleUserTypeSelect('customer')}
-              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 text-left group hover:scale-105"
+              className="bg-[#f8f5ef] rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 text-left group hover:scale-105"
             >
-              <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-200 transition-colors">
-                <UserCircle className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 bg-[#f8f5ef] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#f8f5ef] transition-colors">
+                <UserCircle className="w-8 h-8 text-[#233274]" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              <h3 className="text-2xl font-bold text-[#233274] mb-3">
                 Soy Cliente
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-[#9a98a0] mb-6">
                 Explora y reserva experiencias únicas alrededor del mundo
               </p>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-[#9a98a0]">
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#f8f5ef]0 rounded-full"></div>
                   Reserva tours y experiencias
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#f8f5ef]0 rounded-full"></div>
                   Guarda tus favoritos
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#f8f5ef]0 rounded-full"></div>
                   Gestiona tus reservas
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#f8f5ef]0 rounded-full"></div>
                   Deja reseñas y calificaciones
                 </li>
               </ul>
@@ -164,32 +164,32 @@ const RegisterPage = () => {
             {/* Opción Agencia */}
             <button
               onClick={() => handleUserTypeSelect('agency')}
-              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 text-left group hover:scale-105"
+              className="bg-[#f8f5ef] rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 text-left group hover:scale-105"
             >
-              <div className="w-16 h-16 bg-yellow-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-yellow-200 transition-colors">
-                <Building2 className="w-8 h-8 text-yellow-600" />
+              <div className="w-16 h-16 bg-[#f8f5ef] rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#f8f5ef] transition-colors">
+                <Building2 className="w-8 h-8 text-[#d14a00]" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              <h3 className="text-2xl font-bold text-[#233274] mb-3">
                 Soy Proveedor
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-[#9a98a0] mb-6">
                 Ofrece tus tours y llega a miles de viajeros
               </p>
-              <ul className="space-y-2 text-sm text-gray-600">
+              <ul className="space-y-2 text-sm text-[#9a98a0]">
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#e15f0b] rounded-full"></div>
                   Crea y gestiona tus tours
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#e15f0b] rounded-full"></div>
                   Administra reservas
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#e15f0b] rounded-full"></div>
                   Panel de estadísticas
                 </li>
                 <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></div>
+                  <div className="w-1.5 h-1.5 bg-[#e15f0b] rounded-full"></div>
                   Aumenta tus ventas
                 </li>
               </ul>
@@ -197,9 +197,9 @@ const RegisterPage = () => {
           </div>
 
           <div className="mt-8 text-center">
-            <p className="text-gray-600">
+            <p className="text-[#9a98a0]">
               ¿Ya tienes una cuenta?{' '}
-              <Link to="/login" className="text-yellow-500 hover:text-yellow-600 font-bold transition-colors">
+              <Link to="/login" className="text-[#e15f0b] hover:text-[#d14a00] font-bold transition-colors">
                 Inicia sesión
               </Link>
             </p>
@@ -225,27 +225,27 @@ const RegisterPage = () => {
 
   // PASO 1: Formulario de registro
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] via-[#f8f5ef] to-[#e15f0b] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8 animate-fade-in">
           <button
             onClick={() => setStep(0)}
-            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4"
+            className="inline-flex items-center text-[#9a98a0] hover:text-[#233274] mb-4"
           >
             ← Volver a selección
           </button>
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl mb-6 shadow-xl">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl mb-6 shadow-xl">
             {userType === 'agency' ? (
-              <Building2 className="w-12 h-12 text-gray-900" />
+              <Building2 className="w-12 h-12 text-[#233274]" />
             ) : (
-              <UserCircle className="w-12 h-12 text-gray-900" />
+              <UserCircle className="w-12 h-12 text-[#233274]" />
             )}
           </div>
           <div className="flex flex-col items-center justify-center gap-2 min-h-[120px]">
-            <h2 className="text-4xl font-black text-gray-900 leading-tight text-center">
+            <h2 className="text-4xl font-black text-[#233274] leading-tight text-center">
               {userType === 'agency' ? 'Regístrate como Proveedor' : 'Crea tu cuenta'}
             </h2>
-            <p className="text-gray-600 text-center max-w-xl">
+            <p className="text-[#9a98a0] text-center max-w-xl">
               {userType === 'agency'
                 ? 'Únete a nuestra red de agencias de viajes'
                 : 'Únete a Book&Go y descubre experiencias únicas'}
@@ -253,12 +253,12 @@ const RegisterPage = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 animate-slide-up">
+        <div className="bg-[#f8f5ef] rounded-2xl shadow-xl p-8 animate-slide-up">
           <form onSubmit={handleNext} className="space-y-6">
             {/* Información Personal */}
             <div className="space-y-4">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <User className="w-5 h-5 text-yellow-500" />
+              <h3 className="text-lg font-bold text-[#233274] flex items-center gap-2">
+                <User className="w-5 h-5 text-[#e15f0b]" />
                 Información Personal
               </h3>
 
@@ -304,8 +304,8 @@ const RegisterPage = () => {
             {/* Datos de Agencia */}
             {userType === 'agency' && (
               <div className="border-t pt-6 space-y-4">
-                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-yellow-500" />
+                <h3 className="text-lg font-bold text-[#233274] flex items-center gap-2">
+                  <Shield className="w-5 h-5 text-[#e15f0b]" />
                   Datos de la Agencia
                 </h3>
 
@@ -347,7 +347,7 @@ const RegisterPage = () => {
                 />
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-[#233274] mb-2">
                     Descripción (opcional)
                   </label>
                   <textarea
@@ -355,7 +355,7 @@ const RegisterPage = () => {
                     value={formData.description}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-yellow-500"
+                    className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:outline-none focus:border-[#e15f0b]"
                     placeholder="Cuéntanos sobre tu agencia..."
                   />
                 </div>
@@ -373,8 +373,8 @@ const RegisterPage = () => {
 
             {/* Contraseñas */}
             <div className="border-t pt-6 space-y-4">
-              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-yellow-500" />
+              <h3 className="text-lg font-bold text-[#233274] flex items-center gap-2">
+                <Lock className="w-5 h-5 text-[#e15f0b]" />
                 Seguridad
               </h3>
 
@@ -407,16 +407,16 @@ const RegisterPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               Continuar
             </button>
           </form>
 
           <div className="mt-8 text-center">
-            <p className="text-gray-600">
+            <p className="text-[#9a98a0]">
               ¿Ya tienes una cuenta?{' '}
-              <Link to="/login" className="text-yellow-500 hover:text-yellow-600 font-bold transition-colors">
+              <Link to="/login" className="text-[#e15f0b] hover:text-[#d14a00] font-bold transition-colors">
                 Inicia sesión
               </Link>
             </p>
@@ -442,14 +442,14 @@ const InputField = ({
   maxLength
 }) => (
   <div>
-    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-      {Icon && <Icon className="w-4 h-4 text-yellow-500" />}
+    <label className="block text-sm font-semibold text-[#233274] mb-2 flex items-center gap-2">
+      {Icon && <Icon className="w-4 h-4 text-[#e15f0b]" />}
       {label}
     </label>
     <div className="relative">
       {Icon && (
         <Icon className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-          focusedField === name ? 'text-yellow-500' : 'text-gray-400'
+          focusedField === name ? 'text-[#e15f0b]' : 'text-[#9a98a0]'
         }`} />
       )}
       <input
@@ -462,16 +462,16 @@ const InputField = ({
         maxLength={maxLength}
         className={`w-full ${Icon ? 'pl-12' : 'pl-4'} pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all ${
           error
-            ? 'border-red-500 focus:border-red-500'
+            ? 'border-[#d14a00] focus:border-[#d14a00]'
             : focusedField === name
-            ? 'border-yellow-500 bg-yellow-50'
-            : 'border-gray-200 focus:border-yellow-500'
+            ? 'border-[#e15f0b] bg-[#f8f5ef]'
+            : 'border-[#9a98a0] focus:border-[#e15f0b]'
         }`}
         placeholder={placeholder}
       />
     </div>
     {error && (
-      <p className="mt-1 text-sm text-red-600 animate-fade-in flex items-center gap-1">
+      <p className="mt-1 text-sm text-[#d14a00] animate-fade-in flex items-center gap-1">
         <AlertCircle className="w-4 h-4" />
         {error}
       </p>
@@ -493,13 +493,13 @@ const PasswordField = ({
   placeholder
 }) => (
   <div>
-    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-      <Lock className="w-4 h-4 text-yellow-500" />
+    <label className="block text-sm font-semibold text-[#233274] mb-2 flex items-center gap-2">
+      <Lock className="w-4 h-4 text-[#e15f0b]" />
       {label}
     </label>
     <div className="relative">
       <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-        focusedField === name ? 'text-yellow-500' : 'text-gray-400'
+        focusedField === name ? 'text-[#e15f0b]' : 'text-[#9a98a0]'
       }`} />
       <input
         type={show ? 'text' : 'password'}
@@ -510,23 +510,23 @@ const PasswordField = ({
         onBlur={() => setFocusedField('')}
         className={`w-full pl-12 pr-12 py-3 border-2 rounded-xl focus:outline-none transition-all ${
           error
-            ? 'border-red-500 focus:border-red-500'
+            ? 'border-[#d14a00] focus:border-[#d14a00]'
             : focusedField === name
-            ? 'border-yellow-500 bg-yellow-50'
-            : 'border-gray-200 focus:border-yellow-500'
+            ? 'border-[#e15f0b] bg-[#f8f5ef]'
+            : 'border-[#9a98a0] focus:border-[#e15f0b]'
         }`}
         placeholder={placeholder}
       />
       <button
         type="button"
         onClick={onToggle}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-yellow-500 transition-colors"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
       >
         {show ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
       </button>
     </div>
     {error && (
-      <p className="mt-1 text-sm text-red-600 animate-fade-in flex items-center gap-1">
+      <p className="mt-1 text-sm text-[#d14a00] animate-fade-in flex items-center gap-1">
         <AlertCircle className="w-4 h-4" />
         {error}
       </p>
@@ -552,59 +552,59 @@ const TermsAndConditionsStep = ({ formData, onBack, isAgency, onSubmit, loading,
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] via-[#f8f5ef] to-[#e15f0b] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl mb-6 shadow-xl">
-            <Shield className="w-12 h-12 text-gray-900" />
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl mb-6 shadow-xl">
+            <Shield className="w-12 h-12 text-[#233274]" />
           </div>
-          <h2 className="text-4xl font-black text-gray-900 mb-2">
+          <h2 className="text-4xl font-black text-[#233274] mb-2">
             Términos y Condiciones
           </h2>
-          <p className="text-gray-600">
+          <p className="text-[#9a98a0]">
             Revisa y acepta nuestros términos para continuar
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 animate-slide-up">
+        <div className="bg-[#f8f5ef] rounded-2xl shadow-xl p-8 animate-slide-up">
           {(localError || apiError) && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6 animate-fade-in flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-red-700 text-sm font-medium">{localError || apiError}</p>
+            <div className="bg-[#f8f5ef] border-l-4 border-[#d14a00] p-4 rounded-lg mb-6 animate-fade-in flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
+              <p className="text-[#d14a00] text-sm font-medium">{localError || apiError}</p>
             </div>
           )}
 
-          <div className="border border-gray-200 rounded-xl p-6 max-h-64 overflow-y-auto mb-6">
-            <div className="space-y-4 text-sm text-gray-600">
-              <p className="font-semibold text-gray-900">1. Aceptación de términos</p>
+          <div className="border border-[#9a98a0] rounded-xl p-6 max-h-64 overflow-y-auto mb-6">
+            <div className="space-y-4 text-sm text-[#9a98a0]">
+              <p className="font-semibold text-[#233274]">1. Aceptación de términos</p>
               <p>Al crear una cuenta en Book&Go, aceptas nuestros términos y condiciones.</p>
 
               {isAgency && (
                 <>
-                  <p className="font-semibold text-gray-900">2. Verificación de agencias</p>
+                  <p className="font-semibold text-[#233274]">2. Verificación de agencias</p>
                   <p>Tu cuenta de agencia será revisada por nuestro equipo antes de ser activada completamente.</p>
                 </>
               )}
 
-              <p className="font-semibold text-gray-900">{isAgency ? '3' : '2'}. Uso del servicio</p>
+              <p className="font-semibold text-[#233274]">{isAgency ? '3' : '2'}. Uso del servicio</p>
               <p>Debes utilizar nuestros servicios de manera responsable y legal.</p>
 
-              <p className="font-semibold text-gray-900">{isAgency ? '4' : '3'}. Privacidad</p>
+              <p className="font-semibold text-[#233274]">{isAgency ? '4' : '3'}. Privacidad</p>
               <p>Tus datos serán protegidos según nuestra política de privacidad.</p>
 
-              <p className="font-semibold text-gray-900">{isAgency ? '5' : '4'}. Pagos</p>
+              <p className="font-semibold text-[#233274]">{isAgency ? '5' : '4'}. Pagos</p>
               <p>Todos los pagos se procesan de forma segura a través de nuestros partners de pago.</p>
             </div>
           </div>
 
-          <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-gray-200 hover:border-yellow-500 cursor-pointer transition-all mb-6">
+          <label className="flex items-start gap-3 p-4 rounded-xl border-2 border-[#9a98a0] hover:border-[#e15f0b] cursor-pointer transition-all mb-6">
             <input
               type="checkbox"
               checked={accepted}
               onChange={(e) => setAccepted(e.target.checked)}
-              className="w-5 h-5 mt-0.5 text-yellow-500 focus:ring-yellow-500 rounded"
+              className="w-5 h-5 mt-0.5 text-[#e15f0b] focus:ring-[#e15f0b] rounded"
             />
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-[#233274]">
               Acepto los términos y condiciones, la política de privacidad y el acuerdo de la comunidad de Book&Go.
             </span>
           </label>
@@ -614,14 +614,14 @@ const TermsAndConditionsStep = ({ formData, onBack, isAgency, onSubmit, loading,
               type="button"
               onClick={onBack}
               disabled={loading}
-              className="flex-1 border-2 border-gray-300 text-gray-700 font-bold py-4 rounded-xl hover:bg-gray-50 transition-all disabled:opacity-50"
+              className="flex-1 border-2 border-[#9a98a0] text-[#233274] font-bold py-4 rounded-xl hover:bg-[#f8f5ef] transition-all disabled:opacity-50"
             >
               Atrás
             </button>
             <button
               onClick={handleSubmit}
               disabled={!accepted || loading}
-              className="flex-1 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

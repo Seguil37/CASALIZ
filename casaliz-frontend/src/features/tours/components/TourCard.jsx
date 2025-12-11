@@ -60,7 +60,7 @@ const TourCard = ({ tour }) => {
   return (
     <Link
       to={`/tours/${tour.id}`}
-      className="group bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 border border-gray-200"
+      className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 border border-[#9a98a0]"
     >
       {/* Imagen */}
       <div className="relative h-48 overflow-hidden">
@@ -74,31 +74,31 @@ const TourCard = ({ tour }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
         {/* Badge de categoría */}
-        <div className="absolute top-4 left-4 bg-yellow-500 text-gray-900 px-3 py-1 rounded-full text-xs font-bold">
+        <div className="absolute top-4 left-4 bg-[#e15f0b] text-[#233274] px-3 py-1 rounded-full text-xs font-bold">
           {tour.category?.name || 'Aventura'}
         </div>
 
         {/* Botón de favoritos */}
         <button
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-full hover:bg-white transition-colors cursor-pointer"
+          className="absolute top-4 right-4 bg-[#f8f5ef]/90 backdrop-blur-sm p-2 rounded-full hover:bg-[#f8f5ef] transition-colors cursor-pointer"
           type="button"
           onClick={handleToggleFavorite}
           aria-label={isFavorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}
         >
           <Heart
-            className={`w-4 h-4 ${isFavorite ? 'text-red-500 fill-current' : 'text-gray-600'}`}
+            className={`w-4 h-4 ${isFavorite ? 'text-[#d14a00] fill-current' : 'text-[#9a98a0]'}`}
           />
         </button>
 
         {favoriteMessage && (
-          <div className="absolute top-14 right-4 bg-white/95 text-gray-800 text-xs px-3 py-2 rounded-lg shadow-lg border border-gray-200 max-w-[220px]">
+          <div className="absolute top-14 right-4 bg-[#f8f5ef]/95 text-[#1a2555] text-xs px-3 py-2 rounded-lg shadow-lg border border-[#9a98a0] max-w-[220px]">
             {favoriteMessage}
           </div>
         )}
 
         {/* Badge de descuento */}
         {tour.discount_price && (
-          <div className="absolute bottom-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+          <div className="absolute bottom-4 left-4 bg-[#f8f5ef]0 text-[#f8f5ef] px-3 py-1 rounded-full text-xs font-bold">
             -{Math.round((1 - tour.discount_price / tour.price) * 100)}%
           </div>
         )}
@@ -107,18 +107,18 @@ const TourCard = ({ tour }) => {
       {/* Contenido */}
       <div className="p-5">
         {/* Ubicación */}
-        <div className="flex items-center gap-1 text-gray-500 text-sm mb-2">
-          <MapPin className="w-4 h-4 text-yellow-500" />
+        <div className="flex items-center gap-1 text-[#9a98a0] text-sm mb-2">
+          <MapPin className="w-4 h-4 text-[#e15f0b]" />
           <span>{tour.location_city || 'Perú'}</span>
         </div>
 
         {/* Título */}
-        <h3 className="font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-yellow-500 transition-colors">
+        <h3 className="font-bold text-[#233274] mb-3 line-clamp-2 group-hover:text-[#e15f0b] transition-colors">
           {tour.title}
         </h3>
 
         {/* Características */}
-        <div className="flex items-center gap-4 text-gray-600 text-sm mb-4">
+        <div className="flex items-center gap-4 text-[#9a98a0] text-sm mb-4">
           {tour.duration_days > 0 && (
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
@@ -143,30 +143,30 @@ const TourCard = ({ tour }) => {
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                className={`w-4 h-4 ${i < Math.floor(tour.rating || 0) ? 'text-yellow-500 fill-current' : 'text-gray-300'}`}
+                className={`w-4 h-4 ${i < Math.floor(tour.rating || 0) ? 'text-[#e15f0b] fill-current' : 'text-[#9a98a0]'}`}
               />
             ))}
           </div>
-          <span className="text-sm font-medium text-gray-900">{tour.rating || 0}</span>
-          <span className="text-sm text-gray-500">({tour.total_reviews || 0})</span>
+          <span className="text-sm font-medium text-[#233274]">{tour.rating || 0}</span>
+          <span className="text-sm text-[#9a98a0]">({tour.total_reviews || 0})</span>
         </div>
 
         {/* Precio */}
         <div className="flex items-end justify-between">
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-gray-900">
+              <span className="text-2xl font-bold text-[#233274]">
                 S/. {tour.discount_price || tour.price}
               </span>
               {tour.discount_price && (
-                <span className="text-sm text-gray-500 line-through">
+                <span className="text-sm text-[#9a98a0] line-through">
                   S/. {tour.price}
                 </span>
               )}
             </div>
-            <span className="text-xs text-gray-500">por persona</span>
+            <span className="text-xs text-[#9a98a0]">por persona</span>
           </div>
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors text-sm cursor-pointer">
+          <button className="bg-[#e15f0b] hover:bg-[#d14a00] text-[#233274] font-bold py-2 px-4 rounded-lg transition-colors text-sm cursor-pointer">
             Ver más
           </button>
         </div>

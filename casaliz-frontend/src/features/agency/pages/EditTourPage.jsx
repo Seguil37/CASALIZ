@@ -110,7 +110,7 @@ const EditTourPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-primary animate-spin" />
       </div>
     );
@@ -126,26 +126,26 @@ const EditTourPage = () => {
   const ActiveComponent = tabs.find(t => t.id === activeTab)?.component;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[#f8f5ef] py-8">
       <div className="container-custom max-w-4xl">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => navigate('/agency/tours')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            className="flex items-center gap-2 text-[#9a98a0] hover:text-[#233274] mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
             Volver a mis tours
           </button>
 
-          <h1 className="text-3xl font-black text-gray-900 mb-2">
+          <h1 className="text-3xl font-black text-[#233274] mb-2">
             Editar Tour
           </h1>
         </div>
 
         {/* Tabs */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <div className="flex gap-2 mb-6 border-b border-gray-200">
+        <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 mb-6">
+          <div className="flex gap-2 mb-6 border-b border-[#9a98a0]">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -154,7 +154,7 @@ const EditTourPage = () => {
                 className={`px-4 py-2 font-semibold transition-all border-b-2 ${
                   activeTab === tab.id
                     ? 'border-primary text-primary'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                    : 'border-transparent text-[#9a98a0] hover:text-[#233274]'
                 }`}
               >
                 {tab.name}
@@ -163,9 +163,9 @@ const EditTourPage = () => {
           </div>
 
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6 flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-red-700 text-sm">{error}</p>
+            <div className="bg-[#f8f5ef] border-l-4 border-[#d14a00] p-4 rounded-lg mb-6 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
+              <p className="text-[#d14a00] text-sm">{error}</p>
             </div>
           )}
 
@@ -180,7 +180,7 @@ const EditTourPage = () => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center gap-2 bg-gradient-primary text-gray-900 font-bold px-8 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+            className="flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-8 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
           >
             {saving ? (
               <>

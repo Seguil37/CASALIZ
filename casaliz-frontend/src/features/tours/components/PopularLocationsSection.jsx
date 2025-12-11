@@ -102,10 +102,10 @@ const PopularLocationsSection = () => {
 
   if (loading) {
     return (
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-[#f8f5ef]">
         <div className="container-custom">
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-yellow-500 animate-spin" />
+            <Loader2 className="w-12 h-12 text-[#e15f0b] animate-spin" />
           </div>
         </div>
       </section>
@@ -118,12 +118,12 @@ const PopularLocationsSection = () => {
   }
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-[#f8f5ef]">
       <div className="container-custom">
         {/* Título */}
         <div className="flex items-center gap-3 mb-12 animate-fade-in">
-          <TrendingUp className="w-8 h-8 text-yellow-500" />
-          <h2 className="text-4xl lg:text-5xl font-black text-gray-900">
+          <TrendingUp className="w-8 h-8 text-[#e15f0b]" />
+          <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
             Lugares más visitados
           </h2>
         </div>
@@ -134,7 +134,7 @@ const PopularLocationsSection = () => {
             <Link
               key={index}
               to={`/tours?location=${encodeURIComponent(location.name)}`}
-              className="group bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fade-in"
+              className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               {/* Imagen */}
@@ -150,27 +150,27 @@ const PopularLocationsSection = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                 
                 {/* Badge de rating */}
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                  <span className="text-sm font-bold text-gray-900">{location.rating}</span>
+                <div className="absolute top-4 right-4 bg-[#f8f5ef]/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
+                  <Star className="w-4 h-4 text-[#e15f0b] fill-current" />
+                  <span className="text-sm font-bold text-[#233274]">{location.rating}</span>
                 </div>
               </div>
 
               {/* Contenido */}
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-yellow-500 transition-colors">
+                <h3 className="text-2xl font-bold text-[#233274] mb-2 group-hover:text-[#e15f0b] transition-colors">
                   {location.name}
                 </h3>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <MapPin className="w-4 h-4 text-yellow-500" />
+                  <div className="flex items-center gap-2 text-[#9a98a0]">
+                    <MapPin className="w-4 h-4 text-[#e15f0b]" />
                     <span className="text-sm font-medium">
                       {location.experiences} {location.experiences === 1 ? 'experiencia' : 'experiencias'}
                     </span>
                   </div>
                   
                   {/* Indicador de hover */}
-                  <div className="flex items-center gap-1 text-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1 text-[#e15f0b] opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="text-sm font-semibold">Ver tours</span>
                     <svg
                       className="w-4 h-4 group-hover:translate-x-1 transition-transform"
@@ -196,7 +196,7 @@ const PopularLocationsSection = () => {
         <div className="text-center mt-12">
           <Link
             to="/tours"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Ver todos los destinos
             <svg

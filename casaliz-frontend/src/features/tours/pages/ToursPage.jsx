@@ -152,9 +152,9 @@ const ToursPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f8f5ef]">
       {/* Barra de búsqueda superior */}
-      <div className="bg-white border-b sticky top-20 z-40 shadow-sm">
+      <div className="bg-[#f8f5ef] border-b sticky top-20 z-40 shadow-sm">
         <div className="container-custom py-4">
           <SearchBar
             filters={filters}
@@ -183,11 +183,11 @@ const ToursPage = () => {
             {/* Header con resultados y botón de filtros móvil */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-3xl font-black text-gray-900 mb-2 flex items-center gap-2">
-                  {filters.location && <MapPin className="w-6 h-6 text-yellow-500" />}
+                <h1 className="text-3xl font-black text-[#233274] mb-2 flex items-center gap-2">
+                  {filters.location && <MapPin className="w-6 h-6 text-[#e15f0b]" />}
                   {filters.location || 'Todas las atracciones'}
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-[#9a98a0]">
                   {loading ? 'Cargando...' : (
                     <span>
                       <span className="font-semibold">{pagination.total}</span> experiencias encontradas
@@ -199,7 +199,7 @@ const ToursPage = () => {
               {/* Botón filtros móvil */}
               <button
                 onClick={() => setShowFilters(true)}
-                className="lg:hidden flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all shadow-md"
+                className="lg:hidden flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-[#f8f5ef] px-4 py-2 rounded-lg hover:from-[#f26b1d] hover:to-[#e15f0b] transition-all shadow-md"
               >
                 <Filter className="w-5 h-5" />
                 Filtros
@@ -208,69 +208,69 @@ const ToursPage = () => {
 
             {/* Filtros activos */}
             {Object.values(filters).some(v => v && v !== 'created_at') && (
-              <div className="flex flex-wrap items-center gap-2 mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                <span className="text-sm font-semibold text-gray-700">Filtros activos:</span>
+              <div className="flex flex-wrap items-center gap-2 mb-6 p-4 bg-[#f8f5ef] rounded-lg border border-[#e15f0b]">
+                <span className="text-sm font-semibold text-[#233274]">Filtros activos:</span>
                 {filters.search && (
-                  <span className="px-3 py-1 bg-white text-yellow-700 rounded-full text-sm flex items-center gap-2 border border-yellow-300">
+                  <span className="px-3 py-1 bg-[#f8f5ef] text-[#d14a00] rounded-full text-sm flex items-center gap-2 border border-[#e15f0b]">
                     Búsqueda: {filters.search}
                     <button
                       onClick={() => removeFilter('search')}
-                      className="hover:text-yellow-900 cursor-pointer"
+                      className="hover:text-[#d14a00] cursor-pointer"
                     >
                       ×
                     </button>
                   </span>
                 )}
                 {filters.location && (
-                  <span className="px-3 py-1 bg-white text-yellow-700 rounded-full text-sm flex items-center gap-2 border border-yellow-300">
+                  <span className="px-3 py-1 bg-[#f8f5ef] text-[#d14a00] rounded-full text-sm flex items-center gap-2 border border-[#e15f0b]">
                     Ubicación: {filters.location}
                     <button
                       onClick={() => removeFilter('location')}
-                      className="hover:text-yellow-900 cursor-pointer"
+                      className="hover:text-[#d14a00] cursor-pointer"
                     >
                       ×
                     </button>
                   </span>
                 )}
                 {(filters.minPrice || filters.maxPrice) && (
-                  <span className="px-3 py-1 bg-white text-yellow-700 rounded-full text-sm flex items-center gap-2 border border-yellow-300">
+                  <span className="px-3 py-1 bg-[#f8f5ef] text-[#d14a00] rounded-full text-sm flex items-center gap-2 border border-[#e15f0b]">
                     S/. {filters.minPrice || '0'} - {filters.maxPrice || '∞'}
                     <button
                       onClick={clearPriceRange}
-                      className="hover:text-yellow-900 cursor-pointer"
+                      className="hover:text-[#d14a00] cursor-pointer"
                     >
                       ×
                     </button>
                   </span>
                 )}
                 {filters.category && (
-                  <span className="px-3 py-1 bg-white text-yellow-700 rounded-full text-sm flex items-center gap-2 border border-yellow-300">
+                  <span className="px-3 py-1 bg-[#f8f5ef] text-[#d14a00] rounded-full text-sm flex items-center gap-2 border border-[#e15f0b]">
                     Categoría
                     <button
                       onClick={() => removeFilter('category')}
-                      className="hover:text-yellow-900 cursor-pointer"
+                      className="hover:text-[#d14a00] cursor-pointer"
                     >
                       ×
                     </button>
                   </span>
                 )}
                 {filters.rating && (
-                  <span className="px-3 py-1 bg-white text-yellow-700 rounded-full text-sm flex items-center gap-2 border border-yellow-300">
+                  <span className="px-3 py-1 bg-[#f8f5ef] text-[#d14a00] rounded-full text-sm flex items-center gap-2 border border-[#e15f0b]">
                     Rating: {filters.rating}⭐+
                     <button
                       onClick={() => removeFilter('rating')}
-                      className="hover:text-yellow-900 cursor-pointer"
+                      className="hover:text-[#d14a00] cursor-pointer"
                     >
                       ×
                     </button>
                   </span>
                 )}
                 {filters.duration && (
-                  <span className="px-3 py-1 bg-white text-yellow-700 rounded-full text-sm flex items-center gap-2 border border-yellow-300">
+                  <span className="px-3 py-1 bg-[#f8f5ef] text-[#d14a00] rounded-full text-sm flex items-center gap-2 border border-[#e15f0b]">
                     Duración
                     <button
                       onClick={() => removeFilter('duration')}
-                      className="hover:text-yellow-900 cursor-pointer"
+                      className="hover:text-[#d14a00] cursor-pointer"
                     >
                       ×
                     </button>
@@ -278,7 +278,7 @@ const ToursPage = () => {
                 )}
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-red-600 hover:text-red-700 font-semibold"
+                  className="text-sm text-[#d14a00] hover:text-[#d14a00] font-semibold"
                 >
                   Limpiar todos
                 </button>
@@ -289,13 +289,13 @@ const ToursPage = () => {
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
-                    <div className="h-56 bg-gray-200"></div>
+                  <div key={i} className="bg-[#f8f5ef] rounded-2xl overflow-hidden animate-pulse">
+                    <div className="h-56 bg-[#f8f5ef]"></div>
                     <div className="p-5 space-y-3">
-                      <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-                      <div className="h-6 bg-gray-200 rounded"></div>
-                      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                      <div className="h-8 bg-gray-200 rounded"></div>
+                      <div className="h-4 bg-[#f8f5ef] rounded w-1/3"></div>
+                      <div className="h-6 bg-[#f8f5ef] rounded"></div>
+                      <div className="h-4 bg-[#f8f5ef] rounded w-1/2"></div>
+                      <div className="h-8 bg-[#f8f5ef] rounded"></div>
                     </div>
                   </div>
                 ))}
@@ -315,12 +315,12 @@ const ToursPage = () => {
                     {pagination.currentPage < pagination.lastPage ? (
                       <button
                         onClick={handleLoadMore}
-                        className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl"
+                        className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl"
                       >
                         Ver más ({pagination.total - tours.length} restantes)
                       </button>
                     ) : (
-                      <p className="text-gray-600">
+                      <p className="text-[#9a98a0]">
                         Mostrando todos los resultados ({pagination.total} tours)
                       </p>
                     )}
@@ -330,17 +330,17 @@ const ToursPage = () => {
             ) : (
               <div className="text-center py-20">
                 <div className="mb-4">
-                  <Search className="w-16 h-16 text-gray-300 mx-auto" />
+                  <Search className="w-16 h-16 text-[#9a98a0] mx-auto" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                <h3 className="text-2xl font-bold text-[#233274] mb-2">
                   No se encontraron resultados
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-[#9a98a0] mb-6">
                   Intenta ajustar tus filtros o buscar algo diferente
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl"
+                  className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl"
                 >
                   Limpiar filtros
                 </button>
@@ -353,7 +353,7 @@ const ToursPage = () => {
       {/* Sidebar de Filtros - Móvil */}
       {showFilters && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 lg:hidden">
-          <div className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-white shadow-2xl overflow-y-auto animate-slide-in">
+          <div className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-[#f8f5ef] shadow-2xl overflow-y-auto animate-slide-in">
             <FilterSidebar
               filters={filters}
               onFilterChange={handleFilterChange}

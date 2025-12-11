@@ -46,7 +46,7 @@ const BookingForm = ({ tour, onSubmit, loading }) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Fecha */}
       <div>
-        <label className="block text-lg font-bold text-gray-900 mb-4">
+        <label className="block text-lg font-bold text-[#233274] mb-4">
           <Calendar className="w-5 h-5 inline mr-2 text-primary" />
           Fecha del Tour
         </label>
@@ -56,13 +56,13 @@ const BookingForm = ({ tour, onSubmit, loading }) => {
           minDate={new Date()}
         />
         {errors.date && (
-          <p className="text-red-600 text-sm mt-2">{errors.date}</p>
+          <p className="text-[#d14a00] text-sm mt-2">{errors.date}</p>
         )}
       </div>
 
       {/* Personas */}
       <div>
-        <label className="block text-lg font-bold text-gray-900 mb-4">
+        <label className="block text-lg font-bold text-[#233274] mb-4">
           <Users className="w-5 h-5 inline mr-2 text-primary" />
           Número de Personas
         </label>
@@ -77,13 +77,13 @@ const BookingForm = ({ tour, onSubmit, loading }) => {
           onInfantsChange={(infants) => setFormData({ ...formData, infants })}
         />
         {errors.guests && (
-          <p className="text-red-600 text-sm mt-2">{errors.guests}</p>
+          <p className="text-[#d14a00] text-sm mt-2">{errors.guests}</p>
         )}
       </div>
 
       {/* Solicitudes Especiales */}
       <div>
-        <label className="block text-lg font-bold text-gray-900 mb-4">
+        <label className="block text-lg font-bold text-[#233274] mb-4">
           <MessageSquare className="w-5 h-5 inline mr-2 text-primary" />
           Solicitudes Especiales (Opcional)
         </label>
@@ -91,7 +91,7 @@ const BookingForm = ({ tour, onSubmit, loading }) => {
           value={formData.specialRequests}
           onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
           rows="4"
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none resize-none"
+          className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none resize-none"
           placeholder="Alergias, restricciones dietéticas, necesidades especiales..."
         />
       </div>
@@ -100,7 +100,7 @@ const BookingForm = ({ tour, onSubmit, loading }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-primary hover:bg-gradient-secondary text-gray-900 font-bold px-6 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-gradient-primary hover:bg-gradient-secondary text-[#233274] font-bold px-6 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Procesando...' : 'Continuar al Pago'}
       </button>

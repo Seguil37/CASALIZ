@@ -66,15 +66,15 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">
+      <h2 className="text-xl font-bold text-[#233274] mb-6">
         Imágenes del Tour
       </h2>
 
       {/* Info */}
-      <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
+      <div className="bg-[#f8f5ef] border-l-4 border-[#233274] p-4 rounded-lg">
         <div className="flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-blue-800">
+          <AlertCircle className="w-5 h-5 text-[#233274] flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-[#1a2555]">
             <p className="font-semibold mb-1">Recomendaciones:</p>
             <ul className="list-disc list-inside space-y-1">
               <li>Mínimo 3 imágenes, máximo 5</li>
@@ -88,7 +88,7 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
 
       {/* Add Image Form */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-[#233274] mb-2">
           Agregar Imagen (URL)
         </label>
         <div className="flex gap-2">
@@ -97,19 +97,19 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
             value={newImageUrl}
             onChange={(e) => setNewImageUrl(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddImage()}
-            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none"
+            className="flex-1 px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
             placeholder="https://ejemplo.com/imagen.jpg"
           />
           <button
             type="button"
             onClick={handleAddImage}
-            className="px-6 py-3 bg-primary text-gray-900 font-bold rounded-xl hover:bg-primary/90 transition-all"
+            className="px-6 py-3 bg-primary text-[#233274] font-bold rounded-xl hover:bg-primary/90 transition-all"
           >
             <Upload className="w-5 h-5" />
           </button>
         </div>
         {error && (
-          <p className="text-sm text-red-600 mt-1">{error}</p>
+          <p className="text-sm text-[#d14a00] mt-1">{error}</p>
         )}
       </div>
 
@@ -119,7 +119,7 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
           {imageUrls.map((url, index) => (
             <div
               key={index}
-              className="relative group border-2 border-gray-200 rounded-xl overflow-hidden hover:border-primary transition-all"
+              className="relative group border-2 border-[#9a98a0] rounded-xl overflow-hidden hover:border-primary transition-all"
             >
               <img
                 src={url}
@@ -132,7 +132,7 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
               
               {/* Badge de imagen principal */}
               {index === 0 && (
-                <div className="absolute top-2 left-2 bg-primary text-gray-900 px-3 py-1 rounded-full text-xs font-bold">
+                <div className="absolute top-2 left-2 bg-primary text-[#233274] px-3 py-1 rounded-full text-xs font-bold">
                   Imagen Principal
                 </div>
               )}
@@ -143,7 +143,7 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
                   <button
                     type="button"
                     onClick={() => handleSetAsFeatured(index)}
-                    className="px-4 py-2 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-all text-sm"
+                    className="px-4 py-2 bg-[#f8f5ef] text-[#233274] rounded-lg font-semibold hover:bg-[#f8f5ef] transition-all text-sm"
                   >
                     Hacer Principal
                   </button>
@@ -151,7 +151,7 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(index)}
-                  className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all"
+                  className="p-2 bg-[#f8f5ef]0 text-[#f8f5ef] rounded-lg hover:bg-[#d14a00] transition-all"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -160,10 +160,10 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
           ))}
         </div>
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center">
-          <ImageIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-500 mb-2">No has agregado imágenes aún</p>
-          <p className="text-sm text-gray-400">
+        <div className="border-2 border-dashed border-[#9a98a0] rounded-xl p-12 text-center">
+          <ImageIcon className="w-16 h-16 text-[#9a98a0] mx-auto mb-4" />
+          <p className="text-[#9a98a0] mb-2">No has agregado imágenes aún</p>
+          <p className="text-sm text-[#9a98a0]">
             Agrega al menos 3 imágenes para publicar tu tour
           </p>
         </div>
@@ -171,10 +171,10 @@ const TourImages  = ({ formData, updateFormData, errors = {} }) => {
 
       {/* Counter */}
       <div className="text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-[#9a98a0]">
           {imageUrls.length} de 5 imágenes
           {imageUrls.length < 3 && (
-            <span className="text-red-600 ml-2">
+            <span className="text-[#d14a00] ml-2">
               (Mínimo 3 requeridas)
             </span>
           )}

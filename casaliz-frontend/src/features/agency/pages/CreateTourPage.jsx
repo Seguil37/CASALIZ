@@ -186,28 +186,28 @@ const CreateTourPage = () => {
   const CurrentStepComponent = STEPS[currentStep - 1].component;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[#f8f5ef] py-8">
       <div className="container-custom max-w-4xl">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => navigate('/agency/dashboard')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            className="flex items-center gap-2 text-[#9a98a0] hover:text-[#233274] mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
             Volver al dashboard
           </button>
           
-          <h1 className="text-3xl font-black text-gray-900 mb-2">
+          <h1 className="text-3xl font-black text-[#233274] mb-2">
             Crear Nuevo Tour
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[#9a98a0]">
             Completa la información para publicar tu experiencia
           </p>
         </div>
 
         {/* Progress Steps */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between mb-8">
             {STEPS.map((step, index) => (
               <div key={step.id} className="flex-1 flex items-center">
@@ -215,8 +215,8 @@ const CreateTourPage = () => {
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
                       currentStep >= step.id
-                        ? 'bg-primary text-gray-900'
-                        : 'bg-gray-200 text-gray-500'
+                        ? 'bg-primary text-[#233274]'
+                        : 'bg-[#f8f5ef] text-[#9a98a0]'
                     }`}
                   >
                     {currentStep > step.id ? (
@@ -232,7 +232,7 @@ const CreateTourPage = () => {
                 {index < STEPS.length - 1 && (
                   <div
                     className={`h-1 flex-1 transition-all ${
-                      currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
+                      currentStep > step.id ? 'bg-primary' : 'bg-[#f8f5ef]'
                     }`}
                   />
                 )}
@@ -242,9 +242,9 @@ const CreateTourPage = () => {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6 animate-fade-in flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-red-700 text-sm">{error}</p>
+            <div className="bg-[#f8f5ef] border-l-4 border-[#d14a00] p-4 rounded-lg mb-6 animate-fade-in flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
+              <p className="text-[#d14a00] text-sm">{error}</p>
             </div>
           )}
 
@@ -261,7 +261,7 @@ const CreateTourPage = () => {
           <button
             onClick={handlePrevious}
             disabled={currentStep === 1}
-            className="flex items-center gap-2 px-6 py-3 border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 border-2 border-[#9a98a0] text-[#233274] font-bold rounded-xl hover:bg-[#f8f5ef] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowLeft className="w-5 h-5" />
             Anterior
@@ -281,11 +281,11 @@ const CreateTourPage = () => {
                 <button
                   onClick={() => handleSubmit(true)}
                   disabled={loading}
-                  className="flex items-center gap-2 bg-gradient-primary text-gray-900 font-bold px-6 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+                  className="flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
                 >
                   {loading ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-[#233274] border-t-transparent rounded-full animate-spin" />
                       Publicando...
                     </>
                   ) : (
@@ -299,7 +299,7 @@ const CreateTourPage = () => {
             ) : (
               <button
                 onClick={handleNext}
-                className="flex items-center gap-2 bg-gradient-primary text-gray-900 font-bold px-6 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl"
+                className="flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl"
               >
                 Siguiente
                 <ArrowRight className="w-5 h-5" />

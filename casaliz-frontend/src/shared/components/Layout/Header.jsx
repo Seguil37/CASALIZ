@@ -23,7 +23,7 @@ const Header = () => {
   const cartCount = items.length;
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="bg-[#f8f5ef] shadow-md sticky top-0 z-50">
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           {/* Logo y Buscador */}
@@ -45,7 +45,7 @@ const Header = () => {
                   placeholder="¿A dónde quieres ir?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all bg-white text-[#233274] placeholder-[#9a98a0]"
+                  className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all bg-[#f8f5ef] text-[#233274] placeholder-[#9a98a0]"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                 <button
@@ -119,7 +119,7 @@ const Header = () => {
                 </button>
 
                 {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-[#9a98a0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="absolute right-0 mt-2 w-48 bg-[#f8f5ef] rounded-xl shadow-xl border border-[#9a98a0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <Link
                     to="/profile"
                     className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] rounded-t-xl transition-colors"
@@ -167,7 +167,7 @@ const Header = () => {
 
                   <button
                     onClick={logout}
-                    className="block w-full text-left px-4 py-3 hover:bg-red-50 text-red-600 rounded-b-xl transition-colors border-t"
+                    className="block w-full text-left px-4 py-3 hover:bg-[#f8f5ef] text-[#d14a00] rounded-b-xl transition-colors border-t"
                   >
                     Cerrar Sesión
                   </button>

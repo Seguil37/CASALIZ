@@ -2,7 +2,7 @@
 
 @layer base {
   body {
-    @apply font-sans bg-white text-gray-900;
+    @apply font-sans bg-[#f8f5ef] text-[#233274];
 
   }
 
@@ -19,11 +19,11 @@
 @layer utilities {
   /* Gradientes personalizados */
   .gradient-primary {
-    background: linear-gradient(135deg, #FFFF00 0%, #FFA500 100%);
+    background: linear-gradient(135deg, #e15f0b 0%, #d14a00 100%);
   }
 
   .gradient-secondary {
-    background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+    background: linear-gradient(135deg, #233274 0%, #1a2555 100%);
   }
 
   /* Animaciones personalizadas */

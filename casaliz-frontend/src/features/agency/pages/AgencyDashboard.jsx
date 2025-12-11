@@ -51,28 +51,28 @@ const AgencyDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[#f8f5ef] py-8">
       <div className="container-custom">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-black text-gray-900 mb-2">
+            <h1 className="text-3xl font-black text-[#233274] mb-2">
               ¡Hola, {user?.name}! 👋
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[#9a98a0]">
               Gestiona tus tours y reservas desde aquí
             </p>
           </div>
           <Link
             to="/agency/tours/create"
-            className="mt-4 md:mt-0 inline-flex items-center gap-2 bg-gradient-primary hover:bg-gradient-secondary text-gray-900 font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
+            className="mt-4 md:mt-0 inline-flex items-center gap-2 bg-gradient-primary hover:bg-gradient-secondary text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
           >
             <Plus className="w-5 h-5" />
             Crear Tour
@@ -110,9 +110,9 @@ const AgencyDashboard = () => {
         </div>
 
         {/* Recent Tours */}
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-black text-gray-900">
+            <h2 className="text-2xl font-black text-[#233274]">
               Tus Tours Recientes
             </h2>
             <Link
@@ -125,13 +125,13 @@ const AgencyDashboard = () => {
 
           {recentTours.length === 0 ? (
             <div className="text-center py-12">
-              <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 mb-4">
+              <Calendar className="w-16 h-16 text-[#9a98a0] mx-auto mb-4" />
+              <p className="text-[#9a98a0] mb-4">
                 Aún no has creado ningún tour
               </p>
               <Link
                 to="/agency/tours/create"
-                className="inline-flex items-center gap-2 bg-gradient-primary text-gray-900 font-bold px-6 py-3 rounded-xl"
+                className="inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl"
               >
                 <Plus className="w-5 h-5" />
                 Crear mi primer tour
@@ -153,19 +153,19 @@ const AgencyDashboard = () => {
 // Stat Card Component
 const StatCard = ({ icon: Icon, title, value, color }) => {
   const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    purple: 'bg-purple-50 text-purple-600',
-    orange: 'bg-orange-50 text-orange-600',
+    blue: 'bg-[#f8f5ef] text-[#233274]',
+    green: 'bg-[#f8f5ef] text-[#233274]',
+    purple: 'bg-[#f8f5ef] text-[#233274]',
+    orange: 'bg-[#f8f5ef] text-[#d14a00]',
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+    <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
       <div className={`w-12 h-12 rounded-xl ${colorClasses[color]} flex items-center justify-center mb-4`}>
         <Icon className="w-6 h-6" />
       </div>
-      <p className="text-gray-600 text-sm mb-1">{title}</p>
-      <p className="text-3xl font-black text-gray-900">{value}</p>
+      <p className="text-[#9a98a0] text-sm mb-1">{title}</p>
+      <p className="text-3xl font-black text-[#233274]">{value}</p>
     </div>
   );
 };
@@ -174,9 +174,9 @@ const StatCard = ({ icon: Icon, title, value, color }) => {
 const TourRow = ({ tour }) => {
   const getStatusBadge = (status) => {
     const badges = {
-      published: { text: 'Publicado', class: 'bg-green-100 text-green-700' },
-      draft: { text: 'Borrador', class: 'bg-gray-100 text-gray-700' },
-      pending: { text: 'Pendiente', class: 'bg-yellow-100 text-yellow-700' },
+      published: { text: 'Publicado', class: 'bg-[#f8f5ef] text-[#233274]' },
+      draft: { text: 'Borrador', class: 'bg-[#f8f5ef] text-[#233274]' },
+      pending: { text: 'Pendiente', class: 'bg-[#f8f5ef] text-[#d14a00]' },
     };
 
     const badge = badges[status] || badges.draft;
@@ -189,7 +189,7 @@ const TourRow = ({ tour }) => {
   };
 
   return (
-    <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-primary transition-colors">
+    <div className="flex items-center gap-4 p-4 border border-[#9a98a0] rounded-xl hover:border-primary transition-colors">
       <img
         src={tour.featured_image || 'https://via.placeholder.com/100'}
         alt={tour.title}
@@ -197,8 +197,8 @@ const TourRow = ({ tour }) => {
       />
       
       <div className="flex-1">
-        <h3 className="font-bold text-gray-900 mb-1">{tour.title}</h3>
-        <div className="flex items-center gap-4 text-sm text-gray-600">
+        <h3 className="font-bold text-[#233274] mb-1">{tour.title}</h3>
+        <div className="flex items-center gap-4 text-sm text-[#9a98a0]">
           <span>S/. {tour.price}</span>
           <span>·</span>
           <span>{tour.total_bookings || 0} reservas</span>
@@ -210,17 +210,17 @@ const TourRow = ({ tour }) => {
       <div className="flex items-center gap-2">
         <Link
           to={`/tours/${tour.id}`}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
           title="Ver"
         >
-          <Eye className="w-5 h-5 text-gray-600" />
+          <Eye className="w-5 h-5 text-[#9a98a0]" />
         </Link>
         <Link
           to={`/agency/tours/${tour.id}/edit`}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
           title="Editar"
         >
-          <Edit className="w-5 h-5 text-gray-600" />
+          <Edit className="w-5 h-5 text-[#9a98a0]" />
         </Link>
       </div>
     </div>
