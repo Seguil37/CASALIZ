@@ -77,7 +77,7 @@ const PopularLocationsSection = () => {
           {locations.map((location, index) => (
             <Link
               key={index}
-              to={`/tours?location=${encodeURIComponent(location.name)}`}
+              to={`/projects?location=${encodeURIComponent(location.name)}`}
               className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
@@ -140,7 +140,7 @@ const PopularLocationsSection = () => {
         {/* Botón Ver Más */}
         <div className="text-center mt-12">
           <Link
-            to="/tours"
+            to="/projects"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Ver todos los proyectos

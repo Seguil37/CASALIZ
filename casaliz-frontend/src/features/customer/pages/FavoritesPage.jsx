@@ -25,7 +25,7 @@ const FavoritesPage = () => {
           <Heart className="w-6 h-6 text-[#d14a00]" />
           <div>
             <h1 className="text-3xl font-black text-[#233274]">Mis favoritos</h1>
-            <p className="text-[#9a98a0]">Guarda y revisa los tours que más te interesan.</p>
+            <p className="text-[#9a98a0]">Guarda y revisa los proyectos que más te interesan.</p>
           </div>
         </div>
 
@@ -39,7 +39,7 @@ const FavoritesPage = () => {
           </div>
         ) : (
           <div className="bg-[#f8f5ef] rounded-xl shadow-md p-8 text-center">
-            <p className="text-[#233274] mb-2">Todavía no tienes tours en tu lista.</p>
+            <p className="text-[#233274] mb-2">Todavía no tienes proyectos en tu lista.</p>
             <p className="text-sm text-[#9a98a0]">Explora y agrega tus favoritos para verlos aquí.</p>
           </div>
         )}

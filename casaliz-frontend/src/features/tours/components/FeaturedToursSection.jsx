@@ -77,7 +77,7 @@ const FeaturedToursSection = () => {
             </h2>
           </div>
           <Link
-            to="/tours"
+            to="/projects"
             className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold"
           >
             Ver todos los proyectos

@@ -18,7 +18,7 @@ const HeroSection = () => {
     if (searchData.destination) params.append('location', searchData.destination);
     if (searchData.checkIn) params.append('from', searchData.checkIn);
     if (searchData.checkOut) params.append('to', searchData.checkOut);
-    navigate(`/tours?${params.toString()}`);
+    navigate(`/projects?${params.toString()}`);
   };
 
   return (

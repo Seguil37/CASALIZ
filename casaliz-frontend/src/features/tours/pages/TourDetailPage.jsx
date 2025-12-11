@@ -1,11 +1,11 @@
 // src/features/tours/pages/TourDetailPage.jsx
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { MapPin, Home, ArrowLeft } from 'lucide-react';
 import api from '../../../shared/utils/api';
 
 const TourDetailPage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -14,7 +14,7 @@ const TourDetailPage = () => {
     const fetchProject = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`/projects/${id}`);
+        const response = await api.get(`/projects/${slug}`);
         setProject(response.data);
       } catch (err) {
         setError('Proyecto no encontrado');
@@ -24,7 +24,11 @@ const TourDetailPage = () => {
     };
 
     fetchProject();
-  }, [id]);
+  }, [slug]);
+
+  if (!slug) {
+    return <Navigate to="/projects" replace />;
+  }
 
   if (loading) {
     return <div className="container-custom py-16 text-center">Cargando proyecto...</div>;
@@ -34,7 +38,7 @@ const TourDetailPage = () => {
     return (
       <div className="container-custom py-16 text-center space-y-4">
         <p className="text-xl text-[#233274] font-semibold">{error || 'Proyecto no encontrado'}</p>
-        <Link to="/tours" className="text-[#e15f0b] font-semibold hover:underline inline-flex items-center gap-2">
+        <Link to="/projects" className="text-[#e15f0b] font-semibold hover:underline inline-flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Volver al listado
         </Link>
       </div>
@@ -42,6 +46,7 @@ const TourDetailPage = () => {
   }
 
   const hero = project.hero_image || project.images?.[0]?.path;
+  const description = project.summary || project.description || 'Próximamente más detalles del proyecto.';
 
   return (
     <div className="bg-[#f8f5ef] min-h-screen">
@@ -57,7 +62,11 @@ const TourDetailPage = () => {
           <h1 className="text-3xl md:text-4xl font-black">{project.title}</h1>
           <div className="flex items-center gap-3 text-sm opacity-90">
             <MapPin className="w-4 h-4" />
-            <span>{project.city}{project.state ? `, ${project.state}` : ''}</span>
+            <span>
+              {project.city}
+              {project.state ? `, ${project.state}` : ''}
+              {project.country ? `, ${project.country}` : ''}
+            </span>
           </div>
         </div>
       </div>
@@ -66,7 +75,7 @@ const TourDetailPage = () => {
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#ebe7df]">
             <h2 className="text-xl font-bold text-[#233274] mb-3">Descripción</h2>
-            <p className="text-[#4b4b4b] leading-relaxed whitespace-pre-line">{project.description || 'Próximamente más detalles del proyecto.'}</p>
+            <p className="text-[#4b4b4b] leading-relaxed whitespace-pre-line">{description}</p>
           </div>
 
           {project.images?.length > 0 && (

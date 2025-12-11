@@ -88,7 +88,7 @@ const ReferenceContentSection = () => {
           {content[activeTab].map((item, index) => (
             <Link
               key={index}
-              to={`/tours?tema=${encodeURIComponent(item.name)}`}
+              to={`/projects?tema=${encodeURIComponent(item.name)}`}
               className="group bg-[#f8f5ef] rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-[#f8f5ef] hover:border-[#e15f0b]"
               style={{ animationDelay: `${index * 0.02}s` }}
             >
@@ -115,7 +115,7 @@ const ReferenceContentSection = () => {
         {/* Ver más */}
         <div className="text-center mt-12">
           <Link
-            to="/tours"
+            to="/projects"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Ver todos los recursos
