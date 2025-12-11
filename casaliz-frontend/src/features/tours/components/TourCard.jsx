@@ -158,20 +158,13 @@ const TourCard = ({ tour }) => {
           <span className="text-sm text-[#9a98a0]">({tour.total_reviews || 0})</span>
         </div>
 
-        {/* Precio */}
+        {/* Área y acción */}
         <div className="flex items-end justify-between">
           <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-[#233274]">
-                S/. {tour.discount_price || tour.price}
-              </span>
-              {tour.discount_price && (
-                <span className="text-sm text-[#9a98a0] line-through">
-                  S/. {tour.price}
-                </span>
-              )}
+            <div className="text-xs text-[#9a98a0]">Área estimada</div>
+            <div className="text-2xl font-bold text-[#233274]">
+              {surfaceArea || 'Consultar'}
             </div>
-            <span className="text-xs text-[#9a98a0]">presupuesto estimado</span>
           </div>
           <button className="bg-[#e15f0b] hover:bg-[#d14a00] text-[#233274] font-bold py-2 px-4 rounded-lg transition-colors text-sm cursor-pointer">
             Ver proyecto

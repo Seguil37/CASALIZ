@@ -3,98 +3,46 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, TrendingUp, Loader2, Star } from 'lucide-react';
-import api from '../../../shared/utils/api';
 
 const PopularLocationsSection = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchPopularLocations();
-  }, []);
-
-  const fetchPopularLocations = async () => {
-    try {
-      // Obtener todos los tours publicados
-      const response = await api.get('/tours', { 
-        params: { 
-          per_page: 100 // Obtener todos para contar por ubicación
-        } 
-      });
-
-      const tours = response.data.data || response.data;
-
-      // Agrupar tours por ciudad
-      const locationCounts = {};
-      const locationImages = {};
-
-      tours.forEach((tour) => {
-        const city = tour.location_city;
-        if (city) {
-          locationCounts[city] = (locationCounts[city] || 0) + 1;
-          
-          // Guardar la primera imagen encontrada para cada ciudad
-          if (!locationImages[city] && tour.featured_image) {
-            locationImages[city] = tour.featured_image;
-          }
-        }
-      });
-
-      // Convertir a array y ordenar por cantidad de experiencias
-      const sortedLocations = Object.entries(locationCounts)
-        .map(([name, count]) => ({
-          name,
-          experiences: count,
-          image: locationImages[name] || getDefaultImage(name),
-          rating: (Math.random() * 2 + 3).toFixed(1), // Rating aleatorio entre 3.0 y 5.0
-        }))
-        .sort((a, b) => b.experiences - a.experiences)
-        .slice(0, 9); // Mostrar top 9
-
-      setLocations(sortedLocations);
-    } catch (error) {
-      console.error('Error fetching locations:', error);
-      // Fallback a datos de ejemplo
-      setLocations(fallbackLocations);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Función para obtener imagen por defecto según la ciudad
-  const getDefaultImage = (cityName) => {
-    const defaultImages = {
-      'Miraflores': 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
-      'San Isidro': 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=800',
-      'Barranco': 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
-      'Surco': 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=800',
-      'La Molina': 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800',
-    };
-
-    return defaultImages[cityName] || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
-  };
-
-  // Datos de fallback
-  const fallbackLocations = [
+  const projectLocations = [
     {
-      name: 'Miraflores',
-      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
-      experiences: 24,
-      rating: 4.9,
-    },
-    {
-      name: 'San Isidro',
-      image: 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=800',
-      experiences: 18,
+      name: 'Cusco Centro',
+      subtitle: 'Proyectos de vivienda e interiores',
+      image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800',
+      projects: 32,
       rating: 4.8,
     },
     {
-      name: 'Barranco',
-      image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800',
-      experiences: 15,
+      name: 'San Sebastián',
+      subtitle: 'Casas unifamiliares y multifamiliares',
+      image: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=800',
+      projects: 28,
       rating: 4.7,
     },
+    {
+      name: 'San Jerónimo',
+      subtitle: 'Casas de campo y proyectos residenciales',
+      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      projects: 22,
+      rating: 4.6,
+    },
+    {
+      name: 'Santiago',
+      subtitle: 'Vivienda y comercio local',
+      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      projects: 18,
+      rating: 4.6,
+    },
   ];
+
+  useEffect(() => {
+    setLocations(projectLocations);
+    setLoading(false);
+  }, []);
 
   if (loading) {
     return (
@@ -157,11 +105,12 @@ const PopularLocationsSection = () => {
                 <h3 className="text-2xl font-bold text-[#233274] mb-2 group-hover:text-[#e15f0b] transition-colors">
                   {location.name}
                 </h3>
+                <p className="text-[#9a98a0] mb-3">{location.subtitle}</p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[#9a98a0]">
                     <MapPin className="w-4 h-4 text-[#e15f0b]" />
                     <span className="text-sm font-medium">
-                      {location.experiences} {location.experiences === 1 ? 'proyecto' : 'proyectos'}
+                      {location.projects} {location.projects === 1 ? 'proyecto' : 'proyectos'}
                     </span>
                   </div>
                   

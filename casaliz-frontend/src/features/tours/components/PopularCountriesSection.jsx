@@ -8,28 +8,32 @@ const PopularCountriesSection = () => {
 
   const countries = [
     {
-      name: 'Vivienda unifamiliar',
-      image: 'https://images.unsplash.com/photo-1505693415763-3ed5e04ba4cd?w=600',
-      tours: 45,
+      name: 'Diseños y Proyectos Arquitectónicos',
+      subtitle: 'Viviendas, multifamiliares, casas de campo e interiores 3D',
+      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600',
+      projectsCount: 45,
       rating: 4.9,
     },
     {
-      name: 'Departamentos y multifamiliares',
-      image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=600',
-      tours: 32,
+      name: 'Licencias y Trámites Municipales',
+      subtitle: 'Gestión completa de licencias y documentos',
+      image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600',
+      projectsCount: 60,
       rating: 4.8,
     },
     {
-      name: 'Oficinas y espacios corporativos',
-      image: 'https://images.unsplash.com/photo-1529429617124-aee314d1b56b?w=600',
-      tours: 28,
+      name: 'Habilitaciones Urbanas y Regularizaciones',
+      subtitle: 'Lotes, prescripción adquisitiva y visación de planos',
+      image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=600',
+      projectsCount: 38,
       rating: 4.7,
     },
     {
-      name: 'Locales comerciales',
-      image: 'https://images.unsplash.com/photo-1433838552652-f9a46b332c40?w=600',
-      tours: 19,
-      rating: 4.6,
+      name: 'Topografía y Gestión de Terrenos',
+      subtitle: 'Levantamientos topográficos y asesoría en terrenos',
+      image: 'https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?w=600',
+      projectsCount: 25,
+      rating: 4.8,
     },
   ];
 
@@ -84,12 +88,12 @@ const PopularCountriesSection = () => {
           <div className="flex items-center gap-3">
             <Globe className="w-8 h-8 text-[#e15f0b]" />
             <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
-              Tipos de proyectos más solicitados
+              Nuestros servicios principales
             </h2>
           </div>
           <div className="hidden md:flex items-center gap-2 text-[#e15f0b]">
             <Star className="w-5 h-5 fill-current" />
-            <span className="font-semibold">Explora proyectos de este tipo</span>
+            <span className="font-semibold">Explora nuestros servicios clave</span>
           </div>
         </div>
 
@@ -115,7 +119,7 @@ const PopularCountriesSection = () => {
                 {/* Overlay con gradiente */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
 
-                {/* Nombre del país */}
+                {/* Nombre del servicio */}
                 <div className="absolute top-6 left-6">
                   <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-xl border border-white/20">
                     <h3 className="text-[#f8f5ef] font-bold text-2xl">{country.name}</h3>
@@ -131,14 +135,15 @@ const PopularCountriesSection = () => {
                         <span className="font-bold text-[#233274]">{country.rating}</span>
                       </div>
                       <div className="text-sm text-[#9a98a0]">
-                        {country.tours} proyectos
+                        {country.projectsCount} proyectos
                       </div>
                     </div>
+                    <p className="text-sm text-[#233274]">{country.subtitle}</p>
                   </div>
 
                   {/* Botón de acción (aparece al hover) */}
                   <button className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100">
-                    Explorar proyectos de este tipo
+                    Explorar servicios de este tipo
                   </button>
                 </div>
               </div>
