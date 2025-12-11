@@ -29,11 +29,11 @@ const Header = () => {
           {/* Logo y Buscador */}
           <div className="flex items-center gap-8 flex-1">
             <Link to="/" className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 w-12 h-12 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-black text-gray-900">B&G</span>
+              <div className="bg-gradient-to-r from-[#233274] to-[#e15f0b] w-12 h-12 rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-black text-[#f8f5ef]">B&G</span>
               </div>
-              <span className="text-2xl font-black text-gray-900 hidden sm:block">
-                BOOK<span className="text-yellow-500">&</span>GO
+              <span className="text-2xl font-black text-[#233274] hidden sm:block">
+                BOOK<span className="text-[#e15f0b]">&</span>GO
               </span>
             </Link>
 
@@ -45,12 +45,12 @@ const Header = () => {
                   placeholder="¿A dónde quieres ir?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all bg-white text-[#233274] placeholder-[#9a98a0]"
                 />
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
                 >
                   Buscar
                 </button>
@@ -66,7 +66,7 @@ const Header = () => {
                 to="/contacto"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-gray-600 hover:text-yellow-500 transition-colors"
+                className="flex items-center gap-1 text-[#233274] hover:text-[#e15f0b] transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 <span className="hidden lg:inline">Contactanos</span>
@@ -77,7 +77,7 @@ const Header = () => {
             {!isAuthenticated || user?.role === 'customer' ? (
               <Link
                 to="/register?role=agency"
-                className="hidden md:block text-gray-700 hover:text-yellow-500 font-semibold transition-colors"
+                className="hidden md:block text-[#233274] hover:text-[#e15f0b] font-semibold transition-colors"
               >
                 Hazte Proveedor
               </Link>
@@ -86,11 +86,11 @@ const Header = () => {
             {/* Carrito */}
             <Link
               to="/cart"
-              className="relative p-2 hover:bg-gray-100 rounded-full transition-all"
+              className="relative p-2 hover:bg-[#f8f5ef] rounded-full transition-all"
             >
-              <ShoppingCart className="w-6 h-6 text-gray-700" />
+              <ShoppingCart className="w-6 h-6 text-[#233274]" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-[#f8f5ef] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
                   {cartCount}
                 </span>
               )}
@@ -99,7 +99,7 @@ const Header = () => {
             {/* Usuario */}
             {isAuthenticated ? (
               <div className="relative group">
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-full transition-all">
+                <button className="flex items-center gap-2 p-2 hover:bg-[#f8f5ef] rounded-full transition-all">
                   {user?.avatar ? (
                     <img
                       src={user.avatar}
@@ -107,22 +107,22 @@ const Header = () => {
                       className="w-8 h-8 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold text-gray-900">
+                    <div className="w-8 h-8 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold text-[#f8f5ef]">
                         {user?.name?.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   )}
-                  <span className="hidden md:block font-medium text-gray-700">
+                  <span className="hidden md:block font-medium text-[#233274]">
                     {user?.name?.split(' ')[0]}
                   </span>
                 </button>
 
                 {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-[#9a98a0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <Link
                     to="/profile"
-                    className="block px-4 py-3 hover:bg-gray-50 rounded-t-xl transition-colors"
+                    className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] rounded-t-xl transition-colors"
                   >
                     Mi Perfil
                   </Link>
@@ -131,7 +131,7 @@ const Header = () => {
                   {user?.role === 'customer' && (
                     <Link
                       to="/profile/bookings"
-                      className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors"
                     >
                       Mis Reservas
                     </Link>
@@ -141,7 +141,7 @@ const Header = () => {
                   {user?.role === 'customer' && (
                     <Link
                       to="/favorites"
-                      className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors"
                     >
                       Favoritos
                     </Link>
@@ -150,7 +150,7 @@ const Header = () => {
                   {user?.role === 'agency' && (
                     <Link
                       to="/agency/dashboard"
-                      className="block px-4 py-3 hover:bg-gray-50 transition-colors border-t"
+                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors border-t"
                     >
                       Dashboard Agencia
                     </Link>
@@ -159,7 +159,7 @@ const Header = () => {
                   {user?.role === 'customer' && (
                     <Link
                       to="/customer/dashboard"
-                      className="block px-4 py-3 hover:bg-gray-50 transition-colors border-t"
+                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors border-t"
                     >
                       Dashboard
                     </Link>
@@ -176,7 +176,7 @@ const Header = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
+                className="flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
               >
                 <User className="w-5 h-5" />
                 <span className="hidden md:block">Iniciar Sesión</span>
@@ -186,7 +186,7 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-full"
+              className="lg:hidden p-2 hover:bg-[#f8f5ef] rounded-full"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -205,9 +205,9 @@ const Header = () => {
               placeholder="¿A dónde quieres ir?"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-200 focus:border-yellow-500 focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none"
             />
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
           </form>
         </div>
 
@@ -215,24 +215,24 @@ const Header = () => {
         {mobileMenuOpen && (
           <div className="lg:hidden pb-4 animate-fade-in">
             <div className="flex flex-col gap-2">
-              <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg">
-                <Phone className="w-4 h-4 text-yellow-500" />
+              <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-[#f8f5ef] text-[#233274] rounded-lg">
+                <Phone className="w-4 h-4 text-[#e15f0b]" />
                 <span>+51 990 179 027</span>
               </a>
               <Link
                 to="/contacto"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 rounded-lg"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-[#f8f5ef] text-[#233274] rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <Mail className="w-4 h-4 text-yellow-500" />
+                <Mail className="w-4 h-4 text-[#e15f0b]" />
                 <span>Contactanos</span>
               </Link>
               {!isAuthenticated && (
                 <Link
                   to="/register?role=agency"
-                  className="px-4 py-2 hover:bg-gray-50 rounded-lg"
+                  className="px-4 py-2 hover:bg-[#f8f5ef] text-[#233274] rounded-lg"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Hazte Proveedor
