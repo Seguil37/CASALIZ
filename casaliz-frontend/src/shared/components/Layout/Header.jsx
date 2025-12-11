@@ -127,16 +127,6 @@ const Header = () => {
                     Mi Perfil
                   </Link>
 
-                  {/* Mis Reservas - Solo para clientes */}
-                  {user?.role === ROLES.CLIENT && (
-                    <Link
-                      to="/profile/bookings"
-                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
-                    >
-                      Mis Reservas
-                    </Link>
-                  )}
-
                   {/* Favoritos - Solo para clientes */}
                   {user?.role === ROLES.CLIENT && (
                     <Link

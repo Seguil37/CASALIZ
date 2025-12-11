@@ -2,310 +2,323 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Save,
-  Check,
-  AlertCircle
-} from 'lucide-react';
-import api from '../../../shared/utils/api';
-import TourBasicInfo from '../components/TourBasicInfo';
-import TourPricing from '../components/TourPricing';
-import TourDetails from '../components/TourDetails';
-import TourImages from '../components/TourImages';
+import { ArrowLeft, Save, ImagePlus, PlusCircle, Trash2 } from 'lucide-react';
+import { projectsApi } from '../../../shared/utils/api';
 
-const STEPS = [
-  { id: 1, name: 'Información Básica', component: TourBasicInfo },
-  { id: 2, name: 'Precios y Duración', component: TourPricing },
-  { id: 3, name: 'Detalles del Tour', component: TourDetails },
-  { id: 4, name: 'Imágenes', component: TourImages },
-];
+const emptyImage = { path: '', caption: '' };
 
 const CreateTourPage = () => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [validationErrors, setValidationErrors] = useState({});
-  
   const [formData, setFormData] = useState({
-    // Información básica
     title: '',
-    category_id: '',
-    location_city: '',
-    location_region: '',
-    location_country: 'Peru',
+    type: '',
+    city: '',
+    state: '',
+    country: 'Peru',
+    status: 'draft',
+    is_featured: false,
+    summary: '',
     description: '',
-    
-    // Precios
-    price: '',
-    discount_price: '',
-    duration_days: 0,
-    duration_hours: 8,
-    max_people: 10,
-    min_people: 1,
-    difficulty_level: 'easy',
-    
-    // Detalles
-    itinerary: '',
-    includes: '',
-    excludes: '',
-    requirements: '',
-    cancellation_policy: '',
-    cancellation_hours: 24,
-    
-    // Imágenes
-    featured_image: '',
-    images: [],
+    hero_image: '',
+    images: [emptyImage],
   });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const updateFormData = (data) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    // Limpiar errores del campo actualizado
-    if (validationErrors) {
-      const newErrors = { ...validationErrors };
-      Object.keys(data).forEach(key => {
-        delete newErrors[key];
-      });
-      setValidationErrors(newErrors);
-    }
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
-  // 👇 VALIDACIONES POR PASO
-  const validateStep = (step) => {
-    const errors = {};
-
-    if (step === 1) {
-      if (!formData.title.trim()) errors.title = 'El título es requerido';
-      if (!formData.category_id) errors.category_id = 'Selecciona una categoría';
-      if (!formData.location_city.trim()) errors.location_city = 'La ciudad es requerida';
-      if (!formData.location_region.trim()) errors.location_region = 'La región es requerida';
-      if (!formData.description.trim()) errors.description = 'La descripción es requerida';
-    }
-
-    if (step === 2) {
-      if (!formData.price || formData.price <= 0) errors.price = 'El precio es requerido';
-      if (formData.discount_price && formData.discount_price >= formData.price) {
-        errors.discount_price = 'El descuento debe ser menor al precio regular';
-      }
-      if (formData.duration_days === 0 && formData.duration_hours === 0) {
-        errors.duration_hours = 'Debes ingresar al menos 1 día o 1 hora';
-      }
-    }
-
-    if (step === 3) {
-      if (!formData.itinerary.trim()) errors.itinerary = 'El itinerario es requerido';
-      if (!formData.includes.trim()) errors.includes = 'Debes especificar qué incluye';
-      if (!formData.excludes.trim()) errors.excludes = 'Debes especificar qué no incluye';
-      if (!formData.requirements.trim()) errors.requirements = 'Los requisitos son requeridos';
-      if (!formData.cancellation_policy.trim()) errors.cancellation_policy = 'La política de cancelación es requerida';
-    }
-
-    if (step === 4) {
-      if (!formData.featured_image) errors.featured_image = 'Debes agregar al menos 1 imagen';
-      const totalImages = [formData.featured_image, ...formData.images].filter(Boolean).length;
-      if (totalImages < 3) errors.images = 'Debes agregar al menos 3 imágenes';
-    }
-
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+  const handleImageChange = (index, field, value) => {
+    const updatedImages = [...formData.images];
+    updatedImages[index] = { ...updatedImages[index], [field]: value };
+    setFormData((prev) => ({ ...prev, images: updatedImages }));
   };
 
-  const handleNext = () => {
-    if (validateStep(currentStep)) {
-      if (currentStep < STEPS.length) {
-        setCurrentStep((prev) => prev + 1);
-        setError(null);
-      }
-    } else {
-      setError('Por favor completa todos los campos requeridos');
-    }
+  const addImageField = () => {
+    setFormData((prev) => ({ ...prev, images: [...prev.images, emptyImage] }));
   };
 
-  const handlePrevious = () => {
-    if (currentStep > 1) {
-      setCurrentStep((prev) => prev - 1);
-      setError(null);
-    }
+  const removeImageField = (index) => {
+    const updatedImages = formData.images.filter((_, i) => i !== index);
+    setFormData((prev) => ({ ...prev, images: updatedImages.length ? updatedImages : [emptyImage] }));
   };
 
-  const handleSubmit = async (publish = false) => {
-    // Validar todos los pasos
-    let allValid = true;
-    for (let i = 1; i <= STEPS.length; i++) {
-      if (!validateStep(i)) {
-        allValid = false;
-        setError(`Hay errores en el paso ${i}. Por favor revisa todos los campos.`);
-        setCurrentStep(i);
-        return;
-      }
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.title.trim()) newErrors.title = 'El nombre del proyecto es obligatorio';
+    if (!formData.description.trim()) newErrors.description = 'Agrega una descripción del proyecto';
+    if (!['draft', 'published', 'archived'].includes(formData.status)) {
+      newErrors.status = 'Selecciona un estado válido';
     }
 
-    if (!allValid) return;
+    const imagesWithPath = formData.images.filter((image) => image.path.trim());
+    if (imagesWithPath.length === 0) {
+      newErrors.images = 'Agrega al menos una imagen del proyecto';
+    }
 
-    setLoading(true);
-    setError(null);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!validate()) return;
+
+    setSubmitting(true);
+    setSubmitError('');
+
+    const payload = {
+      ...formData,
+      images: formData.images
+        .filter((image) => image.path.trim())
+        .map((image, index) => ({
+          path: image.path.trim(),
+          caption: image.caption || null,
+          position: index,
+        })),
+    };
 
     try {
-      const payload = {
-        ...formData,
-        category_id: parseInt(formData.category_id),
-        price: parseFloat(formData.price),
-        discount_price: formData.discount_price ? parseFloat(formData.discount_price) : null,
-        duration_days: parseInt(formData.duration_days),
-        duration_hours: parseInt(formData.duration_hours),
-        max_people: parseInt(formData.max_people),
-        min_people: parseInt(formData.min_people),
-        cancellation_hours: parseInt(formData.cancellation_hours),
-        is_published: publish,
-      };
-
-      console.log('Enviando payload:', payload); // Debug
-
-      const response = await api.post('/tours', payload);
-
-      if (response.data.success) {
-        navigate('/agency/tours');
-      }
-    } catch (err) {
-      console.error('Error completo:', err.response?.data); // Debug
-      
-      if (err.response?.data?.errors) {
-        // Errores de validación del backend
-        setValidationErrors(err.response.data.errors);
-        setError('Hay errores en el formulario. Por favor revísalos.');
-      } else {
-        setError(err.response?.data?.message || 'Error al crear el tour');
-      }
+      await projectsApi.create(payload);
+      navigate('/agency/dashboard');
+    } catch (error) {
+      const validationErrors = error.response?.data?.errors || {};
+      setErrors(validationErrors);
+      setSubmitError(error.response?.data?.message || 'No se pudo crear el proyecto');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
-
-  const CurrentStepComponent = STEPS[currentStep - 1].component;
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-8">
-      <div className="container-custom max-w-4xl">
-        {/* Header */}
-        <div className="mb-8">
-          <button
-            onClick={() => navigate('/agency/dashboard')}
-            className="flex items-center gap-2 text-[#9a98a0] hover:text-[#233274] mb-4"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Volver al dashboard
-          </button>
-          
-          <h1 className="text-3xl font-black text-[#233274] mb-2">
-            Crear Nuevo Tour
-          </h1>
-          <p className="text-[#9a98a0]">
-            Completa la información para publicar tu experiencia
-          </p>
-        </div>
+      <div className="container-custom max-w-5xl">
+        <button
+          type="button"
+          onClick={() => navigate('/agency/dashboard')}
+          className="flex items-center gap-2 text-[#9a98a0] hover:text-[#233274] mb-6"
+        >
+          <ArrowLeft className="w-5 h-5" /> Volver al dashboard
+        </button>
 
-        {/* Progress Steps */}
-        <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between mb-8">
-            {STEPS.map((step, index) => (
-              <div key={step.id} className="flex-1 flex items-center">
-                <div className="flex flex-col items-center flex-1">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all ${
-                      currentStep >= step.id
-                        ? 'bg-primary text-[#233274]'
-                        : 'bg-[#f8f5ef] text-[#9a98a0]'
-                    }`}
-                  >
-                    {currentStep > step.id ? (
-                      <Check className="w-5 h-5" />
-                    ) : (
-                      step.id
-                    )}
-                  </div>
-                  <span className="text-xs font-semibold mt-2 text-center hidden md:block">
-                    {step.name}
-                  </span>
-                </div>
-                {index < STEPS.length - 1 && (
-                  <div
-                    className={`h-1 flex-1 transition-all ${
-                      currentStep > step.id ? 'bg-primary' : 'bg-[#f8f5ef]'
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="bg-[#f8f5ef] border-l-4 border-[#d14a00] p-4 rounded-lg mb-6 animate-fade-in flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
-              <p className="text-[#d14a00] text-sm">{error}</p>
+        <div className="bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+            <div>
+              <p className="text-sm font-semibold text-[#9a98a0] uppercase tracking-widest">Nuevo proyecto</p>
+              <h1 className="text-3xl font-black text-[#233274]">Crea un proyecto para el portafolio</h1>
+              <p className="text-[#4b4b4b]">Comparte la información esencial del proyecto y sus imágenes destacadas.</p>
             </div>
-          )}
-
-          {/* Step Content */}
-          <CurrentStepComponent
-            formData={formData}
-            updateFormData={updateFormData}
-            errors={validationErrors}
-          />
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="flex items-center justify-between gap-4">
-          <button
-            onClick={handlePrevious}
-            disabled={currentStep === 1}
-            className="flex items-center gap-2 px-6 py-3 border-2 border-[#9a98a0] text-[#233274] font-bold rounded-xl hover:bg-[#f8f5ef] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Anterior
-          </button>
-
-          <div className="flex items-center gap-4">
-            {currentStep === STEPS.length ? (
-              <>
-                <button
-                  onClick={() => handleSubmit(false)}
-                  disabled={loading}
-                  className="flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-bold rounded-xl hover:bg-primary/10 transition-all disabled:opacity-50"
-                >
-                  <Save className="w-5 h-5" />
-                  Guardar borrador
-                </button>
-                <button
-                  onClick={() => handleSubmit(true)}
-                  disabled={loading}
-                  className="flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-[#233274] border-t-transparent rounded-full animate-spin" />
-                      Publicando...
-                    </>
-                  ) : (
-                    <>
-                      <Check className="w-5 h-5" />
-                      Publicar Tour
-                    </>
-                  )}
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={handleNext}
-                className="flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl"
-              >
-                Siguiente
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-gradient-primary text-[#233274] font-bold rounded-xl shadow-md hover:shadow-lg disabled:opacity-60"
+            >
+              <Save className="w-5 h-5" />
+              {submitting ? 'Guardando...' : 'Guardar proyecto'}
+            </button>
           </div>
+
+          <form className="space-y-8" onSubmit={handleSubmit}>
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Nombre del proyecto *</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => handleChange('title', e.target.value)}
+                  className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Casa de campo en Cieneguilla"
+                />
+                {errors.title && <p className="text-sm text-red-600 mt-1">{errors.title}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Tipo de proyecto</label>
+                <input
+                  type="text"
+                  value={formData.type}
+                  onChange={(e) => handleChange('type', e.target.value)}
+                  className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Residencial, comercial, interiorismo..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Ciudad</label>
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => handleChange('city', e.target.value)}
+                  className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Lima"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Región/Estado</label>
+                <input
+                  type="text"
+                  value={formData.state}
+                  onChange={(e) => handleChange('state', e.target.value)}
+                  className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Lima"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">País</label>
+                <input
+                  type="text"
+                  value={formData.country}
+                  onChange={(e) => handleChange('country', e.target.value)}
+                  className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Perú"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-[#233274] mb-1">Estado *</label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => handleChange('status', e.target.value)}
+                    className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option value="draft">Borrador</option>
+                    <option value="published">Publicado</option>
+                    <option value="archived">Archivado</option>
+                  </select>
+                  {errors.status && <p className="text-sm text-red-600 mt-1">{errors.status}</p>}
+                </div>
+
+                <div className="flex items-center gap-3 mt-6">
+                  <input
+                    id="is_featured"
+                    type="checkbox"
+                    checked={formData.is_featured}
+                    onChange={(e) => handleChange('is_featured', e.target.checked)}
+                    className="w-4 h-4 text-primary border-[#ebe7df] rounded focus:ring-primary"
+                  />
+                  <label htmlFor="is_featured" className="text-sm text-[#233274] font-semibold">
+                    Marcar como proyecto destacado
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Resumen</label>
+                <textarea
+                  value={formData.summary}
+                  onChange={(e) => handleChange('summary', e.target.value)}
+                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Descripción corta del proyecto"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Descripción detallada *</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => handleChange('description', e.target.value)}
+                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Detalles, objetivos y resultados del proyecto"
+                />
+                {errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}
+              </div>
+            </section>
+
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Imagen principal</label>
+                <input
+                  type="text"
+                  value={formData.hero_image}
+                  onChange={(e) => handleChange('hero_image', e.target.value)}
+                  className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="URL de la imagen principal"
+                />
+                <p className="text-xs text-[#9a98a0] mt-1">Usaremos esta imagen en las vistas destacadas del proyecto.</p>
+              </div>
+              <div className="bg-[#f8f5ef] rounded-xl border border-dashed border-[#d5d1c9] p-4 flex items-center gap-3">
+                <ImagePlus className="w-5 h-5 text-[#d14a00]" />
+                <p className="text-sm text-[#4b4b4b]">
+                  Agrega enlaces públicos de tus imágenes alojadas (por ejemplo, en tu CDN o almacenamiento en la nube).
+                </p>
+              </div>
+            </section>
+
+            <section>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-bold text-[#233274]">Galería del proyecto</h2>
+                  <p className="text-sm text-[#9a98a0]">Incluye al menos una imagen con su enlace público.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={addImageField}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[#ebe7df] text-[#233274] hover:border-primary"
+                >
+                  <PlusCircle className="w-4 h-4" /> Añadir imagen
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {formData.images.map((image, index) => (
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-6 gap-4 bg-[#fdfaf5] p-4 rounded-xl border border-[#ebe7df]">
+                    <div className="md:col-span-3">
+                      <label className="block text-sm font-semibold text-[#233274] mb-1">URL de la imagen *</label>
+                      <input
+                        type="text"
+                        value={image.path}
+                        onChange={(e) => handleImageChange(index, 'path', e.target.value)}
+                        className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-[#233274] mb-1">Leyenda</label>
+                      <input
+                        type="text"
+                        value={image.caption}
+                        onChange={(e) => handleImageChange(index, 'caption', e.target.value)}
+                        className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                        placeholder="Vista interior, fachada, etc."
+                      />
+                    </div>
+                    <div className="md:col-span-1 flex items-center justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeImageField(index)}
+                        className="p-2 rounded-full hover:bg-white border border-[#ebe7df]"
+                        aria-label="Eliminar imagen"
+                      >
+                        <Trash2 className="w-4 h-4 text-[#d14a00]" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {errors.images && <p className="text-sm text-red-600 mt-2">{errors.images}</p>}
+            </section>
+
+            {submitError && <p className="text-sm text-red-600">{submitError}</p>}
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#233274] text-white font-bold rounded-xl shadow-md hover:shadow-lg disabled:opacity-60"
+              >
+                <Save className="w-5 h-5" />
+                {submitting ? 'Guardando...' : 'Guardar y publicar'}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
