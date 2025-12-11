@@ -11,7 +11,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::active()
-            ->withCount('tours')
+            ->withCount('projects')
             ->get();
 
         return response()->json($categories);
@@ -20,8 +20,8 @@ class CategoryController extends Controller
     public function show($slug)
     {
         $category = Category::where('slug', $slug)
-            ->with(['tours' => function($query) {
-                $query->active()->with(['agency', 'images'])->limit(12);
+            ->with(['projects' => function($query) {
+                $query->with(['categories', 'creator'])->limit(12);
             }])
             ->firstOrFail();
 

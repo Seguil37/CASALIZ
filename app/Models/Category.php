@@ -17,9 +17,9 @@ class Category extends Model
         'is_active' => 'boolean',
     ];
 
-    public function tours()
+    public function projects()
     {
-        return $this->hasMany(Tour::class);
+        return $this->belongsToMany(Project::class, 'project_category');
     }
 
     public function scopeActive($query)

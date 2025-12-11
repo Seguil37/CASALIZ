@@ -24,14 +24,9 @@ class User extends Authenticatable
         'is_active' => 'boolean',
     ];
 
-    public function agency()
+    public function projects()
     {
-        return $this->hasOne(Agency::class);
-    }
-
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Project::class, 'created_by');
     }
 
     public function reviews()
@@ -39,33 +34,18 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
-    public function favorites()
+    public function isMasterAdmin(): bool
     {
-        return $this->belongsToMany(Tour::class, 'favorites')->withTimestamps();
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-
-    public function isAgency(): bool
-    {
-        return $this->role === 'agency';
-    }
-
-    public function isCustomer(): bool
-    {
-        return $this->role === 'customer';
+        return $this->role === 'master_admin';
     }
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return in_array($this->role, ['admin', 'master_admin']);
     }
 
-    public function hasFavorite(Tour $tour): bool
+    public function isClient(): bool
     {
-        return $this->favorites()->where('tour_id', $tour->id)->exists();
+        return $this->role === 'client';
     }
 }
