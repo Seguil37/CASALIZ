@@ -55,6 +55,12 @@ export const reviewsApi = {
   remove: (id) => api.delete(`/reviews/${id}`),
 };
 
+export const favoritesApi = {
+  list: () => api.get('/favorites'),
+  add: (projectId) => api.post('/favorites', { project_id: projectId }),
+  remove: (projectId) => api.delete(`/favorites/${projectId}`),
+};
+
 export const settingsApi = {
   public: () => api.get('/settings/public'),
   list: (group) => api.get('/admin/settings', { params: { group } }),

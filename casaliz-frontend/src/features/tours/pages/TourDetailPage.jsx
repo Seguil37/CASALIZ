@@ -1,14 +1,21 @@
 // src/features/tours/pages/TourDetailPage.jsx
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { MapPin, Home, ArrowLeft } from 'lucide-react';
+import { MapPin, Home, ArrowLeft, Heart } from 'lucide-react';
 import api from '../../../shared/utils/api';
+import ReviewsSection from '../components/ReviewsSection';
+import useFavoriteStore from '../../../store/favoriteStore';
+import useAuthStore from '../../../store/authStore';
+import { ROLES } from '../../../shared/constants/roles';
 
 const TourDetailPage = () => {
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [favoriteError, setFavoriteError] = useState('');
+  const { favorites, toggleFavorite, fetchFavorites } = useFavoriteStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -16,7 +23,7 @@ const TourDetailPage = () => {
       try {
         const response = await api.get(`/projects/${id}`);
         setProject(response.data);
-      } catch (err) {
+      } catch {
         setError('Proyecto no encontrado');
       } finally {
         setLoading(false);
@@ -25,6 +32,12 @@ const TourDetailPage = () => {
 
     fetchProject();
   }, [id]);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.role === ROLES.CLIENT) {
+      fetchFavorites();
+    }
+  }, [fetchFavorites, isAuthenticated, user?.role]);
 
   if (loading) {
     return <div className="container-custom py-16 text-center">Cargando proyecto...</div>;
@@ -42,6 +55,20 @@ const TourDetailPage = () => {
   }
 
   const hero = project.hero_image || project.images?.[0]?.path;
+  const isFavorite = favorites.includes(Number(id));
+
+  const handleToggleFavorite = async () => {
+    setFavoriteError('');
+    try {
+      await toggleFavorite(Number(id));
+    } catch (err) {
+      setFavoriteError(
+        err.message === 'AUTH_REQUIRED'
+          ? 'Inicia sesión como cliente para guardar favoritos.'
+          : 'No se pudo actualizar tu lista de favoritos.'
+      );
+    }
+  };
 
   return (
     <div className="bg-[#f8f5ef] min-h-screen">
@@ -103,7 +130,28 @@ const TourDetailPage = () => {
               <p className="text-sm text-[#9a98a0]">Resumen</p>
               <p className="text-[#4b4b4b]">{project.summary || 'Proyecto destacado del portafolio de CASALIZ.'}</p>
             </div>
+
+            {isAuthenticated && user?.role === ROLES.CLIENT && (
+              <button
+                onClick={handleToggleFavorite}
+                className={`w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-full font-bold border transition-all ${
+                  isFavorite
+                    ? 'bg-[#233274] text-white border-[#233274]'
+                    : 'bg-white text-[#233274] border-[#233274] hover:bg-[#233274] hover:text-white'
+                }`}
+              >
+                <Heart className={`w-5 h-5 ${isFavorite ? 'fill-white' : 'text-[#233274]'}`} />
+                {isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+              </button>
+            )}
+            {favoriteError && (
+              <p className="text-sm text-red-600 mt-2 text-center">{favoriteError}</p>
+            )}
           </div>
+        </div>
+
+        <div className="lg:col-span-3">
+          <ReviewsSection projectId={project.id} />
         </div>
       </div>
     </div>

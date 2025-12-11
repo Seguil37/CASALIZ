@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, Menu, X, Mail } from 'lucide-react';
+import { Search, User, Menu, X, Mail, Phone } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
+import { ROLES, roleLabels, isAdminRole } from '../../constants/roles';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -109,9 +110,12 @@ const Header = () => {
                       </span>
                     </div>
                   )}
-                  <span className="hidden md:block font-medium text-[#233274]">
-                    {user?.name?.split(' ')[0]}
-                  </span>
+                  <div className="hidden md:flex flex-col items-start leading-tight">
+                    <span className="font-semibold text-[#233274]">{user?.name?.split(' ')[0]}</span>
+                    <span className="text-[11px] text-[#9a98a0] font-medium uppercase tracking-wide">
+                      {roleLabels[user?.role] || 'Usuario'}
+                    </span>
+                  </div>
                 </button>
 
                 {/* Dropdown Menu */}
@@ -124,7 +128,7 @@ const Header = () => {
                   </Link>
 
                   {/* Mis Reservas - Solo para clientes */}
-                  {user?.role === 'customer' && (
+                  {user?.role === ROLES.CLIENT && (
                     <Link
                       to="/profile/bookings"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
@@ -134,7 +138,7 @@ const Header = () => {
                   )}
 
                   {/* Favoritos - Solo para clientes */}
-                  {user?.role === 'customer' && (
+                  {user?.role === ROLES.CLIENT && (
                     <Link
                       to="/favorites"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
@@ -143,7 +147,7 @@ const Header = () => {
                     </Link>
                   )}
 
-                  {user?.role === 'agency' && (
+                  {isAdminRole(user?.role) && (
                     <Link
                       to="/agency/dashboard"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -152,7 +156,7 @@ const Header = () => {
                     </Link>
                   )}
 
-                  {user?.role === 'customer' && (
+                  {user?.role === ROLES.CLIENT && (
                     <Link
                       to="/customer/dashboard"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
