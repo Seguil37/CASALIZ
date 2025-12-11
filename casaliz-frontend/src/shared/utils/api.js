@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://tu-backend/api/v1',
+  baseURL: import.meta.env.VITE_API_URL || '/api/v1',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -50,9 +50,24 @@ export const authApi = {
 };
 
 export const reviewsApi = {
-  listByProject: (projectId) => api.get('/reviews', { params: { project_id: projectId } }),
+  listByProject: (projectId) => {
+    const params = projectId ? { project_id: projectId } : {};
+    return api.get('/reviews', { params });
+  },
   createOrUpdate: (payload) => api.post('/reviews', payload),
   remove: (id) => api.delete(`/reviews/${id}`),
+};
+
+export const favoritesApi = {
+  list: () => api.get('/favorites'),
+  add: (projectId) => api.post('/favorites', { project_id: projectId }),
+  remove: (projectId) => api.delete(`/favorites/${projectId}`),
+};
+
+export const usersApi = {
+  list: (params) => api.get('/users', { params }),
+  create: (payload) => api.post('/users', payload),
+  update: (userId, payload) => api.put(`/users/${userId}`, payload),
 };
 
 export const settingsApi = {

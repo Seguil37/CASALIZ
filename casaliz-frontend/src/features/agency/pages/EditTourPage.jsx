@@ -99,7 +99,7 @@ const EditTourPage = () => {
       const response = await api.put(`/tours/${id}`, payload);
 
       if (response.data.success) {
-        navigate('/agency/tours');
+        navigate('/admin/projects');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Error al actualizar el tour');
@@ -131,7 +131,7 @@ const EditTourPage = () => {
         {/* Header */}
         <div className="mb-8">
           <button
-            onClick={() => navigate('/agency/tours')}
+            onClick={() => navigate('/admin/projects')}
             className="flex items-center gap-2 text-[#9a98a0] hover:text-[#233274] mb-4"
           >
             <ArrowLeft className="w-5 h-5" />

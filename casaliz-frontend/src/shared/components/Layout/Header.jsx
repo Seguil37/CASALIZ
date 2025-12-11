@@ -123,18 +123,18 @@ const Header = () => {
                     Mi Perfil
                   </Link>
 
-                  {/* Mis Reservas - Solo para clientes */}
-                  {user?.role === 'customer' && (
+                  {/* Mis reservas - Solo para clientes */}
+                  {user?.role === 'client' && (
                     <Link
                       to="/profile/bookings"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
                     >
-                      Mis Reservas
+                      Mis reservas
                     </Link>
                   )}
 
                   {/* Favoritos - Solo para clientes */}
-                  {user?.role === 'customer' && (
+                  {user?.role === 'client' && (
                     <Link
                       to="/favorites"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
@@ -143,21 +143,21 @@ const Header = () => {
                     </Link>
                   )}
 
-                  {user?.role === 'agency' && (
+                  {user?.role === 'admin' && (
                     <Link
-                      to="/agency/dashboard"
+                      to="/admin/dashboard"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
-                      Dashboard Agencia
+                      Panel Admin
                     </Link>
                   )}
 
-                  {user?.role === 'customer' && (
+                  {user?.role === 'master_admin' && (
                     <Link
-                      to="/customer/dashboard"
+                      to="/master/dashboard"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
-                      Dashboard
+                      Panel Master
                     </Link>
                   )}
 

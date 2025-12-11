@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Eye, Edit, Trash2, Search } from 'lucide-react';
-import api from '../../../shared/utils/api';
+import { projectsApi } from '../../../shared/utils/api';
 
 const MyToursPage = () => {
   const [tours, setTours] = useState([]);
@@ -16,8 +16,9 @@ const MyToursPage = () => {
 
   const fetchTours = async () => {
     try {
-      const response = await api.get('/agency/tours');
-      setTours(response.data.data || []);
+      const response = await projectsApi.list({ per_page: 50 });
+      const data = response.data.data || response.data || [];
+      setTours(data);
     } catch (error) {
       console.error('Error fetching tours:', error);
     } finally {
@@ -29,7 +30,7 @@ const MyToursPage = () => {
     if (!confirm('¿Estás seguro de eliminar este tour?')) return;
 
     try {
-      await api.delete(`/tours/${tourId}`);
+      await projectsApi.delete(tourId);
       setTours(tours.filter((t) => t.id !== tourId));
     } catch (error) {
       console.error('Error deleting tour:', error);
@@ -63,7 +64,7 @@ const MyToursPage = () => {
             </p>
           </div>
           <Link
-            to="/agency/tours/create"
+            to="/admin/projects/create"
             className="mt-4 md:mt-0 inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl hover:bg-gradient-secondary transition-all shadow-lg hover:shadow-xl"
           >
             <Plus className="w-5 h-5" />
@@ -126,14 +127,14 @@ const MyToursPage = () => {
 
                     <div className="flex items-center gap-2">
                       <Link
-                        to={`/tours/${tour.id}`}
+                        to={`/projects/${tour.slug || tour.id}`}
                         className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
                         title="Ver"
                       >
                         <Eye className="w-5 h-5 text-[#9a98a0]" />
                       </Link>
                       <Link
-                        to={`/agency/tours/${tour.id}/edit`}
+                        to={`/admin/projects/${tour.id}/edit`}
                         className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
                         title="Editar"
                       >

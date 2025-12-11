@@ -13,7 +13,9 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Project::query()->with('featuredImages');
+        $query = Project::query()
+            ->with('featuredImages')
+            ->withCount(['reviews', 'favorites']);
 
         if ($request->filled('type')) {
             $query->where('type', $request->input('type'));
@@ -31,7 +33,9 @@ class ProjectController extends Controller
             $query->where('is_featured', true);
         }
 
-        $query->where('status', 'published');
+        if (!$request->user() || !$request->user()->isAdmin()) {
+            $query->where('status', 'published');
+        }
 
         return response()->json(
             $query->orderByDesc('published_at')->paginate(12)
@@ -50,9 +54,9 @@ class ProjectController extends Controller
         return response()->json($projects);
     }
 
-    public function show(Project $project)
+    public function show(Request $request, Project $project)
     {
-        if ($project->status !== 'published') {
+        if ($project->status !== 'published' && (!$request->user() || !$request->user()->isAdmin())) {
             abort(404);
         }
 

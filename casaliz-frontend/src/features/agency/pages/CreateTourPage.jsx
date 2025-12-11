@@ -166,7 +166,7 @@ const CreateTourPage = () => {
       const response = await api.post('/tours', payload);
 
       if (response.data.success) {
-        navigate('/agency/tours');
+        navigate('/admin/projects');
       }
     } catch (err) {
       console.error('Error completo:', err.response?.data); // Debug
@@ -191,7 +191,7 @@ const CreateTourPage = () => {
         {/* Header */}
         <div className="mb-8">
           <button
-            onClick={() => navigate('/agency/dashboard')}
+            onClick={() => navigate('/admin/dashboard')}
             className="flex items-center gap-2 text-[#9a98a0] hover:text-[#233274] mb-4"
           >
             <ArrowLeft className="w-5 h-5" />
