@@ -28,10 +28,10 @@ const ReferenceContentSection = () => {
   const content = {
     guides: [
       { name: 'Cómo preparar tu terreno antes de diseñar tu casa', count: 12, rating: 4.9 },
-      { name: 'Checklist para definir el programa arquitectónico', count: 18, rating: 4.8 },
+      { name: 'Checklist para definir tu proyecto de vivienda', count: 18, rating: 4.8 },
       { name: 'Guía para elegir materiales según tu presupuesto', count: 10, rating: 4.7 },
-      { name: 'Cómo planificar una remodelación sin estrés', count: 16, rating: 4.8 },
-      { name: 'Errores comunes al diseñar cocinas y baños', count: 14, rating: 4.7 },
+      { name: 'Cómo planificar una remodelación sin sorpresas', count: 16, rating: 4.8 },
+      { name: 'Errores comunes al diseñar tu casa en Cusco', count: 14, rating: 4.7 },
       { name: 'Qué esperar en cada etapa del proyecto', count: 9, rating: 4.8 },
     ],
     permits: [

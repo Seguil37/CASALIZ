@@ -61,7 +61,7 @@ const HeroSection = () => {
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Diseño arquitectónico, planos, remodelación, interiorismo…"
+                    placeholder="Diseño arquitectónico, interiores, trámites…"
                     value={searchData.destination}
                     onChange={(e) =>
                       setSearchData({ ...searchData, destination: e.target.value })
@@ -80,7 +80,7 @@ const HeroSection = () => {
                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Residencial, comercial, oficina, edificio…"
+                    placeholder="Unifamiliar, multifamiliar, comercial…"
                     value={searchData.checkIn}
                     onChange={(e) =>
                       setSearchData({ ...searchData, checkIn: e.target.value })
@@ -99,7 +99,7 @@ const HeroSection = () => {
                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Ciudad o distrito"
+                    placeholder="Cusco, distrito, ciudad…"
                     value={searchData.checkOut}
                     onChange={(e) =>
                       setSearchData({ ...searchData, checkOut: e.target.value })

@@ -51,9 +51,21 @@ const CTASection = () => {
           {/* Beneficios */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: Gift, text: 'Oficina virtual del proyecto', color: 'from-[#e15f0b] to-[#d14a00]' },
-              { icon: Star, text: 'Historial de revisiones', color: 'from-[#233274] to-[#1a2555]' },
-              { icon: Shield, text: 'Documentación centralizada', color: 'from-[#233274] to-[#1a2555]' },
+              {
+                icon: Gift,
+                text: 'Oficina virtual del proyecto — Ve el estado de tu proyecto en tiempo real.',
+                color: 'from-[#e15f0b] to-[#d14a00]',
+              },
+              {
+                icon: Star,
+                text: 'Historial de revisiones — Control de versiones de planos y cambios aprobados.',
+                color: 'from-[#233274] to-[#1a2555]',
+              },
+              {
+                icon: Shield,
+                text: 'Documentación centralizada — Presupuestos, contratos y planos siempre disponibles.',
+                color: 'from-[#233274] to-[#1a2555]',
+              },
             ].map((benefit, index) => {
               const Icon = benefit.icon;
               return (
