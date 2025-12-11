@@ -93,9 +93,9 @@ html {
   background-color: var(--slate-50);
 }
 
-.section-bg.bg-[#f8f5ef] {
-  background-color: #f8f5ef;
-}
+  .section-bg.bg-cream {
+    background-color: #f8f5ef;
+  }
 
 /* 7. Layout para páginas internas */
 .page-wrapper {
