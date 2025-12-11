@@ -1,17 +1,18 @@
 // src/shared/components/Layout/Footer.jsx
-
 import { Link } from 'react-router-dom';
-import { 
-  Facebook, 
-  Instagram, 
-  Twitter, 
-  Linkedin, 
-  Mail, 
-  Phone, 
-  MapPin, 
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPin,
   Clock,
-  Send
+  Send,
 } from 'lucide-react';
+import casalizLogo from '../../../assets/images/casaliz-logo.png';
+
 
 const Footer = () => {
   return (
@@ -21,20 +22,24 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Columna 1: Marca */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] w-10 h-10 rounded-lg flex items-center justify-center">
-                <span className="text-xl font-black text-[#f8f5ef]">B&G</span>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-white rounded-xl shadow-lg border border-white/40 px-4 py-3">
+                <div className="h-14 md:h-16 lg:h-20 max-w-[220px] flex items-center">
+                  <img
+                    src={casalizLogo}
+                    alt="CasaLiz Arquitectos Ingenieros"
+                    className="h-full w-auto max-w-full object-contain"
+                  />
+                </div>
               </div>
-              <span className="text-xl font-black text-[#f8f5ef]">
-                BOOK<span className="text-[#e15f0b]">&</span>GO
-              </span>
             </div>
-            <p className="text-sm text-[#9a98a0] mb-6 leading-relaxed">
-              Tu marketplace de viajes confiable. Conectamos turistas con las mejores agencias para crear experiencias inolvidables.
+            <p className="text-sm text-[#c7c6cc] mb-6 leading-relaxed">
+              Arquitectos e ingenieros especializados en soluciones a medida para proyectos
+              residenciales, comerciales y corporativos.
             </p>
             <div className="flex gap-3">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/CASALIZEIRL"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-[#1a2555] hover:bg-gradient-to-r hover:from-[#e15f0b] hover:to-[#d14a00] rounded-full flex items-center justify-center transition-all group"
@@ -68,35 +73,17 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Columna 2: Links Rápidos */}
+          {/* Columna 2: Nuestros Servicios */}
           <div>
-            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Links Rápidos</h3>
+            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Nuestros Servicios</h3>
             <ul className="space-y-3">
               <li>
                 <Link
-                  to="/"
+                  to="/services"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  Acerca de Nosotros
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/contact"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  Contáctanos
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Diseño arquitectónico
                 </Link>
               </li>
               <li>
@@ -104,33 +91,51 @@ const Footer = () => {
                   to="/services"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  Servicios
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Proyectos residenciales
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/services"
+                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
+                >
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Proyectos comerciales
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/services"
+                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
+                >
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Consultorías y supervisión
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Columna 3: Políticas y Términos */}
+          {/* Columna 3: Proyectos / Empresa */}
           <div>
-            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Políticas y Términos</h3>
+            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Proyectos</h3>
             <ul className="space-y-3">
               <li>
                 <Link
-                  to="/payments"
+                  to="/projects"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  Pagos con Tarjeta
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Galería de proyectos
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/license"
+                  to="/about"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  Licencia
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Nosotros
                 </Link>
               </li>
               <li>
@@ -138,17 +143,17 @@ const Footer = () => {
                   to="/terms"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Términos
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/conditions"
+                  to="/privacy"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                  Condiciones
+                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  Privacidad
                 </Link>
               </li>
             </ul>
@@ -159,55 +164,38 @@ const Footer = () => {
             <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Contáctanos</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-                <div>
-                  <a
-                    href="mailto:info@bookandgo.com"
-                    className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
-                  >
-                    info@bookandgo.com
-                  </a>
-                </div>
+                <Phone className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
+                <a href="tel:+51984696802" className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors">
+                  984 696802
+                </a>
               </li>
               <li className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-                <div className="space-y-1">
-                  <a
-                    href="tel:+51987654321"
-                    className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors block"
-                  >
-                    +51 987 654 321
-                  </a>
-                  <a
-                    href="tel:+51987654322"
-                    className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors block"
-                  >
-                    +51 987 654 322
-                  </a>
-                </div>
+                <Mail className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
+                <a href="mailto:lissyosores@hotmail.com" className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors">
+                  lissyosores@hotmail.com
+                </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
                 <span className="text-[#9a98a0]">
-                  Av. Principal 123, Lima, Perú
+                  Av. Lloque Yupanqui, Edificio Ecological Plaza 2do. nivel Of. 202<br />
+                  Wanchaq - Cusco - Cusco
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <Clock className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-                <span className="text-[#9a98a0]">
-                  Lun - Vie: 9:00 AM - 6:00 PM
-                </span>
+                <span className="text-[#9a98a0]">Lun - Vie: 9:00 AM - 6:00 PM</span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Segunda fila con 2 columnas: Newsletter y Autores */}
+        {/* Segunda fila con 2 columnas: Newsletter y Equipo */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {/* Newsletter */}
           <div className="bg-[#1a2555] rounded-lg p-4">
             <h4 className="text-[#f8f5ef] font-semibold mb-2">Suscríbete a nuestro newsletter</h4>
-            <p className="text-[#9a98a0] text-sm mb-3">Recibe ofertas exclusivas y novedades</p>
+            <p className="text-[#9a98a0] text-sm mb-3">Recibe novedades sobre nuestros proyectos</p>
             <form className="flex">
               <input
                 type="email"
@@ -223,7 +211,7 @@ const Footer = () => {
             </form>
           </div>
 
-          {/* Autores y Desarrolladores */}
+          {/* Equipo y Desarrolladores */}
           <div className="bg-[#1a2555] rounded-lg p-4">
             <h4 className="text-[#f8f5ef] font-semibold mb-3">Autores y desarrolladores</h4>
             <ul className="space-y-3">
@@ -271,7 +259,7 @@ const Footer = () => {
         <div className="border-t border-[#1a2555] pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-[#9a98a0] text-sm">
-              © 2025 BOOK&GO. Todos los derechos reservados.
+              © 2025 CasaLiz Arquitectos Ingenieros. Todos los derechos reservados.
             </p>
             <div className="flex gap-6 text-sm">
               <Link

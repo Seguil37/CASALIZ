@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, User, ShoppingCart, Menu, X, MapPin, Phone, Mail } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import useCartStore from '../../../store/cartStore';
+import casalizLogo from '../../../assets/images/casaliz-logo.png';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,15 +29,15 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo y Buscador */}
           <div className="flex items-center gap-8 flex-1">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-[#233274] to-[#e15f0b] w-12 h-12 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-black text-[#f8f5ef]">B&G</span>
+            <Link to="/" className="flex items-center">
+              <div className="h-12 md:h-14 lg:h-16 max-w-[180px] flex items-center">
+                <img
+                  src={casalizLogo}
+                  alt="CasaLiz Arquitectos Ingenieros"
+                  className="h-full w-auto max-w-full object-contain"
+                />
               </div>
-              <span className="text-2xl font-black text-[#233274] hidden sm:block">
-                BOOK<span className="text-[#e15f0b]">&</span>GO
-              </span>
             </Link>
-
             {/* Barra de búsqueda */}
             <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-xl">
               <div className="relative w-full">
@@ -60,6 +61,28 @@ const Header = () => {
 
           {/* Botones de acción */}
           <div className="flex items-center gap-4 ml-6">
+            {/* Navegación Principal - Desktop */}
+            <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold">
+              <Link
+                to="/services"
+                className="text-[#233274] hover:text-[#e15f0b] transition-colors"
+              >
+                Nuestros Servicios
+              </Link>
+              <Link
+                to="/projects"
+                className="text-[#233274] hover:text-[#e15f0b] transition-colors"
+              >
+                Nuestros Proyectos
+              </Link>
+              <Link
+                to="/about"
+                className="text-[#233274] hover:text-[#e15f0b] transition-colors"
+              >
+                Nosotros
+              </Link>
+            </nav>
+
             {/* Contacto */}
             <div className="hidden xl:flex items-center gap-4 text-sm">
               <Link
@@ -86,7 +109,7 @@ const Header = () => {
             {/* Carrito */}
             <Link
               to="/cart"
-              className="relative p-2 hover:bg-[#f8f5ef] rounded-full transition-all"
+              className="relative p-2 hover:bg-white rounded-full transition-all"
             >
               <ShoppingCart className="w-6 h-6 text-[#233274]" />
               {cartCount > 0 && (
@@ -99,7 +122,7 @@ const Header = () => {
             {/* Usuario */}
             {isAuthenticated ? (
               <div className="relative group">
-                <button className="flex items-center gap-2 p-2 hover:bg-[#f8f5ef] rounded-full transition-all">
+                <button className="flex items-center gap-2 p-2 hover:bg-white rounded-full transition-all">
                   {user?.avatar ? (
                     <img
                       src={user.avatar}
@@ -122,7 +145,7 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-[#f8f5ef] rounded-xl shadow-xl border border-[#9a98a0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <Link
                     to="/profile"
-                    className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] rounded-t-xl transition-colors"
+                    className="block px-4 py-3 hover:bg-white text-[#233274] rounded-t-xl transition-colors"
                   >
                     Mi Perfil
                   </Link>
@@ -131,7 +154,7 @@ const Header = () => {
                   {user?.role === 'customer' && (
                     <Link
                       to="/profile/bookings"
-                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
                     >
                       Mis Reservas
                     </Link>
@@ -141,7 +164,7 @@ const Header = () => {
                   {user?.role === 'customer' && (
                     <Link
                       to="/favorites"
-                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
                     >
                       Favoritos
                     </Link>
@@ -150,7 +173,7 @@ const Header = () => {
                   {user?.role === 'agency' && (
                     <Link
                       to="/agency/dashboard"
-                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors border-t"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
                       Dashboard Agencia
                     </Link>
@@ -159,7 +182,7 @@ const Header = () => {
                   {user?.role === 'customer' && (
                     <Link
                       to="/customer/dashboard"
-                      className="block px-4 py-3 hover:bg-[#f8f5ef] text-[#233274] transition-colors border-t"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
                       Dashboard
                     </Link>
@@ -167,7 +190,7 @@ const Header = () => {
 
                   <button
                     onClick={logout}
-                    className="block w-full text-left px-4 py-3 hover:bg-[#f8f5ef] text-[#d14a00] rounded-b-xl transition-colors border-t"
+                    className="block w-full text-left px-4 py-3 hover:bg-red-50 text-red-600 rounded-b-xl transition-colors border-t"
                   >
                     Cerrar Sesión
                   </button>
@@ -186,12 +209,12 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-[#f8f5ef] rounded-full"
+              className="lg:hidden p-2 hover:bg-white rounded-full"
             >
               {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
+                <X className="w-6 h-6 text-[#233274]" />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className="w-6 h-6 text-[#233274]" />
               )}
             </button>
           </div>
@@ -215,29 +238,52 @@ const Header = () => {
         {mobileMenuOpen && (
           <div className="lg:hidden pb-4 animate-fade-in">
             <div className="flex flex-col gap-2">
-              <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-[#f8f5ef] text-[#233274] rounded-lg">
-                <Phone className="w-4 h-4 text-[#e15f0b]" />
-                <span>+51 990 179 027</span>
-              </a>
               <Link
-                to="/contacto"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-[#f8f5ef] text-[#233274] rounded-lg"
+                to="/services"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <Mail className="w-4 h-4 text-[#e15f0b]" />
-                <span>Contactanos</span>
+                Nuestros Servicios
               </Link>
-              {!isAuthenticated && (
+              <Link
+                to="/projects"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Nuestros Proyectos
+              </Link>
+              <Link
+                to="/about"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Nosotros
+              </Link>
+              <div className="border-t border-[#9a98a0] my-2 pt-2">
+                <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors">
+                  <Phone className="w-4 h-4 text-[#e15f0b]" />
+                  <span>+51 990 179 027</span>
+                </a>
+                <Link
+                  to="/contacto"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Mail className="w-4 h-4 text-[#e15f0b]" />
+                  <span>Contactanos</span>
+                </Link>
+              </div>
+              {!isAuthenticated || user?.role === 'customer' ? (
                 <Link
                   to="/register?role=agency"
-                  className="px-4 py-2 hover:bg-[#f8f5ef] text-[#233274] rounded-lg"
+                  className="px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold border-t border-[#9a98a0] pt-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Hazte Proveedor
                 </Link>
-              )}
+              ) : null}
             </div>
           </div>
         )}
