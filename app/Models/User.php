@@ -12,8 +12,17 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'phone', 'avatar',
-        'bio', 'country', 'city', 'is_active',
+        'name',
+        'email',
+        'password',
+        'role',
+        'phone',
+        'avatar',
+        'bio',
+        'country',
+        'state',
+        'city',
+        'is_active',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -24,48 +33,28 @@ class User extends Authenticatable
         'is_active' => 'boolean',
     ];
 
-    public function agency()
+    public function projects()
     {
-        return $this->hasOne(Agency::class);
-    }
-
-    public function bookings()
-    {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Project::class, 'created_by');
     }
 
     public function reviews()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(ProjectReview::class);
     }
 
-    public function favorites()
+    public function isClient(): bool
     {
-        return $this->belongsToMany(Tour::class, 'favorites')->withTimestamps();
-    }
-
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-
-    public function isAgency(): bool
-    {
-        return $this->role === 'agency';
-    }
-
-    public function isCustomer(): bool
-    {
-        return $this->role === 'customer';
+        return $this->role === 'client';
     }
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin' || $this->role === 'master_admin';
     }
 
-    public function hasFavorite(Tour $tour): bool
+    public function isMasterAdmin(): bool
     {
-        return $this->favorites()->where('tour_id', $tour->id)->exists();
+        return $this->role === 'master_admin';
     }
 }

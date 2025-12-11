@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Project;
+use App\Models\ProjectReview;
+use App\Policies\ProjectPolicy;
+use App\Policies\ProjectReviewPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Models\Tour;
-use App\Models\Booking;
-use App\Models\Review;
-use App\Policies\TourPolicy;
-use App\Policies\BookingPolicy;
-use App\Policies\ReviewPolicy;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -18,9 +17,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        Tour::class => TourPolicy::class,
-        Booking::class => BookingPolicy::class,
-        Review::class => ReviewPolicy::class,
+        Project::class => ProjectPolicy::class,
+        ProjectReview::class => ProjectReviewPolicy::class,
     ];
 
     /**
@@ -30,37 +28,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Gates personalizados (opcionales)
-        \Illuminate\Support\Facades\Gate::define('manage-system', function ($user) {
-            return $user->isAdmin();
-        });
-
-        \Illuminate\Support\Facades\Gate::define('manage-agency', function ($user) {
-            return $user->isAgency() && $user->agency !== null;
-        });
-
-        \Illuminate\Support\Facades\Gate::define('access-dashboard', function ($user) {
-            return $user->isAdmin() || ($user->isAgency() && $user->agency !== null);
-        });
-
-        \Illuminate\Support\Facades\Gate::define('verify-tours', function ($user) {
-            return $user->isAdmin();
-        });
-
-        \Illuminate\Support\Facades\Gate::define('moderate-reviews', function ($user) {
-            return $user->isAdmin();
-        });
-
-        \Illuminate\Support\Facades\Gate::define('view-activity-logs', function ($user) {
-            return $user->isAdmin();
-        });
-
-        \Illuminate\Support\Facades\Gate::define('manage-users', function ($user) {
-            return $user->isAdmin();
-        });
-
-        \Illuminate\Support\Facades\Gate::define('manage-settings', function ($user) {
-            return $user->isAdmin();
-        });
+        Gate::define('manage-system', fn($user) => $user->isAdmin());
+        Gate::define('manage-users', fn($user) => $user->isAdmin());
+        Gate::define('manage-settings', fn($user) => $user->isAdmin());
     }
 }

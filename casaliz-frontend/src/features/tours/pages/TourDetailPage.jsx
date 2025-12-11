@@ -1,754 +1,107 @@
 // src/features/tours/pages/TourDetailPage.jsx
-
-import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import {
-  Heart, Star, MapPin, Clock, Users, Calendar,
-  Check, X, ChevronLeft, ChevronRight, Share2, Shield, Camera, Info
-} from 'lucide-react';
-import api, { reviewsApi } from '../../../shared/utils/api';
-import useAuthStore from '../../../store/authStore';
-import useFavoriteStore from '../../../store/favoriteStore';
+import { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { MapPin, Home, ArrowLeft } from 'lucide-react';
+import api from '../../../shared/utils/api';
 
 const TourDetailPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuthStore();
-  const { favorites, fetchFavorites, toggleFavorite } = useFavoriteStore();
-
-  const [tour, setTour] = useState(null);
+  const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState('description');
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [showImageCounter, setShowImageCounter] = useState(false);
-  const [reviews, setReviews] = useState([]);
-  const [reviewsLoading, setReviewsLoading] = useState(false);
-  const [reviewError, setReviewError] = useState(null);
-  const [reviewForm, setReviewForm] = useState({ rating: 0, comment: '' });
-  const [submittingReview, setSubmittingReview] = useState(false);
-  const [existingReview, setExistingReview] = useState(null);
-  const [actionNotice, setActionNotice] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchTour();
-    fetchReviews();
+    const fetchProject = async () => {
+      setLoading(true);
+      try {
+        const response = await api.get(`/projects/${id}`);
+        setProject(response.data);
+      } catch (err) {
+        setError('Proyecto no encontrado');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProject();
   }, [id]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchFavorites();
-    } else {
-      setIsFavorite(false);
-    }
-  }, [fetchFavorites, isAuthenticated]);
-
-  useEffect(() => {
-    if (tour) {
-      setIsFavorite(favorites.includes(tour.id));
-    }
-  }, [favorites, tour]);
-
-  useEffect(() => {
-    if (isAuthenticated && user && reviews.length > 0) {
-      const mine = reviews.find((review) => review.user_id === user.id);
-      setExistingReview(mine || null);
-      if (mine) {
-        setReviewForm({ rating: mine.rating, comment: mine.comment || '' });
-      }
-    }
-  }, [isAuthenticated, reviews, user]);
-
-  useEffect(() => {
-    if (!actionNotice) return undefined;
-
-    const timer = setTimeout(() => setActionNotice(null), 4000);
-    return () => clearTimeout(timer);
-  }, [actionNotice]);
-
-  const fetchTour = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.get(`/tours/${id}`);
-      setTour(response.data);
-    } catch (err) {
-      console.error('Error fetching tour:', err);
-      setError('No se pudo cargar el tour');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchReviews = async () => {
-    try {
-      setReviewsLoading(true);
-      setReviewError(null);
-      const response = await reviewsApi.listByTour(id);
-      const data = response.data.data || response.data || [];
-      setReviews(data);
-
-      if (isAuthenticated && user) {
-        const mine = data.find((review) => review.user_id === user.id);
-        setExistingReview(mine || null);
-        if (mine) {
-          setReviewForm({ rating: mine.rating, comment: mine.comment || '' });
-        }
-      }
-    } catch (err) {
-      console.error('Error fetching reviews:', err);
-      setReviewError('No se pudieron cargar las reseñas');
-    } finally {
-      setReviewsLoading(false);
-    }
-  };
-
-  const getImageUrls = () => {
-    if (!tour) return [];
-    const images = [];
-
-    if (tour.featured_image) {
-      images.push(tour.featured_image);
-    }
-
-    if (tour.images && Array.isArray(tour.images)) {
-      tour.images.forEach((img) => {
-        const url = typeof img === 'object' ? img.image_url : img;
-        if (url && url !== tour.featured_image) {
-          images.push(url);
-        }
-      });
-    }
-
-    return images.length > 0
-      ? images
-      : ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'];
-  };
-
-  const imageUrls = getImageUrls();
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev === imageUrls.length - 1 ? 0 : prev + 1));
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? imageUrls.length - 1 : prev - 1));
-  };
-
-  const handleReserveNow = () => {
-    navigate(`/booking/${tour.id}`);
-  };
-
-  const handleFavoriteToggle = async () => {
-    if (!tour) return;
-
-    if (!isAuthenticated || user?.role !== 'customer') {
-      setActionNotice({
-        type: 'warning',
-        message: 'Debes iniciar sesión como cliente para usar favoritos.'
-      });
-      return;
-    }
-
-    try {
-      const response = await toggleFavorite(tour.id);
-      const nowFavorite = response?.is_favorite ?? !isFavorite;
-
-      setActionNotice({
-        type: 'success',
-        message: nowFavorite
-          ? 'Tour guardado en favoritos.'
-          : 'Tour eliminado de tus favoritos.'
-      });
-    } catch (error) {
-      if (error.message === 'AUTH_REQUIRED') {
-        setActionNotice({
-          type: 'warning',
-          message: 'Inicia sesión para guardar tus favoritos.'
-        });
-        return;
-      }
-
-      setActionNotice({
-        type: 'error',
-        message: 'No se pudo actualizar el favorito. Inténtalo de nuevo.'
-      });
-    }
-  };
-
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!isAuthenticated || user?.role !== 'customer') {
-      setActionNotice({
-        type: 'warning',
-        message: 'Debes iniciar sesión como cliente para dejar una reseña.'
-      });
-      return;
-    }
-
-    if (!reviewForm.rating || !reviewForm.comment.trim()) {
-      setReviewError('Por favor selecciona una calificación y escribe un comentario.');
-      return;
-    }
-
-    setSubmittingReview(true);
-    setReviewError(null);
-
-    try {
-      await reviewsApi.createOrUpdate({
-        tour_id: tour.id,
-        rating: reviewForm.rating,
-        comment: reviewForm.comment,
-      });
-
-      await fetchReviews();
-      await fetchTour();
-      setActionNotice({
-        type: 'success',
-        message: 'Tu reseña se ha guardado exitosamente.'
-      });
-    } catch (err) {
-      setReviewError(err.response?.data?.message || 'No se pudo guardar la reseña');
-    } finally {
-      setSubmittingReview(false);
-    }
-  };
-
   if (loading) {
+    return <div className="container-custom py-16 text-center">Cargando proyecto...</div>;
+  }
+
+  if (error || !project) {
     return (
-      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#e15f0b] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#9a98a0] font-medium">Cargando detalles del tour...</p>
-        </div>
+      <div className="container-custom py-16 text-center space-y-4">
+        <p className="text-xl text-[#233274] font-semibold">{error || 'Proyecto no encontrado'}</p>
+        <Link to="/tours" className="text-[#e15f0b] font-semibold hover:underline inline-flex items-center gap-2">
+          <ArrowLeft className="w-4 h-4" /> Volver al listado
+        </Link>
       </div>
     );
   }
 
-  if (error || !tour) {
-    return (
-      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
-        <div className="text-center bg-[#f8f5ef] p-8 rounded-xl shadow-lg max-w-md">
-          <div className="w-16 h-16 bg-[#f8f5ef] rounded-full flex items-center justify-center mx-auto mb-4">
-            <X className="w-8 h-8 text-[#d14a00]" />
-          </div>
-          <h2 className="text-2xl font-bold text-[#233274] mb-4">
-            {error || 'Tour no encontrado'}
-          </h2>
-          <Link
-            to="/tours"
-            className="inline-block bg-[#e15f0b] hover:bg-[#d14a00] text-[#233274] font-bold px-6 py-3 rounded-lg transition-all transform hover:scale-105"
-          >
-            Volver a Tours
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const hero = project.hero_image || project.images?.[0]?.path;
 
   return (
-    <div className="min-h-screen bg-[#f8f5ef]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center text-sm text-[#9a98a0] mb-6 animate-fade-in">
-          <Link to="/" className="hover:text-[#d14a00] transition-colors">Inicio</Link>
-          <span className="mx-2">/</span>
-          <Link to="/tours" className="hover:text-[#d14a00] transition-colors">Tours</Link>
-          <span className="mx-2">/</span>
-          <span className="text-[#233274] font-medium truncate max-w-xs sm:max-w-md">{tour.title}</span>
+    <div className="bg-[#f8f5ef] min-h-screen">
+      <div className="relative h-96 w-full">
+        <img
+          src={hero}
+          alt={project.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        <div className="absolute bottom-6 left-6 text-white space-y-2">
+          <p className="text-sm uppercase tracking-wider">Proyecto de arquitectura</p>
+          <h1 className="text-3xl md:text-4xl font-black">{project.title}</h1>
+          <div className="flex items-center gap-3 text-sm opacity-90">
+            <MapPin className="w-4 h-4" />
+            <span>{project.city}{project.state ? `, ${project.state}` : ''}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="container-custom py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#ebe7df]">
+            <h2 className="text-xl font-bold text-[#233274] mb-3">Descripción</h2>
+            <p className="text-[#4b4b4b] leading-relaxed whitespace-pre-line">{project.description || 'Próximamente más detalles del proyecto.'}</p>
+          </div>
+
+          {project.images?.length > 0 && (
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#ebe7df]">
+              <h3 className="text-lg font-bold text-[#233274] mb-4">Galería</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {project.images.map((image) => (
+                  <img
+                    key={image.id}
+                    src={image.path}
+                    alt={image.caption || project.title}
+                    className="w-full h-48 object-cover rounded-xl"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {actionNotice && (
-          <div
-            className={`mb-6 p-4 rounded-xl border flex items-start gap-3 shadow-sm ${
-              actionNotice.type === 'success'
-                ? 'bg-[#f8f5ef] border-[#9a98a0] text-[#1a2555]'
-                : actionNotice.type === 'warning'
-                  ? 'bg-amber-50 border-amber-200 text-amber-800'
-                  : 'bg-[#f8f5ef] border-[#e15f0b] text-[#d14a00]'
-            }`}
-          >
-            <div
-              className={`p-2 rounded-full ${
-                actionNotice.type === 'success'
-                  ? 'bg-[#f8f5ef]'
-                  : actionNotice.type === 'warning'
-                    ? 'bg-amber-100'
-                    : 'bg-[#f8f5ef]'
-              }`}
-            >
-              {actionNotice.type === 'success' && <Check className="w-5 h-5" />}
-              {actionNotice.type === 'warning' && <Info className="w-5 h-5" />}
-              {actionNotice.type === 'error' && <X className="w-5 h-5" />}
-            </div>
-
-            <div className="flex-1">
-              <p className="font-semibold text-sm mb-1">
-                {actionNotice.type === 'success'
-                  ? 'Acción completada'
-                  : actionNotice.type === 'warning'
-                    ? 'Atención necesaria'
-                    : 'Ocurrió un problema'}
-              </p>
-              <p className="text-sm leading-relaxed">{actionNotice.message}</p>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setActionNotice(null)}
-              className="p-1 rounded-lg hover:bg-[#f8f5ef]/60 transition-colors"
-              aria-label="Cerrar notificación"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-
-        <div className="bg-[#f8f5ef] rounded-2xl shadow-xl overflow-hidden animate-fade-in">
-          <div className="p-6 md:p-8">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 bg-[#f8f5ef] text-[#d14a00] px-3 py-1 rounded-full text-sm font-medium">
-                  <MapPin className="w-4 h-4" />
-                  {tour.location_city}, {tour.location_region}
-                </div>
-                <h1 className="text-3xl md:text-4xl font-black text-[#233274] leading-tight">
-                  {tour.title}
-                </h1>
-                <div className="flex items-center gap-3 text-[#9a98a0]">
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-[#e15f0b] fill-current" />
-                    <span className="font-medium">{parseFloat(tour.rating || 0).toFixed(1)}</span>
-                    <span>({tour.total_reviews || 0} reseñas)</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Shield className="w-4 h-4 text-[#233274]" />
-                    <span>Cancelación gratuita</span>
-                  </div>
-                </div>
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#ebe7df] space-y-4">
+            <div className="flex items-center gap-3">
+              <Home className="w-5 h-5 text-[#e15f0b]" />
+              <div>
+                <p className="text-sm text-[#9a98a0]">Tipo</p>
+                <p className="text-lg font-semibold text-[#233274]">{project.type || 'Residencial'}</p>
               </div>
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <div className="bg-[#f8f5ef] rounded-xl shadow-lg overflow-hidden animate-fade-in">
-                  <div className="relative">
-                    <div
-                      className="relative h-64 md:h-96 overflow-hidden"
-                      onMouseEnter={() => setShowImageCounter(true)}
-                      onMouseLeave={() => setShowImageCounter(false)}
-                    >
-                      <img
-                        src={imageUrls[currentImageIndex]}
-                        alt={tour.title}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-
-                      {imageUrls.length > 1 && (
-                        <>
-                          <button
-                            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-[#f8f5ef]/80 hover:bg-[#f8f5ef] text-[#1a2555] rounded-full p-2 shadow-lg transition-all"
-                            onClick={prevImage}
-                            aria-label="Imagen anterior"
-                          >
-                            <ChevronLeft className="w-5 h-5" />
-                          </button>
-                          <button
-                            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#f8f5ef]/80 hover:bg-[#f8f5ef] text-[#1a2555] rounded-full p-2 shadow-lg transition-all"
-                            onClick={nextImage}
-                            aria-label="Siguiente imagen"
-                          >
-                            <ChevronRight className="w-5 h-5" />
-                          </button>
-
-                          <div className={`absolute bottom-4 right-4 bg-black/60 text-[#f8f5ef] px-3 py-1 rounded-full text-sm transition-opacity ${showImageCounter ? 'opacity-100' : 'opacity-0'}`}>
-                            {currentImageIndex + 1} / {imageUrls.length}
-                          </div>
-                        </>
-                      )}
-
-                      <div className="absolute top-4 right-4 flex gap-2">
-                        <button
-                          className="bg-[#f8f5ef]/80 hover:bg-[#f8f5ef] text-[#1a2555] rounded-full p-2 shadow-lg transition-all"
-                          aria-label="Compartir"
-                          type="button"
-                        >
-                          <Share2 size={18} />
-                        </button>
-                        <button
-                          className={`bg-[#f8f5ef]/80 hover:bg-[#f8f5ef] rounded-full p-2 shadow-lg transition-all ${isFavorite ? 'text-[#d14a00]' : 'text-[#1a2555]'}`}
-                          onClick={handleFavoriteToggle}
-                          aria-label="Guardar en favoritos"
-                          type="button"
-                        >
-                          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
-                        </button>
-                      </div>
-                    </div>
-
-                    {imageUrls.length > 1 && (
-                      <div className="flex p-4 gap-2 overflow-x-auto">
-                        {imageUrls.slice(0, 5).map((img, index) => (
-                          <button
-                            key={index}
-                            className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden transition-all ${index === currentImageIndex ? 'ring-2 ring-[#e15f0b] ring-offset-2' : 'opacity-70 hover:opacity-100'}`}
-                            onClick={() => setCurrentImageIndex(index)}
-                            type="button"
-                          >
-                            <img
-                              src={img}
-                              alt={`Vista ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </button>
-                        ))}
-                        {imageUrls.length > 5 && (
-                          <button
-                            className="relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-[#f8f5ef] flex items-center justify-center"
-                            onClick={() => setCurrentImageIndex(5)}
-                            type="button"
-                          >
-                            <span className="text-[#233274] font-medium">+{imageUrls.length - 5}</span>
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-[#f8f5ef] rounded-xl shadow-lg p-6 animate-fade-in">
-                  <h2 className="text-xl font-bold text-[#233274] mb-4 flex items-center gap-2">
-                    <Info className="w-5 h-5 text-[#e15f0b]" />
-                    Información del Tour
-                  </h2>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-start gap-3 p-3 bg-[#f8f5ef] rounded-lg">
-                      <Clock className="w-5 h-5 text-[#e15f0b] mt-0.5 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm text-[#9a98a0]">Duración:</div>
-                        <div className="font-medium text-[#233274]">
-                          {tour.duration_days > 0 && `${tour.duration_days} día${tour.duration_days > 1 ? 's' : ''}`}
-                          {tour.duration_days > 0 && tour.duration_hours > 0 && ' y '}
-                          {tour.duration_hours > 0 && `${tour.duration_hours} hora${tour.duration_hours > 1 ? 's' : ''}`}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3 p-3 bg-[#f8f5ef] rounded-lg">
-                      <MapPin className="w-5 h-5 text-[#e15f0b] mt-0.5 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm text-[#9a98a0]">Ubicación:</div>
-                        <div className="font-medium text-[#233274]">
-                          {tour.location_city}, {tour.location_region}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3 p-3 bg-[#f8f5ef] rounded-lg">
-                      <Users className="w-5 h-5 text-[#e15f0b] mt-0.5 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm text-[#9a98a0]">Grupo:</div>
-                        <div className="font-medium text-[#233274]">
-                          {tour.min_people} - {tour.max_people} personas
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3 p-3 bg-[#f8f5ef] rounded-lg">
-                      <Shield className="w-5 h-5 text-[#e15f0b] mt-0.5 flex-shrink-0" />
-                      <div>
-                        <div className="text-sm text-[#9a98a0]">Dificultad:</div>
-                        <div className="font-medium text-[#233274] capitalize">
-                          {tour.difficulty_level === 'easy' ? 'Fácil' : tour.difficulty_level === 'moderate' ? 'Moderado' : 'Difícil'}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-[#f8f5ef] rounded-xl shadow-lg overflow-hidden animate-fade-in">
-                  <div className="flex border-b border-[#9a98a0] overflow-x-auto">
-                    {['description', 'itinerary', 'includes', 'excludes', 'requirements'].map((tab) => (
-                      <button
-                        key={tab}
-                        type="button"
-                        className={`px-4 py-3 font-medium text-sm whitespace-nowrap transition-all ${
-                          activeTab === tab
-                            ? 'text-[#d14a00] border-b-2 border-[#e15f0b] bg-[#f8f5ef]'
-                            : 'text-[#9a98a0] hover:text-[#233274] hover:bg-[#f8f5ef]'
-                        }`}
-                        onClick={() => setActiveTab(tab)}
-                      >
-                        {tab === 'description' && 'DESCRIPCIÓN'}
-                        {tab === 'itinerary' && 'ITINERARIO'}
-                        {tab === 'includes' && 'INCLUYE'}
-                        {tab === 'excludes' && 'NO INCLUYE'}
-                        {tab === 'requirements' && 'REQUISITOS'}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="p-6">
-                    {activeTab === 'description' && (
-                      <div className="prose max-w-none">
-                        <p className="whitespace-pre-line text-[#233274] leading-relaxed">{tour.description}</p>
-                      </div>
-                    )}
-
-                    {activeTab === 'itinerary' && (
-                      <div className="prose max-w-none">
-                        <div className="whitespace-pre-line text-[#233274] leading-relaxed">
-                          {tour.itinerary || 'Itinerario no disponible'}
-                        </div>
-                      </div>
-                    )}
-
-                    {activeTab === 'includes' && (
-                      <div>
-                        <ul className="space-y-3">
-                          {tour.includes ? tour.includes.split('\n').map((item, i) => (
-                            item.trim() && (
-                              <li key={i} className="flex items-start gap-3">
-                                <div className="w-6 h-6 rounded-full bg-[#f8f5ef] flex items-center justify-center flex-shrink-0 mt-0.5">
-                                  <Check className="w-4 h-4 text-[#233274]" />
-                                </div>
-                                <span className="text-[#233274]">{item.replace(/^[•-]\s*/, '').trim()}</span>
-                              </li>
-                            )
-                          )) : <li className="text-[#9a98a0]">No hay información disponible</li>}
-                        </ul>
-                      </div>
-                    )}
-
-                    {activeTab === 'excludes' && (
-                      <div>
-                        <ul className="space-y-3">
-                          {tour.excludes ? tour.excludes.split('\n').map((item, i) => (
-                            item.trim() && (
-                              <li key={i} className="flex items-start gap-3">
-                                <div className="w-6 h-6 rounded-full bg-[#f8f5ef] flex items-center justify-center flex-shrink-0 mt-0.5">
-                                  <X className="w-4 h-4 text-[#d14a00]" />
-                                </div>
-                                <span className="text-[#233274]">{item.replace(/^[•-]\s*/, '').trim()}</span>
-                              </li>
-                            )
-                          )) : <li className="text-[#9a98a0]">No hay información disponible</li>}
-                        </ul>
-                      </div>
-                    )}
-
-                    {activeTab === 'requirements' && (
-                      <div className="prose max-w-none">
-                        <div className="whitespace-pre-line text-[#233274] leading-relaxed">
-                          {tour.requirements || 'No hay requisitos específicos'}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="bg-[#f8f5ef] rounded-xl shadow-lg p-6 animate-fade-in space-y-6">
-                  <div className="flex items-center justify-between gap-4 flex-wrap">
-                    <div className="flex items-center gap-2">
-                      <Star className="w-5 h-5 text-[#e15f0b] fill-current" />
-                      <h2 className="text-xl font-bold text-[#233274]">Opiniones de los viajeros</h2>
-                    </div>
-                    <div className="text-sm text-[#9a98a0]">
-                      {tour.total_reviews || 0} reseña(s) · Promedio {parseFloat(tour.rating || 0).toFixed(1)} ⭐
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    <div className="lg:w-1/3 bg-[#f8f5ef] rounded-xl p-5 flex flex-col items-start gap-3">
-                      <span className="text-sm text-[#9a98a0]">Calificación general</span>
-                      <div className="flex items-center gap-3">
-                        <span className="text-5xl font-black text-[#233274]">{parseFloat(tour.rating || 0).toFixed(1)}</span>
-                        <div className="flex items-center gap-1">
-                          {[1, 2, 3, 4, 5].map((value) => (
-                            <Star
-                              key={value}
-                              className={`w-5 h-5 ${value <= Math.round(tour.rating || 0) ? 'text-[#e15f0b] fill-current' : 'text-[#9a98a0]'}`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <p className="text-[#9a98a0]">Basado en {tour.total_reviews || 0} reseñas verificadas</p>
-                    </div>
-
-                    <div className="flex-1 space-y-4">
-                      <div className="bg-[#f8f5ef] rounded-xl p-4">
-                        <h3 className="font-semibold text-[#233274] mb-3">Deja tu reseña</h3>
-                        <form onSubmit={handleReviewSubmit} className="space-y-3">
-                          <div className="flex items-center gap-2">
-                            {[1, 2, 3, 4, 5].map((value) => (
-                              <button
-                                key={value}
-                                type="button"
-                                onClick={() => setReviewForm({ ...reviewForm, rating: value })}
-                                className="p-2 rounded-full hover:bg-[#f8f5ef] transition-colors cursor-pointer"
-                                aria-label={`Calificar con ${value} estrellas`}
-                              >
-                                <Star
-                                  className={`w-6 h-6 ${value <= reviewForm.rating ? 'text-[#e15f0b] fill-current' : 'text-[#9a98a0]'}`}
-                                />
-                              </button>
-                            ))}
-                            <span className="text-sm text-[#9a98a0]">
-                              {reviewForm.rating ? `${reviewForm.rating} de 5` : 'Selecciona tu calificación'}
-                            </span>
-                          </div>
-
-                          <textarea
-                            className="w-full border-2 border-[#9a98a0] rounded-lg p-3 focus:outline-none focus:border-[#e15f0b] transition-colors"
-                            rows={4}
-                            placeholder="Comparte tu experiencia"
-                            value={reviewForm.comment}
-                            onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                          ></textarea>
-
-                          {reviewError && <p className="text-sm text-[#d14a00]">{reviewError}</p>}
-
-                          <div className="flex items-center justify-between flex-wrap gap-2">
-                            <span className="text-sm text-[#9a98a0]">
-                              {existingReview ? 'Ya enviaste una reseña. Puedes actualizarla.' : 'Solo usuarios autenticados pueden reseñar.'}
-                            </span>
-                            <button
-                              type="submit"
-                              disabled={submittingReview}
-                              className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-5 py-2 rounded-lg transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
-                            >
-                              {submittingReview ? 'Guardando...' : existingReview ? 'Actualizar reseña' : 'Enviar reseña'}
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-
-                      <div className="space-y-3">
-                        {reviewsLoading ? (
-                          <p className="text-[#9a98a0]">Cargando reseñas...</p>
-                        ) : reviews.length > 0 ? (
-                          reviews.map((review) => (
-                            <div key={review.id} className="border border-[#9a98a0] rounded-xl p-4 hover:shadow-md transition-shadow">
-                              <div className="flex items-start gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#f8f5ef] text-[#d14a00] flex items-center justify-center font-bold">
-                                  {review.user?.name?.slice(0, 2).toUpperCase() || 'US'}
-                                </div>
-                                <div className="flex-1">
-                                  <div className="flex items-center justify-between gap-2">
-                                    <div>
-                                      <div className="font-semibold text-[#233274]">{review.user?.name || 'Viajero'}</div>
-                                      <div className="text-xs text-[#9a98a0]">{new Date(review.created_at).toLocaleDateString()}</div>
-                                    </div>
-                                    <div className="flex items-center gap-1 text-[#e15f0b]">
-                                      {[1, 2, 3, 4, 5].map((value) => (
-                                        <Star
-                                          key={value}
-                                          className={`w-4 h-4 ${value <= review.rating ? 'fill-current text-[#e15f0b]' : 'text-[#9a98a0]'}`}
-                                        />
-                                      ))}
-                                      <span className="text-sm text-[#233274] font-semibold ml-1">{review.rating}</span>
-                                    </div>
-                                  </div>
-                                  <p className="text-[#233274] mt-2 leading-relaxed">{review.comment}</p>
-                                </div>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="text-[#9a98a0]">Aún no hay reseñas para este tour.</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-1">
-                <div className="sticky top-6 space-y-6">
-                  <div className="bg-[#f8f5ef] rounded-xl shadow-lg overflow-hidden animate-fade-in">
-                    <div className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] p-1">
-                      <div className="bg-[#f8f5ef] p-6">
-                        <div className="text-center mb-6">
-                          <div className="text-sm text-[#9a98a0] mb-1">PRECIO POR PERSONA</div>
-                          <div className="text-3xl font-bold text-[#233274]">
-                            S/. {parseFloat(tour.discount_price || tour.price).toFixed(2)}
-                            {tour.discount_price && (
-                              <span className="text-lg text-[#9a98a0] line-through block">
-                                S/. {parseFloat(tour.price).toFixed(2)}
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-sm text-[#9a98a0] mt-1">Impuestos incluidos</div>
-                        </div>
-
-                        <div className="space-y-3 mb-6">
-                          <div className="flex items-center gap-2 text-sm">
-                            <div className="w-5 h-5 rounded-full bg-[#f8f5ef] flex items-center justify-center flex-shrink-0">
-                              <Check className="w-3 h-3 text-[#233274]" />
-                            </div>
-                            <span className="text-[#233274]">Pago 100% seguro</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm">
-                            <div className="w-5 h-5 rounded-full bg-[#f8f5ef] flex items-center justify-center flex-shrink-0">
-                              <Check className="w-3 h-3 text-[#233274]" />
-                            </div>
-                            <span className="text-[#233274]">Cancelación hasta {tour.cancellation_hours}h antes</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm">
-                            <div className="w-5 h-5 rounded-full bg-[#f8f5ef] flex items-center justify-center flex-shrink-0">
-                              <Check className="w-3 h-3 text-[#233274]" />
-                            </div>
-                            <span className="text-[#233274]">Confirmación instantánea</span>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={handleReserveNow}
-                          className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
-                        >
-                          <Calendar className="w-5 h-5" />
-                          Reservar Ahora
-                        </button>
-
-                        <p className="text-xs text-[#9a98a0] text-center mt-4">
-                          Selecciona fecha y cantidad en el siguiente paso
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {tour.agency && (
-                    <div className="bg-[#f8f5ef] rounded-xl shadow-lg p-6 animate-fade-in">
-                      <h3 className="text-lg font-bold text-[#233274] mb-4">Operado por</h3>
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-[#f8f5ef] rounded-full flex items-center justify-center">
-                          <Camera className="w-6 h-6 text-[#9a98a0]" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-[#233274]">{tour.agency.business_name || 'Agencia de Tours'}</h4>
-                          <div className="flex items-center gap-1 mt-1">
-                            <Star fill="currentColor" className="w-4 h-4 text-[#e15f0b]" />
-                            <span className="text-sm font-medium">{parseFloat(tour.agency.rating || 0).toFixed(1)}</span>
-                            <span className="text-sm text-[#9a98a0]">({tour.agency.total_reviews || 0} reseñas)</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="bg-[#f8f5ef] rounded-xl shadow-lg p-6 animate-fade-in">
-                    <h4 className="font-bold text-[#233274] mb-3 flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-[#233274]" />
-                      Política de Cancelación
-                    </h4>
-                    <p className="text-sm text-[#9a98a0]">
-                      {tour.cancellation_policy || `Cancelación gratuita hasta ${tour.cancellation_hours} horas antes del inicio del tour.`}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <p className="text-sm text-[#9a98a0]">Estado</p>
+              <p className="text-lg font-semibold text-[#233274]">{project.status === 'published' ? 'Publicado' : 'Borrador'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-[#9a98a0]">Resumen</p>
+              <p className="text-[#4b4b4b]">{project.summary || 'Proyecto destacado del portafolio de CASALIZ.'}</p>
             </div>
           </div>
         </div>
