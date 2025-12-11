@@ -14,6 +14,10 @@ class ProjectReviewPolicy
 
     public function delete(User $user, ProjectReview $review): bool
     {
-        return $user->isAdmin() || $user->id === $review->user_id;
+        if ($user->isMasterAdmin() || $user->isAdmin()) {
+            return true;
+        }
+
+        return $user->id === $review->user_id;
     }
 }
