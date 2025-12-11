@@ -223,31 +223,6 @@ html {
    CORRECCIÓN DE PÁGINAS ESPECÍFICAS
    ==================================================== */
 
-/* Cart Page */
-.cart-page {
-  padding: 2rem 0;
-  background: var(--slate-50);
-  min-height: 80vh;
-}
-
-.cart-page .container-custom {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-/* Checkout Page */
-.checkout-page-wrapper {
-  background-color: var(--slate-50);
-  padding: 3rem 0;
-  min-height: calc(100vh - 80px);
-}
-
-@media (max-width: 768px) {
-  .checkout-page-wrapper {
-    padding: 2rem 0;
-  }
-}
-
 /* Tour Detail Page */
 .tour-detail-page {
   padding: 2rem 0;

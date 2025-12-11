@@ -2,20 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Calendar, 
-  Users, 
-  Clock, 
-  MapPin, 
+import {
+  Calendar,
+  Users,
+  Clock,
+  MapPin,
   AlertCircle,
-  ShoppingCart,
   ArrowLeft,
   Info,
   Star,
   Shield
 } from 'lucide-react';
 import api from '../../../shared/utils/api';
-import useCartStore from '../../../store/cartStore';
 import useAuthStore from '../../../store/authStore';
 import DateSelector from '../components/DateSelector';
 import GuestSelector from '../components/GuestSelector';
@@ -24,12 +22,12 @@ const BookingPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
-  const { addItem } = useCartStore();
-  
+
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [focusedField, setFocusedField] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   
   const [bookingData, setBookingData] = useState({
     date: '',
@@ -65,7 +63,7 @@ const BookingPage = () => {
     return total;
   };
 
-  const handleAddToCart = () => {
+  const handleCreateBooking = async () => {
     if (!isAuthenticated) {
       navigate('/login', { state: { from: `/booking/${id}` } });
       return;
@@ -86,21 +84,37 @@ const BookingPage = () => {
       return;
     }
 
-    const cartItem = {
+    const bookingPayload = {
       tour_id: tour.id,
-      tour_title: tour.title,
-      tour_image: tour.featured_image,
-      date: bookingData.date,
+      booking_date: bookingData.date,
+      booking_time: null,
       adults: bookingData.adults,
       children: bookingData.children,
       infants: bookingData.infants,
       special_requests: bookingData.specialRequests,
-      price_per_adult: parseFloat(tour.discount_price || tour.price),
       total_price: calculatePrice(),
+      payment_method: 'manual',
     };
 
-    addItem(cartItem);
-    navigate('/cart');
+    setSubmitting(true);
+
+    try {
+      await api.post('/bookings', bookingPayload);
+
+      navigate('/booking/success', {
+        state: {
+          totalPaid: bookingPayload.total_price,
+          bookingsCount: 1,
+          paymentMethod: 'manual',
+        },
+        replace: true,
+      });
+    } catch (err) {
+      console.error('Error creating booking:', err);
+      setError(err.response?.data?.message || 'No pudimos completar tu reserva. Inténtalo nuevamente.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -326,14 +340,13 @@ const BookingPage = () => {
                 </span>
               </div>
 
-              {/* Botón Agregar al Carrito */}
+              {/* Botón de reserva */}
               <button
-                onClick={handleAddToCart}
-                disabled={!bookingData.date}
+                onClick={handleCreateBooking}
+                disabled={!bookingData.date || submitting}
                 className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ShoppingCart className="w-5 h-5" />
-                Agregar al Carrito
+                {submitting ? 'Procesando reserva...' : 'Reservar ahora'}
               </button>
 
               <div className="mt-6 bg-[#f8f5ef] rounded-xl p-4">

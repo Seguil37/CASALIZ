@@ -18,9 +18,7 @@ import TourDetailPage from './features/tours/pages/TourDetailPage';
 import LoginPage from './features/auth/pages/LoginPage';
 import RegisterPage from './features/auth/pages/RegisterPage';
 import ProfilePage from './features/profile/pages/ProfilePage';
-import CartPage from './features/booking/pages/CartPage';
 import BookingPage from './features/booking/pages/BookingPage';
-import CheckoutPage from './features/booking/pages/CheckoutPage';
 import BookingSuccessPage from './features/booking/pages/BookingSuccessPage';
 import MyBookingsPage from './features/customer/pages/MyBookingsPage';
 import FavoritesPage from './features/customer/pages/FavoritesPage';
@@ -77,7 +75,6 @@ function App() {
             <Route path="tours/:id" element={<TourDetailPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
-            <Route path="cart" element={<CartPage />} />
             <Route path="contacto" element={<ContactPage />} />
 
             {/* Customer Routes */}
@@ -136,15 +133,6 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['customer']}>
                   <BookingPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="checkout"
-              element={
-                <ProtectedRoute allowedRoles={['customer']}>
-                  <CheckoutPage />
                 </ProtectedRoute>
               }
             />
