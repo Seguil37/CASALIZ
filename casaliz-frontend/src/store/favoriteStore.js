@@ -1,7 +1,8 @@
 // src/store/favoriteStore.js
 import { create } from 'zustand';
-import api from '../shared/utils/api';
+import { favoritesApi } from '../shared/utils/api';
 import useAuthStore from './authStore';
+import { ROLES } from '../shared/constants/roles';
 
 const useFavoriteStore = create((set, get) => ({
   favorites: [],
@@ -12,7 +13,7 @@ const useFavoriteStore = create((set, get) => ({
 
   fetchFavorites: async (force = false) => {
     const { isAuthenticated, user } = useAuthStore.getState();
-    if (!isAuthenticated || user?.role !== 'customer') {
+    if (!isAuthenticated || user?.role !== ROLES.CLIENT) {
       set({ favorites: [], hasFetched: false });
       return;
     }
@@ -21,9 +22,9 @@ const useFavoriteStore = create((set, get) => ({
 
     set({ loading: true, error: null });
     try {
-      const response = await api.get('/favorites');
+      const response = await favoritesApi.list();
       const data = response.data.data || response.data || [];
-      const favoriteIds = data.map((item) => item.id || item.tour_id || item.tour?.id).filter(Boolean);
+      const favoriteIds = data.map((item) => item.id).filter(Boolean);
       set({ favorites: favoriteIds, favoriteTours: data, hasFetched: true });
     } catch (error) {
       set({ error: error.response?.data?.message || 'No se pudieron cargar tus favoritos' });
@@ -34,23 +35,32 @@ const useFavoriteStore = create((set, get) => ({
 
   toggleFavorite: async (tourId) => {
     const { isAuthenticated, user } = useAuthStore.getState();
-    if (!isAuthenticated || user?.role !== 'customer') {
+    if (!isAuthenticated || user?.role !== ROLES.CLIENT) {
       throw new Error('AUTH_REQUIRED');
     }
 
-    const response = await api.post(`/favorites/${tourId}/toggle`);
-    const isFavorite = response.data?.is_favorite;
+    const isCurrentlyFavorite = get().favorites.includes(tourId);
+
+    if (isCurrentlyFavorite) {
+      await favoritesApi.remove(tourId);
+      set((state) => ({
+        favorites: state.favorites.filter((id) => id !== tourId),
+        favoriteTours: state.favoriteTours.filter((tour) => tour.id !== tourId),
+      }));
+      return { is_favorite: false };
+    }
+
+    const response = await favoritesApi.add(tourId);
+    const project = response.data?.project || response.data;
 
     set((state) => ({
-      favorites: isFavorite
-        ? [...new Set([...state.favorites, tourId])]
-        : state.favorites.filter((id) => id !== tourId),
-      favoriteTours: isFavorite
-        ? state.favoriteTours
-        : state.favoriteTours.filter((tour) => (tour.id || tour.tour_id) !== tourId),
+      favorites: [...new Set([...state.favorites, tourId])],
+      favoriteTours: project
+        ? [project, ...state.favoriteTours.filter((tour) => tour.id !== tourId)]
+        : state.favoriteTours,
     }));
 
-    return response.data;
+    return { is_favorite: true };
   },
 
   reset: () => set({ favorites: [], favoriteTours: [], hasFetched: false, error: null }),

@@ -23,6 +23,7 @@ import BookingSuccessPage from './features/booking/pages/BookingSuccessPage';
 import MyBookingsPage from './features/customer/pages/MyBookingsPage';
 import FavoritesPage from './features/customer/pages/FavoritesPage';
 import ContactPage from './features/contact/pages/ContactPage';
+import { ROLES } from './shared/constants/roles';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -81,7 +82,9 @@ function App() {
             <Route
               path="profile"
               element={
-                <ProtectedRoute allowedRoles={['customer', 'agency', 'admin']}>
+                <ProtectedRoute
+                  allowedRoles={[ROLES.CLIENT, ROLES.ADMIN, ROLES.MASTER_ADMIN]}
+                >
                   <ProfilePage />
                 </ProtectedRoute>
               }
@@ -91,7 +94,7 @@ function App() {
             <Route
               path="agency/dashboard"
               element={
-                <ProtectedRoute allowedRoles={['agency']}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <AgencyDashboard />
                 </ProtectedRoute>
               }
@@ -99,7 +102,7 @@ function App() {
             <Route
               path="agency/tours"
               element={
-                <ProtectedRoute allowedRoles={['agency']}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <MyToursPage />
                 </ProtectedRoute>
               }
@@ -107,7 +110,7 @@ function App() {
             <Route
               path="agency/tours/create"
               element={
-                <ProtectedRoute allowedRoles={['agency']}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <CreateTourPage />
                 </ProtectedRoute>
               }
@@ -115,7 +118,7 @@ function App() {
             <Route
               path="agency/tours/:id/edit"
               element={
-                <ProtectedRoute allowedRoles={['agency']}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <EditTourPage />
                 </ProtectedRoute>
               }
@@ -123,7 +126,7 @@ function App() {
             <Route
               path="agency/bookings"
               element={
-                <ProtectedRoute allowedRoles={['agency']}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <AgencyBookingsPage />
                 </ProtectedRoute>
               }
@@ -131,7 +134,7 @@ function App() {
             <Route
               path="booking/:id"
               element={
-                <ProtectedRoute allowedRoles={['customer']}>
+                <ProtectedRoute allowedRoles={[ROLES.CLIENT]}>
                   <BookingPage />
                 </ProtectedRoute>
               }
@@ -140,7 +143,7 @@ function App() {
             <Route
               path="booking/success"
               element={
-                <ProtectedRoute allowedRoles={['customer']}>
+                <ProtectedRoute allowedRoles={[ROLES.CLIENT]}>
                   <BookingSuccessPage />
                 </ProtectedRoute>
               }
@@ -149,7 +152,7 @@ function App() {
             <Route
               path="profile/bookings"
               element={
-                <ProtectedRoute allowedRoles={['customer']}>
+                <ProtectedRoute allowedRoles={[ROLES.CLIENT]}>
                   <MyBookingsPage />
                 </ProtectedRoute>
               }
@@ -157,7 +160,7 @@ function App() {
             <Route
               path="favorites"
               element={
-                <ProtectedRoute allowedRoles={['customer']}>
+                <ProtectedRoute allowedRoles={[ROLES.CLIENT]}>
                   <FavoritesPage />
                 </ProtectedRoute>
               }
