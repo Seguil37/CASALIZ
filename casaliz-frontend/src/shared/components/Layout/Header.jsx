@@ -96,16 +96,6 @@ const Header = () => {
               </Link>
             </div>
 
-            {/* Hazte Proveedor */}
-            {!isAuthenticated || user?.role === 'customer' ? (
-              <Link
-                to="/register?role=agency"
-                className="hidden md:block text-[#233274] hover:text-[#e15f0b] font-semibold transition-colors"
-              >
-                Hazte Proveedor
-              </Link>
-            ) : null}
-
             {/* Carrito */}
             <Link
               to="/cart"
@@ -275,15 +265,6 @@ const Header = () => {
                   <span>Contactanos</span>
                 </Link>
               </div>
-              {!isAuthenticated || user?.role === 'customer' ? (
-                <Link
-                  to="/register?role=agency"
-                  className="px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold border-t border-[#9a98a0] pt-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Hazte Proveedor
-                </Link>
-              ) : null}
             </div>
           </div>
         )}
