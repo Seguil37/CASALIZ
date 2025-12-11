@@ -59,6 +59,11 @@ class Project extends Model
         return $this->hasMany(ProjectReview::class);
     }
 
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
     public function author()
     {
         return $this->belongsTo(User::class, 'created_by');

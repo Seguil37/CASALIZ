@@ -6,7 +6,7 @@ import useAuthStore from '../../../store/authStore';
 import { Heart } from 'lucide-react';
 
 const FavoritesPage = () => {
-  const { favorites, favoriteTours, fetchFavorites, loading } = useFavoriteStore();
+  const { favorites, favoriteProjects, fetchFavorites, loading } = useFavoriteStore();
   const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const FavoritesPage = () => {
   }, [fetchFavorites, isAuthenticated]);
 
   const hasFavorites = favorites.length > 0;
-  const toursToShow = favoriteTours.length > 0 ? favoriteTours : [];
+  const toursToShow = favoriteProjects.length > 0 ? favoriteProjects : [];
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">

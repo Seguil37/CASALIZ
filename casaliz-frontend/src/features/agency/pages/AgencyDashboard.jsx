@@ -51,7 +51,7 @@ const AgencyDashboard = () => {
             <p className="text-[#9a98a0]">Administra los proyectos del portafolio CASALIZ.</p>
           </div>
           <Link
-            to="/agency/tours/create"
+            to="/admin/projects/create"
             className="mt-4 md:mt-0 inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
           >
             <Plus className="w-5 h-5" />
@@ -68,7 +68,7 @@ const AgencyDashboard = () => {
         <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-black text-[#233274]">Proyectos recientes</h2>
-            <Link to="/tours" className="text-primary hover:text-primary-dark font-semibold">
+            <Link to="/projects" className="text-primary hover:text-primary-dark font-semibold">
               Ver todos →
             </Link>
           </div>
@@ -78,7 +78,7 @@ const AgencyDashboard = () => {
               <Home className="w-16 h-16 text-[#9a98a0] mx-auto mb-4" />
               <p className="text-[#9a98a0] mb-4">Aún no has creado proyectos</p>
               <Link
-                to="/agency/tours/create"
+                to="/admin/projects/create"
                 className="inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl"
               >
                 <Plus className="w-5 h-5" />
@@ -135,8 +135,8 @@ const ProjectRow = ({ project }) => (
         </span>
       )}
       <div className="flex items-center gap-2">
-        <Link to={`/tours/${project.id}`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Eye className="w-4 h-4 text-[#233274]" /></Link>
-        <Link to={`/agency/tours/${project.id}/edit`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Edit className="w-4 h-4 text-[#233274]" /></Link>
+        <Link to={`/projects/${project.id}`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Eye className="w-4 h-4 text-[#233274]" /></Link>
+        <Link to={`/admin/projects/${project.id}/edit`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Edit className="w-4 h-4 text-[#233274]" /></Link>
         <button type="button" className="p-2 rounded-full hover:bg-[#f8f5ef]">
           <Trash2 className="w-4 h-4 text-[#d14a00]" />
         </button>

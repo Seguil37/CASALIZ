@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SystemSettingsController;
+use App\Http\Controllers\Api\UserController;
 
 Route::prefix('v1')->group(function () {
     // Autenticación
@@ -42,5 +44,17 @@ Route::prefix('v1')->group(function () {
 
         Route::post('/reviews', [ReviewController::class, 'store']);
         Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
+
+        Route::prefix('users')->middleware('can:manage-users')->group(function () {
+            Route::get('/', [UserController::class, 'index']);
+            Route::post('/', [UserController::class, 'store']);
+            Route::put('/{user}', [UserController::class, 'update']);
+        });
+
+        Route::prefix('favorites')->middleware('can:manage-favorites')->group(function () {
+            Route::get('/', [FavoriteController::class, 'index']);
+            Route::post('/', [FavoriteController::class, 'store']);
+            Route::delete('/{project}', [FavoriteController::class, 'destroy']);
+        });
     });
 });
