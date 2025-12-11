@@ -175,10 +175,10 @@ const BookingSuccessPage = () => {
         {/* Explorar más */}
         <div className="text-center">
           <Link
-            to="/tours"
+            to="/projects"
             className="inline-flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-bold text-lg transition-colors"
           >
-            Explorar más experiencias
+            Explorar más proyectos
             <ArrowRight className="w-5 h-5" />
           </Link>
           <p className="text-sm text-[#9a98a0] mt-2">

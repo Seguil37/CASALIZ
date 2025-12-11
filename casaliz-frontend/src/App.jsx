@@ -71,8 +71,10 @@ function App() {
           <Route path="/" element={<MainLayout />}>
             {/* Public Routes */}
             <Route index element={<HomePage />} />
-            <Route path="tours" element={<ToursPage />} />
-            <Route path="tours/:id" element={<TourDetailPage />} />
+            <Route path="projects" element={<ToursPage />} />
+            <Route path="projects/:slug" element={<TourDetailPage />} />
+            <Route path="tours" element={<Navigate to="/projects" replace />} />
+            <Route path="tours/:slug" element={<TourDetailPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="contacto" element={<ContactPage />} />

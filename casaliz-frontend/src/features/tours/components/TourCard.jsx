@@ -7,7 +7,7 @@ const TourCard = ({ tour }) => {
 
   return (
     <Link
-      to={`/tours/${tour.id}`}
+      to={`/projects/${tour.slug || tour.id}`}
       className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 border border-[#9a98a0]"
     >
       <div className="relative h-48 overflow-hidden">
