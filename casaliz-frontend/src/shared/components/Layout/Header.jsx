@@ -2,26 +2,22 @@
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, ShoppingCart, Menu, X, MapPin, Phone, Mail } from 'lucide-react';
+import { Search, User, Menu, X, MapPin, Phone, Mail } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
-import useCartStore from '../../../store/cartStore';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuthStore();
-  const { items } = useCartStore();
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/tours?search=${searchQuery}`);
+      navigate(`/projects?search=${searchQuery}`);
     }
   };
-
-  const cartCount = items.length;
 
   return (
     <header className="bg-[#f8f5ef] shadow-md sticky top-0 z-50">
@@ -43,7 +39,7 @@ const Header = () => {
               <div className="relative w-full">
                 <input
                   type="text"
-                  placeholder="¿A dónde quieres ir?"
+                  placeholder="Busca proyectos o ubicaciones"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all bg-[#f8f5ef] text-[#233274] placeholder-[#9a98a0]"
@@ -96,29 +92,6 @@ const Header = () => {
               </Link>
             </div>
 
-            {/* Hazte Proveedor */}
-            {!isAuthenticated || user?.role === 'customer' ? (
-              <Link
-                to="/register?role=agency"
-                className="hidden md:block text-[#233274] hover:text-[#e15f0b] font-semibold transition-colors"
-              >
-                Hazte Proveedor
-              </Link>
-            ) : null}
-
-            {/* Carrito */}
-            <Link
-              to="/cart"
-              className="relative p-2 hover:bg-white rounded-full transition-all"
-            >
-              <ShoppingCart className="w-6 h-6 text-[#233274]" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-[#f8f5ef] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-
             {/* Usuario */}
             {isAuthenticated ? (
               <div className="relative group">
@@ -150,41 +123,12 @@ const Header = () => {
                     Mi Perfil
                   </Link>
 
-                  {/* Mis Reservas - Solo para clientes */}
-                  {user?.role === 'customer' && (
+                  {(user?.role === 'admin' || user?.role === 'master_admin') && (
                     <Link
-                      to="/profile/bookings"
-                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
-                    >
-                      Mis Reservas
-                    </Link>
-                  )}
-
-                  {/* Favoritos - Solo para clientes */}
-                  {user?.role === 'customer' && (
-                    <Link
-                      to="/favorites"
-                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
-                    >
-                      Favoritos
-                    </Link>
-                  )}
-
-                  {user?.role === 'agency' && (
-                    <Link
-                      to="/agency/dashboard"
+                      to="/admin/projects"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
-                      Dashboard Agencia
-                    </Link>
-                  )}
-
-                  {user?.role === 'customer' && (
-                    <Link
-                      to="/customer/dashboard"
-                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
-                    >
-                      Dashboard
+                      Panel de proyectos
                     </Link>
                   )}
 
@@ -225,7 +169,7 @@ const Header = () => {
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
-              placeholder="¿A dónde quieres ir?"
+              placeholder="Busca proyectos o ubicaciones"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none"
@@ -275,15 +219,6 @@ const Header = () => {
                   <span>Contactanos</span>
                 </Link>
               </div>
-              {!isAuthenticated || user?.role === 'customer' ? (
-                <Link
-                  to="/register?role=agency"
-                  className="px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold border-t border-[#9a98a0] pt-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Hazte Proveedor
-                </Link>
-              ) : null}
             </div>
           </div>
         )}
