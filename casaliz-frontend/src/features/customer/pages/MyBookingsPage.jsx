@@ -104,27 +104,27 @@ const MyBookingsPage = () => {
     const configs = {
       pending: {
         label: 'Pendiente',
-        color: 'bg-yellow-100 text-yellow-800',
+        color: 'bg-[#f8f5ef] text-[#d14a00]',
         icon: Clock
       },
       confirmed: {
         label: 'Confirmado',
-        color: 'bg-green-100 text-green-800',
+        color: 'bg-[#f8f5ef] text-[#1a2555]',
         icon: CheckCircle
       },
       cancelled: {
         label: 'Cancelado',
-        color: 'bg-red-100 text-red-800',
+        color: 'bg-[#f8f5ef] text-[#d14a00]',
         icon: XCircle
       },
       completed: {
         label: 'Completado',
-        color: 'bg-blue-100 text-blue-800',
+        color: 'bg-[#f8f5ef] text-[#1a2555]',
         icon: CheckCircle
       },
       in_progress: {
         label: 'En progreso',
-        color: 'bg-purple-100 text-purple-800',
+        color: 'bg-[#f8f5ef] text-[#1a2555]',
         icon: Clock
       }
     };
@@ -149,37 +149,37 @@ const MyBookingsPage = () => {
 
   if (loading && bookings.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 text-yellow-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600 font-medium">Cargando tus reservas...</p>
+          <Loader2 className="w-12 h-12 text-[#e15f0b] animate-spin mx-auto mb-4" />
+          <p className="text-[#9a98a0] font-medium">Cargando tus reservas...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[#f8f5ef] py-8">
       <div className="container-custom max-w-6xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-black text-gray-900 mb-2">
+          <h1 className="text-4xl font-black text-[#233274] mb-2">
             Mis Reservas
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[#9a98a0]">
             Gestiona y revisa todas tus experiencias reservadas
           </p>
         </div>
 
         {/* Filtros */}
-        <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+        <div className="bg-[#f8f5ef] rounded-xl shadow-md p-4 mb-6">
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 filter === 'all'
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#e15f0b] text-[#f8f5ef]'
+                  : 'bg-[#f8f5ef] text-[#233274] hover:bg-[#f8f5ef]'
               }`}
             >
               Todas
@@ -188,8 +188,8 @@ const MyBookingsPage = () => {
               onClick={() => setFilter('confirmed')}
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 filter === 'confirmed'
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#f8f5ef]0 text-[#f8f5ef]'
+                  : 'bg-[#f8f5ef] text-[#233274] hover:bg-[#f8f5ef]'
               }`}
             >
               Confirmadas
@@ -198,8 +198,8 @@ const MyBookingsPage = () => {
               onClick={() => setFilter('pending')}
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 filter === 'pending'
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#e15f0b] text-[#f8f5ef]'
+                  : 'bg-[#f8f5ef] text-[#233274] hover:bg-[#f8f5ef]'
               }`}
             >
               Pendientes
@@ -208,8 +208,8 @@ const MyBookingsPage = () => {
               onClick={() => setFilter('completed')}
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 filter === 'completed'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#f8f5ef]0 text-[#f8f5ef]'
+                  : 'bg-[#f8f5ef] text-[#233274] hover:bg-[#f8f5ef]'
               }`}
             >
               Completadas
@@ -218,8 +218,8 @@ const MyBookingsPage = () => {
               onClick={() => setFilter('cancelled')}
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 filter === 'cancelled'
-                  ? 'bg-red-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-[#f8f5ef]0 text-[#f8f5ef]'
+                  : 'bg-[#f8f5ef] text-[#233274] hover:bg-[#f8f5ef]'
               }`}
             >
               Canceladas
@@ -229,29 +229,29 @@ const MyBookingsPage = () => {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+          <div className="bg-[#f8f5ef] border-l-4 border-[#d14a00] p-4 rounded-lg mb-6">
             <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500" />
-              <p className="text-red-700 font-medium">{error}</p>
+              <AlertCircle className="w-5 h-5 text-[#d14a00]" />
+              <p className="text-[#d14a00] font-medium">{error}</p>
             </div>
           </div>
         )}
 
         {/* Lista de Reservas */}
         {filteredBookings.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Calendar className="w-12 h-12 text-gray-400" />
+          <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-12 text-center">
+            <div className="w-24 h-24 bg-[#f8f5ef] rounded-full flex items-center justify-center mx-auto mb-6">
+              <Calendar className="w-12 h-12 text-[#9a98a0]" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+            <h3 className="text-2xl font-bold text-[#233274] mb-3">
               No tienes reservas
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-[#9a98a0] mb-6">
               Explora nuestros tours y comienza tu aventura
             </p>
             <button
               onClick={() => navigate('/tours')}
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
             >
               Explorar Tours
             </button>
@@ -265,7 +265,7 @@ const MyBookingsPage = () => {
               return (
                 <div
                   key={booking.id}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
+                  className="bg-[#f8f5ef] rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
                 >
                   <div className="md:flex">
                     {/* Imagen */}
@@ -285,10 +285,10 @@ const MyBookingsPage = () => {
                     <div className="flex-1 p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          <h3 className="text-xl font-bold text-[#233274] mb-2">
                             {booking.tour?.title}
                           </h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-4 text-sm text-[#9a98a0]">
                             <div className="flex items-center gap-1">
                               <Calendar className="w-4 h-4" />
                               {new Date(booking.booking_date).toLocaleDateString('es-PE', {
@@ -306,21 +306,21 @@ const MyBookingsPage = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm text-gray-600 mb-1">Total pagado</p>
-                          <p className="text-2xl font-black text-yellow-500">
+                          <p className="text-sm text-[#9a98a0] mb-1">Total pagado</p>
+                          <p className="text-2xl font-black text-[#e15f0b]">
                             S/. {parseFloat(booking.total_price).toFixed(2)}
                           </p>
                         </div>
                       </div>
 
                       {/* Detalles */}
-                      <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-700">
+                      <div className="flex flex-wrap gap-4 mb-4 text-sm text-[#233274]">
                         <div className="flex items-center gap-1">
-                          <Users className="w-4 h-4 text-gray-500" />
+                          <Users className="w-4 h-4 text-[#9a98a0]" />
                           {booking.number_of_people} persona{booking.number_of_people > 1 ? 's' : ''}
                         </div>
                         <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4 text-gray-500" />
+                          <MapPin className="w-4 h-4 text-[#9a98a0]" />
                           {booking.tour?.location_city}
                         </div>
                       </div>
@@ -329,7 +329,7 @@ const MyBookingsPage = () => {
                       <div className="flex flex-wrap gap-3">
                         <button
                           onClick={() => handleDownloadVoucher(booking.id)}
-                          className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all font-medium"
+                          className="flex items-center gap-2 px-4 py-2 bg-[#f8f5ef]0 hover:bg-[#233274] text-[#f8f5ef] rounded-lg transition-all font-medium"
                         >
                           <Download className="w-4 h-4" />
                           Descargar
@@ -337,7 +337,7 @@ const MyBookingsPage = () => {
 
                         <button
                           onClick={() => handleContactAgency(booking)}
-                          className="flex items-center gap-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-all font-medium"
+                          className="flex items-center gap-2 px-4 py-2 bg-[#f8f5ef]0 hover:bg-[#1a2555] text-[#f8f5ef] rounded-lg transition-all font-medium"
                         >
                           <MessageSquare className="w-4 h-4" />
                           Contactar
@@ -347,7 +347,7 @@ const MyBookingsPage = () => {
                           <button
                             onClick={() => handleCancelBooking(booking.id)}
                             disabled={cancellingId === booking.id}
-                            className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all font-medium disabled:opacity-50"
+                            className="flex items-center gap-2 px-4 py-2 bg-[#f8f5ef]0 hover:bg-[#d14a00] text-[#f8f5ef] rounded-lg transition-all font-medium disabled:opacity-50"
                           >
                             {cancellingId === booking.id ? (
                               <>
@@ -365,7 +365,7 @@ const MyBookingsPage = () => {
 
                         <button
                           onClick={() => navigate(`/tours/${booking.tour_id}`)}
-                          className="flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-all font-medium ml-auto"
+                          className="flex items-center gap-2 px-4 py-2 bg-[#f8f5ef] hover:bg-[#9a98a0] text-[#233274] rounded-lg transition-all font-medium ml-auto"
                         >
                           Ver tour
                           <ChevronRight className="w-4 h-4" />
@@ -374,13 +374,13 @@ const MyBookingsPage = () => {
 
                       {/* Dejar reseña si está completado */}
                       {booking.status === 'completed' && !booking.review && (
-                        <div className="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded">
-                          <p className="text-sm text-yellow-800 mb-2">
+                        <div className="mt-4 bg-[#f8f5ef] border-l-4 border-[#e15f0b] p-3 rounded">
+                          <p className="text-sm text-[#d14a00] mb-2">
                             ¿Disfrutaste esta experiencia? ¡Déjanos tu reseña!
                           </p>
                           <button
                             onClick={() => navigate(`/tours/${booking.tour_id}?review=true`)}
-                            className="flex items-center gap-1 text-yellow-700 hover:text-yellow-800 font-medium text-sm"
+                            className="flex items-center gap-1 text-[#d14a00] hover:text-[#d14a00] font-medium text-sm"
                           >
                             <Star className="w-4 h-4" />
                             Dejar reseña

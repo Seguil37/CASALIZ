@@ -77,16 +77,16 @@ const ProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="text-center bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <X className="w-8 h-8 text-red-500" />
+      <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="text-center bg-[#f8f5ef] rounded-2xl shadow-xl p-8 max-w-md mx-4">
+          <div className="w-16 h-16 bg-[#f8f5ef] rounded-full flex items-center justify-center mx-auto mb-4">
+            <X className="w-8 h-8 text-[#d14a00]" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Debes iniciar sesión</h2>
-          <p className="text-gray-600 mb-6">Por favor, inicia sesión para ver tu perfil</p>
+          <h2 className="text-2xl font-bold text-[#233274] mb-2">Debes iniciar sesión</h2>
+          <p className="text-[#9a98a0] mb-6">Por favor, inicia sesión para ver tu perfil</p>
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Iniciar Sesión
           </Link>
@@ -96,16 +96,16 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef] py-12 px-4 sm:px-6 lg:px-8">
       <div className="container-custom max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Columna Principal - Perfil y Formulario */}
           <div className="md:col-span-2 space-y-8">
             {/* Header con Avatar y Botón de Editar */}
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 animate-fade-in">
+            <div className="bg-[#f8f5ef] rounded-2xl shadow-xl overflow-hidden mb-8 animate-fade-in">
               {/* Banner de Perfil */}
-              <div className="h-32 bg-gradient-to-br from-yellow-400 to-orange-500 relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/50 to-orange-500/50"></div>
+              <div className="h-32 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#e15f0b]/50 to-[#d14a00]/50"></div>
                 <div className="relative z-10 flex items-center justify-center h-full">
                   {user?.avatar ? (
                     <img
@@ -114,9 +114,9 @@ const ProfilePage = () => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-32 h-32 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <User className="w-16 h-16 text-yellow-600" />
-                    <span className="text-2xl font-bold text-yellow-800">
+                    <div className="w-32 h-32 bg-[#f8f5ef] rounded-full flex items-center justify-center">
+                      <User className="w-16 h-16 text-[#d14a00]" />
+                    <span className="text-2xl font-bold text-[#d14a00]">
                         {user?.name?.charAt(0).toUpperCase()}
                       </span>
                     </div>
@@ -127,9 +127,9 @@ const ProfilePage = () => {
               {/* Botón de Editar */}
               <button
                 onClick={() => setIsEditing(true)}
-                className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2 hover:bg-white transition-colors"
+                className="absolute top-4 right-4 bg-[#f8f5ef]/90 backdrop-blur-sm rounded-full p-2 hover:bg-[#f8f5ef] transition-colors"
               >
-                <Edit2 className="w-5 h-5 text-gray-700" />
+                <Edit2 className="w-5 h-5 text-[#233274]" />
               </button>
             </div>
 
@@ -138,8 +138,8 @@ const ProfilePage = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Nombre */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <User className="w-5 h-5 text-yellow-500" />
+                  <label className="block text-sm font-semibold text-[#233274] mb-2 flex items-center gap-2">
+                    <User className="w-5 h-5 text-[#e15f0b]" />
                     Nombre completo
                   </label>
                   <div className="relative">
@@ -148,17 +148,17 @@ const ProfilePage = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-yellow-500 focus:outline-none transition-all ${
+                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all ${
                         errors.name
-                          ? 'border-red-500'
-                          : 'border-gray-200 focus:border-yellow-500'
+                          ? 'border-[#d14a00]'
+                          : 'border-[#9a98a0] focus:border-[#e15f0b]'
                       }`}
                       placeholder="Juan Pérez"
                     />
                   </div>
                   {errors.name && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-4 h-4 text-red-500" />
+                    <p className="mt-1 text-sm text-[#d14a00] flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4 text-[#d14a00]" />
                       {errors.name}
                     </p>
                   )}
@@ -166,8 +166,8 @@ const ProfilePage = () => {
 
                 {/* Email */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <Mail className="w-5 h-5 text-yellow-500" />
+                  <label className="block text-sm font-semibold text-[#233274] mb-2 flex items-center gap-2">
+                    <Mail className="w-5 h-5 text-[#e15f0b]" />
                     Correo electrónico
                   </label>
                   <div className="relative">
@@ -176,18 +176,18 @@ const ProfilePage = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-yellow-500 focus:outline-none transition-all ${
+                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all ${
                         errors.email
-                          ? 'border-red-500'
-                          : 'border-gray-200 focus:border-yellow-500'
+                          ? 'border-[#d14a00]'
+                          : 'border-[#9a98a0] focus:border-[#e15f0b]'
                       }`}
                       placeholder="tu@email.com"
                       disabled
                     />
                   </div>
                   {errors.email && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-4 h-4 text-red-500" />
+                    <p className="mt-1 text-sm text-[#d14a00] flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4 text-[#d14a00]" />
                       {errors.email}
                     </p>
                   )}
@@ -195,8 +195,8 @@ const ProfilePage = () => {
 
                 {/* Teléfono */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <Phone className="w-5 h-5 text-yellow-500" />
+                  <label className="block text-sm font-semibold text-[#233274] mb-2 flex items-center gap-2">
+                    <Phone className="w-5 h-5 text-[#e15f0b]" />
                     Teléfono
                   </label>
                   <div className="relative">
@@ -205,17 +205,17 @@ const ProfilePage = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-yellow-500 focus:outline-none transition-all ${
+                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all ${
                         errors.phone
-                          ? 'border-red-500'
-                          : 'border-gray-200 focus:border-yellow-500'
+                          ? 'border-[#d14a00]'
+                          : 'border-[#9a98a0] focus:border-[#e15f0b]'
                       }`}
                       placeholder="+51 999 999 999"
                     />
                   </div>
                   {errors.phone && (
-                    <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-4 h-4 text-red-500" />
+                    <p className="mt-1 text-sm text-[#d14a00] flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4 text-[#d14a00]" />
                       {errors.phone}
                     </p>
                   )}
@@ -223,8 +223,8 @@ const ProfilePage = () => {
 
                 {/* Bio */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
-                    <Edit2 className="w-5 h-5 text-yellow-500" />
+                  <label className="block text-sm font-semibold text-[#233274] mb-2 flex items-center gap-2">
+                    <Edit2 className="w-5 h-5 text-[#e15f0b]" />
                     Biografía
                   </label>
                   <textarea
@@ -232,7 +232,7 @@ const ProfilePage = () => {
                     value={formData.bio}
                     onChange={handleChange}
                     rows={4}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:outline-none resize-none transition-all"
+                    className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none resize-none transition-all"
                     placeholder="Cuéntanos sobre ti..."
                   />
                 </div>
@@ -240,14 +240,14 @@ const ProfilePage = () => {
                 {/* País y Ciudad */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#233274] mb-2">
                       País
                     </label>
                     <select
                       name="country"
                       value={formData.country}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:outline-none transition-all"
+                      className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all"
                     disabled={loading}
                     >
                       <option value="">Selecciona un país</option>
@@ -262,7 +262,7 @@ const ProfilePage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-[#233274] mb-2">
                       Ciudad
                     </label>
                     <input
@@ -270,7 +270,7 @@ const ProfilePage = () => {
                       name="city"
                       value={formData.city}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:outline-none transition-all"
+                      className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all"
                       placeholder="Lima"
                     />
                   </div>
@@ -281,18 +281,18 @@ const ProfilePage = () => {
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="flex-1 border-2 border-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors"
+                    className="flex-1 border-2 border-[#9a98a0] text-[#233274] font-semibold px-6 py-3 rounded-xl hover:bg-[#f8f5ef] transition-colors"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <>
-                        <div className="w-5 h-5 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-5 h-5 border-4 border-[#9a98a0] border-t-transparent rounded-full animate-spin"></div>
                         Guardando...
                       </>
                     ) : (
@@ -308,39 +308,39 @@ const ProfilePage = () => {
               // Vista de Perfil (no edición)
               <div className="space-y-6">
                 {/* Información Personal */}
-                <div className="bg-white rounded-2xl shadow-lg p-8 animate-fade-in">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                    <User className="w-6 h-6 text-yellow-500" />
+                <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-8 animate-fade-in">
+                  <h3 className="text-xl font-bold text-[#233274] mb-6 flex items-center gap-2">
+                    <User className="w-6 h-6 text-[#e15f0b]" />
                     Información Personal
                   </h3>
                   
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <span className="text-gray-500 font-medium w-24">Nombre:</span>
-                      <span className="text-gray-900 font-medium">{user?.name}</span>
+                      <span className="text-[#9a98a0] font-medium w-24">Nombre:</span>
+                      <span className="text-[#233274] font-medium">{user?.name}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-gray-500 font-medium w-24">Email:</span>
-                      <span className="text-gray-900 font-medium truncate">{user?.email}</span>
+                      <span className="text-[#9a98a0] font-medium w-24">Email:</span>
+                      <span className="text-[#233274] font-medium truncate">{user?.email}</span>
                     </div>
                     {user?.phone && (
                       <div className="flex items-center gap-3">
-                        <span className="text-gray-500 font-medium w-24">Teléfono:</span>
-                        <span className="text-gray-900 font-medium">{user?.phone}</span>
+                        <span className="text-[#9a98a0] font-medium w-24">Teléfono:</span>
+                        <span className="text-[#233274] font-medium">{user?.phone}</span>
                       </div>
                     )}
                     {user?.bio && (
-                      <div className="mt-4 p-4 bg-gray-50 rounded-xl">
-                        <p className="text-gray-700">{user.bio}</p>
+                      <div className="mt-4 p-4 bg-[#f8f5ef] rounded-xl">
+                        <p className="text-[#233274]">{user.bio}</p>
                       </div>
                     )}
                   </div>
 
                   {/* Ubicación */}
                   {(user?.city || user?.country) && (
-                    <div className="flex items-center gap-3 mt-4 p-4 bg-gray-50 rounded-xl">
-                      <MapPin className="w-5 h-5 text-yellow-500" />
-                      <span className="text-gray-900">
+                    <div className="flex items-center gap-3 mt-4 p-4 bg-[#f8f5ef] rounded-xl">
+                      <MapPin className="w-5 h-5 text-[#e15f0b]" />
+                      <span className="text-[#233274]">
                         {user?.city}, {user?.country}
                       </span>
                     </div>
@@ -348,12 +348,12 @@ const ProfilePage = () => {
 
                   {/* Estadísticas */}
                   <div className="grid grid-cols-2 gap-4 mt-6">
-                    <div className="text-center p-4 bg-yellow-50 rounded-xl">
-                      <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Calendar className="w-6 h-6 text-yellow-600" />
+                    <div className="text-center p-4 bg-[#f8f5ef] rounded-xl">
+                      <div className="w-12 h-12 bg-[#f8f5ef] rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Calendar className="w-6 h-6 text-[#d14a00]" />
                       </div>
-                      <p className="text-gray-900 font-medium">Miembro desde</p>
-                      <p className="text-gray-700 text-sm">
+                      <p className="text-[#233274] font-medium">Miembro desde</p>
+                      <p className="text-[#233274] text-sm">
                         {new Date(user?.created_at).toLocaleDateString('es-PE', {
                           year: 'numeric',
                           month: 'long',
@@ -362,12 +362,12 @@ const ProfilePage = () => {
                       </p>
                     </div>
 
-                    <div className="text-center p-4 bg-green-50 rounded-xl">
-                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Shield className="w-6 h-6 text-green-600" />
+                    <div className="text-center p-4 bg-[#f8f5ef] rounded-xl">
+                      <div className="w-12 h-12 bg-[#f8f5ef] rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Shield className="w-6 h-6 text-[#233274]" />
                       </div>
-                      <p className="text-gray-900 font-medium">Verificado</p>
-                      <p className="text-gray-700 text-sm">Email verificado</p>
+                      <p className="text-[#233274] font-medium">Verificado</p>
+                      <p className="text-[#233274] text-sm">Email verificado</p>
                     </div>
                   </div>
                 </div>
@@ -378,35 +378,35 @@ const ProfilePage = () => {
           {/* Columna Derecha - Estadísticas y Actividad */}
           <div className="md:col-span-1 space-y-8">
             {/* Estadísticas del Perfil */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-24 animate-fade-in">
-              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                <Star className="w-6 h-6 text-yellow-500 fill-current" />
+            <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-8 sticky top-24 animate-fade-in">
+              <h3 className="text-xl font-bold text-[#233274] mb-6 flex items-center gap-2">
+                <Star className="w-6 h-6 text-[#e15f0b] fill-current" />
                 Estadísticas
               </h3>
               
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Reservas realizadas</span>
-                  <span className="text-2xl font-bold text-gray-900">{user?.total_bookings || 0}</span>
+                  <span className="text-[#9a98a0]">Reservas realizadas</span>
+                  <span className="text-2xl font-bold text-[#233274]">{user?.total_bookings || 0}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Total gastado</span>
-                  <span className="text-2xl font-bold text-gray-900">S/. {user?.total_spent || 0}</span>
+                  <span className="text-[#9a98a0]">Total gastado</span>
+                  <span className="text-2xl font-bold text-[#233274]">S/. {user?.total_spent || 0}</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                <span className="text-gray-600">Nivel de viajero</span>
+              <div className="flex items-center justify-between pt-6 border-t border-[#9a98a0]">
+                <span className="text-[#9a98a0]">Nivel de viajero</span>
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className="w-5 h-5 text-yellow-500 fill-current"
+                        className="w-5 h-5 text-[#e15f0b] fill-current"
                       />
                     ))}
                   </div>
-                  <span className="ml-2 text-gray-900 font-bold">
+                  <span className="ml-2 text-[#233274] font-bold">
                     {user?.rating ? parseFloat(user.rating).toFixed(1) : 'N/A'}
                   </span>
                 </div>
@@ -414,36 +414,36 @@ const ProfilePage = () => {
 
               {/* Actividad Reciente */}
               <div className="pt-6">
-                <h4 className="text-lg font-bold text-gray-900 mb-4">Actividad Reciente</h4>
+                <h4 className="text-lg font-bold text-[#233274] mb-4">Actividad Reciente</h4>
                 
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <span className="text-yellow-800 font-bold text-lg">3</span>
+                    <div className="w-10 h-10 bg-[#f8f5ef] rounded-full flex items-center justify-center">
+                      <span className="text-[#d14a00] font-bold text-lg">3</span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Reservas este mes</p>
-                      <p className="text-sm text-gray-600">Ver todas</p>
+                      <p className="font-medium text-[#233274]">Reservas este mes</p>
+                      <p className="text-sm text-[#9a98a0]">Ver todas</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-green-800 font-bold text-lg">12</span>
+                    <div className="w-10 h-10 bg-[#f8f5ef] rounded-full flex items-center justify-center">
+                      <span className="text-[#1a2555] font-bold text-lg">12</span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Reservas este año</p>
-                      <p className="text-sm text-gray-600">Ver todas</p>
+                      <p className="font-medium text-[#233274]">Reservas este año</p>
+                      <p className="text-sm text-[#9a98a0]">Ver todas</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-800 font-bold text-lg">24</span>
+                    <div className="w-10 h-10 bg-[#f8f5ef] rounded-full flex items-center justify-center">
+                      <span className="text-[#1a2555] font-bold text-lg">24</span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Reservas este año</p>
-                      <p className="text-sm text-gray-600">Ver todas</p>
+                      <p className="font-medium text-[#233274]">Reservas este año</p>
+                      <p className="text-sm text-[#9a98a0]">Ver todas</p>
                     </div>
                   </div>
                 </div>

@@ -38,10 +38,10 @@ const HeroSection = () => {
         <div className="animate-fade-in">
           {/* Logo y título principal */}
           <div className="mb-6">
-            <h1 className="text-6xl lg:text-8xl font-black text-white mb-2 tracking-tight">
-              BOOK<span className="text-yellow-400">&</span>GO
+            <h1 className="text-6xl lg:text-8xl font-black text-[#f8f5ef] mb-2 tracking-tight">
+              BOOK<span className="text-[#e15f0b]">&</span>GO
             </h1>
-            <p className="text-xl lg:text-2xl text-yellow-400 font-semibold tracking-wide">
+            <p className="text-xl lg:text-2xl text-[#e15f0b] font-semibold tracking-wide">
               Un click, mil destinos
             </p>
           </div>
@@ -49,16 +49,16 @@ const HeroSection = () => {
           {/* Buscador */}
           <form
             onSubmit={handleSearch}
-            className="max-w-5xl mx-auto mt-12 bg-white rounded-2xl shadow-2xl p-4 lg:p-6 animate-slide-up"
+            className="max-w-5xl mx-auto mt-12 bg-[#f8f5ef] rounded-2xl shadow-2xl p-4 lg:p-6 animate-slide-up"
           >
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
               {/* ¿A dónde vas? */}
               <div className="relative">
-                <label className="block text-left text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-left text-sm font-semibold text-[#233274] mb-2">
                   ¿A dónde vas?
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
                     type="text"
                     placeholder="Destino, ciudad o tour"
@@ -66,43 +66,43 @@ const HeroSection = () => {
                     onChange={(e) =>
                       setSearchData({ ...searchData, destination: e.target.value })
                     }
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-all text-gray-900 font-medium"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all text-[#233274] font-medium"
                   />
                 </div>
               </div>
 
               {/* Check In */}
               <div className="relative">
-                <label className="block text-left text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-left text-sm font-semibold text-[#233274] mb-2">
                   Check In
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
                     type="date"
                     value={searchData.checkIn}
                     onChange={(e) =>
                       setSearchData({ ...searchData, checkIn: e.target.value })
                     }
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-all text-gray-900 font-medium"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all text-[#233274] font-medium"
                   />
                 </div>
               </div>
 
               {/* Check Out */}
               <div className="relative">
-                <label className="block text-left text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-left text-sm font-semibold text-[#233274] mb-2">
                   Check Out
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                   <input
                     type="date"
                     value={searchData.checkOut}
                     onChange={(e) =>
                       setSearchData({ ...searchData, checkOut: e.target.value })
                     }
-                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-all text-gray-900 font-medium"
+                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all text-[#233274] font-medium"
                   />
                 </div>
               </div>
@@ -111,7 +111,7 @@ const HeroSection = () => {
               <div className="flex items-end">
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
+                  className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
                 >
                   <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   Buscar
@@ -122,14 +122,14 @@ const HeroSection = () => {
 
           {/* Tags populares */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <span className="text-white text-sm font-medium">Búsquedas populares:</span>
+            <span className="text-[#f8f5ef] text-sm font-medium">Búsquedas populares:</span>
             {['Machu Picchu', 'Lima', 'Cusco', 'Arequipa', 'Paracas'].map((tag) => (
               <button
                 key={tag}
                 onClick={() => {
                   setSearchData({ ...searchData, destination: tag });
                 }}
-                className="px-4 py-1 bg-white/20 hover:bg-yellow-400 backdrop-blur-sm text-white hover:text-gray-900 rounded-full text-sm font-medium transition-all"
+                className="px-4 py-1 bg-[#f8f5ef]/20 hover:bg-[#e15f0b] backdrop-blur-sm text-[#f8f5ef] hover:text-[#233274] rounded-full text-sm font-medium transition-all"
               >
                 {tag}
               </button>
@@ -147,11 +147,11 @@ const HeroSection = () => {
               return (
                 <div
                   key={index}
-                  className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-white animate-fade-in"
+                  className="bg-[#f8f5ef]/10 backdrop-blur-sm rounded-lg p-4 text-[#f8f5ef] animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex items-center justify-center gap-2 mb-2">
-                    <Icon className="w-5 h-5 text-yellow-400 fill-current" />
+                    <Icon className="w-5 h-5 text-[#e15f0b] fill-current" />
                     <span className="text-2xl font-bold">{item.count}</span>
                   </div>
                   <p className="text-sm">{item.text}</p>

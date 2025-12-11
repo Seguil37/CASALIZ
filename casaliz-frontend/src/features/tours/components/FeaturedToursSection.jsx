@@ -135,11 +135,11 @@ const FeaturedToursSection = () => {
 
   if (loading) {
     return (
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-[#f8f5ef]">
         <div className="container-custom">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent"></div>
-            <p className="mt-4 text-gray-600">Cargando experiencias...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#e15f0b] border-t-transparent"></div>
+            <p className="mt-4 text-[#9a98a0]">Cargando experiencias...</p>
           </div>
         </div>
       </section>
@@ -147,19 +147,19 @@ const FeaturedToursSection = () => {
   }
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-[#f8f5ef]">
       <div className="container-custom">
         {/* Título */}
         <div className="flex items-center justify-between mb-12 animate-fade-in">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-yellow-500" />
-            <h2 className="text-4xl lg:text-5xl font-black text-gray-900">
+            <Sparkles className="w-8 h-8 text-[#e15f0b]" />
+            <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
               Experiencias más buscadas
             </h2>
           </div>
           <Link
             to="/tours"
-            className="hidden md:flex items-center gap-2 text-yellow-500 hover:text-yellow-600 font-semibold"
+            className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold"
           >
             Ver todas
             <svg
@@ -195,7 +195,7 @@ const FeaturedToursSection = () => {
         <div className="text-center mt-12 md:hidden">
           <Link
             to="/tours"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Ver todas las experiencias
             <svg

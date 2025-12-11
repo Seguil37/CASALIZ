@@ -89,17 +89,17 @@ const PopularCountriesSection = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-white overflow-hidden">
+    <section className="py-20 bg-[#f8f5ef] overflow-hidden">
       <div className="container-custom">
         {/* Título */}
         <div className="flex items-center justify-between mb-12 animate-fade-in">
           <div className="flex items-center gap-3">
-            <Globe className="w-8 h-8 text-yellow-500" />
-            <h2 className="text-4xl lg:text-5xl font-black text-gray-900">
+            <Globe className="w-8 h-8 text-[#e15f0b]" />
+            <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
               Países más populares
             </h2>
           </div>
-          <div className="hidden md:flex items-center gap-2 text-yellow-500">
+          <div className="hidden md:flex items-center gap-2 text-[#e15f0b]">
             <Star className="w-5 h-5 fill-current" />
             <span className="font-semibold">Explora todos los destinos</span>
           </div>
@@ -130,26 +130,26 @@ const PopularCountriesSection = () => {
                 {/* Nombre del país */}
                 <div className="absolute top-6 left-6">
                   <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-xl border border-white/20">
-                    <h3 className="text-white font-bold text-2xl">{country.name}</h3>
+                    <h3 className="text-[#f8f5ef] font-bold text-2xl">{country.name}</h3>
                   </div>
                 </div>
 
                 {/* Información adicional */}
                 <div className="absolute bottom-6 left-6 right-6">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 mb-4">
+                  <div className="bg-[#f8f5ef]/90 backdrop-blur-sm rounded-xl p-4 mb-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1">
-                        <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                        <span className="font-bold text-gray-900">{country.rating}</span>
+                        <Star className="w-5 h-5 text-[#e15f0b] fill-current" />
+                        <span className="font-bold text-[#233274]">{country.rating}</span>
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-[#9a98a0]">
                         {country.tours} experiencias
                       </div>
                     </div>
                   </div>
                   
                   {/* Botón de acción (aparece al hover) */}
-                  <button className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+                  <button className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100">
                     Explorar destinos
                   </button>
                 </div>
@@ -163,7 +163,7 @@ const PopularCountriesSection = () => {
           {countries.map((_, index) => (
             <div
               key={index}
-              className="w-2 h-2 rounded-full bg-gray-300 animate-pulse"
+              className="w-2 h-2 rounded-full bg-[#9a98a0] animate-pulse"
               style={{ animationDelay: `${index * 0.2}s` }}
             ></div>
           ))}

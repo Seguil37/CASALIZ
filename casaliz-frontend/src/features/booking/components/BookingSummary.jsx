@@ -4,7 +4,7 @@ import { Calendar, Users, MapPin, Clock } from 'lucide-react';
 
 const BookingSummary = ({ tour, bookingData, priceBreakdown }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+    <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 sticky top-24">
       {/* Imagen */}
       <img
         src={tour.featured_image}
@@ -12,14 +12,14 @@ const BookingSummary = ({ tour, bookingData, priceBreakdown }) => {
         className="w-full h-48 object-cover rounded-xl mb-4"
       />
 
-      <h3 className="font-bold text-gray-900 text-lg mb-4">
+      <h3 className="font-bold text-[#233274] text-lg mb-4">
         {tour.title}
       </h3>
 
       {/* Detalles */}
-      <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
+      <div className="space-y-3 mb-6 pb-6 border-b border-[#9a98a0]">
         {bookingData.date && (
-          <div className="flex items-center gap-2 text-gray-700">
+          <div className="flex items-center gap-2 text-[#233274]">
             <Calendar className="w-5 h-5 text-primary" />
             <span className="text-sm">
               {new Date(bookingData.date).toLocaleDateString('es-PE', {
@@ -32,7 +32,7 @@ const BookingSummary = ({ tour, bookingData, priceBreakdown }) => {
           </div>
         )}
 
-        <div className="flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-2 text-[#233274]">
           <Users className="w-5 h-5 text-primary" />
           <span className="text-sm">
             {bookingData.adults} adulto{bookingData.adults > 1 ? 's' : ''}
@@ -41,14 +41,14 @@ const BookingSummary = ({ tour, bookingData, priceBreakdown }) => {
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-2 text-[#233274]">
           <MapPin className="w-5 h-5 text-primary" />
           <span className="text-sm">
             {tour.location_city}, {tour.location_region}
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-gray-700">
+        <div className="flex items-center gap-2 text-[#233274]">
           <Clock className="w-5 h-5 text-primary" />
           <span className="text-sm">
             {tour.duration_days > 0 && `${tour.duration_days} día${tour.duration_days > 1 ? 's' : ''}`}
@@ -60,9 +60,9 @@ const BookingSummary = ({ tour, bookingData, priceBreakdown }) => {
 
       {/* Desglose de Precios */}
       {priceBreakdown && (
-        <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
+        <div className="space-y-3 mb-6 pb-6 border-b border-[#9a98a0]">
           {priceBreakdown.items.map((item, index) => (
-            <div key={index} className="flex justify-between text-gray-700 text-sm">
+            <div key={index} className="flex justify-between text-[#233274] text-sm">
               <span>{item.label}</span>
               <span className="font-semibold">S/. {item.amount.toFixed(2)}</span>
             </div>
@@ -72,13 +72,13 @@ const BookingSummary = ({ tour, bookingData, priceBreakdown }) => {
 
       {/* Total */}
       <div className="flex justify-between items-center">
-        <span className="text-xl font-black text-gray-900">Total</span>
+        <span className="text-xl font-black text-[#233274]">Total</span>
         <span className="text-3xl font-black text-primary">
           S/. {priceBreakdown?.total.toFixed(2) || '0.00'}
         </span>
       </div>
 
-      <p className="text-xs text-gray-500 text-center mt-4">
+      <p className="text-xs text-[#9a98a0] text-center mt-4">
         Cancelación gratuita hasta {tour.cancellation_hours}h antes
       </p>
     </div>

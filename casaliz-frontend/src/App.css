@@ -5,7 +5,7 @@
 /* 1. Resetear body para quitar espacios blancos */
 body {
   font-family: "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: var(--white);
+  background: #f8f5ef;
   color: var(--text-default);
   margin: 0; /* ✅ Eliminar margen */
   padding: 0; /* ✅ Eliminar padding */
@@ -93,8 +93,8 @@ html {
   background-color: var(--slate-50);
 }
 
-.section-bg.bg-white {
-  background-color: var(--white);
+.section-bg.bg-[#f8f5ef] {
+  background-color: #f8f5ef;
 }
 
 /* 7. Layout para páginas internas */
@@ -132,7 +132,7 @@ html {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   padding: 4rem 0;
-  background: linear-gradient(135deg, var(--yellow-300) 0%, var(--orange-500) 100%);
+  background: linear-gradient(135deg, #e15f0b 0%, #d14a00 100%);
 }
 
 .hero-content {
@@ -323,7 +323,7 @@ html {
   
   /* Formulario de perfil */
   .profile-form {
-    background: white;
+    background: #f8f5ef;
     border-radius: 1rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
@@ -341,7 +341,7 @@ html {
   
   /* Sección de información personal */
   .info-section {
-    background: white;
+    background: #f8f5ef;
     border-radius: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
@@ -366,7 +366,7 @@ html {
   
   /* Tarjetas de estadísticas */
   .stat-card {
-    background: white;
+    background: #f8f5ef;
     border-radius: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
@@ -402,7 +402,7 @@ html {
   
   /* Actividad reciente */
   .activity-card {
-    background: white;
+    background: #f8f5ef;
     border-radius: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
@@ -452,12 +452,12 @@ html {
   
   .badge-green {
     background-color: #10b981;
-    color: white;
+    color: #f8f5ef;
   }
   
   .badge-blue {
     background-color: #3b82f6;
-    color: white;
+    color: #f8f5ef;
   }
   
   /* Responsive */

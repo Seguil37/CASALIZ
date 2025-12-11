@@ -80,10 +80,10 @@ const ReferenceContentSection = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <section className="py-20 bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef]">
       <div className="container-custom">
         {/* Título */}
-        <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-8 text-center animate-fade-in">
+        <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-8 text-center animate-fade-in">
           Contenido Referencial
         </h2>
 
@@ -98,11 +98,11 @@ const ReferenceContentSection = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`group flex items-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg scale-105'
-                    : 'bg-white text-gray-600 hover:bg-gray-100 shadow-md hover:shadow-lg'
+                    ? 'bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-[#f8f5ef] shadow-lg scale-105'
+                    : 'bg-[#f8f5ef] text-[#9a98a0] hover:bg-[#f8f5ef] shadow-md hover:shadow-lg'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-white' : 'text-yellow-500'}`} />
+                <Icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-[#f8f5ef]' : 'text-[#e15f0b]'}`} />
                 <span className="hidden sm:inline">{tab.label}</span>
                 <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
               </button>
@@ -116,25 +116,25 @@ const ReferenceContentSection = () => {
             <Link
               key={index}
               to={`/tours?${activeTab === 'countries' ? 'country' : 'location'}=${item.name}`}
-              className="group bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100 hover:border-yellow-500"
+              className="group bg-[#f8f5ef] rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-[#f8f5ef] hover:border-[#e15f0b]"
               style={{ animationDelay: `${index * 0.02}s` }}
             >
-              <h3 className="font-bold text-gray-900 mb-2 group-hover:text-yellow-500 transition-colors truncate">
+              <h3 className="font-bold text-[#233274] mb-2 group-hover:text-[#e15f0b] transition-colors truncate">
                 {item.name}
               </h3>
 
               {/* Rating */}
               <div className="flex items-center gap-1 mb-2">
-                <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                <span className="text-sm font-medium text-gray-900">{item.rating}</span>
+                <Star className="w-4 h-4 text-[#e15f0b] fill-current" />
+                <span className="text-sm font-medium text-[#233274]">{item.rating}</span>
               </div>
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-[#9a98a0]">
                 {item.count} {item.count === 1 ? 'tour' : 'tours'} y actividades
               </p>
 
               {/* Indicador de hover */}
-              <div className="mt-3 h-1 w-0 group-hover:w-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-500 rounded-full"></div>
+              <div className="mt-3 h-1 w-0 group-hover:w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] transition-all duration-500 rounded-full"></div>
             </Link>
           ))}
         </div>
@@ -143,7 +143,7 @@ const ReferenceContentSection = () => {
         <div className="text-center mt-12">
           <Link
             to="/tours"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             Explorar todos los destinos
             <svg

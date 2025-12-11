@@ -25,7 +25,7 @@ const Footer = () => {
               <div className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] w-10 h-10 rounded-lg flex items-center justify-center">
                 <span className="text-xl font-black text-[#f8f5ef]">B&G</span>
               </div>
-              <span className="text-xl font-black text-white">
+              <span className="text-xl font-black text-[#f8f5ef]">
                 BOOK<span className="text-[#e15f0b]">&</span>GO
               </span>
             </div>
@@ -70,7 +70,7 @@ const Footer = () => {
 
           {/* Columna 2: Links Rápidos */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Links Rápidos</h3>
+            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Links Rápidos</h3>
             <ul className="space-y-3">
               <li>
                 <Link
@@ -113,7 +113,7 @@ const Footer = () => {
 
           {/* Columna 3: Políticas y Términos */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Políticas y Términos</h3>
+            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Políticas y Términos</h3>
             <ul className="space-y-3">
               <li>
                 <Link
@@ -156,7 +156,7 @@ const Footer = () => {
 
           {/* Columna 4: Contáctanos */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Contáctanos</h3>
+            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Contáctanos</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
@@ -206,13 +206,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {/* Newsletter */}
           <div className="bg-[#1a2555] rounded-lg p-4">
-            <h4 className="text-white font-semibold mb-2">Suscríbete a nuestro newsletter</h4>
+            <h4 className="text-[#f8f5ef] font-semibold mb-2">Suscríbete a nuestro newsletter</h4>
             <p className="text-[#9a98a0] text-sm mb-3">Recibe ofertas exclusivas y novedades</p>
             <form className="flex">
               <input
                 type="email"
                 placeholder="Tu correo electrónico"
-                className="flex-1 px-3 py-2 bg-[#0d1844] text-white rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#e15f0b] placeholder-[#9a98a0]"
+                className="flex-1 px-3 py-2 bg-[#0d1844] text-[#f8f5ef] rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#e15f0b] placeholder-[#9a98a0]"
               />
               <button
                 type="submit"
@@ -225,7 +225,7 @@ const Footer = () => {
 
           {/* Autores y Desarrolladores */}
           <div className="bg-[#1a2555] rounded-lg p-4">
-            <h4 className="text-white font-semibold mb-3">Autores y desarrolladores</h4>
+            <h4 className="text-[#f8f5ef] font-semibold mb-3">Autores y desarrolladores</h4>
             <ul className="space-y-3">
               <li className="flex items-center justify-between">
                 <span className="text-[#9a98a0] text-sm">Armando Fernando Machaca Gutierrez</span>

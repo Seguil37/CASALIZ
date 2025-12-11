@@ -46,19 +46,19 @@ const CartPage = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] via-[#f8f5ef] to-[#e15f0b] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="container-custom max-w-md">
-          <div className="text-center bg-white rounded-2xl shadow-xl p-8 animate-fade-in">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl mb-6 shadow-lg">
-              <ShoppingBag className="w-12 h-12 text-gray-900" />
+          <div className="text-center bg-[#f8f5ef] rounded-2xl shadow-xl p-8 animate-fade-in">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl mb-6 shadow-lg">
+              <ShoppingBag className="w-12 h-12 text-[#233274]" />
             </div>
-            <h2 className="text-3xl font-black text-gray-900 mb-2">
+            <h2 className="text-3xl font-black text-[#233274] mb-2">
               Tu carrito está vacío
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-[#9a98a0] mb-6">
               Explora nuestros tours y comienza a planificar tu próxima aventura
             </p>
-            <Link to="/tours" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl">
+            <Link to="/tours" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl">
               Explorar Tours
             </Link>
           </div>
@@ -68,37 +68,37 @@ const CartPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-orange-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] via-[#f8f5ef] to-[#e15f0b] py-8">
       <div className="container-custom">
         {/* Header con título y botón de limpiar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-          <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-2 sm:mb-0">
+          <h1 className="text-3xl sm:text-4xl font-black text-[#233274] mb-2 sm:mb-0">
             Mi Carrito ({items.length} {items.length === 1 ? 'item' : 'items'})
           </h1>
           <button
             onClick={clearCart}
-            className="text-sm bg-white hover:bg-gray-100 text-red-600 hover:text-red-700 font-semibold px-4 py-2 rounded-xl transition-all border border-red-200"
+            className="text-sm bg-[#f8f5ef] hover:bg-[#f8f5ef] text-[#d14a00] hover:text-[#d14a00] font-semibold px-4 py-2 rounded-xl transition-all border border-[#e15f0b]"
           >
             Limpiar carrito
           </button>
         </div>
 
         {/* Alerta de reserva */}
-        <div className="bg-gradient-to-r from-yellow-100 to-yellow-200 border border-yellow-300 rounded-xl p-4 mb-6 animate-fade-in">
+        <div className="bg-gradient-to-r from-[#f8f5ef] to-[#f8f5ef] border border-[#e15f0b] rounded-xl p-4 mb-6 animate-fade-in">
           <div className="flex items-center gap-3">
-            <Clock className="w-5 h-5 text-yellow-600" />
-            <span className="text-gray-800 font-medium">Completa tu reserva para asegurar tu lugar</span>
+            <Clock className="w-5 h-5 text-[#d14a00]" />
+            <span className="text-[#1a2555] font-medium">Completa tu reserva para asegurar tu lugar</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Lista de items */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="bg-[#f8f5ef] rounded-2xl shadow-lg overflow-hidden">
               <div className="p-6">
                 <div className="space-y-4">
                   {items.map((item, index) => (
-                    <div key={item.id} className="border-b border-gray-100 pb-6 last:border-0">
+                    <div key={item.id} className="border-b border-[#f8f5ef] pb-6 last:border-0">
                       <div className="flex gap-4">
                         {/* Imagen */}
                         <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden flex-shrink-0">
@@ -112,31 +112,31 @@ const CartPage = () => {
                         {/* Detalles */}
                         <div className="flex-1">
                           <div className="flex justify-between items-start mb-2">
-                            <h4 className="text-lg font-bold text-gray-900 line-clamp-2">
+                            <h4 className="text-lg font-bold text-[#233274] line-clamp-2">
                               {item.tour_title}
                             </h4>
                             <div className="flex gap-2">
                               {item.category && (
-                                <span className="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                                <span className="inline-flex items-center px-2 py-1 bg-[#f8f5ef] text-[#d14a00] text-xs font-medium rounded-full">
                                   {item.category}
                                 </span>
                               )}
                               {item.rating && (
                                 <div className="flex items-center gap-1">
-                                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                                  <span className="text-sm text-gray-600">({item.rating})</span>
+                                  <Star className="w-4 h-4 text-[#e15f0b] fill-current" />
+                                  <span className="text-sm text-[#9a98a0]">({item.rating})</span>
                                 </div>
                               )}
                             </div>
                           </div>
 
-                          <div className="space-y-2 text-sm text-gray-600">
+                          <div className="space-y-2 text-sm text-[#9a98a0]">
                             <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4 text-yellow-500" />
+                              <Calendar className="w-4 h-4 text-[#e15f0b]" />
                               <span>{formatDate(item.date)}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Users className="w-4 h-4 text-yellow-500" />
+                              <Users className="w-4 h-4 text-[#e15f0b]" />
                               <span>
                                 {item.adults} adulto{item.adults > 1 ? 's' : ''}
                                 {item.children > 0 && `, ${item.children} niño${item.children > 1 ? 's' : ''}`}
@@ -145,14 +145,14 @@ const CartPage = () => {
                             </div>
                             {item.special_requests && (
                               <div className="flex items-start gap-2">
-                                <AlertCircle className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
-                                <span className="text-gray-700 text-xs bg-yellow-50 px-2 py-1 rounded">
+                                <AlertCircle className="w-4 h-4 text-[#e15f0b] flex-shrink-0 mt-0.5" />
+                                <span className="text-[#233274] text-xs bg-[#f8f5ef] px-2 py-1 rounded">
                                   {item.special_requests}
                                 </span>
                               </div>
                             )}
                             <div className="flex items-center gap-2">
-                              <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                              <Check className="w-4 h-4 text-[#233274] flex-shrink-0 mt-0.5" />
                               <span>Cancelación gratuita</span>
                             </div>
                           </div>
@@ -162,22 +162,22 @@ const CartPage = () => {
                             <div className="flex items-center gap-2">
                               <button 
                                 onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                                className="w-8 h-8 bg-yellow-100 hover:bg-yellow-200 text-yellow-600 rounded-full flex items-center justify-center transition-colors"
+                                className="w-8 h-8 bg-[#f8f5ef] hover:bg-[#f8f5ef] text-[#d14a00] rounded-full flex items-center justify-center transition-colors"
                                 disabled={item.quantity <= 1}
                               >
                                 <Minus className="w-4 h-4" />
                               </button>
-                              <span className="w-8 text-center font-bold text-gray-900">{item.quantity}</span>
+                              <span className="w-8 text-center font-bold text-[#233274]">{item.quantity}</span>
                               <button 
                                 onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                                className="w-8 h-8 bg-yellow-100 hover:bg-yellow-200 text-yellow-600 rounded-full flex items-center justify-center transition-colors"
+                                className="w-8 h-8 bg-[#f8f5ef] hover:bg-[#f8f5ef] text-[#d14a00] rounded-full flex items-center justify-center transition-colors"
                               disabled={item.quantity >= 20}
                               >
                                 <Plus className="w-4 h-4" />
                               </button>
                             </div>
                             <button 
-                              className="text-red-500 hover:text-red-700 p-2"
+                              className="text-[#d14a00] hover:text-[#d14a00] p-2"
                               onClick={() => removeItem(item.id)}
                             >
                               <Trash2 className="w-5 h-5" />
@@ -193,7 +193,7 @@ const CartPage = () => {
 
             {/* Resumen de compra */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24 animate-fade-in">
+              <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 sticky top-24 animate-fade-in">
                 {/* Imagen destacada del primer tour */}
                 {items.length > 0 && (
                   <div className="relative mb-6 rounded-xl overflow-hidden h-48">
@@ -203,47 +203,47 @@ const CartPage = () => {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                    <div className="absolute bottom-4 left-4 text-white">
+                    <div className="absolute bottom-4 left-4 text-[#f8f5ef]">
                       <h3 className="text-xl font-bold">Carrito de Compras</h3>
                     </div>
                   </div>
                 )}
 
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Resumen del Pedido</h3>
+                <h3 className="text-xl font-bold text-[#233274] mb-6">Resumen del Pedido</h3>
                 
                 {/* Detalles del precio */}
-                <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
-                  <div className="flex justify-between text-gray-700">
+                <div className="space-y-3 mb-6 pb-6 border-b border-[#9a98a0]">
+                  <div className="flex justify-between text-[#233274]">
                     <span>Subtotal ({items.length} {items.length === 1 ? 'tour' : 'tours'})</span>
-                    <span className="font-semibold text-gray-900">S/. {subtotal.toFixed(2)}</span>
+                    <span className="font-semibold text-[#233274]">S/. {subtotal.toFixed(2)}</span>
                   </div>
                   
                   {discount > 0 && (
-                    <div className="flex justify-between text-gray-700">
+                    <div className="flex justify-between text-[#233274]">
                       <span>Descuento (10%)</span>
-                      <span className="font-semibold text-green-600">-S/. {discount.toFixed(2)}</span>
+                      <span className="font-semibold text-[#233274]">-S/. {discount.toFixed(2)}</span>
                     </div>
                   )}
 
-                  <div className="flex justify-between text-gray-700">
+                  <div className="flex justify-between text-[#233274]">
                     <span>Impuestos (18%)</span>
-                    <span className="font-semibold text-gray-900">S/. {taxes.toFixed(2)}</span>
+                    <span className="font-semibold text-[#233274]">S/. {taxes.toFixed(2)}</span>
                   </div>
                 </div>
 
                 {/* Total */}
                 <div className="flex justify-between items-center pt-4">
-                  <span className="text-xl font-bold text-gray-900">Total</span>
+                  <span className="text-xl font-bold text-[#233274]">Total</span>
                   <div className="text-right">
-                    <div className="text-3xl font-black text-yellow-500">S/. {total.toFixed(2)}</div>
-                    <div className="text-sm text-gray-500">Todos los cargos incluidos</div>
+                    <div className="text-3xl font-black text-[#e15f0b]">S/. {total.toFixed(2)}</div>
+                    <div className="text-sm text-[#9a98a0]">Todos los cargos incluidos</div>
                   </div>
                 </div>
 
                 {/* Botón de checkout */}
                 <button
                   onClick={handleCheckout}
-                  className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-6 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                 >
                   <Calendar className="w-5 h-5" />
                   Proceder al Pago
@@ -251,59 +251,59 @@ const CartPage = () => {
 
                 {/* Beneficios */}
                 <div className="mt-6 space-y-4">
-                  <div className="bg-yellow-50 rounded-xl p-4">
+                  <div className="bg-[#f8f5ef] rounded-xl p-4">
                     <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                      <Shield className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Pago Seguro</p>
-                        <p className="text-sm text-gray-600">Tus datos están protegidos</p>
+                        <p className="font-medium text-[#233274]">Pago Seguro</p>
+                        <p className="text-sm text-[#9a98a0]">Tus datos están protegidos</p>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-yellow-50 rounded-xl p-4">
+                  <div className="bg-[#f8f5ef] rounded-xl p-4">
                     <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                      <Shield className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Cancelación Flexible</p>
-                        <p className="text-sm text-gray-600">Hasta 24 horas antes</p>
+                        <p className="font-medium text-[#233274]">Cancelación Flexible</p>
+                        <p className="text-sm text-[#9a98a0]">Hasta 24 horas antes</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Beneficios adicionales */}
-                <div className="bg-white rounded-xl p-4 border border-gray-200">
-                  <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Star className="w-5 h-5 text-yellow-500" />
+                <div className="bg-[#f8f5ef] rounded-xl p-4 border border-[#9a98a0]">
+                  <h4 className="font-bold text-[#233274] mb-4 flex items-center gap-2">
+                    <Star className="w-5 h-5 text-[#e15f0b]" />
                     ¿Por qué reservar con nosotros?
                   </h4>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3">
-                      <Star className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <Star className="w-4 h-4 text-[#e15f0b] flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Pago 100% seguro</p>
-                        <p className="text-sm text-gray-600">Transacciones protegidas</p>
+                        <p className="font-medium text-[#233274]">Pago 100% seguro</p>
+                        <p className="text-sm text-[#9a98a0]">Transacciones protegidas</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <Star className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <Star className="w-4 h-4 text-[#e15f0b] flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Mejor precio garantizado</p>
-                        <p className="text-sm text-gray-600">Si encuentras el mismo tour más barato, te reembolsamos la diferencia</p>
+                        <p className="font-medium text-[#233274]">Mejor precio garantizado</p>
+                        <p className="text-sm text-[#9a98a0]">Si encuentras el mismo tour más barato, te reembolsamos la diferencia</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <Star className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <Star className="w-4 h-4 text-[#e15f0b] flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Atención al cliente 24/7</p>
-                        <p className="text-sm text-gray-600">Estamos aquí para ayudarte en cualquier momento</p>
+                        <p className="font-medium text-[#233274]">Atención al cliente 24/7</p>
+                        <p className="text-sm text-[#9a98a0]">Estamos aquí para ayudarte en cualquier momento</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <Star className="w-4 h-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <Star className="w-4 h-4 text-[#e15f0b] flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="font-medium text-gray-900">Confirmación instantánea</p>
-                        <p className="text-sm text-gray-600">Recibe tu confirmación inmediatamente</p>
+                        <p className="font-medium text-[#233274]">Confirmación instantánea</p>
+                        <p className="text-sm text-[#9a98a0]">Recibe tu confirmación inmediatamente</p>
                       </div>
                     </li>
                   </ul>

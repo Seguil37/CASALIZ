@@ -99,13 +99,13 @@ const BookingMessages = ({ bookingId }) => {
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg flex flex-col h-[600px]">
+    <div className="bg-[#f8f5ef] rounded-2xl shadow-lg flex flex-col h-[600px]">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h3 className="font-bold text-gray-900">
+      <div className="px-6 py-4 border-b border-[#9a98a0]">
+        <h3 className="font-bold text-[#233274]">
           Mensajes con la Agencia
         </h3>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-[#9a98a0]">
           Comunícate directamente sobre tu reserva
         </p>
       </div>
@@ -114,8 +114,8 @@ const BookingMessages = ({ bookingId }) => {
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {messages.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No hay mensajes aún</p>
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="text-[#9a98a0]">No hay mensajes aún</p>
+            <p className="text-sm text-[#9a98a0] mt-2">
               Inicia la conversación con la agencia
             </p>
           </div>
@@ -131,13 +131,13 @@ const BookingMessages = ({ bookingId }) => {
                 <div
                   className={`max-w-[70%] ${
                     isOwn
-                      ? 'bg-primary text-gray-900'
-                      : 'bg-gray-100 text-gray-900'
+                      ? 'bg-primary text-[#233274]'
+                      : 'bg-[#f8f5ef] text-[#233274]'
                   } rounded-2xl px-4 py-3`}
                 >
                   {/* Nombre del remitente */}
                   {!isOwn && (
-                    <p className="text-xs font-semibold text-gray-600 mb-1">
+                    <p className="text-xs font-semibold text-[#9a98a0] mb-1">
                       {message.sender?.name || 'Agencia'}
                     </p>
                   )}
@@ -150,7 +150,7 @@ const BookingMessages = ({ bookingId }) => {
                   {/* Hora */}
                   <p
                     className={`text-xs mt-1 ${
-                      isOwn ? 'text-gray-700' : 'text-gray-500'
+                      isOwn ? 'text-[#233274]' : 'text-[#9a98a0]'
                     }`}
                   >
                     {formatTime(message.created_at)}
@@ -167,7 +167,7 @@ const BookingMessages = ({ bookingId }) => {
       </div>
 
       {/* Input Area */}
-      <div className="px-6 py-4 border-t border-gray-200">
+      <div className="px-6 py-4 border-t border-[#9a98a0]">
         <form onSubmit={handleSend} className="flex items-end gap-3">
           <div className="flex-1">
             <textarea
@@ -181,14 +181,14 @@ const BookingMessages = ({ bookingId }) => {
               }}
               placeholder="Escribe tu mensaje..."
               rows="2"
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-primary focus:outline-none resize-none"
+              className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none resize-none"
             />
           </div>
 
           <button
             type="submit"
             disabled={sending || !newMessage.trim()}
-            className="px-6 py-3 bg-gradient-primary hover:bg-gradient-secondary text-gray-900 font-bold rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-6 py-3 bg-gradient-primary hover:bg-gradient-secondary text-[#233274] font-bold rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {sending ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -198,7 +198,7 @@ const BookingMessages = ({ bookingId }) => {
             Enviar
           </button>
         </form>
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-xs text-[#9a98a0] mt-2">
           Presiona Enter para enviar, Shift+Enter para nueva línea
         </p>
       </div>

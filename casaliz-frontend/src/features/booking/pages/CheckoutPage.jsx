@@ -257,18 +257,18 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#f8f5ef]">
       <div className="checkout-page-container">
         <div className="container-custom max-w-6xl">
-          <h1 className="text-3xl font-black text-gray-900 mb-8">
+          <h1 className="text-3xl font-black text-[#233274] mb-8">
             Finalizar Reserva
           </h1>
 
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+            <div className="bg-[#f8f5ef] border-l-4 border-[#d14a00] p-4 rounded-lg mb-6">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-red-700 text-sm">{error}</p>
+                <AlertCircle className="w-5 h-5 text-[#d14a00] flex-shrink-0 mt-0.5" />
+                <p className="text-[#d14a00] text-sm">{error}</p>
               </div>
             </div>
           )}
@@ -277,15 +277,15 @@ const CheckoutPage = () => {
             {/* Formulario de Pago */}
             <div className="lg:col-span-2 space-y-6">
               {/* Métodos de Pago */}
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">
+              <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
+                <h2 className="text-xl font-bold text-[#233274] mb-6">
                   Método de Pago
                 </h2>
 
                 <div className="space-y-4">
                   {/* Tarjeta */}
                   <label className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    paymentMethod === 'card' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-500'
+                    paymentMethod === 'card' ? 'border-[#e15f0b] bg-[#f8f5ef]' : 'border-[#9a98a0] hover:border-[#e15f0b]'
                   }`}>
                     <input
                       type="radio"
@@ -293,17 +293,17 @@ const CheckoutPage = () => {
                       value="card"
                       checked={paymentMethod === 'card'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-5 h-5 text-yellow-500"
+                      className="w-5 h-5 text-[#e15f0b]"
                     />
-                    <CreditCard className="w-6 h-6 text-gray-600" />
-                    <span className="font-semibold text-gray-900">
+                    <CreditCard className="w-6 h-6 text-[#9a98a0]" />
+                    <span className="font-semibold text-[#233274]">
                       Tarjeta de Crédito/Débito
                     </span>
                   </label>
 
                   {/* Yape */}
                   <label className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    paymentMethod === 'yape' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-500'
+                    paymentMethod === 'yape' ? 'border-[#e15f0b] bg-[#f8f5ef]' : 'border-[#9a98a0] hover:border-[#e15f0b]'
                   }`}>
                     <input
                       type="radio"
@@ -311,20 +311,20 @@ const CheckoutPage = () => {
                       value="yape"
                       checked={paymentMethod === 'yape'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-5 h-5 text-yellow-500"
+                      className="w-5 h-5 text-[#e15f0b]"
                     />
-                    <div className="w-6 h-6 bg-purple-600 rounded flex items-center justify-center">
-                      <Smartphone className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 bg-[#1a2555] rounded flex items-center justify-center">
+                      <Smartphone className="w-4 h-4 text-[#f8f5ef]" />
                     </div>
                     <div className="flex-1">
-                      <span className="font-semibold text-gray-900">Yape</span>
-                      <p className="text-xs text-gray-600">BCP - Billetera digital</p>
+                      <span className="font-semibold text-[#233274]">Yape</span>
+                      <p className="text-xs text-[#9a98a0]">BCP - Billetera digital</p>
                     </div>
                   </label>
 
                   {/* Plin */}
                   <label className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    paymentMethod === 'plin' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-500'
+                    paymentMethod === 'plin' ? 'border-[#e15f0b] bg-[#f8f5ef]' : 'border-[#9a98a0] hover:border-[#e15f0b]'
                   }`}>
                     <input
                       type="radio"
@@ -332,20 +332,20 @@ const CheckoutPage = () => {
                       value="plin"
                       checked={paymentMethod === 'plin'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-5 h-5 text-yellow-500"
+                      className="w-5 h-5 text-[#e15f0b]"
                     />
                     <div className="w-6 h-6 bg-cyan-500 rounded flex items-center justify-center">
-                      <Smartphone className="w-4 h-4 text-white" />
+                      <Smartphone className="w-4 h-4 text-[#f8f5ef]" />
                     </div>
                     <div className="flex-1">
-                      <span className="font-semibold text-gray-900">Plin</span>
-                      <p className="text-xs text-gray-600">Pago móvil multibanco</p>
+                      <span className="font-semibold text-[#233274]">Plin</span>
+                      <p className="text-xs text-[#9a98a0]">Pago móvil multibanco</p>
                     </div>
                   </label>
 
                   {/* Mercado Pago */}
                   <label className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    paymentMethod === 'mercadopago' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-500'
+                    paymentMethod === 'mercadopago' ? 'border-[#e15f0b] bg-[#f8f5ef]' : 'border-[#9a98a0] hover:border-[#e15f0b]'
                   }`}>
                     <input
                       type="radio"
@@ -353,20 +353,20 @@ const CheckoutPage = () => {
                       value="mercadopago"
                       checked={paymentMethod === 'mercadopago'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-5 h-5 text-yellow-500"
+                      className="w-5 h-5 text-[#e15f0b]"
                     />
-                    <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center text-white font-bold text-xs">
+                    <div className="w-6 h-6 bg-[#f8f5ef]0 rounded flex items-center justify-center text-[#f8f5ef] font-bold text-xs">
                       MP
                     </div>
                     <div className="flex-1">
-                      <span className="font-semibold text-gray-900">Mercado Pago</span>
-                      <p className="text-xs text-gray-600">Paga seguro y en cuotas</p>
+                      <span className="font-semibold text-[#233274]">Mercado Pago</span>
+                      <p className="text-xs text-[#9a98a0]">Paga seguro y en cuotas</p>
                     </div>
                   </label>
 
                   {/* PayPal */}
                   <label className={`flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                    paymentMethod === 'paypal' ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-500'
+                    paymentMethod === 'paypal' ? 'border-[#e15f0b] bg-[#f8f5ef]' : 'border-[#9a98a0] hover:border-[#e15f0b]'
                   }`}>
                     <input
                       type="radio"
@@ -374,25 +374,25 @@ const CheckoutPage = () => {
                       value="paypal"
                       checked={paymentMethod === 'paypal'}
                       onChange={(e) => setPaymentMethod(e.target.value)}
-                      className="w-5 h-5 text-yellow-500"
+                      className="w-5 h-5 text-[#e15f0b]"
                     />
-                    <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-white font-bold text-xs">
+                    <div className="w-6 h-6 bg-[#233274] rounded flex items-center justify-center text-[#f8f5ef] font-bold text-xs">
                       P
                     </div>
-                    <span className="font-semibold text-gray-900">PayPal</span>
+                    <span className="font-semibold text-[#233274]">PayPal</span>
                   </label>
                 </div>
               </div>
 
               {/* Formulario de Tarjeta */}
               {paymentMethod === 'card' && (
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">
+                <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
+                  <h2 className="text-xl font-bold text-[#233274] mb-6">
                     Información de la Tarjeta
                   </h2>
 
-                  <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 mb-6 text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-yellow-500/20 rounded-full blur-3xl"></div>
+                  <div className="bg-gradient-to-br from-[#1a2555] to-[#233274] rounded-2xl p-6 mb-6 text-[#f8f5ef] relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-40 h-40 bg-[#e15f0b]/20 rounded-full blur-3xl"></div>
                     
                     <div className="relative z-10">
                       <div className="mb-8">
@@ -426,7 +426,7 @@ const CheckoutPage = () => {
 
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#233274] mb-2">
                         Número de Tarjeta
                       </label>
                       <input
@@ -434,13 +434,13 @@ const CheckoutPage = () => {
                         value={cardData.cardNumber}
                         onChange={handleCardNumberChange}
                         placeholder="1234 5678 9012 3456"
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:outline-none font-mono"
+                        className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none font-mono"
                         maxLength="19"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-[#233274] mb-2">
                         Nombre en la Tarjeta
                       </label>
                       <input
@@ -448,13 +448,13 @@ const CheckoutPage = () => {
                         value={cardData.cardName}
                         onChange={(e) => setCardData({ ...cardData, cardName: e.target.value.toUpperCase() })}
                         placeholder="JUAN PÉREZ"
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:outline-none uppercase"
+                        className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none uppercase"
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-[#233274] mb-2">
                           Fecha de Expiración
                         </label>
                         <input
@@ -462,13 +462,13 @@ const CheckoutPage = () => {
                           value={cardData.expiryDate}
                           onChange={handleExpiryChange}
                           placeholder="MM/AA"
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:outline-none font-mono"
+                          className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none font-mono"
                           maxLength="5"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-[#233274] mb-2">
                           CVV
                         </label>
                         <input
@@ -476,14 +476,14 @@ const CheckoutPage = () => {
                           value={cardData.cvv}
                           onChange={(e) => setCardData({ ...cardData, cvv: e.target.value.replace(/\D/g, '') })}
                           placeholder="123"
-                          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:outline-none font-mono"
+                          className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none font-mono"
                           maxLength="4"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-6 flex items-center gap-2 text-sm text-gray-600">
+                  <div className="mt-6 flex items-center gap-2 text-sm text-[#9a98a0]">
                     <Lock className="w-4 h-4" />
                     <span>Tus datos están protegidos y encriptados</span>
                   </div>
@@ -492,21 +492,21 @@ const CheckoutPage = () => {
 
               {/* Botón Yape */}
               {paymentMethod === 'yape' && (
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">
+                <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
+                  <h2 className="text-xl font-bold text-[#233274] mb-6">
                     Pago con Yape
                   </h2>
 
-                  <div className="bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-8 text-white text-center mb-6">
+                  <div className="bg-gradient-to-br from-[#233274] to-[#1a2555] rounded-2xl p-8 text-[#f8f5ef] text-center mb-6">
                     <Smartphone className="w-16 h-16 mx-auto mb-4" />
                     <h3 className="text-2xl font-bold mb-2">Yape</h3>
-                    <p className="text-purple-200 text-sm">BCP - Billetera digital</p>
+                    <p className="text-[#f8f5ef] text-sm">BCP - Billetera digital</p>
                   </div>
 
                   <button
                     onClick={() => setShowYapeModal(true)}
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50"
+                    className="w-full bg-gradient-to-r from-[#233274] to-[#1a2555] hover:from-[#1a2555] hover:to-[#1a2555] text-[#f8f5ef] font-bold py-4 rounded-xl transition-all disabled:opacity-50"
                   >
                     {loading ? 'Procesando...' : 'Continuar con Yape'}
                   </button>
@@ -515,12 +515,12 @@ const CheckoutPage = () => {
 
               {/* Botón Plin */}
               {paymentMethod === 'plin' && (
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">
+                <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
+                  <h2 className="text-xl font-bold text-[#233274] mb-6">
                     Pago con Plin
                   </h2>
 
-                  <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-8 text-white text-center mb-6">
+                  <div className="bg-gradient-to-br from-[#233274] to-[#1a2555] rounded-2xl p-8 text-[#f8f5ef] text-center mb-6">
                     <Smartphone className="w-16 h-16 mx-auto mb-4" />
                     <h3 className="text-2xl font-bold mb-2">Plin</h3>
                     <p className="text-cyan-100 text-sm">Pago móvil multibanco</p>
@@ -529,7 +529,7 @@ const CheckoutPage = () => {
                   <button
                     onClick={() => setShowPlinModal(true)}
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50"
+                    className="w-full bg-gradient-to-r from-[#233274] to-[#1a2555] hover:from-[#1a2555] hover:to-[#1a2555] text-[#f8f5ef] font-bold py-4 rounded-xl transition-all disabled:opacity-50"
                   >
                     {loading ? 'Procesando...' : 'Continuar con Plin'}
                   </button>
@@ -538,21 +538,21 @@ const CheckoutPage = () => {
 
               {/* Botón Mercado Pago */}
               {paymentMethod === 'mercadopago' && (
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">
+                <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
+                  <h2 className="text-xl font-bold text-[#233274] mb-6">
                     Pago con Mercado Pago
                   </h2>
 
-                  <div className="bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl p-8 text-white text-center mb-6">
+                  <div className="bg-gradient-to-br from-[#233274] to-[#1a2555] rounded-2xl p-8 text-[#f8f5ef] text-center mb-6">
                     <CreditCard className="w-16 h-16 mx-auto mb-4" />
                     <h3 className="text-2xl font-bold mb-2">Mercado Pago</h3>
-                    <p className="text-blue-100 text-sm">Tu dinero seguro</p>
+                    <p className="text-[#f8f5ef] text-sm">Tu dinero seguro</p>
                   </div>
 
                   <button
                     onClick={() => setShowMercadoPagoModal(true)}
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50"
+                    className="w-full bg-gradient-to-r from-[#233274] to-[#1a2555] hover:from-[#233274] hover:to-[#1a2555] text-[#f8f5ef] font-bold py-4 rounded-xl transition-all disabled:opacity-50"
                   >
                     {loading ? 'Procesando...' : 'Continuar con Mercado Pago'}
                   </button>
@@ -561,20 +561,20 @@ const CheckoutPage = () => {
 
               {/* PayPal */}
               {paymentMethod === 'paypal' && (
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div className="bg-[#f8f5ef] rounded-2xl shadow-lg overflow-hidden">
                   <div className="p-6">
-                    <h2 className="text-xl font-bold text-gray-900 mb-6">
+                    <h2 className="text-xl font-bold text-[#233274] mb-6">
                       Pago con PayPal
                     </h2>
 
-                    <div className="bg-blue-50 rounded-xl p-4 mb-6">
-                      <p className="text-sm text-blue-900">
+                    <div className="bg-[#f8f5ef] rounded-xl p-4 mb-6">
+                      <p className="text-sm text-[#1a2555]">
                         <strong>Total a pagar:</strong> ${totalUSD} USD (aprox. S/. {total.toFixed(2)})
                       </p>
                     </div>
                   </div>
                   
-                  <div className="paypal-isolated-container bg-gray-50 p-6 border-t border-gray-200">
+                  <div className="paypal-isolated-container bg-[#f8f5ef] p-6 border-t border-[#9a98a0]">
                     <div className="paypal-wrapper">
                       <PayPalButton
                         amount={parseFloat(totalUSD)}
@@ -589,13 +589,13 @@ const CheckoutPage = () => {
 
             {/* Resumen del Pedido */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">
+              <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 sticky top-24">
+                <h2 className="text-xl font-bold text-[#233274] mb-6">
                   Resumen de la Reserva
                 </h2>
 
                 {/* Items */}
-                <div className="space-y-4 mb-6 pb-6 border-b border-gray-200">
+                <div className="space-y-4 mb-6 pb-6 border-b border-[#9a98a0]">
                   {items.map((item, index) => (
                     <div key={index} className="space-y-2">
                       <div className="flex gap-3">
@@ -605,13 +605,13 @@ const CheckoutPage = () => {
                           className="w-16 h-16 rounded-lg object-cover"
                         />
                         <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900 text-sm line-clamp-2">
+                          <h4 className="font-semibold text-[#233274] text-sm line-clamp-2">
                             {item.tour_title}
                           </h4>
                         </div>
                       </div>
                       
-                      <div className="text-xs text-gray-600 space-y-1">
+                      <div className="text-xs text-[#9a98a0] space-y-1">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {new Date(item.date).toLocaleDateString('es-PE', { 
@@ -629,7 +629,7 @@ const CheckoutPage = () => {
                       </div>
 
                       <div className="text-right">
-                        <span className="font-bold text-gray-900">
+                        <span className="font-bold text-[#233274]">
                           S/. {parseFloat(item.total_price).toFixed(2)}
                         </span>
                       </div>
@@ -639,23 +639,23 @@ const CheckoutPage = () => {
 
                 {/* Total */}
                 <div className="space-y-3 mb-6">
-                  <div className="flex justify-between text-gray-700">
+                  <div className="flex justify-between text-[#233274]">
                     <span>Subtotal</span>
                     <span className="font-semibold">S/. {total.toFixed(2)}</span>
                   </div>
                   {paymentMethod === 'paypal' && (
-                    <div className="flex justify-between text-gray-700">
+                    <div className="flex justify-between text-[#233274]">
                       <span>En USD</span>
                       <span className="font-semibold">${totalUSD} USD</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-gray-700">
+                  <div className="flex justify-between text-[#233274]">
                     <span>Impuestos y cargos</span>
                     <span className="font-semibold">S/. 0.00</span>
                   </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-gray-200">
-                    <span className="text-xl font-black text-gray-900">Total</span>
-                    <span className="text-2xl font-black text-yellow-500">
+                  <div className="flex justify-between items-center pt-3 border-t border-[#9a98a0]">
+                    <span className="text-xl font-black text-[#233274]">Total</span>
+                    <span className="text-2xl font-black text-[#e15f0b]">
                       S/. {total.toFixed(2)}
                     </span>
                   </div>
@@ -666,7 +666,7 @@ const CheckoutPage = () => {
                   <button
                     onClick={handlePayment}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold px-6 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-6 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? (
                       <>
@@ -683,18 +683,18 @@ const CheckoutPage = () => {
                 )}
 
                 {paymentMethod === 'paypal' && (
-                  <p className="text-sm text-gray-600 text-center">
+                  <p className="text-sm text-[#9a98a0] text-center">
                     Usa los botones de PayPal arriba para completar tu pago
                   </p>
                 )}
 
                 {(paymentMethod === 'yape' || paymentMethod === 'plin' || paymentMethod === 'mercadopago') && (
-                  <p className="text-sm text-gray-600 text-center">
+                  <p className="text-sm text-[#9a98a0] text-center">
                     Haz clic en el botón arriba para continuar con el pago
                   </p>
                 )}
 
-                <p className="text-xs text-gray-500 text-center mt-4">
+                <p className="text-xs text-[#9a98a0] text-center mt-4">
                   {paymentMethod === 'paypal' 
                     ? '✓ PayPal Sandbox - Usa tu cuenta de prueba' 
                     : '⚠️ Este es un pago simulado. No se procesarán cargos reales.'}

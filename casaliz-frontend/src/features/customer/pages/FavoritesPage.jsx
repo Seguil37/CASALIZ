@@ -19,18 +19,18 @@ const FavoritesPage = () => {
   const toursToShow = favoriteTours.length > 0 ? favoriteTours : [];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
+    <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom">
         <div className="flex items-center gap-3 mb-6">
-          <Heart className="w-6 h-6 text-red-500" />
+          <Heart className="w-6 h-6 text-[#d14a00]" />
           <div>
-            <h1 className="text-3xl font-black text-gray-900">Mis favoritos</h1>
-            <p className="text-gray-600">Guarda y revisa los tours que más te interesan.</p>
+            <h1 className="text-3xl font-black text-[#233274]">Mis favoritos</h1>
+            <p className="text-[#9a98a0]">Guarda y revisa los tours que más te interesan.</p>
           </div>
         </div>
 
         {loading ? (
-          <p className="text-gray-600">Cargando tus favoritos...</p>
+          <p className="text-[#9a98a0]">Cargando tus favoritos...</p>
         ) : hasFavorites ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {toursToShow.map((tour) => (
@@ -38,9 +38,9 @@ const FavoritesPage = () => {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md p-8 text-center">
-            <p className="text-gray-700 mb-2">Todavía no tienes tours en tu lista.</p>
-            <p className="text-sm text-gray-500">Explora y agrega tus favoritos para verlos aquí.</p>
+          <div className="bg-[#f8f5ef] rounded-xl shadow-md p-8 text-center">
+            <p className="text-[#233274] mb-2">Todavía no tienes tours en tu lista.</p>
+            <p className="text-sm text-[#9a98a0]">Explora y agrega tus favoritos para verlos aquí.</p>
           </div>
         )}
       </div>
