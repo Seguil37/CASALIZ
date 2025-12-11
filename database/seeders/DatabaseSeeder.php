@@ -11,7 +11,6 @@ class DatabaseSeeder extends Seeder
         $this->command->info('🚀 Seeders CASA LIZ');
 
         $this->call([
-            SystemSettingsSeeder::class,
             CasalizUsersSeeder::class,
             CasalizCategoriesSeeder::class,
             CasalizProjectsSeeder::class,
