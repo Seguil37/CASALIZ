@@ -29,4 +29,13 @@ class UserPolicy
 
         return $user->isAdmin() && $user->id === $model->id;
     }
+
+    public function delete(User $user, User $model): bool
+    {
+        if (!$user->isMasterAdmin()) {
+            return false;
+        }
+
+        return $user->id !== $model->id;
+    }
 }
