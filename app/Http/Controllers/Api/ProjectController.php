@@ -31,10 +31,17 @@ class ProjectController extends Controller
             $query->where('is_featured', true);
         }
 
-        $query->where('status', 'published');
+        $user = $request->user('sanctum');
+
+        if (!$user || !$user->isAdmin()) {
+            $query->where('status', 'published');
+        }
+
+        $perPage = min(max((int) $request->input('per_page', 12), 1), 100);
 
         return response()->json(
-            $query->orderByDesc('published_at')->paginate(12)
+            $query->orderByDesc(DB::raw('COALESCE(published_at, created_at)'))
+                ->paginate($perPage)
         );
     }
 
@@ -50,9 +57,12 @@ class ProjectController extends Controller
         return response()->json($projects);
     }
 
-    public function show(Project $project)
+    public function show(Request $request, Project $project)
     {
-        if ($project->status !== 'published') {
+        $user = $request->user('sanctum');
+
+        // Permitir ver si: está publicado O el usuario es admin O el usuario es el creador
+        if ($project->status !== 'published' && (!$user || (!$user->isAdmin() && $project->created_by !== $user->id))) {
             abort(404);
         }
 
