@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Models\Favorite;
 use App\Models\Project;
 use App\Models\ProjectReview;
+use App\Models\Service;
 use App\Models\User;
 use App\Policies\FavoritePolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\ProjectReviewPolicy;
+use App\Policies\ServicePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -24,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         Project::class => ProjectPolicy::class,
         ProjectReview::class => ProjectReviewPolicy::class,
         Favorite::class => FavoritePolicy::class,
+        Service::class => ServicePolicy::class,
         User::class => UserPolicy::class,
     ];
 
