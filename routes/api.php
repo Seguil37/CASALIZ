@@ -57,6 +57,10 @@ Route::prefix('v1')->group(function () {
             Route::put('/users/{user}', [UserController::class, 'update']);
         });
 
+        Route::middleware('can:delete,user')->group(function () {
+            Route::delete('/users/{user}', [UserController::class, 'destroy']);
+        });
+
         Route::get('/favorites', [FavoriteController::class, 'index']);
         Route::post('/favorites', [FavoriteController::class, 'store']);
         Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy']);

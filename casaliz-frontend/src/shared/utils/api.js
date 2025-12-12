@@ -65,6 +65,7 @@ export const adminUsersApi = {
   list: (page = 1) => api.get('/users', { params: { page } }),
   create: (data) => api.post('/users', data),
   update: (id, data) => api.put(`/users/${id}`, data),
+  delete: (id) => api.delete(`/users/${id}`),
 };
 
 export const settingsApi = {

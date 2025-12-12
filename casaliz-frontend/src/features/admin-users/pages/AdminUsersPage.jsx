@@ -8,6 +8,7 @@ import {
   Plus,
   Shield,
   ShieldCheck,
+  Trash2,
   UserCog,
   UserMinus,
   UserPlus,
@@ -208,6 +209,28 @@ const AdminUsersPage = () => {
     }
   };
 
+  const handleDelete = async (user) => {
+    if (!window.confirm(`¿Seguro que deseas eliminar a ${user.name}? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+
+    try {
+      await adminUsersApi.delete(user.id);
+
+      if (users.length === 1 && currentPage > 1) {
+        setCurrentPage((p) => Math.max(1, p - 1));
+      } else {
+        setUsers((prev) => prev.filter((u) => u.id !== user.id));
+        setMeta((prev) => ({
+          ...prev,
+          total: Math.max(0, (prev.total || 1) - 1),
+        }));
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || err.response?.data?.errors?.user?.[0] || 'No se pudo eliminar el usuario.');
+    }
+  };
+
   const updateUserInState = (userId, updatedUser) => {
     setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, ...updatedUser } : u)));
   };
@@ -333,6 +356,14 @@ const AdminUsersPage = () => {
                             {u.role === ROLES.MASTER_ADMIN ? <Shield className="w-4 h-4" /> : <ShieldCheck className="w-4 h-4" />}
                             {u.role === ROLES.MASTER_ADMIN ? 'Quitar Master' : 'Hacer Master'}
                           </button>
+                          {authUser?.role === ROLES.MASTER_ADMIN && authUser?.id !== u.id && (
+                            <button
+                              onClick={() => handleDelete(u)}
+                              className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 text-sm font-semibold"
+                            >
+                              <Trash2 className="w-4 h-4" /> Eliminar
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

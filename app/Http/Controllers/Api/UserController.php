@@ -122,6 +122,29 @@ class UserController extends Controller
         ]);
     }
 
+    public function destroy(Request $request, User $user)
+    {
+        $this->authorize('delete', $user);
+
+        if ($request->user()->id === $user->id) {
+            throw ValidationException::withMessages([
+                'user' => 'No puedes eliminar tu propia cuenta.',
+            ]);
+        }
+
+        if ($user->role === 'master_admin' && $this->isLastActiveMaster($user)) {
+            throw ValidationException::withMessages([
+                'user' => 'Debe existir al menos un master admin activo en el sistema.',
+            ]);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Usuario eliminado correctamente',
+        ]);
+    }
+
     private function isLastActiveMaster(User $target): bool
     {
         return User::where('role', 'master_admin')
