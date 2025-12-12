@@ -2,13 +2,33 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Eye, Edit, Trash2, Search } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Search, ChevronLeft, ChevronRight, Archive } from 'lucide-react';
 import { projectsApi } from '../../../shared/utils/api';
 
+const STATUS_CONFIG = {
+  published: {
+    label: 'Publicado',
+    bgColor: 'bg-green-100',
+    textColor: 'text-green-700'
+  },
+  draft: {
+    label: 'Borrador',
+    bgColor: 'bg-yellow-100',
+    textColor: 'text-yellow-700'
+  },
+  archived: {
+    label: 'Archivado',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-700'
+  }
+};
+
 const MyToursPage = () => {
-  const [projects, setProjects] = useState([]);
+  const [allProjects, setAllProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10);
 
   useEffect(() => {
     fetchProjects();
@@ -16,9 +36,10 @@ const MyToursPage = () => {
 
   const fetchProjects = async () => {
     try {
-      const response = await projectsApi.list();
+      setLoading(true);
+      const response = await projectsApi.list({ per_page: 1000 });
       const data = response.data?.data ?? response.data ?? [];
-      setProjects(data);
+      setAllProjects(data);
     } catch (error) {
       console.error('Error fetching proyectos:', error);
     } finally {
@@ -31,16 +52,39 @@ const MyToursPage = () => {
 
     try {
       await projectsApi.delete(projectId);
-      setProjects(projects.filter((p) => p.id !== projectId));
+      setAllProjects(allProjects.filter((p) => p.id !== projectId));
     } catch (error) {
       console.error('Error deleting project:', error);
       alert('Error al eliminar el proyecto');
     }
   };
 
-  const filtered = projects.filter((project) =>
+  // Filtrar por búsqueda
+  const filtered = allProjects.filter((project) =>
     project.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Calcular paginación
+  const totalPages = Math.ceil(filtered.length / perPage);
+  const startIndex = (currentPage - 1) * perPage;
+  const paginatedProjects = filtered.slice(startIndex, startIndex + perPage);
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Resetear a página 1 al buscar
+  };
 
   if (loading) {
     return (
@@ -57,7 +101,7 @@ const MyToursPage = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
             <h1 className="text-3xl font-black text-[#233274] mb-2">Mis proyectos</h1>
-            <p className="text-[#9a98a0]">Gestiona tus proyectos publicados</p>
+            <p className="text-[#9a98a0]">Gestiona todos tus proyectos</p>
           </div>
           <Link
             to="/agency/tours/create"
@@ -75,7 +119,7 @@ const MyToursPage = () => {
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               className="w-full pl-12 pr-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-primary focus:outline-none"
               placeholder="Buscar proyectos..."
             />
@@ -86,72 +130,114 @@ const MyToursPage = () => {
         <div className="bg-[#f8f5ef] rounded-2xl shadow-lg overflow-hidden">
           {filtered.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-[#9a98a0]">No se encontraron proyectos</p>
+              <p className="text-[#9a98a0]">
+                {allProjects.length === 0 ? 'No tienes proyectos' : 'No se encontraron proyectos'}
+              </p>
             </div>
           ) : (
-            <div className="divide-y divide-[#9a98a0]">
-              {filtered.map((project) => (
-                <div
-                  key={project.id}
-                  className="p-6 hover:bg-[#f8f5ef] transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={project.hero_image || project.featuredImages?.[0]?.path || 'https://via.placeholder.com/100'}
-                      alt={project.title}
-                      className="w-24 h-24 rounded-xl object-cover"
-                    />
+            <>
+              <div className="divide-y divide-[#9a98a0]">
+                {paginatedProjects.map((project) => {
+                  const statusConfig = STATUS_CONFIG[project.status] || STATUS_CONFIG.draft;
+                  
+                  return (
+                    <div
+                      key={project.id}
+                      className="p-6 hover:bg-[#f8f5ef] transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={project.hero_image || project.featuredImages?.[0]?.path || 'https://via.placeholder.com/100'}
+                          alt={project.title}
+                          className="w-24 h-24 rounded-xl object-cover"
+                        />
 
-                    <div className="flex-1">
-                      <h3 className="font-bold text-[#233274] text-lg mb-2">
-                        {project.title}
-                      </h3>
-                      <div className="flex items-center gap-4 text-sm text-[#9a98a0]">
-                        <span>{project.city}{project.state ? `, ${project.state}` : ''}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          project.status === 'published'
-                            ? 'bg-green-100 text-green-700'
-                            : project.status === 'draft'
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          {project.status === 'published' ? 'Publicado' : project.status === 'draft' ? 'Borrador' : 'Archivado'}
-                        </span>
-                        {project.is_featured && (
-                          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
-                            Destacado
-                          </span>
-                        )}
+                        <div className="flex-1">
+                          <h3 className="font-bold text-[#233274] text-lg mb-2">
+                            {project.title}
+                          </h3>
+                          <div className="flex items-center gap-4 text-sm text-[#9a98a0]">
+                            <span>{project.city}{project.state ? `, ${project.state}` : ''}</span>
+                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
+                              {statusConfig.label}
+                            </span>
+                            {project.is_featured && (
+                              <span className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700">
+                                Destacado
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Link
+                            to={`/tours/${project.id}`}
+                            className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
+                            title="Ver"
+                          >
+                            <Eye className="w-5 h-5 text-[#9a98a0]" />
+                          </Link>
+                          <Link
+                            to={`/agency/tours/${project.id}/edit`}
+                            className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
+                            title="Editar"
+                          >
+                            <Edit className="w-5 h-5 text-[#9a98a0]" />
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(project.id)}
+                            className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-5 h-5 text-[#d14a00]" />
+                          </button>
+                        </div>
                       </div>
                     </div>
+                  );
+                })}
+              </div>
 
-                    <div className="flex items-center gap-2">
-                      <Link
-                        to={`/tours/${project.id}`}
-                        className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
-                        title="Ver"
-                      >
-                        <Eye className="w-5 h-5 text-[#9a98a0]" />
-                      </Link>
-                      <Link
-                        to={`/agency/tours/${project.id}/edit`}
-                        className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
-                        title="Editar"
-                      >
-                        <Edit className="w-5 h-5 text-[#9a98a0]" />
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(project.id)}
-                        className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
-                        title="Eliminar"
-                      >
-                        <Trash2 className="w-5 h-5 text-[#d14a00]" />
-                      </button>
-                    </div>
-                  </div>
+              {/* Pagination */}
+              <div className="bg-white border-t border-[#ebe7df] px-6 py-4 flex items-center justify-between">
+                <div className="text-sm text-[#9a98a0]">
+                  Mostrando <span className="font-bold text-[#233274]">{startIndex + 1}</span> a <span className="font-bold text-[#233274]">{Math.min(startIndex + perPage, filtered.length)}</span> de <span className="font-bold text-[#233274]">{filtered.length}</span> proyectos
                 </div>
-              ))}
-            </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className="p-2 rounded-lg border border-[#ebe7df] hover:bg-[#f8f5ef] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5 text-[#233274]" />
+                  </button>
+
+                  <div className="flex gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-8 h-8 rounded-lg font-semibold transition-colors ${
+                          currentPage === page
+                            ? 'bg-gradient-primary text-[#233274]'
+                            : 'border border-[#ebe7df] text-[#9a98a0] hover:bg-[#f8f5ef]'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className="p-2 rounded-lg border border-[#ebe7df] hover:bg-[#f8f5ef] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5 text-[#233274]" />
+                  </button>
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
