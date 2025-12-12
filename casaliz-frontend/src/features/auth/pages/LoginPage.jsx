@@ -234,9 +234,9 @@ const LoginPage = () => {
         <div className="mt-6 bg-[#f8f5ef] border border-[#f8f5ef] rounded-xl p-4">
           <p className="text-sm font-semibold text-[#1a2555] mb-2">🔐 Cuentas de prueba:</p>
           <div className="space-y-1 text-xs text-[#1a2555]">
-            <p><strong>Admin:</strong> admin@bookandgo.com</p>
-            <p><strong>Agencia:</strong> inca@bookandgo.com</p>
-            <p><strong>Cliente:</strong> juan@example.com</p>
+            <p><strong>Master Admin:</strong> master@casaliz.test</p>
+            <p><strong>Admin Principal:</strong> admin@casaliz.test</p>
+            <p><strong>Cliente:</strong> cliente@casaliz.test</p>
             <p className="mt-2"><strong>Contraseña:</strong> password</p>
           </div>
         </div>
