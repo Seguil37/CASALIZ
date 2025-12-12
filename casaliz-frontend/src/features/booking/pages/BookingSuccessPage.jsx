@@ -175,7 +175,7 @@ const BookingSuccessPage = () => {
         {/* Explorar más */}
         <div className="text-center">
           <Link
-            to="/tours"
+            to="/projects"
             className="inline-flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-bold text-lg transition-colors"
           >
             Explorar más experiencias

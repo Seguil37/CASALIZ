@@ -123,7 +123,7 @@ const AgencyDashboard = () => {
         <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-black text-[#233274]">Todos los proyectos</h2>
-            <Link to="/tours" className="text-primary hover:text-primary-dark font-semibold">
+            <Link to="/projects" className="text-primary hover:text-primary-dark font-semibold">
               Ver galería →
             </Link>
           </div>
@@ -240,7 +240,7 @@ const ProjectRow = ({ project, onDelete }) => {
           </span>
         )}
         <div className="flex items-center gap-2">
-          <Link to={`/tours/${project.id}`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Eye className="w-4 h-4 text-[#233274]" /></Link>
+          <Link to={`/projects/${project.id}`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Eye className="w-4 h-4 text-[#233274]" /></Link>
           <Link to={`/agency/tours/${project.id}/edit`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Edit className="w-4 h-4 text-[#233274]" /></Link>
           <button
             type="button"

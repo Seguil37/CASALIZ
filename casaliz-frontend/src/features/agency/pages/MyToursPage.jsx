@@ -171,7 +171,7 @@ const MyToursPage = () => {
 
                         <div className="flex items-center gap-2">
                           <Link
-                            to={`/tours/${project.id}`}
+                            to={`/projects/${project.id}`}
                             className="p-2 hover:bg-[#f8f5ef] rounded-lg transition-colors"
                             title="Ver"
                           >

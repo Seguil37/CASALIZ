@@ -16,7 +16,7 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/tours?search=${searchQuery}`);
+      navigate(`/projects?search=${searchQuery}`);
     }
   };
 

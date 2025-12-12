@@ -247,13 +247,13 @@ const MyBookingsPage = () => {
               No tienes reservas
             </h3>
             <p className="text-[#9a98a0] mb-6">
-              Explora nuestros tours y comienza tu aventura
+              Explora nuestros proyectos y comienza tu aventura
             </p>
             <button
-              onClick={() => navigate('/tours')}
+              onClick={() => navigate('/projects')}
               className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
             >
-              Explorar Tours
+              Explorar proyectos
             </button>
           </div>
         ) : (
@@ -364,10 +364,10 @@ const MyBookingsPage = () => {
                         )}
 
                         <button
-                          onClick={() => navigate(`/tours/${booking.tour_id}`)}
+                          onClick={() => navigate(`/projects/${booking.tour_id}`)}
                           className="flex items-center gap-2 px-4 py-2 bg-[#f8f5ef] hover:bg-[#9a98a0] text-[#233274] rounded-lg transition-all font-medium ml-auto"
                         >
-                          Ver tour
+                          Ver proyecto
                           <ChevronRight className="w-4 h-4" />
                         </button>
                       </div>
@@ -379,7 +379,7 @@ const MyBookingsPage = () => {
                             ¿Disfrutaste esta experiencia? ¡Déjanos tu reseña!
                           </p>
                           <button
-                            onClick={() => navigate(`/tours/${booking.tour_id}?review=true`)}
+                            onClick={() => navigate(`/projects/${booking.tour_id}?review=true`)}
                             className="flex items-center gap-1 text-[#d14a00] hover:text-[#d14a00] font-medium text-sm"
                           >
                             <Star className="w-4 h-4" />

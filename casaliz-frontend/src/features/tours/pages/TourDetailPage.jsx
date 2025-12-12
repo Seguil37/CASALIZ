@@ -47,7 +47,7 @@ const TourDetailPage = () => {
     return (
       <div className="container-custom py-16 text-center space-y-4">
         <p className="text-xl text-[#233274] font-semibold">{error || 'Proyecto no encontrado'}</p>
-        <Link to="/tours" className="text-[#e15f0b] font-semibold hover:underline inline-flex items-center gap-2">
+        <Link to="/projects" className="text-[#e15f0b] font-semibold hover:underline inline-flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Volver al listado
         </Link>
       </div>

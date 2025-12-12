@@ -139,10 +139,10 @@ const BookingPage = () => {
             {error || 'Tour no encontrado'}
           </h2>
           <button
-            onClick={() => navigate('/tours')}
+            onClick={() => navigate('/projects')}
             className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
           >
-            Ver todos los tours
+            Ver todos los proyectos
           </button>
         </div>
       </div>
@@ -156,11 +156,11 @@ const BookingPage = () => {
       <div className="container-custom max-w-6xl">
         {/* Breadcrumb */}
         <button
-          onClick={() => navigate(`/tours/${id}`)}
+          onClick={() => navigate(`/projects/${id}`)}
           className="flex items-center gap-2 text-[#9a98a0] hover:text-[#d14a00] mb-6 font-semibold transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          Volver al tour
+          Volver al proyecto
         </button>
 
         <div className="grid lg:grid-cols-3 gap-8">
