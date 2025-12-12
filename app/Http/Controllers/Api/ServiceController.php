@@ -27,7 +27,7 @@ class ServiceController extends Controller
 
         if (!$user || !$user->isAdmin()) {
             $query->where('status', 'published');
-        } elseif ($request->filled('status')) {
+        } elseif ($request->filled('status') && $request->input('status') !== 'all') {
             $query->where('status', $request->input('status'));
         }
 
@@ -71,7 +71,7 @@ class ServiceController extends Controller
         return DB::transaction(function () use ($validated, $request) {
             $service = Service::create([
                 ...collect($validated)->except('images')->toArray(),
-                'slug' => Str::slug($validated['title']),
+                'slug' => $this->generateUniqueSlug($validated['title']),
                 'created_by' => $request->user()->id,
                 'updated_by' => $request->user()->id,
             ]);
@@ -102,7 +102,9 @@ class ServiceController extends Controller
         return DB::transaction(function () use ($validated, $service, $request) {
             $service->update([
                 ...collect($validated)->except('images')->toArray(),
-                'slug' => isset($validated['title']) ? Str::slug($validated['title']) : $service->slug,
+                'slug' => isset($validated['title'])
+                    ? $this->generateUniqueSlug($validated['title'], $service->id)
+                    : $service->slug,
                 'updated_by' => $request->user()->id,
             ]);
 
@@ -142,5 +144,25 @@ class ServiceController extends Controller
                 'position' => 0,
             ]);
         }
+    }
+
+    protected function generateUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($title) ?: 'servicio';
+        $slug = $baseSlug;
+        $suffix = 1;
+
+        $exists = function (string $candidate) use ($ignoreId): bool {
+            return Service::where('slug', $candidate)
+                ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+                ->exists();
+        };
+
+        while ($exists($slug)) {
+            $slug = "{$baseSlug}-{$suffix}";
+            $suffix++;
+        }
+
+        return $slug;
     }
 }
