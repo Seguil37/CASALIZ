@@ -24,6 +24,7 @@ import MyBookingsPage from './features/customer/pages/MyBookingsPage';
 import FavoritesPage from './features/customer/pages/FavoritesPage';
 import ContactPage from './features/contact/pages/ContactPage';
 import { ROLES } from './shared/constants/roles';
+import AdminUsersPage from './features/admin-users/pages/AdminUsersPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -162,6 +163,15 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.CLIENT]}>
                   <FavoritesPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="admin/users"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
+                  <AdminUsersPage />
                 </ProtectedRoute>
               }
             />

@@ -528,3 +528,30 @@ html {
     padding-top: 4rem; /* en desktop 4 rem */
   }
 }
+
+/* Pills para selección de rol en el módulo de administradores */
+.admin-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #ebe7df;
+  background: #fdfaf5;
+  color: #233274;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-role-pill:hover {
+  background: #f8f5ef;
+  border-color: #dcd6c9;
+}
+
+.admin-role-pill.active {
+  border-color: #e15f0b;
+  background: linear-gradient(135deg, #ffe9d6, #fff3e5);
+  color: #b55600;
+  box-shadow: 0 8px 20px rgba(225, 95, 11, 0.15);
+}
