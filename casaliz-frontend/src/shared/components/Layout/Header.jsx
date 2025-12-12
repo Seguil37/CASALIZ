@@ -142,7 +142,7 @@ const Header = () => {
                       to="/agency/dashboard"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
-                      Dashboard Agencia
+                      Dashboard Proyectos
                     </Link>
                   )}
 
