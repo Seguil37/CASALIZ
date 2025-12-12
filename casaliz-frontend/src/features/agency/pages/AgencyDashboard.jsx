@@ -34,6 +34,26 @@ const AgencyDashboard = () => {
     }
   };
 
+  const handleDelete = async (projectId) => {
+    const projectToDelete = recentProjects.find((p) => p.id === projectId);
+    if (!projectToDelete) return;
+    if (!window.confirm('Estas seguro de eliminar este proyecto?')) return;
+
+    try {
+      await projectsApi.delete(projectId);
+      setRecentProjects((prev) => prev.filter((p) => p.id !== projectId));
+      setStats((prev) => ({
+        ...prev,
+        total_projects: Math.max(0, prev.total_projects - 1),
+        featured: projectToDelete.is_featured ? Math.max(0, prev.featured - 1) : prev.featured,
+        total_reviews: Math.max(0, prev.total_reviews - (projectToDelete.reviews_count || 0)),
+      }));
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      alert('Error al eliminar el proyecto');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center">
@@ -88,7 +108,7 @@ const AgencyDashboard = () => {
           ) : (
             <div className="space-y-4">
               {recentProjects.map((project) => (
-                <ProjectRow key={project.id} project={project} />
+                <ProjectRow key={project.id} project={project} onDelete={handleDelete} />
               ))}
             </div>
           )}
@@ -110,7 +130,7 @@ const StatCard = ({ icon: Icon, title, value }) => (
   </div>
 );
 
-const ProjectRow = ({ project }) => (
+const ProjectRow = ({ project, onDelete }) => (
   <div className="bg-white rounded-2xl p-4 border border-[#ebe7df] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div className="flex items-start gap-4">
       <img
@@ -134,10 +154,19 @@ const ProjectRow = ({ project }) => (
           Borrador
         </span>
       )}
+      {project.is_featured && (
+        <span className="inline-flex items-center gap-1 text-sm text-blue-700 bg-blue-50 px-2 py-1 rounded-full">
+          <TrendingUp className="w-4 h-4" /> Destacado
+        </span>
+      )}
       <div className="flex items-center gap-2">
         <Link to={`/tours/${project.id}`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Eye className="w-4 h-4 text-[#233274]" /></Link>
         <Link to={`/agency/tours/${project.id}/edit`} className="p-2 rounded-full hover:bg-[#f8f5ef]"><Edit className="w-4 h-4 text-[#233274]" /></Link>
-        <button type="button" className="p-2 rounded-full hover:bg-[#f8f5ef]">
+        <button
+          type="button"
+          onClick={() => onDelete?.(project.id)}
+          className="p-2 rounded-full hover:bg-[#f8f5ef]"
+        >
           <Trash2 className="w-4 h-4 text-[#d14a00]" />
         </button>
       </div>
