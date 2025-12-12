@@ -25,6 +25,9 @@ import FavoritesPage from './features/customer/pages/FavoritesPage';
 import ContactPage from './features/contact/pages/ContactPage';
 import { ROLES } from './shared/constants/roles';
 import AdminUsersPage from './features/admin-users/pages/AdminUsersPage';
+import ServicesPage from './features/services/pages/ServicesPage';
+import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
+import AdminServicesPage from './features/services/pages/AdminServicesPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -78,6 +81,8 @@ function App() {
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="contacto" element={<ContactPage />} />
+            <Route path="services" element={<ServicesPage />} />
+            <Route path="services/:slug" element={<ServiceDetailPage />} />
 
             {/* Customer Routes */}
             <Route
@@ -105,6 +110,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <MyToursPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/services"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <AdminServicesPage />
                 </ProtectedRoute>
               }
             />

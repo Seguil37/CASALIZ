@@ -41,6 +41,14 @@ export const projectsApi = {
   delete: (id) => api.delete(`/projects/${id}`),
 };
 
+export const servicesApi = {
+  list: (params) => api.get('/services', { params }),
+  show: (slug) => api.get(`/services/${slug}`),
+  create: (data) => api.post('/services', data),
+  update: (id, data) => api.put(`/services/${id}`, data),
+  delete: (id) => api.delete(`/services/${id}`),
+};
+
 export const authApi = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
