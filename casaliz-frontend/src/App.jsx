@@ -28,6 +28,7 @@ import AdminUsersPage from './features/admin-users/pages/AdminUsersPage';
 import ServicesPage from './features/services/pages/ServicesPage';
 import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
 import AdminServicesPage from './features/services/pages/AdminServicesPage';
+import AboutPage from './features/about/pages/AboutPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -85,6 +86,7 @@ function App() {
             <Route path="contacto" element={<ContactPage />} />
             <Route path="services" element={<ServicesPage />} />
             <Route path="services/:slug" element={<ServiceDetailPage />} />
+            <Route path="about" element={<AboutPage />} />
 
             {/* Customer Routes */}
             <Route
