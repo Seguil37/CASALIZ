@@ -80,18 +80,18 @@ const ServicesPage = () => {
         {services.length === 0 ? (
           <p className="text-[#9a98a0]">No hay servicios publicados.</p>
         ) : (
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
             {services.map((service) => (
               <Link
                 key={service.id}
                 to={`/services/${service.slug}`}
-                className="group relative bg-white rounded-2xl shadow overflow-hidden block"
+                className="group relative bg-white rounded-2xl shadow-lg overflow-hidden block h-full"
               >
-                <div className="relative h-72 w-full">
+                <div className="relative h-[30rem] sm:h-[34rem] lg:h-[38rem] w-full bg-[#f8f5ef] flex items-center justify-center">
                   <img
                     src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x240'}
                     alt={service.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                   <span className="absolute top-4 left-4 bg-white/90 text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full">
                     {service.category}
