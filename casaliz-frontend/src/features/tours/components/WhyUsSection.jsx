@@ -34,7 +34,7 @@ const WhyUsSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef]">
+    <section id="nosotros" className="py-20 bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef]">
       <div className="container-custom">
         {/* Título */}
         <div className="text-center mb-16 animate-fade-in">

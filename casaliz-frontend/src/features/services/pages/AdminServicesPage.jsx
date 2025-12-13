@@ -12,7 +12,7 @@ const emptyImage = { path: '', caption: '' };
 
 const emptyForm = {
   title: '',
-  category: 'Diseno, Construccion e Inmobiliaria',
+  category: 'Diseño, Construccion e Inmobiliaria',
   short_description: '',
   description: '',
   status: 'published',

@@ -1,6 +1,7 @@
 // src/features/tours/components/PopularCountriesSection.jsx
 
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Globe, Star } from 'lucide-react';
 
 const PopularCountriesSection = () => {
@@ -141,10 +142,13 @@ const PopularCountriesSection = () => {
                     <p className="text-sm text-[#233274]">{country.subtitle}</p>
                   </div>
 
-                  {/* Botón de acción (aparece al hover) */}
-                  <button className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+                  {/* Boton de accion (aparece al hover) */}
+                  <Link
+                    to={`/services?search=${encodeURIComponent(country.name)}`}
+                    className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100 text-center block"
+                  >
                     Explorar servicios de este tipo
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

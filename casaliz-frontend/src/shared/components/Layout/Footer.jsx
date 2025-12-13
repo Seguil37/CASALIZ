@@ -131,7 +131,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/about"
+                  to="/#nosotros"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -140,20 +140,20 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/terms"
+                  to="/"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Términos
+                  Inicio
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/privacy"
+                  to="/services"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Privacidad
+                  Servicios
                 </Link>
               </li>
             </ul>
@@ -198,22 +198,22 @@ const Footer = () => {
             </p>
             <div className="flex gap-6 text-sm">
               <Link
-                to="/terms"
+                to="/"
                 className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
               >
-                Términos de Servicio
+                Inicio
               </Link>
               <Link
-                to="/privacy"
+                to="/services"
                 className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
               >
-                Política de Privacidad
+                Servicios
               </Link>
               <Link
-                to="/cookies"
+                to="/projects"
                 className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
               >
-                Política de Cookies
+                Proyectos
               </Link>
             </div>
           </div>

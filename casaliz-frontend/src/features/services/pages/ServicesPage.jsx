@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Search, Sparkles, Briefcase } from 'lucide-react';
 import { servicesApi } from '../../../shared/utils/api';
 
 const ServicesPage = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') || '');
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -21,6 +25,33 @@ const ServicesPage = () => {
 
     fetchServices();
   }, []);
+
+  useEffect(() => {
+    setSearchTerm(searchParams.get('search') || '');
+    setCategoryFilter(searchParams.get('category') || '');
+  }, [searchParams]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (searchTerm) params.append('search', searchTerm);
+    if (categoryFilter) params.append('category', categoryFilter);
+    setSearchParams(params);
+  };
+
+  const filteredServices = useMemo(() => {
+    return services.filter((service) => {
+      const matchesText = searchTerm
+        ? `${service.title} ${service.short_description || ''} ${service.category || ''}`
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+        : true;
+      const matchesCategory = categoryFilter
+        ? (service.category || '').toLowerCase().includes(categoryFilter.toLowerCase())
+        : true;
+      return matchesText && matchesCategory;
+    });
+  }, [services, searchTerm, categoryFilter]);
 
   const serviceHighlights = [
     'Viviendas unifamiliares y multifamiliares',
@@ -65,7 +96,7 @@ const ServicesPage = () => {
               Soluciones de diseño, construccion e inmobiliaria en un solo equipo.
             </h1>
             <p className="text-lg max-w-2xl text-white/90">
-              Conecta con el servicio que necesitas: licencias, diseño, obra y gestion comercial. Te acompaniamos desde la
+              Conecta con el servicio que necesitas: licencias, diseño, obra y gestion comercial. Te acompanamos desde la
               idea hasta la entrega final.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -75,26 +106,62 @@ const ServicesPage = () => {
               >
                 Ver catalogo
               </a>
-            </div>
-            <div className="flex flex-wrap gap-4 text-sm text-white/80">
-              <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-white/15">
-                <span className="h-2 w-2 rounded-full bg-[#fbbf24]" /> Tramites municipales
-              </span>
-              <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-white/15">
-                <span className="h-2 w-2 rounded-full bg-[#fbbf24]" /> Diseño y supervision
-              </span>
-              <span className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 border border-white/15">
-                <span className="h-2 w-2 rounded-full bg-[#fbbf24]" /> Venta y regularizacion
-              </span>
+              <a
+                href="#nosotros"
+                className="px-5 py-3 rounded-xl border border-white/60 text-white font-bold hover:bg-white/10 transition-colors"
+              >
+                Por que Casaliz
+              </a>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-2xl bg-white/10 border border-white/15 p-4 col-span-2">
-              <p className="text-sm text-white/70">Atencion integral</p>
-              <p className="text-lg font-semibold">
-                Coordinamos arquitectura, gestion tecnica y tramites para que avances sin retrasos.
-              </p>
+
+          <div className="bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl backdrop-blur">
+            <div className="flex items-center gap-2 text-sm font-semibold uppercase text-white/80 mb-4">
+              <Briefcase className="w-5 h-5" />
+              Encuentra tu servicio
             </div>
+            <form onSubmit={handleSearch} className="space-y-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70 w-5 h-5" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Licencias, diseño, topografia..."
+                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/60"
+                />
+              </div>
+              <div className="relative">
+                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70 w-5 h-5" />
+                <input
+                  type="text"
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  placeholder="Categoria o especialidad"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/60"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-white text-[#233274] font-bold py-3 rounded-xl hover:-translate-y-0.5 transition-transform shadow-lg"
+              >
+                Buscar servicios
+              </button>
+              <div className="flex flex-wrap gap-2 text-xs text-white/80">
+                <Sparkles className="w-4 h-4 text-[#fbbf24]" />
+                <span>Sugerencias:</span>
+                {['Licencias', 'Habilitaciones', 'Topografia', 'Diseño interior'].map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setSearchTerm(tag)}
+                    className="px-3 py-1 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -138,11 +205,11 @@ const ServicesPage = () => {
           </div>
         </div>
 
-        {services.length === 0 ? (
+        {filteredServices.length === 0 ? (
           <p className="text-[#9a98a0]">No hay servicios publicados.</p>
         ) : (
           <div id="servicios-listado" className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
-            {services.map((service) => (
+            {filteredServices.map((service) => (
               <Link
                 key={service.id}
                 to={`/services/${service.slug}`}
