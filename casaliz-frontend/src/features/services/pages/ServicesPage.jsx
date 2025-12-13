@@ -22,6 +22,24 @@ const ServicesPage = () => {
     fetchServices();
   }, []);
 
+  const serviceHighlights = [
+    'Viviendas unifamiliares y multifamiliares',
+    'Casas de campo',
+    'Diseño de interiores con vistas en 3D',
+    'Expediente de licencia de construcción',
+    'Declaratoria de fábrica',
+    'Independizaciones',
+    'Habilitaciones urbanas',
+    'Subdivisión de lote',
+    'Acumulación de lote',
+    'Prescripción adquisitiva',
+    'Visación de planos',
+    'Levantamientos topográficos',
+    'Licencia de funcionamiento',
+    'Compra-venta de terrenos',
+    'Expedientes técnicos',
+  ];
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f8f5ef]">
@@ -42,33 +60,48 @@ const ServicesPage = () => {
       </div>
 
       <div className="container-custom">
-        <h2 className="text-2xl font-bold text-[#233274] mb-6">Diseño, Construcción e Inmobiliaria</h2>
+        <div className="flex flex-col gap-4 mb-8">
+          <h2 className="text-2xl font-bold text-[#233274]">Estos son los servicios que hacemos</h2>
+          <p className="text-[#233274] max-w-3xl">
+            Conoce el catálogo de soluciones de Diseño, Construcción e Inmobiliaria disponibles en CASALIZ.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {serviceHighlights.map((item) => (
+              <span
+                key={item}
+                className="px-4 py-2 bg-white text-[#233274] rounded-full shadow-sm border border-[#e2dfd7] text-sm font-semibold"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
 
         {services.length === 0 ? (
           <p className="text-[#9a98a0]">No hay servicios publicados.</p>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
             {services.map((service) => (
-              <article key={service.id} className="bg-white rounded-2xl shadow p-5 flex flex-col">
-                <img
-                  src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x240'}
-                  alt={service.title}
-                  className="w-full h-48 object-cover rounded-xl mb-4"
-                />
-                <div className="flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold text-[#233274] mb-2">{service.title}</h3>
-                  <p className="text-[#666] flex-1">{service.short_description}</p>
-                  <div className="mt-4 flex justify-between items-center">
-                    <span className="text-xs uppercase tracking-wide text-[#9a98a0]">{service.category}</span>
-                    <Link
-                      to={`/services/${service.slug}`}
-                      className="text-primary font-semibold hover:underline"
-                    >
-                      Ver detalle
-                    </Link>
+              <Link
+                key={service.id}
+                to={`/services/${service.slug}`}
+                className="group relative bg-white rounded-2xl shadow overflow-hidden block"
+              >
+                <div className="relative h-72 w-full">
+                  <img
+                    src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x240'}
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <span className="absolute top-4 left-4 bg-white/90 text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full">
+                    {service.category}
+                  </span>
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-center px-6 text-white">
+                    <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
+                    <p className="text-sm font-medium">Haz clic para ver el detalle</p>
                   </div>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}
