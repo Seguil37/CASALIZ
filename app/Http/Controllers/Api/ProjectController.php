@@ -19,6 +19,15 @@ class ProjectController extends Controller
             $query->where('type', $request->input('type'));
         }
 
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+
+            $query->where(function ($query) use ($searchTerm) {
+                $query->where('title', 'like', "%{$searchTerm}%")
+                    ->orWhere('city', 'like', "%{$searchTerm}%");
+            });
+        }
+
         if ($request->filled('city')) {
             $query->where('city', $request->input('city'));
         }

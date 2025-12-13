@@ -15,7 +15,7 @@ const SearchBar = ({ filters, onFilterChange, onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const cityValue = cityFilter || searchInput;
+    const cityValue = cityFilter;
     const nextFilters = {
       ...filters,
       search: searchInput,
