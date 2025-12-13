@@ -84,8 +84,6 @@ const Header = () => {
             <div className="hidden xl:flex items-center gap-4 text-sm">
               <Link
                 to="/contacto"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="flex items-center gap-1 text-[#233274] hover:text-[#e15f0b] transition-colors"
               >
                 <Mail className="w-4 h-4" />
@@ -251,8 +249,6 @@ const Header = () => {
                 </a>
                 <Link
                   to="/contacto"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >

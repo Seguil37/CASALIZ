@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { servicesApi } from '../../../shared/utils/api';
 import { ChevronRight, Zap, CheckCircle } from 'lucide-react';
 
@@ -198,9 +198,12 @@ const ServiceDetailPage = () => {
               Contactar Ahora
               <ChevronRight className="w-5 h-5" />
             </a>
-            <button className="inline-flex items-center justify-center gap-2 border-2 border-white text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-[#233274] transition-all duration-300">
+            <Link
+              to="/services"
+              className="inline-flex items-center justify-center gap-2 border-2 border-white text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-[#233274] transition-all duration-300"
+            >
               Ver Otros Servicios
-            </button>
+            </Link>
           </div>
         </div>
       </section>
