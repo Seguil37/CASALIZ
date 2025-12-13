@@ -92,7 +92,7 @@ const RegisterPage = () => {
           <div className="flex flex-col items-center justify-center gap-2 min-h-[120px]">
             <h2 className="text-4xl font-black text-[#233274] leading-tight text-center">Crea tu cuenta</h2>
             <p className="text-[#9a98a0] text-center max-w-xl">
-              Únete a Book&Go y descubre experiencias únicas.
+              Únete a Casaliz, tu opinión nos importa.
             </p>
           </div>
         </div>
@@ -326,7 +326,7 @@ const TermsAndConditionsStep = ({ onBack, onSubmit, loading, apiError }) => {
           <div className="border border-[#9a98a0] rounded-xl p-6 max-h-64 overflow-y-auto mb-6">
             <div className="space-y-4 text-sm text-[#9a98a0]">
               <p className="font-semibold text-[#233274]">1. Aceptación de términos</p>
-              <p>Al crear una cuenta en Book&Go, aceptas nuestros términos y condiciones.</p>
+              <p>Al crear una cuenta en Casaliz, aceptas nuestros términos y condiciones.</p>
 
               <p className="font-semibold text-[#233274]">2. Uso del servicio</p>
               <p>Debes utilizar nuestros servicios de manera responsable y legal.</p>
@@ -347,7 +347,7 @@ const TermsAndConditionsStep = ({ onBack, onSubmit, loading, apiError }) => {
               className="w-5 h-5 mt-0.5 text-[#e15f0b] focus:ring-[#e15f0b] rounded"
             />
             <span className="text-sm text-[#233274]">
-              Acepto los términos y condiciones, la política de privacidad y el acuerdo de la comunidad de Book&Go.
+              Acepto los términos y condiciones, la política de privacidad y el acuerdo de la comunidad de Casaliz.
             </span>
           </label>
 

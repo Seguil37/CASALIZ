@@ -92,7 +92,7 @@ const Footer = () => {
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Proyectos residenciales
+                  Licencias
                 </Link>
               </li>
               <li>
@@ -101,7 +101,7 @@ const Footer = () => {
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Proyectos comerciales
+                  Expedientes tecnicos
                 </Link>
               </li>
               <li>
