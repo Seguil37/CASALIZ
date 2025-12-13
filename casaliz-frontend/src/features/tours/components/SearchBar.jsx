@@ -3,30 +3,34 @@ import { useEffect, useState } from 'react';
 import { Search, Sparkles, Home } from 'lucide-react';
 
 const SearchBar = ({ filters, onFilterChange, onSearch }) => {
-  const [cityInput, setCityInput] = useState(filters.city || filters.search || '');
+  const [searchInput, setSearchInput] = useState(filters.search || '');
+  const [cityFilter, setCityFilter] = useState(filters.city || '');
   const [typeInput, setTypeInput] = useState(filters.type || '');
 
   useEffect(() => {
-    setCityInput(filters.city || filters.search || '');
+    setSearchInput(filters.search || '');
+    setCityFilter(filters.city || '');
     setTypeInput(filters.type || '');
   }, [filters.city, filters.search, filters.type]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const cityValue = cityFilter || searchInput;
     const nextFilters = {
       ...filters,
-      search: cityInput,
-      city: cityInput,
+      search: searchInput,
+      city: cityValue,
       type: typeInput,
     };
-    onFilterChange('search', cityInput);
-    onFilterChange('city', cityInput);
+    onFilterChange('search', searchInput);
+    onFilterChange('city', cityValue);
     onFilterChange('type', typeInput);
     onSearch(nextFilters);
   };
 
   const setLocation = (city) => {
-    setCityInput(city);
+    setCityFilter(city);
+    setSearchInput(city);
     const nextFilters = {
       ...filters,
       search: city,
@@ -52,8 +56,11 @@ const SearchBar = ({ filters, onFilterChange, onSearch }) => {
             <input
               type="text"
               placeholder="Busca por ciudad o proyecto"
-              value={cityInput}
-              onChange={(e) => setCityInput(e.target.value)}
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                setCityFilter('');
+              }}
               className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-[#9a98a0] text-[#233274] placeholder-[#9a98a0] focus:outline-none focus:border-[#e15f0b] transition-all"
             />
           </div>
