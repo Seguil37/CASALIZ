@@ -1,25 +1,7 @@
 // src/features/tours/components/FilterSidebar.jsx
-import { useEffect, useState } from 'react';
-import { MapPin, Star, Home, X, Filter } from 'lucide-react';
-import api from '../../../shared/utils/api';
+import { Star, X, Filter } from 'lucide-react';
 
 const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = false, onClose }) => {
-  const [types, setTypes] = useState([]);
-
-  useEffect(() => {
-    fetchTypes();
-  }, []);
-
-  const fetchTypes = async () => {
-    try {
-      const response = await api.get('/settings/public');
-      const projectTypes = response.data?.project_types || [];
-      setTypes(projectTypes);
-    } catch (error) {
-      console.error('Error fetching types:', error);
-    }
-  };
-
   const handleApply = () => {
     onApply();
     if (isMobile && onClose) onClose();
@@ -40,51 +22,6 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
       )}
 
       {!isMobile && <h3 className="text-xl font-bold text-[#233274]">Filtros</h3>}
-
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-[#233274] flex items-center gap-2">
-          <Home className="w-4 h-4 text-[#e15f0b]" />
-          Tipo de proyecto
-        </label>
-        <select
-          value={filters.type}
-          onChange={(e) => onFilterChange('type', e.target.value)}
-          className="w-full px-3 py-2 border-2 border-[#9a98a0] rounded-lg focus:border-[#e15f0b] focus:outline-none transition-all"
-        >
-          <option value="">Todos</option>
-          {types.map((type) => (
-            <option key={type} value={type}>{type}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-[#233274] flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-[#e15f0b]" />
-          Estado / Provincia
-        </label>
-        <input
-          type="text"
-          value={filters.state}
-          onChange={(e) => onFilterChange('state', e.target.value)}
-          placeholder="Lima, Cusco..."
-          className="w-full px-3 py-2 border-2 border-[#9a98a0] rounded-lg focus:border-[#e15f0b] focus:outline-none transition-all"
-        />
-      </div>
-
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-[#233274] flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-[#e15f0b]" />
-          Ciudad
-        </label>
-        <input
-          type="text"
-          value={filters.city}
-          onChange={(e) => onFilterChange('city', e.target.value)}
-          placeholder="Ciudad"
-          className="w-full px-3 py-2 border-2 border-[#9a98a0] rounded-lg focus:border-[#e15f0b] focus:outline-none transition-all"
-        />
-      </div>
 
       <div className="space-y-3">
         <label className="block text-sm font-semibold text-[#233274] flex items-center gap-2">

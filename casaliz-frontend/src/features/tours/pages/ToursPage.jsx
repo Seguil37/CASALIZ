@@ -16,9 +16,8 @@ const ToursPage = () => {
 
   const defaultFilters = {
     search: searchParams.get('search') || '',
-    type: searchParams.get('type') || '',
     city: searchParams.get('city') || '',
-    state: searchParams.get('state') || '',
+    type: searchParams.get('type') || '',
     featured: searchParams.get('featured') || '',
   };
   const [filters, setFilters] = useState(defaultFilters);
@@ -32,9 +31,8 @@ const ToursPage = () => {
     try {
       const params = {
         search: searchParams.get('search') || undefined,
-        type: searchParams.get('type') || undefined,
         city: searchParams.get('city') || undefined,
-        state: searchParams.get('state') || undefined,
+        type: searchParams.get('type') || undefined,
         featured: searchParams.get('featured') || undefined,
         page,
       };
@@ -105,8 +103,8 @@ const ToursPage = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-3xl font-black text-[#233274] mb-2 flex items-center gap-2">
-                  {(filters.city || filters.state) && <MapPin className="w-6 h-6 text-[#e15f0b]" />}
-                  {filters.city || filters.state || 'Todos los proyectos'}
+                  {filters.search && <MapPin className="w-6 h-6 text-[#e15f0b]" />}
+                  {filters.search || 'Todos los proyectos'}
                 </h1>
                 <p className="text-[#9a98a0]">
                   {loading ? 'Cargando...' : (

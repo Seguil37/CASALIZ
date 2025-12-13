@@ -9,31 +9,108 @@ const PopularCountriesSection = () => {
 
   const countries = [
     {
-      name: 'Diseños y Proyectos Arquitectónicos',
-      subtitle: 'Viviendas, multifamiliares, casas de campo e interiores 3D',
-      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=600',
+      name: 'Viviendas unifamiliares y multifamiliares',
+      subtitle: 'Diseño y proyectos residenciales de calidad',
+      image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600',
       projectsCount: 45,
       rating: 4.9,
     },
     {
-      name: 'Licencias y Trámites Municipales',
-      subtitle: 'Gestión completa de licencias y documentos',
-      image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600',
+      name: 'Casas de campo',
+      subtitle: 'Proyectos arquitectónicos rurales y de descanso',
+      image: 'https://images.unsplash.com/photo-1570129477492-45e003008e0c?w=600',
+      projectsCount: 28,
+      rating: 4.8,
+    },
+    {
+      name: 'Diseño de interiores con vistas en 3D',
+      subtitle: 'Visualización y planificación de espacios interiores',
+      image: 'https://images.unsplash.com/photo-1565182999555-5174ed846f4d?w=600',
+      projectsCount: 32,
+      rating: 4.9,
+    },
+    {
+      name: 'Expediente de licencia de construcción',
+      subtitle: 'Tramitación completa de permisos municipales',
+      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600',
       projectsCount: 60,
       rating: 4.8,
     },
     {
-      name: 'Habilitaciones Urbanas y Regularizaciones',
-      subtitle: 'Lotes, prescripción adquisitiva y visación de planos',
-      image: 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=600',
-      projectsCount: 38,
+      name: 'Declaratoria de fábrica',
+      subtitle: 'Legalización de construcciones existentes',
+      image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600',
+      projectsCount: 22,
       rating: 4.7,
     },
     {
-      name: 'Topografía y Gestión de Terrenos',
-      subtitle: 'Levantamientos topográficos y asesoría en terrenos',
-      image: 'https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?w=600',
+      name: 'Independizaciones',
+      subtitle: 'Segregación y documentación de propiedades',
+      image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600',
+      projectsCount: 35,
+      rating: 4.8,
+    },
+    {
+      name: 'Habilitaciones urbanas',
+      subtitle: 'Proyectos de urbanización y desarrollo territorial',
+      image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600',
+      projectsCount: 18,
+      rating: 4.7,
+    },
+    {
+      name: 'Subdivisión de lote',
+      subtitle: 'Parcelación y división de terrenos',
+      image: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=600',
       projectsCount: 25,
+      rating: 4.8,
+    },
+    {
+      name: 'Acumulación de lote',
+      subtitle: 'Unificación de terrenos para nuevos proyectos',
+      image: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600',
+      projectsCount: 16,
+      rating: 4.7,
+    },
+    {
+      name: 'Prescripción adquisitiva',
+      subtitle: 'Gestión de derechos de propiedad por posesión',
+      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600',
+      projectsCount: 14,
+      rating: 4.8,
+    },
+    {
+      name: 'Visación de planos',
+      subtitle: 'Revisión técnica y aprobación de documentos',
+      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600',
+      projectsCount: 40,
+      rating: 4.9,
+    },
+    {
+      name: 'Levantamientos topográficos',
+      subtitle: 'Mediciones y mapeos de terrenos precisos',
+      image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600',
+      projectsCount: 38,
+      rating: 4.8,
+    },
+    {
+      name: 'Licencia de funcionamiento',
+      subtitle: 'Permisos para operación de establecimientos',
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600',
+      projectsCount: 45,
+      rating: 4.7,
+    },
+    {
+      name: 'Compra-venta de terrenos',
+      subtitle: 'Asesoría en transacciones inmobiliarias',
+      image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600',
+      projectsCount: 52,
+      rating: 4.9,
+    },
+    {
+      name: 'Expedientes técnicos',
+      subtitle: 'Documentación completa para proyectos constructivos',
+      image: 'https://images.unsplash.com/photo-1554224311-beee415c15c9?w=600',
+      projectsCount: 48,
       rating: 4.8,
     },
   ];
@@ -130,16 +207,8 @@ const PopularCountriesSection = () => {
                 {/* Información adicional */}
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="bg-[#f8f5ef]/90 backdrop-blur-sm rounded-xl p-4 mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-1">
-                        <Star className="w-5 h-5 text-[#e15f0b] fill-current" />
-                        <span className="font-bold text-[#233274]">{country.rating}</span>
-                      </div>
-                      <div className="text-sm text-[#9a98a0]">
-                        {country.projectsCount} proyectos
-                      </div>
-                    </div>
-                    <p className="text-sm text-[#233274]">{country.subtitle}</p>
+                    <p className="text-sm text-[#233274] font-semibold">{country.subtitle}</p>
+              
                   </div>
 
                   {/* Boton de accion (aparece al hover) */}
