@@ -162,15 +162,6 @@ const Header = () => {
                     </Link>
                   )}
 
-                  {user?.role === ROLES.CLIENT && (
-                    <Link
-                      to="/customer/dashboard"
-                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
-                    >
-                      Dashboard
-                    </Link>
-                  )}
-
                   <button
                     onClick={logout}
                     className="block w-full text-left px-4 py-3 hover:bg-red-50 text-red-600 rounded-b-xl transition-colors border-t"

@@ -17,7 +17,6 @@ const HomePage = () => {
       <PopularLocationsSection />
       <FeaturedToursSection />
       <PopularCountriesSection />
-      <ReferenceContentSection />
     </div>
   );
 };

@@ -106,12 +106,7 @@ const ServicesPage = () => {
               >
                 Ver catalogo
               </a>
-              <a
-                href="#nosotros"
-                className="px-5 py-3 rounded-xl border border-white/60 text-white font-bold hover:bg-white/10 transition-colors"
-              >
-                Por que Casaliz
-              </a>
+              
             </div>
           </div>
 

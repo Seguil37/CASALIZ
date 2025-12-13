@@ -37,10 +37,7 @@ const capabilityPillars = [
     title: 'Dirección de obra y supervisión',
     detail: 'Seguimiento en campo, control de avances, seguridad y estándares constructivos.',
   },
-  {
-    title: 'Interiorismo y equipamiento',
-    detail: 'Materialidad coherente, iluminación y mobiliario que realzan la experiencia.',
-  },
+  
 ];
 
 const AboutPage = () => {
@@ -107,23 +104,7 @@ const AboutPage = () => {
       </section>
 
       <section id="nosotros" className="container-custom py-16 lg:py-20 space-y-10">
-        <div className="grid gap-8 lg:grid-cols-[1.3fr_auto] items-start">
-          <div className="space-y-6">
-            <h2 className="text-3xl lg:text-4xl font-black text-[#0f1b35]">Equipo senior que traduce ideas en obras ejecutables</h2>
-            <p className="text-lg text-[#4a4b57] max-w-3xl">
-              Nuestro equipo combina dirección de proyectos, gestión municipal y supervisión de obra. Trabajamos con metodologías
-              claras: levantamiento de requerimientos, lineamientos normativos, plan de licencias y control de presupuesto para
-              asegurar que cada decisión esté respaldada por data y experiencia.
-            </p>
-          </div>
-          <div className="bg-white rounded-3xl shadow-xl border border-[#e2dfd7] p-6">
-            <p className="text-sm font-semibold text-[#d14a00] uppercase tracking-[0.2em] mb-3">Acompañamiento dedicado</p>
-            <p className="text-base text-[#4a4b57]">
-              Asignamos un líder técnico y un coordinador de especialidades para cada proyecto. Esto permite gestionar consultas de
-              municipalidades, compatibilizar planos y mantener comunicación directa con el cliente.
-            </p>
-          </div>
-        </div>
+        
 
         <div className="grid gap-6 md:grid-cols-3">
           {experienceHighlights.map((item) => {

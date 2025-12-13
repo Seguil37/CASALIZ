@@ -130,13 +130,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/#nosotros"
+                <a
+                  href="http://localhost:5173/about"
                   className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
                 >
                   <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   Nosotros
-                </Link>
+                </a>
               </li>
               <li>
                 <Link

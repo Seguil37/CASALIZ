@@ -71,7 +71,7 @@ const LoginPage = () => {
             Bienvenido de nuevo
           </h2>
           <p className="text-[#9a98a0]">
-            Inicia sesión para acceder a tus reservas y experiencias
+            Inicia sesión para dejar reseñas, tu opinion nos importa.
           </p>
         </div>
 
@@ -200,35 +200,7 @@ const LoginPage = () => {
         </div>
 
         {/* Beneficios */}
-        <div className="mt-8 bg-[#f8f5ef] rounded-2xl shadow-lg p-6 animate-fade-in">
-          <h3 className="text-lg font-bold text-[#233274] mb-4 flex items-center gap-2">
-            <Shield className="w-5 h-5 text-[#e15f0b]" />
-            ¿Por qué elegir Book&Go?
-          </h3>
-          <div className="space-y-3">
-            <div className="flex items-start gap-3">
-              <Star className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-[#233274]">Experiencias verificadas</p>
-                <p className="text-sm text-[#9a98a0]">Todas nuestras agencias son revisadas y aprobadas</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Star className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-[#233274]">Pago seguro</p>
-                <p className="text-sm text-[#9a98a0]">Transacciones protegidas con encriptación SSL</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Star className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-medium text-[#233274]">Soporte 24/7</p>
-                <p className="text-sm text-[#9a98a0]">Estamos aquí para ayudarte en cualquier momento</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        
 
         {/* Cuentas de prueba */}
         <div className="mt-6 bg-[#f8f5ef] border border-[#f8f5ef] rounded-xl p-4">

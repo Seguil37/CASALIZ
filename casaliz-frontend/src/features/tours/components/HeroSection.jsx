@@ -20,7 +20,10 @@ const HeroSection = () => {
     }
 
     const params = new URLSearchParams();
-    if (projectQuery) params.append('search', projectQuery);
+    if (projectQuery) {
+      params.append('search', projectQuery);
+      params.append('city', projectQuery);
+    }
     navigate(`/projects?${params.toString()}`);
   };
 
@@ -51,7 +54,7 @@ const HeroSection = () => {
         <div className="animate-fade-in">
           <div className="mb-6">
             <h1 className="text-5xl lg:text-7xl font-black text-[#f8f5ef] mb-4 tracking-tight">
-              Disenamos espacios que hablan por ti.
+              Diseñamos espacios que hablan por ti.
             </h1>
             <p className="text-xl lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide">
               Arquitectura, interiorismo y gestion de proyectos para viviendas, oficinas y espacios comerciales.
@@ -72,14 +75,14 @@ const HeroSection = () => {
               >
                 {value === 'projects' && 'Proyectos'}
                 {value === 'services' && 'Servicios'}
-                {value === 'about' && 'Nosotros'}
+                {value === 'about' && 'Empresa'}
               </button>
             ))}
           </div>
 
           {isAbout ? (
             <div className="max-w-5xl mx-auto bg-[#0f1b35]/80 border border-white/30 rounded-3xl p-8 text-white shadow-2xl backdrop-blur">
-              <p className="text-3xl md:text-4xl font-black mb-3">10+ anos de experiencia combinada</p>
+              <p className="text-3xl md:text-4xl font-black mb-3">10+ años de experiencia combinada</p>
               <p className="text-white/85 mb-6 text-lg max-w-3xl mx-auto">
                 Equipo de arquitectos e ingenieros que lidera licencias, diseno, construccion y supervision.
                 Cuentanos tu idea y la llevamos a proyecto ejecutable.
@@ -131,24 +134,12 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <span className="text-[#233274] text-sm font-semibold">Sugerencias rapidas:</span>
-                {suggestions.map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => onChange(tag)}
-                    className="px-4 py-1 bg-[#f8f5ef] hover:bg-[#eae5d8] text-[#d14a00] rounded-full text-sm font-medium transition-all border border-[#e2dfd7]"
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
+              
             </form>
           )}
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {[{ icon: Star, text: 'Clientes que confian en Casaliz', count: '98%' }, { icon: Star, text: 'Proyectos disenados y construidos', count: '120+' }, { icon: Users, text: 'Anos de experiencia combinada', count: '10+' }].map((item, index) => {
+            {[{ icon: Star, text: 'Clientes que confian en Casaliz', count: '98%' }, { icon: Star, text: 'Proyectos disenados y construidos', count: '120+' }, { icon: Users, text: 'Años de experiencia combinada', count: '10+' }].map((item, index) => {
               const Icon = item.icon;
               return (
                 <div
