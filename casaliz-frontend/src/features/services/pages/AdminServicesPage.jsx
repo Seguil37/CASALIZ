@@ -15,7 +15,7 @@ const emptyForm = {
   category: 'Diseno, Construccion e Inmobiliaria',
   short_description: '',
   description: '',
-  status: 'draft',
+  status: 'published',
   featured: false,
   cover_image: '',
   images: [emptyImage],
@@ -29,6 +29,11 @@ const AdminServicesPage = () => {
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  useEffect(() => {
+    // Ensure default status is published on initial load
+    setForm(emptyForm);
+  }, []);
 
   useEffect(() => {
     loadServices();
@@ -281,13 +286,13 @@ const AdminServicesPage = () => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-sm text-[#555]">Estado</label>
-                <select
-                  className="w-full border rounded-lg p-2"
-                  value={form.status}
-                  onChange={(e) => setForm({ ...form, status: e.target.value })}
-                >
-                  <option value="draft">Borrador</option>
-                  <option value="published">Publicado</option>
+              <select
+                className="w-full border rounded-lg p-2"
+                value={form.status || 'published'}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                <option value="draft">Borrador</option>
+                <option value="published">Publicado</option>
                   <option value="archived">Archivado</option>
                 </select>
               </div>

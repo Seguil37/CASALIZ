@@ -1,6 +1,6 @@
 // src/features/agency/pages/CreateTourPage.jsx
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, ImagePlus, PlusCircle, Trash2 } from 'lucide-react';
 import { projectsApi } from '../../../shared/utils/api';
@@ -15,7 +15,7 @@ const CreateTourPage = () => {
     city: '',
     state: '',
     country: 'Peru',
-    status: 'draft',
+    status: 'published',
     is_featured: false,
     summary: '',
     description: '',
@@ -25,6 +25,11 @@ const CreateTourPage = () => {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  useEffect(() => {
+    // Force published as default state on initial load
+    setFormData((prev) => ({ ...prev, status: 'published' }));
+  }, []);
 
   const openPreview = (url) => {
     if (!url || !url.trim()) return;
@@ -188,8 +193,8 @@ const CreateTourPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-[#233274] mb-1">Estado *</label>
-                  <select
-                    value={formData.status}
+              <select
+                    value={formData.status || 'published'}
                     onChange={(e) => handleChange('status', e.target.value)}
                     className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                   >
