@@ -16,7 +16,7 @@ const WhyUsSection = () => {
       title: 'Diseño funcional y estético',
       description:
         'Creamos espacios que se ven bien, se sienten bien y funcionan mejor: iluminación, circulación, materiales y cada detalle pensado para el uso diario.',
-      color: 'from-[#e15f0b] to-[#d14a00]',
+      color: 'from-[#233274] to-[#1a2555]',
     },
     {
       icon: Calendar,
