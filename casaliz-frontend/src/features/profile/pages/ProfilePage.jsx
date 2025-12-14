@@ -2,7 +2,23 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Mail, Phone, MapPin, Calendar, Edit2, Save, X, Camera, Shield, Star, AlertCircle } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Edit2,
+  Save,
+  X,
+  Camera,
+  Shield,
+  Star,
+  AlertCircle,
+  Lock,
+  KeyRound,
+  Settings
+} from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 
 const ProfilePage = () => {
@@ -18,6 +34,14 @@ const ProfilePage = () => {
     city: user?.city || '',
   });
   const [errors, setErrors] = useState({});
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,6 +81,41 @@ const ProfilePage = () => {
     });
     setIsEditing(false);
     setErrors({});
+  };
+
+  const handlePasswordChange = (e) => {
+    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+    if (passwordError) {
+      setPasswordError('');
+    }
+    if (passwordMessage) {
+      setPasswordMessage('');
+    }
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordMessage('');
+
+    if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+      setPasswordError('Por favor completa todos los campos.');
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    setPasswordLoading(true);
+
+    // Simulación de actualización de contraseña
+    setTimeout(() => {
+      setPasswordMessage('Tu contraseña ha sido actualizada correctamente.');
+      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setPasswordLoading(false);
+    }, 1000);
   };
 
   const handleAvatarChange = (e) => {
@@ -180,9 +239,9 @@ const ProfilePage = () => {
                         errors.email
                           ? 'border-[#d14a00]'
                           : 'border-[#9a98a0] focus:border-[#e15f0b]'
-                      }`}
+                        }`}
                       placeholder="tu@email.com"
-                      disabled
+                      disabled={loading}
                     />
                   </div>
                   {errors.email && (
@@ -376,10 +435,124 @@ const ProfilePage = () => {
           </div>
 
           {/* Columna Derecha - Estadísticas y Actividad */}
-          
+          <div className="space-y-6">
+            <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 animate-fade-in">
+              <h3 className="text-xl font-bold text-[#233274] mb-4 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-[#e15f0b]" />
+                Opciones rápidas
+              </h3>
+              <p className="text-[#233274] text-sm mb-4">
+                Accede rápidamente a la edición de tus datos personales o a la actualización de tu contraseña.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="w-full inline-flex items-center justify-between px-4 py-3 rounded-xl bg-white border-2 border-[#9a98a0]/40 hover:border-[#e15f0b] transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <User className="w-5 h-5 text-[#e15f0b]" />
+                    <div className="text-left">
+                      <p className="text-[#233274] font-semibold">Editar información</p>
+                      <span className="text-xs text-[#9a98a0]">Nombre, correo, teléfono y ubicación</span>
+                    </div>
+                  </div>
+                  <Edit2 className="w-4 h-4 text-[#233274]" />
+                </button>
+
+                <a
+                  href="#cambiar-contrasena"
+                  className="w-full inline-flex items-center justify-between px-4 py-3 rounded-xl bg-white border-2 border-[#9a98a0]/40 hover:border-[#e15f0b] transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <KeyRound className="w-5 h-5 text-[#e15f0b]" />
+                    <div className="text-left">
+                      <p className="text-[#233274] font-semibold">Cambiar contraseña</p>
+                      <span className="text-xs text-[#9a98a0]">Refuerza la seguridad de tu cuenta</span>
+                    </div>
+                  </div>
+                  <Lock className="w-4 h-4 text-[#233274]" />
+                </a>
+              </div>
+            </div>
+
+            <div id="cambiar-contrasena" className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 animate-fade-in">
+              <h3 className="text-xl font-bold text-[#233274] mb-4 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-[#e15f0b]" />
+                Cambiar contraseña
+              </h3>
+              <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-[#233274] mb-2">Contraseña actual</label>
+                  <input
+                    type="password"
+                    name="currentPassword"
+                    value={passwordData.currentPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#233274] mb-2">Nueva contraseña</label>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#233274] mb-2">Confirmar nueva contraseña</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordChange}
+                    className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
+
+                {passwordError && (
+                  <p className="text-sm text-[#d14a00] flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4" />
+                    {passwordError}
+                  </p>
+                )}
+
+                {passwordMessage && (
+                  <p className="text-sm text-green-700 flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    {passwordMessage}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {passwordLoading ? (
+                    <>
+                      <div className="w-5 h-5 border-4 border-[#9a98a0] border-t-transparent rounded-full animate-spin"></div>
+                      Actualizando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-5 h-5" />
+                      Guardar nueva contraseña
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
