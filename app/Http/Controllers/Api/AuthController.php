@@ -96,11 +96,24 @@ class AuthController extends Controller
             'state' => 'nullable|string|max:100',
             'city' => 'nullable|string|max:100',
             'avatar' => 'nullable|image|max:2048',
+            'current_password' => 'required_with:password|string',
+            'password' => 'sometimes|string|min:8|confirmed',
         ]);
 
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
             $validated['avatar'] = $path;
+        }
+
+        if (isset($validated['password'])) {
+            if (!Hash::check($validated['current_password'], $user->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => ['La contraseña actual no es correcta.'],
+                ]);
+            }
+
+            $validated['password'] = Hash::make($validated['password']);
+            unset($validated['current_password']);
         }
 
         $user->update($validated);
