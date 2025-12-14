@@ -62,9 +62,9 @@ class ServiceController extends Controller
             'description' => 'required|string',
             'status' => 'required|in:draft,published,archived',
             'featured' => 'boolean',
-            'cover_image' => 'required|string',
-            'images' => 'array',
-            'images.*.path' => 'required_with:images|string',
+            'cover_image' => 'required|string|max:2048',
+            'images' => 'array|max:20',
+            'images.*.path' => 'required_with:images|string|max:2048',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
@@ -93,9 +93,9 @@ class ServiceController extends Controller
             'description' => 'sometimes|string',
             'status' => 'in:draft,published,archived',
             'featured' => 'boolean',
-            'cover_image' => 'sometimes|string',
-            'images' => 'array',
-            'images.*.path' => 'required_with:images|string',
+            'cover_image' => 'sometimes|string|max:2048',
+            'images' => 'array|max:20',
+            'images.*.path' => 'required_with:images|string|max:2048',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
