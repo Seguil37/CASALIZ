@@ -100,14 +100,14 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
             'hero_image' => 'nullable|string',
             'images' => 'array',
-            'images.*.path' => 'required_with:images|string',
+            'images.*.path' => 'required_with:images|string|max:2048',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
         return DB::transaction(function () use ($validated, $request) {
             $project = Project::create([
                 ...collect($validated)->except('images')->toArray(),
-                'slug' => Str::slug($validated['title']),
+                'slug' => $this->generateUniqueSlug($validated['title']),
                 'published_at' => $validated['status'] === 'published'
                     ? now()
                     : null,
@@ -145,8 +145,8 @@ class ProjectController extends Controller
             'summary' => 'nullable|string',
             'description' => 'nullable|string',
             'hero_image' => 'nullable|string',
-            'images' => 'array',
-            'images.*.path' => 'required_with:images|string',
+            'images' => 'array|max:20',
+            'images.*.path' => 'required_with:images|string|max:2048',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
@@ -154,7 +154,7 @@ class ProjectController extends Controller
             $project->update([
                 ...collect($validated)->except('images')->toArray(),
                 'slug' => isset($validated['title'])
-                    ? Str::slug($validated['title'])
+                    ? $this->generateUniqueSlug($validated['title'], $project->id)
                     : $project->slug,
                 'published_at' => ($validated['status'] ?? $project->status) === 'published'
                     ? ($project->published_at ?? now())
@@ -184,5 +184,25 @@ class ProjectController extends Controller
         $project->delete();
 
         return response()->json(['message' => 'Proyecto eliminado']);
+    }
+
+    protected function generateUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($title) ?: 'proyecto';
+        $slug = $baseSlug;
+        $suffix = 1;
+
+        $exists = function (string $candidate) use ($ignoreId): bool {
+            return Project::where('slug', $candidate)
+                ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+                ->exists();
+        };
+
+        while ($exists($slug)) {
+            $slug = "{$baseSlug}-{$suffix}";
+            $suffix++;
+        }
+
+        return $slug;
     }
 }
