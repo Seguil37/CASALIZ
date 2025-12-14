@@ -20,6 +20,7 @@ import {
   Settings
 } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
+import { authApi } from '../../../shared/utils/api';
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuthStore();
@@ -53,19 +54,25 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrors({});
 
     try {
-      // Aquí iría la llamada al API
-      // await api.put('/profile', formData);
-      
-      // Simulación
-      setTimeout(() => {
-        updateUser({ ...user, ...formData });
-        setIsEditing(false);
-        setLoading(false);
-      }, 1000);
+      const response = await authApi.updateProfile(formData);
+      updateUser(response.data.user);
+      setIsEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      const apiErrors = error.response?.data?.errors;
+
+      if (apiErrors) {
+        const formattedErrors = Object.fromEntries(
+          Object.entries(apiErrors).map(([key, messages]) => [key, messages[0]])
+        );
+
+        setErrors(formattedErrors);
+      } else {
+        console.error('Error updating profile:', error);
+      }
+    } finally {
       setLoading(false);
     }
   };
@@ -93,7 +100,7 @@ const ProfilePage = () => {
     }
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setPasswordError('');
     setPasswordMessage('');
@@ -110,12 +117,32 @@ const ProfilePage = () => {
 
     setPasswordLoading(true);
 
-    // Simulación de actualización de contraseña
-    setTimeout(() => {
+    try {
+      const response = await authApi.updateProfile({
+        current_password: passwordData.currentPassword,
+        password: passwordData.newPassword,
+        password_confirmation: passwordData.confirmPassword,
+      });
+
+      updateUser(response.data.user);
       setPasswordMessage('Tu contraseña ha sido actualizada correctamente.');
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    } catch (error) {
+      const apiErrors = error.response?.data?.errors;
+      const apiMessage = error.response?.data?.message;
+
+      if (apiErrors?.current_password?.length) {
+        setPasswordError(apiErrors.current_password[0]);
+      } else if (apiErrors?.password?.length) {
+        setPasswordError(apiErrors.password[0]);
+      } else if (apiMessage) {
+        setPasswordError(apiMessage);
+      } else {
+        setPasswordError('No se pudo actualizar la contraseña. Inténtalo nuevamente.');
+      }
+    } finally {
       setPasswordLoading(false);
-    }, 1000);
+    }
   };
 
   const handleAvatarChange = (e) => {
