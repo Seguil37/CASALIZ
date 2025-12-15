@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\ServiceImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ServiceController extends Controller
@@ -62,9 +63,11 @@ class ServiceController extends Controller
             'description' => 'required|string',
             'status' => 'required|in:draft,published,archived',
             'featured' => 'boolean',
-            'cover_image' => 'required|string|max:2048',
+            'cover_image' => 'nullable|string|max:2048|required_without:cover_image_file',
+            'cover_image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:cover_image',
             'images' => 'array|max:20',
-            'images.*.path' => 'required_with:images|string|max:2048',
+            'images.*.path' => 'nullable|string|max:2048|required_without:images.*.file',
+            'images.*.file' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:images.*.path',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
@@ -76,7 +79,22 @@ class ServiceController extends Controller
                 'updated_by' => $request->user()->id,
             ]);
 
-            $this->syncImages($service, $validated['images'] ?? []);
+            $folder = $this->serviceFolder($service);
+
+            $coverImagePath = $this->storeImageFile(
+                $request->file('cover_image_file'),
+                $folder,
+                'cover'
+            ) ?? $validated['cover_image'] ?? null;
+
+            $service->update(['cover_image' => $coverImagePath]);
+
+            $this->syncImages(
+                $service,
+                $validated['images'] ?? [],
+                $request,
+                $folder
+            );
 
             return response()->json($service->load('gallery'), 201);
         });
@@ -93,9 +111,11 @@ class ServiceController extends Controller
             'description' => 'sometimes|string',
             'status' => 'in:draft,published,archived',
             'featured' => 'boolean',
-            'cover_image' => 'sometimes|string|max:2048',
+            'cover_image' => 'sometimes|nullable|string|max:2048|required_without:cover_image_file',
+            'cover_image_file' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:cover_image',
             'images' => 'array|max:20',
-            'images.*.path' => 'required_with:images|string|max:2048',
+            'images.*.path' => 'nullable|string|max:2048|required_without:images.*.file',
+            'images.*.file' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:images.*.path',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
@@ -108,9 +128,19 @@ class ServiceController extends Controller
                 'updated_by' => $request->user()->id,
             ]);
 
+            $folder = $this->serviceFolder($service);
+
+            $coverImagePath = $this->storeImageFile(
+                $request->file('cover_image_file'),
+                $folder,
+                'cover'
+            ) ?? $validated['cover_image'] ?? $service->cover_image;
+
+            $service->update(['cover_image' => $coverImagePath]);
+
             if (array_key_exists('images', $validated)) {
                 $service->images()->delete();
-                $this->syncImages($service, $validated['images']);
+                $this->syncImages($service, $validated['images'], $request, $folder);
             }
 
             return response()->json($service->load('gallery'));
@@ -125,12 +155,20 @@ class ServiceController extends Controller
         return response()->json(['message' => 'Servicio eliminado']);
     }
 
-    protected function syncImages(Service $service, array $images): void
+    protected function syncImages(Service $service, array $images, Request $request, string $folder): void
     {
         foreach ($images as $index => $image) {
+            $file = $request->file("images.$index.file");
+            $storedPath = $this->storeImageFile($file, $folder, "gallery-{$index}");
+            $path = $storedPath ?? $image['path'] ?? null;
+
+            if (!$path) {
+                continue;
+            }
+
             ServiceImage::create([
                 'service_id' => $service->id,
-                'path' => $image['path'],
+                'path' => $path,
                 'caption' => $image['caption'] ?? null,
                 'position' => $index,
             ]);
@@ -144,6 +182,25 @@ class ServiceController extends Controller
                 'position' => 0,
             ]);
         }
+    }
+
+    protected function storeImageFile($file, string $folder, string $prefix): ?string
+    {
+        if (!$file) {
+            return null;
+        }
+
+        $extension = $file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'jpg';
+        $filename = "{$prefix}-" . uniqid() . ".{$extension}";
+
+        $storedPath = $file->storeAs($folder, $filename, 'public');
+
+        return Storage::url($storedPath);
+    }
+
+    protected function serviceFolder(Service $service): string
+    {
+        return "images/servicios/{$service->id}-{$service->slug}";
     }
 
     protected function generateUniqueSlug(string $title, ?int $ignoreId = null): string

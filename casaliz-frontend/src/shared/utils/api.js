@@ -32,20 +32,37 @@ api.interceptors.response.use(
   }
 );
 
+const isFormData = (data) => typeof FormData !== 'undefined' && data instanceof FormData;
+
+const postWithData = (url, data) =>
+  isFormData(data)
+    ? api.post(url, data, { headers: { 'Content-Type': 'multipart/form-data' } })
+    : api.post(url, data);
+
+const putWithData = (url, data) => {
+  if (isFormData(data)) {
+    if (!data.has('_method')) {
+      data.append('_method', 'PUT');
+    }
+    return api.post(url, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+  }
+  return api.put(url, data);
+};
+
 export const projectsApi = {
   list: (params) => api.get('/projects', { params }),
   show: (id) => api.get(`/projects/${id}`),
   featured: () => api.get('/projects/featured'),
-  create: (data) => api.post('/projects', data),
-  update: (id, data) => api.put(`/projects/${id}`, data),
+  create: (data) => postWithData('/projects', data),
+  update: (id, data) => putWithData(`/projects/${id}`, data),
   delete: (id) => api.delete(`/projects/${id}`),
 };
 
 export const servicesApi = {
   list: (params) => api.get('/services', { params }),
   show: (slug) => api.get(`/services/${slug}`),
-  create: (data) => api.post('/services', data),
-  update: (id, data) => api.put(`/services/${id}`, data),
+  create: (data) => postWithData('/services', data),
+  update: (id, data) => putWithData(`/services/${id}`, data),
   delete: (id) => api.delete(`/services/${id}`),
 };
 

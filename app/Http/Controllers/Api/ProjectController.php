@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -98,9 +99,11 @@ class ProjectController extends Controller
             'is_featured' => 'boolean',
             'summary' => 'nullable|string',
             'description' => 'nullable|string',
-            'hero_image' => 'nullable|string',
+            'hero_image' => 'nullable|string|max:2048|required_without:hero_image_file',
+            'hero_image_file' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:hero_image',
             'images' => 'array',
-            'images.*.path' => 'required_with:images|string|max:2048',
+            'images.*.path' => 'nullable|string|max:2048|required_without:images.*.file',
+            'images.*.file' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:images.*.path',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
@@ -115,16 +118,17 @@ class ProjectController extends Controller
                 'updated_by' => $request->user()->id,
             ]);
 
-            if (!empty($validated['images'])) {
-                foreach ($validated['images'] as $index => $image) {
-                    ProjectImage::create([
-                        'project_id' => $project->id,
-                        'path' => $image['path'],
-                        'caption' => $image['caption'] ?? null,
-                        'position' => $index,
-                    ]);
-                }
-            }
+            $folder = $this->projectFolder($project);
+
+            $heroImage = $this->storeImageFile(
+                $request->file('hero_image_file'),
+                $folder,
+                'hero'
+            ) ?? $validated['hero_image'] ?? null;
+
+            $project->update(['hero_image' => $heroImage]);
+
+            $this->syncImages($project, $validated['images'] ?? [], $request, $folder);
 
             return response()->json($project->load('featuredImages'), 201);
         });
@@ -144,9 +148,11 @@ class ProjectController extends Controller
             'is_featured' => 'boolean',
             'summary' => 'nullable|string',
             'description' => 'nullable|string',
-            'hero_image' => 'nullable|string',
+            'hero_image' => 'sometimes|nullable|string|max:2048|required_without:hero_image_file',
+            'hero_image_file' => 'sometimes|nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:hero_image',
             'images' => 'array|max:20',
-            'images.*.path' => 'required_with:images|string|max:2048',
+            'images.*.path' => 'nullable|string|max:2048|required_without:images.*.file',
+            'images.*.file' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:images.*.path',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
@@ -162,16 +168,19 @@ class ProjectController extends Controller
                 'updated_by' => $request->user()->id,
             ]);
 
+            $folder = $this->projectFolder($project);
+
+            $heroImage = $this->storeImageFile(
+                $request->file('hero_image_file'),
+                $folder,
+                'hero'
+            ) ?? $validated['hero_image'] ?? $project->hero_image;
+
+            $project->update(['hero_image' => $heroImage]);
+
             if (array_key_exists('images', $validated)) {
                 $project->images()->delete();
-                foreach ($validated['images'] as $index => $image) {
-                    ProjectImage::create([
-                        'project_id' => $project->id,
-                        'path' => $image['path'],
-                        'caption' => $image['caption'] ?? null,
-                        'position' => $index,
-                    ]);
-                }
+                $this->syncImages($project, $validated['images'], $request, $folder);
             }
 
             return response()->json($project->load('featuredImages'));
@@ -184,6 +193,45 @@ class ProjectController extends Controller
         $project->delete();
 
         return response()->json(['message' => 'Proyecto eliminado']);
+    }
+
+    protected function syncImages(Project $project, array $images, Request $request, string $folder): void
+    {
+        foreach ($images as $index => $image) {
+            $file = $request->file("images.$index.file");
+            $storedPath = $this->storeImageFile($file, $folder, "gallery-{$index}");
+            $path = $storedPath ?? $image['path'] ?? null;
+
+            if (!$path) {
+                continue;
+            }
+
+            ProjectImage::create([
+                'project_id' => $project->id,
+                'path' => $path,
+                'caption' => $image['caption'] ?? null,
+                'position' => $index,
+            ]);
+        }
+    }
+
+    protected function storeImageFile($file, string $folder, string $prefix): ?string
+    {
+        if (!$file) {
+            return null;
+        }
+
+        $extension = $file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'jpg';
+        $filename = "{$prefix}-" . uniqid() . ".{$extension}";
+
+        $storedPath = $file->storeAs($folder, $filename, 'public');
+
+        return Storage::url($storedPath);
+    }
+
+    protected function projectFolder(Project $project): string
+    {
+        return "images/proyectos/{$project->id}-{$project->slug}";
     }
 
     protected function generateUniqueSlug(string $title, ?int $ignoreId = null): string

@@ -1,3 +1,5 @@
+﻿// src/features/services/pages/AdminServicesPage.jsx
+
 import { useEffect, useState } from 'react';
 import { servicesApi } from '../../../shared/utils/api';
 import { Plus, Pencil, Trash2, Search, ImagePlus } from 'lucide-react';
@@ -8,16 +10,17 @@ const STATUS_LABELS = {
   archived: 'Archivado',
 };
 
-const emptyImage = { path: '', caption: '' };
+const emptyImage = { path: '', caption: '', file: null, preview: '' };
 
 const emptyForm = {
   title: '',
-  category: 'Diseño, Construccion e Inmobiliaria',
+  category: 'Diseno, Construccion e Inmobiliaria',
   short_description: '',
   description: '',
   status: 'published',
   featured: false,
   cover_image: '',
+  coverImageFile: null,
   images: [emptyImage],
 };
 
@@ -29,9 +32,9 @@ const AdminServicesPage = () => {
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [coverPreview, setCoverPreview] = useState('');
 
   useEffect(() => {
-    // Ensure default status is published on initial load
     setForm(emptyForm);
   }, []);
 
@@ -52,24 +55,90 @@ const AdminServicesPage = () => {
     }
   };
 
+  const openPreview = (url) => {
+    if (!url || !url.trim()) return;
+    window.open(url.trim(), '_blank', 'noopener,noreferrer');
+  };
+
+  const handleImageChange = (index, field, value) => {
+    const updated = [...form.images];
+    updated[index] = { ...updated[index], [field]: value };
+    setForm({ ...form, images: updated });
+  };
+
+  const handleGalleryFileChange = (index, file) => {
+    const updated = [...form.images];
+    const previousPreview = updated[index]?.preview;
+
+    if (previousPreview && previousPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(previousPreview);
+    }
+
+    updated[index] = {
+      ...updated[index],
+      file: file || null,
+      preview: file ? URL.createObjectURL(file) : updated[index].preview || updated[index].path,
+      path: file ? '' : updated[index].path,
+    };
+
+    setForm({ ...form, images: updated });
+  };
+
+  const addImageField = () => {
+    setForm({ ...form, images: [...form.images, emptyImage] });
+  };
+
+  const removeImageField = (index) => {
+    const updated = form.images.filter((_, i) => i !== index);
+    setForm({ ...form, images: updated.length ? updated : [emptyImage] });
+  };
+
+  const handleCoverFileChange = (file) => {
+    if (coverPreview && coverPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(coverPreview);
+    }
+    setCoverPreview(file ? URL.createObjectURL(file) : form.cover_image || '');
+    setForm({ ...form, coverImageFile: file || null, cover_image: file ? '' : form.cover_image });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitError('');
     setSubmitting(true);
 
-    const imagesPayload = (form.images || [])
-      .filter((image) => image.path.trim())
-      .map((image, index) => ({
-        path: image.path.trim(),
-        caption: image.caption?.trim() || null,
-        position: index,
-      }));
+    const imagesPayload = [];
+    form.images.forEach((image, index) => {
+      if (image.file) {
+        imagesPayload.push({ type: 'file', file: image.file, caption: image.caption, index });
+      } else if (image.path.trim()) {
+        imagesPayload.push({ type: 'path', path: image.path.trim(), caption: image.caption, index });
+      }
+    });
 
-    const payload = {
-      ...form,
-      cover_image: form.cover_image.trim(),
-      images: imagesPayload,
-    };
+    const payload = new FormData();
+    payload.append('title', form.title);
+    if (form.category) payload.append('category', form.category);
+    if (form.short_description) payload.append('short_description', form.short_description);
+    if (form.description) payload.append('description', form.description);
+    payload.append('status', form.status || 'published');
+    payload.append('featured', form.featured ? '1' : '0');
+
+    if (form.coverImageFile) {
+      payload.append('cover_image_file', form.coverImageFile);
+    } else if (form.cover_image.trim()) {
+      payload.append('cover_image', form.cover_image.trim());
+    }
+
+    imagesPayload.forEach((image) => {
+      if (image.type === 'file') {
+        payload.append(`images[${image.index}][file]`, image.file);
+      } else {
+        payload.append(`images[${image.index}][path]`, image.path);
+      }
+      if (image.caption?.trim()) {
+        payload.append(`images[${image.index}][caption]`, image.caption.trim());
+      }
+    });
 
     try {
       if (editing) {
@@ -78,6 +147,7 @@ const AdminServicesPage = () => {
         await servicesApi.create(payload);
       }
       setForm(emptyForm);
+      setCoverPreview('');
       setEditing(null);
       await loadServices();
     } catch (error) {
@@ -99,14 +169,18 @@ const AdminServicesPage = () => {
       status: service.status || 'draft',
       featured: Boolean(service.featured),
       cover_image: service.cover_image || '',
+      coverImageFile: null,
       images:
         service.gallery?.length > 0
           ? service.gallery.map((image) => ({
               path: image.path || '',
               caption: image.caption || '',
+              file: null,
+              preview: image.path || '',
             }))
           : [emptyImage],
     });
+    setCoverPreview(service.cover_image || '');
   };
 
   const handleDelete = async (id) => {
@@ -123,26 +197,6 @@ const AdminServicesPage = () => {
     service.title?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleImageChange = (index, field, value) => {
-    const updated = [...form.images];
-    updated[index] = { ...updated[index], [field]: value };
-    setForm({ ...form, images: updated });
-  };
-
-  const addImageField = () => {
-    setForm({ ...form, images: [...form.images, emptyImage] });
-  };
-
-  const removeImageField = (index) => {
-    const updated = form.images.filter((_, i) => i !== index);
-    setForm({ ...form, images: updated.length ? updated : [emptyImage] });
-  };
-
-  const openPreview = (url) => {
-    if (!url || !url.trim()) return;
-    window.open(url.trim(), '_blank', 'noopener,noreferrer');
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f8f5ef]">
@@ -150,6 +204,8 @@ const AdminServicesPage = () => {
       </div>
     );
   }
+
+  const coverPreviewSrc = coverPreview || form.cover_image.trim();
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-8">
@@ -253,46 +309,53 @@ const AdminServicesPage = () => {
             </div>
 
             <div>
-              <label className="text-sm text-[#555]">Imagen principal (URL)</label>
-              <div className="flex items-start gap-3">
+              <label className="text-sm text-[#555]">Imagen principal</label>
+              <div className="space-y-3">
                 <input
-                  required
+                  type="file"
+                  accept="image/*"
                   className="w-full border rounded-lg p-2"
-                  value={form.cover_image}
-                  onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
-                  placeholder="https://..."
+                  onChange={(e) => handleCoverFileChange(e.target.files?.[0] || null)}
                 />
-                <button
-                  type="button"
-                  onClick={() => openPreview(form.cover_image)}
-                  disabled={!form.cover_image.trim()}
-                  className="px-3 py-2 rounded-lg border border-[#d5d1c9] text-[#233274] hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Ver
-                </button>
-              </div>
-              {form.cover_image.trim() && (
-                <div className="mt-2">
-                  <p className="text-xs text-[#9a98a0] mb-1">Previsualizacion</p>
-                  <img
-                    src={form.cover_image.trim()}
-                    alt={form.title || 'Portada del servicio'}
-                    className="w-full h-40 object-cover rounded-xl border border-[#ebe7df]"
+                <div className="flex items-start gap-3">
+                  <input
+                    className="w-full border rounded-lg p-2"
+                    value={form.cover_image}
+                    onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
+                    placeholder="https://... (opcional)"
                   />
+                  <button
+                    type="button"
+                    onClick={() => openPreview(form.cover_image)}
+                    disabled={!form.cover_image.trim()}
+                    className="px-3 py-2 rounded-lg border border-[#d5d1c9] text-[#233274] hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Ver
+                  </button>
                 </div>
-              )}
+                {coverPreviewSrc && (
+                  <div className="mt-2">
+                    <p className="text-xs text-[#9a98a0] mb-1">Previsualizacion</p>
+                    <img
+                      src={coverPreviewSrc}
+                      alt={form.title || 'Portada del servicio'}
+                      className="w-full h-40 object-cover rounded-xl border border-[#ebe7df]"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-sm text-[#555]">Estado</label>
-              <select
-                className="w-full border rounded-lg p-2"
-                value={form.status || 'published'}
-                onChange={(e) => setForm({ ...form, status: e.target.value })}
-              >
-                <option value="draft">Borrador</option>
-                <option value="published">Publicado</option>
+                <select
+                  className="w-full border rounded-lg p-2"
+                  value={form.status || 'published'}
+                  onChange={(e) => setForm({ ...form, status: e.target.value })}
+                >
+                  <option value="draft">Borrador</option>
+                  <option value="published">Publicado</option>
                   <option value="archived">Archivado</option>
                 </select>
               </div>
@@ -315,14 +378,20 @@ const AdminServicesPage = () => {
 
               <div className="space-y-3">
                 {form.images.map((image, index) => (
-                  <div key={index} className="bg-[#fdfaf5] p-3 rounded-lg border border-[#ebe7df]">
-                    <label className="text-xs text-[#555] block mb-1">URL de la imagen</label>
+                  <div key={index} className="bg-[#fdfaf5] p-3 rounded-lg border border-[#ebe7df] space-y-2">
+                    <label className="text-xs text-[#555] block">Imagen</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="w-full border rounded-lg p-2"
+                      onChange={(e) => handleGalleryFileChange(index, e.target.files?.[0] || null)}
+                    />
                     <div className="flex items-start gap-2">
                       <input
                         className="w-full border rounded-lg p-2"
                         value={image.path}
                         onChange={(e) => handleImageChange(index, 'path', e.target.value)}
-                        placeholder="https://..."
+                        placeholder="URL publica (opcional)"
                       />
                       <button
                         type="button"
@@ -340,16 +409,16 @@ const AdminServicesPage = () => {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    <label className="text-xs text-[#555] block mt-2 mb-1">Leyenda</label>
+                    <label className="text-xs text-[#555] block">Leyenda</label>
                     <input
                       className="w-full border rounded-lg p-2"
                       value={image.caption}
                       onChange={(e) => handleImageChange(index, 'caption', e.target.value)}
                       placeholder="Detalle de la imagen"
                     />
-                    {image.path.trim() && (
+                    {(image.preview || image.path.trim()) && (
                       <img
-                        src={image.path.trim()}
+                        src={image.preview || image.path.trim()}
                         alt={image.caption || `Imagen ${index + 1}`}
                         className="w-full h-32 object-cover rounded-lg border border-[#ebe7df] mt-2"
                       />
@@ -376,6 +445,7 @@ const AdminServicesPage = () => {
                   onClick={() => {
                     setEditing(null);
                     setForm(emptyForm);
+                    setCoverPreview('');
                     setSubmitError('');
                   }}
                   className="flex-1 border rounded-lg py-2"
