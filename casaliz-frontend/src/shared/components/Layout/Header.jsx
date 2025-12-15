@@ -199,7 +199,7 @@ const Header = () => {
           <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
-              placeholder="¿A dónde quieres ir?"
+              placeholder="¿Qué proyecto estás buscando?"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none"

@@ -221,9 +221,9 @@ const TourDetailPage = () => {
                       alt={image.caption || project.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <span className="absolute bottom-4 right-4 text-xs font-bold text-white px-4 py-2 rounded-full bg-[#e15f0b]/90 backdrop-blur transform translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
-                      Ver grande →
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="absolute bottom-4 right-4 text-sm font-bold text-white px-4 py-2 rounded-full bg-[#0f172a]/85 border border-white/25 shadow-lg shadow-black/40 backdrop-blur-sm flex items-center gap-2 transition-transform duration-300">
+                      Ver grande <ChevronRight className="w-4 h-4" />
                     </span>
                   </button>
                 ))}

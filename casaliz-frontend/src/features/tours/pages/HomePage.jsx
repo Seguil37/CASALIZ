@@ -12,11 +12,16 @@ const HomePage = () => {
   return (
     <div className="min-h-screen">
       <HeroSection />
-      <WhyUsSection />
-      <CTASection />
-      <PopularLocationsSection />
-      <FeaturedToursSection />
       <PopularCountriesSection />
+      <CTASection />
+      <FeaturedToursSection />
+      <WhyUsSection />
+      <PopularLocationsSection />
+
+      
+      
+      
+      
     </div>
   );
 };

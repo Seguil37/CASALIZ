@@ -62,7 +62,7 @@ const HeroSection = () => {
           </div>
 
           <div className="flex justify-center gap-2 mb-4">
-            {['projects', 'services', 'about'].map((value) => (
+            {['services', 'projects', 'about'].map((value) => (
               <button
                 key={value}
                 type="button"

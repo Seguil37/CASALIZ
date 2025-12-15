@@ -10,11 +10,12 @@ const CTASection = () => {
   if (isAuthenticated) return null;
 
   return (
-    <section className="py-20 bg-gradient-to-r from-[#e15f0b] via-[#f26b1d] to-[#d14a00] relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-[#e15f0b] via-[#f26b1d] to-[#233274] relative overflow-hidden">
       {/* Decoraciones de fondo */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#f8f5ef] rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f8f5ef] rounded-full blur-3xl"></div>
+      <div className="absolute inset-0">
+        <div className="absolute top-[-6rem] right-[-4rem] w-96 h-96 bg-[#fbbf24]/25 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-[-6rem] left-[-4rem] w-[28rem] h-[28rem] bg-[#1a2555]/30 rounded-full blur-3xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
       </div>
 
       <div className="container-custom relative z-10">
@@ -49,23 +50,21 @@ const CTASection = () => {
           </div>
 
           {/* Beneficios */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
+
               {
-                icon: Gift,
-                text: 'Oficina virtual del proyecto — Ve el estado de tu proyecto en tiempo real.',
+                icon: UserPlus,
+                text: 'Proyectos favoritos — Guarda tus proyectos favoritos para consultarlos siempre que los necesites. Descubre trabajos populares de la comunidad, comparte tus favoritos con otros usuarios y mantén una lista personalizada de inspiración.',
                 color: 'from-[#e15f0b] to-[#d14a00]',
               },
+              
               {
-                icon: Star,
-                text: 'Historial de revisiones — Control de versiones de planos y cambios aprobados.',
+                icon: UserPlus,
+                text: 'Opiniones de clientes — Lee reseñas de la comunidad, descubre proyectos destacados y guarda tus favoritos. Crea tu cuenta para dejar tus propias valoraciones y ayudar a otros usuarios a tomar mejores decisiones.',
                 color: 'from-[#233274] to-[#1a2555]',
               },
-              {
-                icon: Shield,
-                text: 'Documentación centralizada — Presupuestos, contratos y planos siempre disponibles.',
-                color: 'from-[#233274] to-[#1a2555]',
-              },
+              
             ].map((benefit, index) => {
               const Icon = benefit.icon;
               return (

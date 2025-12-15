@@ -77,7 +77,19 @@ const useAuthStore = create(
 
           return { success: true };
         } catch (error) {
-          const errorMessage = error.response?.data?.message || 'Error al registrarse';
+          const serverMessage = error.response?.data?.message;
+          const emailError = error.response?.data?.errors?.email?.[0];
+          let errorMessage = 'Error al registrarse';
+
+          if (emailError) {
+            errorMessage = emailError;
+          } else if (serverMessage) {
+            errorMessage = serverMessage;
+          }
+
+          if (errorMessage === 'The email has already been taken.') {
+            errorMessage = 'El correo ya está registrado.';
+          }
           
           set({
             loading: false,

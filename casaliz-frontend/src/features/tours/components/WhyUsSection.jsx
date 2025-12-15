@@ -85,14 +85,15 @@ const WhyUsSection = () => {
             return (
               <div
                 key={index}
-                className="bg-gradient-to-br from-[#f8f5ef] to-[#e15f0b] rounded-2xl p-8 text-center animate-fade-in"
+                className="relative overflow-hidden bg-gradient-to-br from-[#233274] via-[#2f3f8c] to-[#d67a2b] rounded-2xl p-8 text-center animate-fade-in shadow-xl"
                 style={{ animationDelay: `${0.6 + index * 0.1}s` }}
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Icon className="w-8 h-8 text-[#f8f5ef]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10 pointer-events-none" />
+                <div className="relative w-16 h-16 bg-gradient-to-br from-[#f59e0b] to-[#d14a00] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Icon className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-4xl font-black text-[#233274] mb-2">{stat.value}</div>
-                <div className="text-[#233274] font-medium">{stat.label}</div>
+                <div className="relative text-4xl font-black text-white drop-shadow mb-2">{stat.value}</div>
+                <div className="relative text-white/90 font-medium">{stat.label}</div>
               </div>
             );
           })}

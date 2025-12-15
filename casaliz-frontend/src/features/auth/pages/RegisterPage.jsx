@@ -255,11 +255,11 @@ const PasswordField = ({ label, name, value, onChange, error, show, onToggle, fo
   <div className="relative group">
     <label className="block text-sm font-semibold text-[#233274] mb-2">{label}</label>
     <div
-      className={`flex items-center px-4 py-3 border-2 rounded-xl transition-all duration-300 bg-white shadow-sm focus-within:border-[#e15f0b] focus-within:ring-2 focus-within:ring-[#e15f0b]/20 ${
+      className={`relative px-4 py-3 border-2 rounded-xl transition-all duration-300 bg-white shadow-sm focus-within:border-[#e15f0b] focus-within:ring-2 focus-within:ring-[#e15f0b]/20 ${
         error ? 'border-[#d14a00]' : 'border-[#9a98a0]'
       }`}
     >
-      <Lock className={`w-5 h-5 mr-3 ${focusedField === name ? 'text-[#e15f0b]' : 'text-[#9a98a0]'}`} />
+      <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${focusedField === name ? 'text-[#e15f0b]' : 'text-[#9a98a0]'}`} />
       <input
         type={show ? 'text' : 'password'}
         name={name}
@@ -268,12 +268,12 @@ const PasswordField = ({ label, name, value, onChange, error, show, onToggle, fo
         onFocus={() => setFocusedField(name)}
         onBlur={() => setFocusedField('')}
         placeholder={placeholder}
-        className="w-full bg-transparent focus:outline-none text-[#233274] placeholder:text-[#9a98a0]"
+        className="w-full bg-transparent focus:outline-none text-[#233274] placeholder:text-[#9a98a0] pl-12 pr-12"
       />
       <button
         type="button"
         onClick={onToggle}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
+        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
       >
         {show ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
       </button>
@@ -329,13 +329,22 @@ const TermsAndConditionsStep = ({ onBack, onSubmit, loading, apiError }) => {
               <p>Al crear una cuenta en Casaliz, aceptas nuestros términos y condiciones.</p>
 
               <p className="font-semibold text-[#233274]">2. Uso del servicio</p>
-              <p>Debes utilizar nuestros servicios de manera responsable y legal.</p>
+              <p>Debes utilizar nuestros servicios de manera responsable, legal y sin afectar el funcionamiento de la plataforma.</p>
 
               <p className="font-semibold text-[#233274]">3. Privacidad</p>
-              <p>Tus datos serán protegidos según nuestra política de privacidad.</p>
+              <p>Tus datos serán protegidos y utilizados únicamente para fines de contacto, cotización y gestión de servicios.</p>
 
-              <p className="font-semibold text-[#233274]">4. Pagos</p>
-              <p>Todos los pagos se procesan de forma segura a través de nuestros partners de pago.</p>
+              <p className="font-semibold text-[#233274]">4. Información proporcionada</p>
+              <p>Te comprometes a registrar información veraz y actualizada. Casaliz no se responsabiliza por errores derivados de datos incorrectos.</p>
+
+              <p className="font-semibold text-[#233274]">5. Alcance de cotizaciones</p>
+              <p>Las cotizaciones son referenciales y pueden variar según cambios de requerimientos, condiciones del inmueble y trámites municipales.</p>
+
+              <p className="font-semibold text-[#233274]">6. Propiedad intelectual</p>
+              <p>Los diseños, planos, renders y documentos técnicos elaborados por Casaliz son propiedad de la empresa, salvo acuerdo escrito.</p>
+
+              <p className="font-semibold text-[#233274]">7. Cambios y actualizaciones</p>
+              <p>Casaliz puede actualizar estos términos cuando sea necesario. Las modificaciones se publicarán en la plataforma.</p>
             </div>
           </div>
 

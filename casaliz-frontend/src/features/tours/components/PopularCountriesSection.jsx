@@ -169,10 +169,13 @@ const PopularCountriesSection = () => {
               Nuestros servicios principales
             </h2>
           </div>
-          <div className="hidden md:flex items-center gap-2 text-[#e15f0b]">
+          <Link
+            to="/services"
+            className="hidden md:inline-flex items-center gap-2 text-[#e15f0b] font-semibold hover:text-[#d14a00] transition-colors"
+          >
             <Star className="w-5 h-5 fill-current" />
             <span className="font-semibold">Explora nuestros servicios clave</span>
-          </div>
+          </Link>
         </div>
 
         {/* Carrusel */}
