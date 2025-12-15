@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, TrendingUp, Loader2, Star } from 'lucide-react';
+import { TrendingUp, Loader2 } from 'lucide-react';
 
 const PopularLocationsSection = () => {
   const [locations, setLocations] = useState([]);
@@ -77,7 +77,7 @@ const PopularLocationsSection = () => {
           {locations.map((location, index) => (
             <Link
               key={index}
-              to={`/projects?location=${encodeURIComponent(location.name)}`}
+              to={`/projects?search=${encodeURIComponent(location.name)}`}
               className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
@@ -92,12 +92,6 @@ const PopularLocationsSection = () => {
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                
-                {/* Badge de rating */}
-                <div className="absolute top-4 right-4 bg-[#f8f5ef]/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1">
-                  <Star className="w-4 h-4 text-[#e15f0b] fill-current" />
-                  <span className="text-sm font-bold text-[#233274]">{location.rating}</span>
-                </div>
               </div>
 
               {/* Contenido */}
@@ -106,16 +100,8 @@ const PopularLocationsSection = () => {
                   {location.name}
                 </h3>
                 <p className="text-[#9a98a0] mb-3">{location.subtitle}</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#9a98a0]">
-                    <MapPin className="w-4 h-4 text-[#e15f0b]" />
-                    <span className="text-sm font-medium">
-                      {location.projects} {location.projects === 1 ? 'proyecto' : 'proyectos'}
-                    </span>
-                  </div>
-                  
-                  {/* Indicador de hover */}
-                  <div className="flex items-center gap-1 text-[#e15f0b] opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center justify-start">
+                  <div className="flex items-center gap-1 text-[#e15f0b] opacity-80 group-hover:opacity-100 transition-opacity">
                     <span className="text-sm font-semibold">Ver proyectos</span>
                     <svg
                       className="w-4 h-4 group-hover:translate-x-1 transition-transform"

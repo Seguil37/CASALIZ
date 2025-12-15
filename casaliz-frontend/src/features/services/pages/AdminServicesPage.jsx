@@ -1,8 +1,9 @@
 ﻿// src/features/services/pages/AdminServicesPage.jsx
 
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { servicesApi } from '../../../shared/utils/api';
-import { Plus, Pencil, Trash2, Search, ImagePlus } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, ImagePlus, Eye } from 'lucide-react';
 
 const STATUS_LABELS = {
   published: 'Publicado',
@@ -25,6 +26,7 @@ const emptyForm = {
 };
 
 const AdminServicesPage = () => {
+  const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -58,6 +60,12 @@ const AdminServicesPage = () => {
   const openPreview = (url) => {
     if (!url || !url.trim()) return;
     window.open(url.trim(), '_blank', 'noopener,noreferrer');
+  };
+
+  const viewService = (service) => {
+    if (!service) return;
+    const url = service.public_url?.trim() || (service.slug ? `/services/${service.slug}` : `/services/${service.id}`);
+    navigate(url);
   };
 
   const handleImageChange = (index, field, value) => {
@@ -241,6 +249,13 @@ const AdminServicesPage = () => {
                   <div className="mt-2 text-xs text-[#555]">{STATUS_LABELS[service.status] || service.status}</div>
                 </div>
                 <div className="flex gap-2">
+                  <button
+                    onClick={() => viewService(service)}
+                    className="p-2 rounded-lg bg-[#f8f5ef] text-[#233274] hover:bg-[#e5e7eb] transition-transform hover:scale-105"
+                    title="Ver servicio publicado"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </button>
                   <button
                     onClick={() => handleEdit(service)}
                     className="p-2 rounded-lg bg-[#f0f0f5] hover:bg-[#e5e5ee]"

@@ -54,22 +54,7 @@ const Footer = () => {
               >
                 <Instagram className="w-5 h-5 text-[#9a98a0] group-hover:text-[#f8f5ef]" />
               </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-[#1a2555] hover:bg-gradient-to-r hover:from-[#e15f0b] hover:to-[#d14a00] rounded-full flex items-center justify-center transition-all group"
-              >
-                <Twitter className="w-5 h-5 text-[#9a98a0] group-hover:text-[#f8f5ef]" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-[#1a2555] hover:bg-gradient-to-r hover:from-[#e15f0b] hover:to-[#d14a00] rounded-full flex items-center justify-center transition-all group"
-              >
-                <Linkedin className="w-5 h-5 text-[#9a98a0] group-hover:text-[#f8f5ef]" />
-              </a>
+              
             </div>
           </div>
 

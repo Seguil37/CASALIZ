@@ -1,7 +1,7 @@
 // src/features/tours/components/CTASection.jsx
 
 import { Link } from 'react-router-dom';
-import { LogIn, UserPlus, Star, Shield, Gift } from 'lucide-react';
+import { LogIn, UserPlus, Star, Shield, Gift, Heart } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 
 const CTASection = () => {
@@ -22,12 +22,12 @@ const CTASection = () => {
         <div className="max-w-4xl mx-auto text-center">
           {/* Título principal */}
           <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-6 animate-fade-in">
-            Inicia sesión para seguir tu proyecto con Casaliz
+            Accede a tu cuenta Casaliz
           </h2>
 
           {/* Subtítulo */}
           <p className="text-xl text-[#1a2555] mb-8 animate-fade-in">
-            Visualiza planos, revisiones, avances y documentos de tu obra en un solo lugar.
+            Inicia sesión para dejar reseñas, descubrir proyectos destacados y guardar tus favoritos.
           </p>
 
           {/* Botones */}
@@ -54,7 +54,7 @@ const CTASection = () => {
             {[
 
               {
-                icon: UserPlus,
+                icon: Heart,
                 text: 'Proyectos favoritos — Guarda tus proyectos favoritos para consultarlos siempre que los necesites. Descubre trabajos populares de la comunidad, comparte tus favoritos con otros usuarios y mantén una lista personalizada de inspiración.',
                 color: 'from-[#e15f0b] to-[#d14a00]',
               },
@@ -67,6 +67,8 @@ const CTASection = () => {
               
             ].map((benefit, index) => {
               const Icon = benefit.icon;
+              const [titlePart, ...restParts] = benefit.text.split(' — ');
+              const descriptionPart = restParts.join(' — ');
               return (
                 <div
                   key={index}
@@ -76,7 +78,15 @@ const CTASection = () => {
                   <div className={`w-12 h-12 bg-gradient-to-br ${benefit.color} rounded-full flex items-center justify-center mx-auto mb-3`}>
                     <Icon className="w-6 h-6 text-[#f8f5ef]" />
                   </div>
-                  <p className="font-semibold text-[#233274]">{benefit.text}</p>
+                  <p className="text-[#233274] text-center">
+                    <span className="font-extrabold">{titlePart}</span>
+                    {descriptionPart ? (
+                      <>
+                        {' '}—<br />
+                        {descriptionPart}
+                      </>
+                    ) : null}
+                  </p>
                 </div>
               );
             })}
