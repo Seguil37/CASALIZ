@@ -56,7 +56,7 @@ const ServicesPage = () => {
         : true;
       return matchesText && matchesCategory;
     });
-  }, [services, searchTerm, categoryFilter]);
+  }, [services, appliedSearchTerm, categoryFilter]);
 
   const serviceHighlights = [
     'Viviendas unifamiliares y multifamiliares',
@@ -150,7 +150,7 @@ const ServicesPage = () => {
               <div className="flex flex-wrap gap-2 text-xs text-white/80">
                 <Sparkles className="w-4 h-4 text-[#fbbf24]" />
                 <span>Sugerencias:</span>
-                {['Licencias', 'Habilitaciones', 'Topografia', 'Diseño interior'].map((tag) => (
+                {[ 'Diseño, Construcción y Regularización Inmobiliaria', 'Servicios Inmobiliarios', 'Trámites y Regularización Inmobiliaria'].map((tag) => (
                   <button
                     key={tag}
                     type="button"
