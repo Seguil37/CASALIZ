@@ -10,18 +10,22 @@ const TourCard = ({ tour }) => {
       to={`/projects/${tour.id}`}
       className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 border border-[#9a98a0]"
     >
-      <div className="relative h-48 overflow-hidden">
+      <div className="p-4 pb-0">
+        {tour.is_featured && (
+          <span className="inline-flex bg-[#e15f0b] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+            Destacado
+          </span>
+        )}
+      </div>
+        
+      <div className="relative overflow-hidden bg-white aspect-[4/3]">
         <img
           src={image}
           alt={tour.title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        {tour.is_featured && (
-          <div className="absolute top-4 left-4 bg-[#e15f0b] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-            Destacado
-          </div>
-        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+
       </div>
 
       <div className="p-5 space-y-3">

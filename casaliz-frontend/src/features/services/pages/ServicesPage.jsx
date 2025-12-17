@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, Briefcase } from 'lucide-react';
 import { servicesApi } from '../../../shared/utils/api';
 
 const ServicesPage = () => {
+  const location = useLocation();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || location.state?.prefill || '');
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState(searchParams.get('search') || '');
   const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') || '');
 
   useEffect(() => {
@@ -27,24 +29,27 @@ const ServicesPage = () => {
   }, []);
 
   useEffect(() => {
-    setSearchTerm(searchParams.get('search') || '');
+    const fromQuery = searchParams.get('search') || '';
+    setSearchTerm(fromQuery || location.state?.prefill || '');
+    setAppliedSearchTerm(fromQuery);
     setCategoryFilter(searchParams.get('category') || '');
-  }, [searchParams]);
+  }, [searchParams, location.state]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (searchTerm) params.append('search', searchTerm);
     if (categoryFilter) params.append('category', categoryFilter);
+    setAppliedSearchTerm(searchTerm);
     setSearchParams(params);
   };
 
   const filteredServices = useMemo(() => {
     return services.filter((service) => {
-      const matchesText = searchTerm
+      const matchesText = appliedSearchTerm
         ? `${service.title} ${service.short_description || ''} ${service.category || ''}`
             .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+            .includes(appliedSearchTerm.toLowerCase())
         : true;
       const matchesCategory = categoryFilter
         ? (service.category || '').toLowerCase().includes(categoryFilter.toLowerCase())
@@ -208,17 +213,19 @@ const ServicesPage = () => {
               <Link
                 key={service.id}
                 to={`/services/${service.slug}`}
-                className="group relative bg-white rounded-2xl shadow-lg overflow-hidden block h-full"
+                className="group relative rounded-2xl shadow-lg overflow-hidden block h-full bg-gradient-to-br from-[#1b274f] via-[#1f2f63] to-[#0f193a]"
               >
-                <div className="relative h-[30rem] sm:h-[34rem] lg:h-[38rem] w-full bg-[#f8f5ef] flex items-center justify-center">
+                <div className="p-4 pb-0">
+                  <span className="inline-flex bg-[#f8f5ef] text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full border border-[#ebe7df]">
+                    {service.category || 'Servicio'}
+                  </span>
+                </div>
+                <div className="relative aspect-[4/3] w-full bg-[#f8f5ef] flex items-center justify-center">
                   <img
                     src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x240'}
                     alt={service.title}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
-                  <span className="absolute top-4 left-4 bg-white/90 text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full">
-                    {service.category}
-                  </span>
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-center px-6 text-white">
                     <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
                     <p className="text-sm font-medium">Haz clic para ver el detalle</p>

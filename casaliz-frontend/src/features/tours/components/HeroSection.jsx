@@ -30,12 +30,12 @@ const HeroSection = () => {
   };
 
   const projectSuggestions = ['Casa Miraflores', 'Oficina abierta', 'Remodelacion integral', 'Interiorismo boutique', 'Edificio mixto'];
-  const serviceSuggestions = ['Licencias y tramites', 'Diseno arquitectonico', 'Habilitaciones urbanas', 'Topografia'];
+  const serviceSuggestions = ['Licencias y tramites', 'Diseño arquitectonico', 'Habilitaciones urbanas', 'Topografia'];
 
   const isAbout = mode === 'about';
   const inputLabel = mode === 'services' ? 'Servicio o palabra clave' : 'Ciudad o destino';
   const inputPlaceholder = mode === 'services'
-    ? 'Licencias, diseno, topografia...'
+    ? 'Licencias, diseño, topografia...'
     : 'Ciudad, tipo de proyecto o referencia';
   const suggestions = mode === 'services' ? serviceSuggestions : projectSuggestions;
   const value = mode === 'services' ? serviceQuery : projectQuery;
@@ -86,7 +86,7 @@ const HeroSection = () => {
             <div className="max-w-5xl mx-auto bg-[#0f1b35]/80 border border-white/30 rounded-3xl p-8 text-white shadow-2xl backdrop-blur">
               <p className="text-3xl md:text-4xl font-black mb-3">10+ años de experiencia combinada</p>
               <p className="text-white/85 mb-6 text-lg max-w-3xl mx-auto">
-                Equipo de arquitectos e ingenieros que lidera licencias, diseno, construccion y supervision.
+                Equipo de arquitectos e ingenieros que lidera licencias, diseño, construccion y supervision.
                 Cuentanos tu idea y la llevamos a proyecto ejecutable.
               </p>
               <div className="flex flex-wrap justify-center gap-3">

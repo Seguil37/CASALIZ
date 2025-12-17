@@ -1,21 +1,21 @@
 ﻿// src/features/services/pages/AdminServicesPage.jsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { servicesApi } from '../../../shared/utils/api';
-import { Plus, Pencil, Trash2, Search, ImagePlus, Eye } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, ImagePlus, Eye, CheckCircle, TrendingUp, Archive } from 'lucide-react';
 
-const STATUS_LABELS = {
-  published: 'Publicado',
-  draft: 'Borrador',
-  archived: 'Archivado',
+const SERVICE_STATUS_CONFIG = {
+  published: { label: 'Publicado', bg: 'bg-green-100', text: 'text-green-700', icon: CheckCircle },
+  draft: { label: 'Borrador', bg: 'bg-yellow-100', text: 'text-yellow-700', icon: null },
+  archived: { label: 'Archivado', bg: 'bg-gray-100', text: 'text-gray-700', icon: Archive },
 };
 
 const emptyImage = { path: '', caption: '', file: null, preview: '' };
 
 const emptyForm = {
   title: '',
-  category: 'Diseno, Construccion e Inmobiliaria',
+  category: '',
   short_description: '',
   description: '',
   status: 'published',
@@ -23,6 +23,14 @@ const emptyForm = {
   cover_image: '',
   coverImageFile: null,
   images: [emptyImage],
+};
+
+const translateMessage = (msg = '') => {
+  const text = msg.toLowerCase();
+  if (text.includes('cover image field is required when cover image file is not present')) {
+    return 'La imagen principal es obligatoria cuando no adjuntas un archivo.';
+  }
+  return msg;
 };
 
 const AdminServicesPage = () => {
@@ -35,6 +43,8 @@ const AdminServicesPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [coverPreview, setCoverPreview] = useState('');
+  const summaryRef = useRef(null);
+  const descriptionRef = useRef(null);
 
   useEffect(() => {
     setForm(emptyForm);
@@ -43,6 +53,16 @@ const AdminServicesPage = () => {
   useEffect(() => {
     loadServices();
   }, []);
+
+  useEffect(() => {
+    const autoResize = (el) => {
+      if (!el) return;
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    };
+    autoResize(summaryRef.current);
+    autoResize(descriptionRef.current);
+  }, [form.short_description, form.description]);
 
   const loadServices = async () => {
     try {
@@ -160,7 +180,11 @@ const AdminServicesPage = () => {
       await loadServices();
     } catch (error) {
       console.error('Error guardando servicio', error);
-      setSubmitError(error.response?.data?.message || 'No se pudo guardar el servicio');
+      const coverError =
+        error.response?.data?.errors?.cover_image?.[0] ||
+        error.response?.data?.errors?.cover_image_file?.[0];
+      const apiMessage = translateMessage(error.response?.data?.message || coverError);
+      setSubmitError(apiMessage || 'No se pudo guardar el servicio');
     } finally {
       setSubmitting(false);
     }
@@ -246,7 +270,23 @@ const AdminServicesPage = () => {
                   <p className="text-xs uppercase text-[#9a98a0]">{service.category}</p>
                   <h3 className="text-lg font-bold text-[#233274]">{service.title}</h3>
                   <p className="text-sm text-[#666] line-clamp-2">{service.short_description}</p>
-                  <div className="mt-2 text-xs text-[#555]">{STATUS_LABELS[service.status] || service.status}</div>
+                  <div className="mt-2 flex items-center gap-2">
+                    {(() => {
+                      const cfg = SERVICE_STATUS_CONFIG[service.status] || SERVICE_STATUS_CONFIG.draft;
+                      const Icon = cfg.icon;
+                      return (
+                        <span className={`inline-flex items-center gap-1 text-xs ${cfg.text} ${cfg.bg} px-2 py-1 rounded-full whitespace-nowrap`}>
+                          {Icon && <Icon className="w-4 h-4" />}
+                          {cfg.label}
+                        </span>
+                      );
+                    })()}
+                    {service.featured && (
+                      <span className="inline-flex items-center gap-1 text-xs text-blue-700 bg-blue-50 px-2 py-1 rounded-full whitespace-nowrap">
+                        <TrendingUp className="w-4 h-4" /> Destacado
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -306,9 +346,11 @@ const AdminServicesPage = () => {
               <label className="text-sm text-[#555]">Resumen</label>
               <textarea
                 required
-                className="w-full border rounded-lg p-2"
+                ref={summaryRef}
+                className="w-full border rounded-lg p-3 min-h-[100px] resize-none overflow-hidden"
                 value={form.short_description}
                 onChange={(e) => setForm({ ...form, short_description: e.target.value })}
+                placeholder="Resumen breve del servicio"
               />
             </div>
 
@@ -316,10 +358,11 @@ const AdminServicesPage = () => {
               <label className="text-sm text-[#555]">Descripcion</label>
               <textarea
                 required
-                rows={4}
-                className="w-full border rounded-lg p-2"
+                ref={descriptionRef}
+                className="w-full border rounded-lg p-3 min-h-[140px] resize-none overflow-hidden"
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
+                placeholder="Descripcion detallada del servicio"
               />
             </div>
 

@@ -23,9 +23,9 @@ const PopularCountriesSection = () => {
   const scrollRef = useRef(null);
 
   const countries = [
-    { name: 'Viviendas unifamiliares y multifamiliares', subtitle: 'Diseno y proyectos residenciales de calidad', image: viviendasImg, projectsCount: 45, rating: 4.9 },
+    { name: 'Viviendas unifamiliares y multifamiliares', subtitle: 'Diseño y proyectos residenciales de calidad', image: viviendasImg, projectsCount: 45, rating: 4.9 },
     { name: 'Casas de campo', subtitle: 'Proyectos arquitectonicos rurales y de descanso', image: casasCampoImg, projectsCount: 28, rating: 4.8 },
-    { name: 'Diseno de interiores con vistas en 3D', subtitle: 'Visualizacion y planificacion de espacios interiores', image: interiores3dImg, projectsCount: 32, rating: 4.9 },
+    { name: 'Diseño de interiores con vistas en 3D', subtitle: 'Visualizacion y planificacion de espacios interiores', image: interiores3dImg, projectsCount: 32, rating: 4.9 },
     { name: 'Expediente de licencia de construccion', subtitle: 'Tramitacion completa de permisos municipales', image: expedienteLicenciaImg, projectsCount: 60, rating: 4.8 },
     { name: 'Declaratoria de fabrica', subtitle: 'Legalizacion de construcciones existentes', image: declaratoriaImg, projectsCount: 22, rating: 4.7 },
     { name: 'Independizaciones', subtitle: 'Segregacion y documentacion de propiedades', image: independizacionesImg, projectsCount: 35, rating: 4.8 },
@@ -126,7 +126,8 @@ const PopularCountriesSection = () => {
                     <p className="text-sm text-[#233274] font-semibold">{country.subtitle}</p>
                   </div>
                   <Link
-                    to={`/services?search=${encodeURIComponent(country.name)}`}
+                    to="/services"
+                    state={{ prefill: country.name }}
                     className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100 text-center block"
                   >
                     Explorar servicios de este tipo

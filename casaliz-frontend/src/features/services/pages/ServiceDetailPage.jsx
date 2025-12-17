@@ -76,7 +76,7 @@ const ServiceDetailPage = () => {
               </p>
 
               <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-8 space-y-4">
-                <div className="prose prose-invert max-w-none text-white/90 font-light leading-relaxed text-base">
+                <div className="prose prose-invert max-w-none text-white/90 font-light leading-relaxed text-base whitespace-pre-line">
                   {service.description}
                 </div>
               </div>
@@ -149,12 +149,12 @@ const ServiceDetailPage = () => {
                 <button
                   key={image.id}
                   onClick={() => setLightboxImage(image)}
-                  className="group relative w-full h-72 overflow-hidden rounded-2xl border-2 border-[#ebe7df] shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50"
+                  className="group relative w-full overflow-hidden rounded-2xl border-2 border-[#ebe7df] shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50"
                 >
                   <img
                     src={image.path}
                     alt={image.caption || service.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full aspect-[4/3] object-contain bg-[#f8f5ef] transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   

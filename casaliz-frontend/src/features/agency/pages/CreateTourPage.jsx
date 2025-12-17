@@ -1,6 +1,6 @@
 // src/features/agency/pages/CreateTourPage.jsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, ImagePlus, PlusCircle, Trash2 } from 'lucide-react';
 import { projectsApi } from '../../../shared/utils/api';
@@ -27,10 +27,22 @@ const CreateTourPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [heroPreview, setHeroPreview] = useState('');
+  const summaryRef = useRef(null);
+  const descriptionRef = useRef(null);
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, status: 'published' }));
   }, []);
+
+  useEffect(() => {
+    const autoResize = (el) => {
+      if (!el) return;
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    };
+    autoResize(summaryRef.current);
+    autoResize(descriptionRef.current);
+  }, [formData.summary, formData.description]);
 
   const openPreview = (url) => {
     if (!url || !url.trim()) return;
@@ -280,8 +292,9 @@ const CreateTourPage = () => {
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Resumen</label>
                 <textarea
                   value={formData.summary}
+                  ref={summaryRef}
                   onChange={(e) => handleChange('summary', e.target.value)}
-                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full min-h-[140px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
                   placeholder="Descripcion corta del proyecto"
                 />
               </div>
@@ -289,8 +302,9 @@ const CreateTourPage = () => {
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Descripcion detallada *</label>
                 <textarea
                   value={formData.description}
+                  ref={descriptionRef}
                   onChange={(e) => handleChange('description', e.target.value)}
-                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full min-h-[180px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
                   placeholder="Detalles, objetivos y resultados del proyecto"
                 />
                 {errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}
@@ -427,6 +441,15 @@ const CreateTourPage = () => {
                   </div>
                 ))}
                 {errors.images && <p className="text-sm text-red-600">{errors.images}</p>}
+              </div>
+              <div className="flex justify-end mt-4">
+                <button
+                  type="button"
+                  onClick={addImageField}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-[#ebe7df] text-[#233274] hover:border-primary"
+                >
+                  <PlusCircle className="w-4 h-4" /> Anadir imagen
+                </button>
               </div>
             </section>
 
