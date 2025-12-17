@@ -11,8 +11,8 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
     <div className="bg-white rounded-2xl shadow-lg p-2 space-y-3 relative border border-[#e2dfd7] text-[#233274] text-sm">
       {isMobile && (
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-[#233274] flex items-center gap-2">
-            <Filter className="w-5 h-5 text-[#e15f0b]" />
+          <h3 className="text-xs font-bold uppercase tracking-wide text-[#233274] flex items-center gap-2">
+            <Filter className="w-4 h-4 text-[#e15f0b]" />
             Filtros
           </h3>
           <button onClick={onClose} className="p-2 hover:bg-[#f8f5ef] rounded-full transition-colors">
@@ -22,8 +22,8 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
       )}
 
       {!isMobile && (
-        <h3 className="text-base font-semibold text-[#233274] flex items-center gap-2">
-          <Filter className="w-5 h-5 text-[#e15f0b]" />
+        <h3 className="text-xs font-bold uppercase tracking-wide text-[#233274] flex items-center gap-2">
+          <Filter className="w-4 h-4 text-[#e15f0b]" />
           Filtros
         </h3>
       )}
