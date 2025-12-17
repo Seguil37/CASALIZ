@@ -293,7 +293,7 @@ const AdminUsersPage = () => {
             <div className="text-center py-16 text-[#6c6b70]">No hay administradores registrados.</div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left min-w-[800px]">
+              <table className="w-full text-left min-w-[1100px]">
                 <thead className="bg-[#f8f5ef] text-[#6c6b70] uppercase text-xs tracking-[0.1em]">
                   <tr>
                     <th className="py-4 px-6 font-semibold">Nombre</th>
@@ -330,8 +330,8 @@ const AdminUsersPage = () => {
                       <td className="py-4 px-6 text-[#6c6b70]">
                         {u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}
                       </td>
-                      <td className="py-4 px-6">
-                        <div className="flex flex-wrap gap-2">
+                      <td className="py-4 px-6 min-w-[480px]">
+                        <div className="flex flex-wrap md:flex-nowrap gap-2">
                           <button
                             onClick={() => openEditModal(u)}
                             className="inline-flex items-center gap-1 px-3 py-2 rounded-lg border border-[#ebe7df] text-[#233274] hover:bg-[#f8f5ef] text-sm font-semibold"

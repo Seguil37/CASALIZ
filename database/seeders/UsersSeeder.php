@@ -13,8 +13,8 @@ class UsersSeeder extends Seeder
         $users = [
             [
                 'name' => 'Master Admin',
-                'email' => 'master@casaliz.test',
-                'password' => Hash::make('password'),
+                'email' => 'seguilso37@gmail.com',
+                'password' => Hash::make('mychemicalromance37'),
                 'role' => 'master_admin',
                 'city' => 'Lima',
                 'state' => 'Lima',
@@ -22,8 +22,8 @@ class UsersSeeder extends Seeder
             ],
             [
                 'name' => 'Admin Principal',
-                'email' => 'admin@casaliz.test',
-                'password' => Hash::make('password'),
+                'email' => 'ioseguil@gmail.com',
+                'password' => Hash::make('mychemicalromance37'),
                 'role' => 'admin',
                 'city' => 'Arequipa',
                 'state' => 'Arequipa',
@@ -31,7 +31,7 @@ class UsersSeeder extends Seeder
             ],
             [
                 'name' => 'Cliente Demo',
-                'email' => 'cliente@casaliz.test',
+                'email' => 'jhojanvidal321@gmail.com',
                 'password' => Hash::make('password'),
                 'role' => 'client',
                 'city' => 'Cusco',
