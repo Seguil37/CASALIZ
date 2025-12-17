@@ -82,14 +82,11 @@ const ToursPage = () => {
     <div className="min-h-screen bg-[#f8f5ef]">
       <div className="bg-[#f8f5ef] border-b sticky top-20 z-40 shadow-sm">
         <div className="container-custom py-4">
-          <SearchBar filters={filters} onFilterChange={handleFilterChange} onSearch={applyFilters} />
-        </div>
-      </div>
-
-      <div className="container-custom py-8">
-        <div className="flex gap-8">
-          <div className="hidden lg:block w-80 flex-shrink-0">
-            <div className="sticky top-36">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex-1">
+              <SearchBar filters={filters} onFilterChange={handleFilterChange} onSearch={applyFilters} />
+            </div>
+            <div className="hidden lg:block w-full max-w-sm flex-shrink-0">
               <FilterSidebar
                 filters={filters}
                 onFilterChange={handleFilterChange}
@@ -98,7 +95,11 @@ const ToursPage = () => {
               />
             </div>
           </div>
+        </div>
+      </div>
 
+      <div className="container-custom py-8">
+        <div className="flex gap-8">
           <div className="flex-1">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>

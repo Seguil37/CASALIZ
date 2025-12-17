@@ -44,7 +44,7 @@ const SearchBar = ({ filters, onFilterChange, onSearch }) => {
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-4 md:p-6">
+      <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-[#e2dfd7] text-[#233274]">
         <div className="text-xs font-bold uppercase tracking-wide mb-3 flex items-center gap-2 text-[#233274]">
           <Home className="w-4 h-4 text-[#e15f0b]" />
           Encuentra tu proyecto
@@ -61,7 +61,7 @@ const SearchBar = ({ filters, onFilterChange, onSearch }) => {
                 setSearchInput(e.target.value);
                 setCityFilter('');
               }}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-[#9a98a0] text-[#233274] placeholder-[#9a98a0] focus:outline-none focus:border-[#e15f0b] transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-[#d7d4cb] text-[#233274] placeholder-[#9a98a0] focus:outline-none focus:border-[#e15f0b] transition-all bg-white"
             />
           </div>
 
@@ -72,7 +72,7 @@ const SearchBar = ({ filters, onFilterChange, onSearch }) => {
               placeholder="Tipo de proyecto"
               value={typeInput}
               onChange={(e) => setTypeInput(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-[#9a98a0] text-[#233274] placeholder-[#9a98a0] focus:outline-none focus:border-[#e15f0b] transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-[#d7d4cb] text-[#233274] placeholder-[#9a98a0] focus:outline-none focus:border-[#e15f0b] transition-all bg-white"
             />
           </div>
 

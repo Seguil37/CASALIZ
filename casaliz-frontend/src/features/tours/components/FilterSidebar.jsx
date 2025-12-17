@@ -8,7 +8,7 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
   };
 
   return (
-    <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6 space-y-6 relative">
+    <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6 relative border border-[#e2dfd7] text-[#233274]">
       {isMobile && (
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-[#233274] flex items-center gap-2">
@@ -21,25 +21,31 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
         </div>
       )}
 
-      {!isMobile && <h3 className="text-xl font-bold text-[#233274]">Filtros</h3>}
+      {!isMobile && (
+        <h3 className="text-xl font-bold text-[#233274] flex items-center gap-2">
+          <Filter className="w-5 h-5 text-[#e15f0b]" />
+          Filtros
+        </h3>
+      )}
 
-      <div className="space-y-3">
-        <label className="block text-sm font-semibold text-[#233274] flex items-center gap-2">
+      <div className="space-y-3 bg-[#fdfaf5] border border-[#e2dfd7] rounded-xl p-4 shadow-inner">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[#233274]">
           <Star className="w-4 h-4 text-[#e15f0b]" />
           Solo destacados
-        </label>
+        </div>
         <label className="flex items-center gap-2 text-sm text-[#233274]">
           <input
             type="checkbox"
             checked={!!filters.featured}
             onChange={(e) => onFilterChange('featured', e.target.checked ? 1 : '')}
-            className="text-[#e15f0b] focus:ring-[#e15f0b]"
+            className="h-4 w-4 rounded border-[#9a98a0] text-[#e15f0b] focus:ring-[#e15f0b] focus:outline-none"
+            style={{ accentColor: '#e15f0b' }}
           />
           Mostrar proyectos destacados
         </label>
       </div>
 
-      <div className="flex gap-3 pt-4 border-t">
+      <div className="flex gap-3 pt-4 border-t border-[#e2dfd7]">
         <button
           onClick={onClear}
           className="flex-1 px-4 py-3 border-2 border-[#9a98a0] text-[#233274] font-semibold rounded-xl hover:bg-[#f8f5ef] transition-all"
@@ -48,7 +54,7 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
         </button>
         <button
           onClick={handleApply}
-          className="flex-1 px-4 py-3 bg-[#233274] text-[#f8f5ef] font-semibold rounded-xl hover:bg-[#1a255c] transition-all"
+          className="flex-1 px-4 py-3 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-white font-semibold rounded-xl hover:from-[#f26b1d] hover:to-[#e15f0b] transition-all shadow-md"
         >
           Aplicar
         </button>

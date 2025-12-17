@@ -21,12 +21,12 @@ const CTASection = () => {
       <div className="container-custom relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Título principal */}
-          <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-6 animate-fade-in">
+          <h2 className="text-4xl lg:text-5xl font-black text-[#f8f5ef] mb-6 animate-fade-in">
             Accede a tu cuenta Casaliz
           </h2>
 
           {/* Subtítulo */}
-          <p className="text-xl text-[#1a2555] mb-8 animate-fade-in">
+          <p className="text-xl text-[#f8f5ef] mb-8 animate-fade-in">
             Inicia sesión para dejar reseñas, descubrir proyectos destacados y guardar tus favoritos.
           </p>
 
