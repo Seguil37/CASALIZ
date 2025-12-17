@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Search, Star, Users } from 'lucide-react';
+import heroImage from '../../../assets/images/logo/logo.png';
+
 
 const HeroSection = () => {
-  const [mode, setMode] = useState('projects');
+  const [mode, setMode] = useState('services');
   const [projectQuery, setProjectQuery] = useState('');
   const [serviceQuery, setServiceQuery] = useState('');
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70 z-10" />
         <img
-          src="https://scontent-lim1-1.xx.fbcdn.net/v/t39.30808-6/471261672_921713853272572_2849473084232492966_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=aO-qf6JFBE0Q7kNvwF2trnQ&_nc_oc=AdmNQcTEwlsSJhTw9l-3M7LbJPiL5iqNNAgVjwF-l-UG5XJhkIcmzhClMRWEuDzO0wY&_nc_zt=23&_nc_ht=scontent-lim1-1.xx&_nc_gid=UTAzAimmvmz_EEiBKXBcpA&oh=00_AflrXZ1VKzXVMcFBU1hU8YCQVh-My9zK4w7em0uq2vQQuw&oe=69401BA1"
+          src={heroImage}
           alt="Hero background"
           className="w-full h-full object-cover animate-slow-zoom"
         />
@@ -57,7 +59,7 @@ const HeroSection = () => {
               Diseñamos espacios que hablan por ti.
             </h1>
             <p className="text-xl lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide">
-              Arquitectura, interiorismo y gestion de proyectos para viviendas, oficinas y espacios comerciales.
+              Arquitectura y gestion de proyectos para viviendas, oficinas y espacios comerciales.
             </p>
           </div>
 
@@ -129,13 +131,13 @@ const HeroSection = () => {
                     className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
                   >
                     <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    {mode === 'services' ? 'Buscar servicios' : 'Buscar soluciones'}
+                    {mode === 'services' ? 'Buscar servicios' : 'Buscar proyectos'}
                   </button>
                 </div>
               </div>
 
               
-            </form>
+            </form>  
           )}
 
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">

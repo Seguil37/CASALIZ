@@ -18,7 +18,7 @@ const TourCard = ({ tour }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         {tour.is_featured && (
-          <div className="absolute top-4 left-4 bg-[#e15f0b] text-[#233274] px-3 py-1 rounded-full text-xs font-bold">
+          <div className="absolute top-4 left-4 bg-[#e15f0b] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
             Destacado
           </div>
         )}

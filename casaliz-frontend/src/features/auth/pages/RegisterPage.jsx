@@ -87,7 +87,7 @@ const RegisterPage = () => {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8 animate-fade-in">
           <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl mb-6 shadow-xl">
-            <UserPlus className="w-12 h-12 text-[#233274]" />
+            <UserPlus className="w-12 h-12 text-[#f8f5ef]" />
           </div>
           <div className="flex flex-col items-center justify-center gap-2 min-h-[120px]">
             <h2 className="text-4xl font-black text-[#233274] leading-tight text-center">Crea tu cuenta</h2>
@@ -187,7 +187,7 @@ const RegisterPage = () => {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               Continuar
             </button>
@@ -309,7 +309,7 @@ const TermsAndConditionsStep = ({ onBack, onSubmit, loading, apiError }) => {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8 animate-fade-in">
           <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl mb-6 shadow-xl">
-            <Shield className="w-12 h-12 text-[#233274]" />
+            <Shield className="w-12 h-12 text-[#f8f5ef]" />
           </div>
           <h2 className="text-4xl font-black text-[#233274] mb-2">Términos y Condiciones</h2>
           <p className="text-[#9a98a0]">Revisa y acepta nuestros términos para continuar</p>
@@ -372,7 +372,7 @@ const TermsAndConditionsStep = ({ onBack, onSubmit, loading, apiError }) => {
             <button
               onClick={handleSubmit}
               disabled={!accepted || loading}
-              className="flex-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

@@ -43,10 +43,10 @@ const capabilityPillars = [
 const AboutPage = () => {
   return (
     <div className="bg-[#f8f5ef] text-[#233274]">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0f1b35] via-[#18274a] to-[#0f1b35] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white">
         <div className="absolute inset-0 opacity-10" aria-hidden>
-          <div className="absolute -left-12 -top-12 w-72 h-72 rounded-full bg-[#e15f0b] blur-3xl" />
-          <div className="absolute right-0 bottom-0 w-80 h-80 rounded-full bg-[#d14a00] blur-3xl" />
+          <div className="absolute -left-12 -top-12 w-72 h-72 rounded-full bg-[#fbbf24] blur-3xl" />
+          <div className="absolute right-0 bottom-0 w-80 h-80 rounded-full bg-[#e15f0b] blur-3xl" />
         </div>
 
         <div className="container-custom relative py-20 lg:py-28 grid gap-12 lg:grid-cols-[1.2fr_auto] items-center">

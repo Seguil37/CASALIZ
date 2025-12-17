@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { TrendingUp, Loader2 } from 'lucide-react';
+import cuscoImg from '../../../assets/images/zonas/cusco.png';
+import sanJeronimoImg from '../../../assets/images/zonas/san-jeronimo.png';
+import sanSebastianImg from '../../../assets/images/zonas/san-sebastian.png';
+import santiagoImg from '../../../assets/images/zonas/santiago.png';
 
 const PopularLocationsSection = () => {
   const [locations, setLocations] = useState([]);
@@ -12,28 +16,28 @@ const PopularLocationsSection = () => {
     {
       name: 'Cusco Centro',
       subtitle: 'Proyectos de vivienda e interiores',
-      image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800',
+      image: cuscoImg,
       projects: 32,
       rating: 4.8,
     },
     {
-      name: 'San Sebastián',
+      name: 'San Sebastian',
       subtitle: 'Casas unifamiliares y multifamiliares',
-      image: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=800',
+      image: sanSebastianImg,
       projects: 28,
       rating: 4.7,
     },
     {
-      name: 'San Jerónimo',
+      name: 'San Jeronimo',
       subtitle: 'Casas de campo y proyectos residenciales',
-      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      image: sanJeronimoImg,
       projects: 22,
       rating: 4.6,
     },
     {
       name: 'Santiago',
       subtitle: 'Vivienda y comercio local',
-      image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      image: santiagoImg,
       projects: 18,
       rating: 4.6,
     },
@@ -56,7 +60,6 @@ const PopularLocationsSection = () => {
     );
   }
 
-  // Si no hay ubicaciones, no mostrar la sección
   if (locations.length === 0) {
     return null;
   }
@@ -64,15 +67,13 @@ const PopularLocationsSection = () => {
   return (
     <section className="py-20 bg-[#f8f5ef]">
       <div className="container-custom">
-        {/* Título */}
         <div className="flex items-center gap-3 mb-12 animate-fade-in">
           <TrendingUp className="w-8 h-8 text-[#e15f0b]" />
           <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
-            Zonas donde más diseñamos
+            Zonas donde mas disenamos
           </h2>
         </div>
 
-        {/* Grid de ubicaciones */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {locations.map((location, index) => (
             <Link
@@ -81,7 +82,6 @@ const PopularLocationsSection = () => {
               className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
-              {/* Imagen */}
               <div className="relative h-48 overflow-hidden">
                 <img
                   src={location.image}
@@ -91,10 +91,9 @@ const PopularLocationsSection = () => {
                     e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               </div>
 
-              {/* Contenido */}
               <div className="p-6">
                 <h3 className="text-2xl font-bold text-[#233274] mb-2 group-hover:text-[#e15f0b] transition-colors">
                   {location.name}
@@ -123,7 +122,6 @@ const PopularLocationsSection = () => {
           ))}
         </div>
 
-        {/* Botón Ver Más */}
         <div className="text-center mt-12">
           <Link
             to="/projects"

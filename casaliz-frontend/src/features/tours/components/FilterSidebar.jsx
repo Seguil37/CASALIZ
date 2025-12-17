@@ -8,10 +8,10 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6 relative border border-[#e2dfd7] text-[#233274]">
+    <div className="bg-white rounded-2xl shadow-lg p-2 space-y-3 relative border border-[#e2dfd7] text-[#233274] text-sm">
       {isMobile && (
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-[#233274] flex items-center gap-2">
+          <h3 className="text-base font-semibold text-[#233274] flex items-center gap-2">
             <Filter className="w-5 h-5 text-[#e15f0b]" />
             Filtros
           </h3>
@@ -22,13 +22,13 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
       )}
 
       {!isMobile && (
-        <h3 className="text-xl font-bold text-[#233274] flex items-center gap-2">
+        <h3 className="text-base font-semibold text-[#233274] flex items-center gap-2">
           <Filter className="w-5 h-5 text-[#e15f0b]" />
           Filtros
         </h3>
       )}
 
-      <div className="space-y-3 bg-[#fdfaf5] border border-[#e2dfd7] rounded-xl p-4 shadow-inner">
+      <div className="space-y-1.5 bg-[#fdfaf5] border border-[#e2dfd7] rounded-xl p-2 shadow-inner">
         <div className="flex items-center gap-2 text-sm font-semibold text-[#233274]">
           <Star className="w-4 h-4 text-[#e15f0b]" />
           Solo destacados
@@ -45,16 +45,16 @@ const FilterSidebar = ({ filters, onFilterChange, onApply, onClear, isMobile = f
         </label>
       </div>
 
-      <div className="flex gap-3 pt-4 border-t border-[#e2dfd7]">
+      <div className="flex gap-3 pt-2 border-t border-[#e2dfd7]">
         <button
           onClick={onClear}
-          className="flex-1 px-4 py-3 border-2 border-[#9a98a0] text-[#233274] font-semibold rounded-xl hover:bg-[#f8f5ef] transition-all"
+          className="flex-1 px-3 py-1.5 border-2 border-[#9a98a0] text-[#233274] font-semibold rounded-xl hover:bg-[#f8f5ef] transition-all text-sm"
         >
           Limpiar
         </button>
         <button
           onClick={handleApply}
-          className="flex-1 px-4 py-3 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-white font-semibold rounded-xl hover:from-[#f26b1d] hover:to-[#e15f0b] transition-all shadow-md"
+          className="flex-1 px-3 py-1.5 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] text-white font-semibold rounded-xl hover:from-[#f26b1d] hover:to-[#e15f0b] transition-all shadow-md text-sm"
         >
           Aplicar
         </button>

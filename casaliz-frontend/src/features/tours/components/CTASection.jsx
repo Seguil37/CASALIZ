@@ -1,7 +1,7 @@
 // src/features/tours/components/CTASection.jsx
 
 import { Link } from 'react-router-dom';
-import { LogIn, UserPlus, Star, Shield, Gift, Heart } from 'lucide-react';
+import { LogIn, UserPlus, Heart } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 
 const CTASection = () => {
@@ -13,8 +13,8 @@ const CTASection = () => {
     <section className="py-20 bg-gradient-to-br from-[#e15f0b] via-[#f26b1d] to-[#233274] relative overflow-hidden">
       {/* Decoraciones de fondo */}
       <div className="absolute inset-0">
-        <div className="absolute top-[-6rem] right-[-4rem] w-96 h-96 bg-[#fbbf24]/25 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-[-6rem] left-[-4rem] w-[28rem] h-[28rem] bg-[#1a2555]/30 rounded-full blur-3xl"></div>
+        <div className="absolute top-[-6rem] right-[-4rem] w-96 h-96 bg-[#fbbf24]/25 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-6rem] left-[-4rem] w-[28rem] h-[28rem] bg-[#1a2555]/30 rounded-full blur-3xl" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-white/10" />
       </div>
 
@@ -52,23 +52,22 @@ const CTASection = () => {
           {/* Beneficios */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-
               {
                 icon: Heart,
-                text: 'Proyectos favoritos — Guarda tus proyectos favoritos para consultarlos siempre que los necesites. Descubre trabajos populares de la comunidad, comparte tus favoritos con otros usuarios y mantén una lista personalizada de inspiración.',
+                title: 'Proyectos favoritos',
+                description:
+                  'Guarda tus proyectos favoritos para consultarlos siempre que los necesites. Descubre trabajos populares de la comunidad, comparte tus favoritos con otros usuarios y mantén una lista personalizada de inspiración.',
                 color: 'from-[#e15f0b] to-[#d14a00]',
               },
-              
               {
                 icon: UserPlus,
-                text: 'Opiniones de clientes — Lee reseñas de la comunidad, descubre proyectos destacados y guarda tus favoritos. Crea tu cuenta para dejar tus propias valoraciones y ayudar a otros usuarios a tomar mejores decisiones.',
+                title: 'Opiniones de clientes',
+                description:
+                  'Lee reseñas de la comunidad, descubre proyectos destacados y guarda tus favoritos. Crea tu cuenta para dejar tus propias valoraciones y ayudar a otros usuarios a tomar mejores decisiones.',
                 color: 'from-[#233274] to-[#1a2555]',
               },
-              
             ].map((benefit, index) => {
               const Icon = benefit.icon;
-              const [titlePart, ...restParts] = benefit.text.split(' — ');
-              const descriptionPart = restParts.join(' — ');
               return (
                 <div
                   key={index}
@@ -79,13 +78,9 @@ const CTASection = () => {
                     <Icon className="w-6 h-6 text-[#f8f5ef]" />
                   </div>
                   <p className="text-[#233274] text-center">
-                    <span className="font-extrabold">{titlePart}</span>
-                    {descriptionPart ? (
-                      <>
-                        {' '}—<br />
-                        {descriptionPart}
-                      </>
-                    ) : null}
+                    <span className="font-extrabold">{benefit.title}</span>
+                    <br />
+                    {benefit.description}
                   </p>
                 </div>
               );

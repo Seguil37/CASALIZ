@@ -7,7 +7,7 @@ const ContactPage = () => {
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl shadow-xl">
-            <Mail className="w-10 h-10 text-[#233274]" />
+            <Mail className="w-10 h-10 text-[#f8f5ef]" />
           </div>
           <div>
             <p className="text-sm font-semibold text-[#d14a00] uppercase tracking-wide">Conectemos tu visión con la realidad</p>

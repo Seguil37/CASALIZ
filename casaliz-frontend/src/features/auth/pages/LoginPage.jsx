@@ -65,7 +65,7 @@ const LoginPage = () => {
         {/* Logo y Header */}
         <div className="text-center mb-8 animate-fade-in">
           <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-[#e15f0b] to-[#d14a00] rounded-2xl mb-6 shadow-xl">
-            <LogIn className="w-12 h-12 text-[#233274]" />
+            <LogIn className="w-12 h-12 text-[#f8f5ef]" />
           </div>
           <h2 className="text-4xl font-black text-[#233274] mb-2">
             Bienvenido de nuevo
@@ -169,7 +169,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#233274] font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
