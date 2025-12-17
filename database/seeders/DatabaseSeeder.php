@@ -10,9 +10,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersSeeder::class,
-            ProjectsSeeder::class,
-            ServicesSeeder::class,
             SystemSettingsSeeder::class,
         ]);
+        $this->call(ServicesTableSeeder::class);
+        $this->call(ServiceImagesTableSeeder::class);
+        $this->call(ProjectsTableSeeder::class);
+        $this->call(ProjectImagesTableSeeder::class);
     }
 }
