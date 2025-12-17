@@ -82,7 +82,7 @@ const PopularLocationsSection = () => {
               className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fade-in"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-56 overflow-hidden">
                 <img
                   src={location.image}
                   alt={location.name}
@@ -91,7 +91,7 @@ const PopularLocationsSection = () => {
                     e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/15 to-transparent" />
               </div>
 
               <div className="p-6">
