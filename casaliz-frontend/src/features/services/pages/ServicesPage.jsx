@@ -11,6 +11,9 @@ const ServicesPage = () => {
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || location.state?.prefill || '');
   const [appliedSearchTerm, setAppliedSearchTerm] = useState(searchParams.get('search') || '');
   const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') || '');
+  const [featuredOnly, setFeaturedOnly] = useState(
+    searchParams.get('featured') === '1' || searchParams.get('featured') === 'true'
+  );
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -33,15 +36,34 @@ const ServicesPage = () => {
     setSearchTerm(fromQuery || location.state?.prefill || '');
     setAppliedSearchTerm(fromQuery);
     setCategoryFilter(searchParams.get('category') || '');
+    const featuredFromUrl = searchParams.get('featured');
+    setFeaturedOnly(featuredFromUrl === '1' || featuredFromUrl === 'true');
   }, [searchParams, location.state]);
+
+  const applyFiltersToQuery = (nextSearchTerm, nextCategory, nextFeatured) => {
+    const params = new URLSearchParams();
+    if (nextSearchTerm) params.append('search', nextSearchTerm);
+    if (nextCategory) params.append('category', nextCategory);
+    if (nextFeatured) params.append('featured', '1');
+    setAppliedSearchTerm(nextSearchTerm);
+    setSearchParams(params);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (searchTerm) params.append('search', searchTerm);
-    if (categoryFilter) params.append('category', categoryFilter);
-    setAppliedSearchTerm(searchTerm);
-    setSearchParams(params);
+    applyFiltersToQuery(searchTerm, categoryFilter, featuredOnly);
+  };
+
+  const handleFeaturedToggle = (checked) => {
+    setFeaturedOnly(checked);
+    applyFiltersToQuery(searchTerm, categoryFilter, checked);
+  };
+
+  const isFeaturedService = (service) => {
+    const value = service?.is_featured ?? service?.featured;
+    if (typeof value === 'string') return value === '1' || value.toLowerCase() === 'true';
+    if (typeof value === 'number') return value === 1;
+    return Boolean(value);
   };
 
   const filteredServices = useMemo(() => {
@@ -54,9 +76,10 @@ const ServicesPage = () => {
       const matchesCategory = categoryFilter
         ? (service.category || '').toLowerCase().includes(categoryFilter.toLowerCase())
         : true;
-      return matchesText && matchesCategory;
+      const matchesFeatured = featuredOnly ? isFeaturedService(service) : true;
+      return matchesText && matchesCategory && matchesFeatured;
     });
-  }, [services, appliedSearchTerm, categoryFilter]);
+  }, [services, appliedSearchTerm, categoryFilter, featuredOnly]);
 
   const serviceHighlights = [
     'Viviendas unifamiliares y multifamiliares',
@@ -141,6 +164,16 @@ const ServicesPage = () => {
                   className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/60"
                 />
               </div>
+              <label className="flex items-center gap-2 text-sm font-semibold text-white/80">
+                <input
+                  type="checkbox"
+                  checked={featuredOnly}
+                  onChange={(e) => handleFeaturedToggle(e.target.checked)}
+                  className="h-4 w-4 rounded border-white/60 bg-white/20 text-[#fbbf24] focus:ring-white/60"
+                />
+                <Sparkles className="w-4 h-4 text-[#fbbf24]" />
+                <span>Ver solo destacados</span>
+              </label>
               <button
                 type="submit"
                 className="w-full bg-white text-[#233274] font-bold py-3 rounded-xl hover:-translate-y-0.5 transition-transform shadow-lg"
@@ -216,9 +249,17 @@ const ServicesPage = () => {
                 className="group relative rounded-2xl shadow-lg overflow-hidden block h-full bg-gradient-to-br from-[#1b274f] via-[#1f2f63] to-[#0f193a]"
               >
                 <div className="p-4 pb-0">
-                  <span className="inline-flex bg-[#f8f5ef] text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full border border-[#ebe7df]">
-                    {service.category || 'Servicio'}
-                  </span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="inline-flex bg-[#f8f5ef] text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full border border-[#ebe7df]">
+                      {service.category || 'Servicio'}
+                    </span>
+                    {isFeaturedService(service) && (
+                      <span className="inline-flex items-center gap-1 bg-[#e15f0b] text-white text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
+                        <Sparkles className="w-4 h-4" />
+                        Destacado
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="relative aspect-[4/3] w-full bg-[#f8f5ef] flex items-center justify-center">
                   <img
