@@ -70,7 +70,7 @@ const PopularLocationsSection = () => {
         <div className="flex items-center gap-3 mb-12 animate-fade-in">
           <TrendingUp className="w-8 h-8 text-[#e15f0b]" />
           <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
-            Zonas donde mas disenamos
+            Zonas donde mas diseñamos
           </h2>
         </div>
 

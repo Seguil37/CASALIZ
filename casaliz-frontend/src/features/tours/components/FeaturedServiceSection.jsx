@@ -7,14 +7,20 @@ const FeaturedServiceSection = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const isFeaturedService = (service) => {
+    const value = service?.is_featured ?? service?.featured;
+    if (typeof value === 'string') return value === '1' || value.toLowerCase() === 'true';
+    if (typeof value === 'number') return value === 1;
+    return Boolean(value);
+  };
+
   useEffect(() => {
     const fetchFeaturedServices = async () => {
       try {
         const response = await servicesApi.list({ per_page: 8, is_featured: true });
         const data = response.data?.data ?? response.data ?? [];
-        const featured = data.filter((service) => service.is_featured !== false);
-        const normalized = (featured.length > 0 ? featured : data).slice(0, 8);
-        setServices(normalized);
+        const featured = data.filter(isFeaturedService).slice(0, 8);
+        setServices(featured);
       } catch (error) {
         console.error('Error fetching services:', error);
       } finally {
@@ -100,7 +106,7 @@ const FeaturedServiceSection = () => {
               className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 border border-[#9a98a0]"
             >
               <div className="p-4 pb-0">
-                {(service.is_featured ?? true) && (
+                {isFeaturedService(service) && (
                   <span className="inline-flex bg-[#e15f0b] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
                     Destacado
                   </span>

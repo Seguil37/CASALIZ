@@ -3,7 +3,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { servicesApi } from '../../../shared/utils/api';
-import { Plus, Pencil, Trash2, Search, ImagePlus, Eye, CheckCircle, TrendingUp, Archive } from 'lucide-react';
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Search,
+  ImagePlus,
+  Eye,
+  CheckCircle,
+  TrendingUp,
+  Archive,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 
 const SERVICE_STATUS_CONFIG = {
   published: { label: 'Publicado', bg: 'bg-green-100', text: 'text-green-700', icon: CheckCircle },
@@ -38,6 +50,7 @@ const AdminServicesPage = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
@@ -229,6 +242,40 @@ const AdminServicesPage = () => {
     service.title?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const perPage = 10;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  const startIndex = (currentPage - 1) * perPage;
+  const paginatedServices = filtered.slice(startIndex, startIndex + perPage);
+
+  const scrollToListTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      scrollToListTop();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      scrollToListTop();
+    }
+  };
+
+  const handleSearchChange = (value) => {
+    setSearch(value);
+    setCurrentPage(1);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f8f5ef]">
@@ -252,14 +299,20 @@ const AdminServicesPage = () => {
             <Search className="text-[#9a98a0]" />
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Buscar por titulo"
               className="w-full outline-none"
             />
           </div>
 
           <div className="space-y-4">
-            {filtered.map((service) => (
+            {filtered.length === 0 && (
+              <div className="bg-white rounded-2xl shadow p-6 text-center text-[#9a98a0]">
+                No se encontraron servicios.
+              </div>
+            )}
+
+            {paginatedServices.map((service) => (
               <div key={service.id} className="bg-white rounded-2xl shadow p-4 flex gap-4 items-center">
                 <img
                   src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/120x90'}
@@ -312,6 +365,58 @@ const AdminServicesPage = () => {
               </div>
             ))}
           </div>
+
+          {filtered.length > 0 && (
+            <div className="bg-white rounded-2xl shadow p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
+              <div className="text-sm text-[#9a98a0]">
+                Mostrando{' '}
+                <span className="font-bold text-[#233274]">
+                  {filtered.length === 0 ? 0 : startIndex + 1}
+                </span>{' '}
+                a{' '}
+                <span className="font-bold text-[#233274]">
+                  {Math.min(startIndex + perPage, filtered.length)}
+                </span>{' '}
+                de <span className="font-bold text-[#233274]">{filtered.length}</span> servicios
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className="p-2 rounded-lg border border-[#ebe7df] hover:bg-[#f8f5ef] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5 text-[#233274]" />
+                </button>
+
+                <div className="flex gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => {
+                        setCurrentPage(page);
+                        scrollToListTop();
+                      }}
+                      className={`w-8 h-8 rounded-lg font-semibold transition-colors ${
+                        currentPage === page
+                          ? 'bg-gradient-primary text-[#233274]'
+                          : 'border border-[#ebe7df] text-[#9a98a0] hover:bg-[#f8f5ef]'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages || filtered.length === 0}
+                  className="p-2 rounded-lg border border-[#ebe7df] hover:bg-[#f8f5ef] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5 text-[#233274]" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl shadow p-6">
