@@ -5,6 +5,7 @@ import WhyUsSection from '../components/WhyUsSection';
 import CTASection from '../components/CTASection';
 import PopularLocationsSection from '../components/PopularLocationsSection';
 import FeaturedToursSection from '../components/FeaturedToursSection';
+import FeaturedServiceSection from '../components/FeaturedServiceSection';
 import PopularCountriesSection from '../components/PopularCountriesSection';
 import ReferenceContentSection from '../components/ReferenceContentSection';
 
@@ -14,6 +15,7 @@ const HomePage = () => {
       <HeroSection />
       <PopularCountriesSection />
       <CTASection />
+      <FeaturedServiceSection />
       <FeaturedToursSection />
       <WhyUsSection />
       <PopularLocationsSection />

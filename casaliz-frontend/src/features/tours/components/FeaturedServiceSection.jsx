@@ -1,0 +1,139 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Sparkles, Briefcase } from 'lucide-react';
+import { servicesApi } from '../../../shared/utils/api';
+
+const FeaturedServiceSection = () => {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedServices = async () => {
+      try {
+        const response = await servicesApi.list({ per_page: 8, is_featured: true });
+        const data = response.data?.data ?? response.data ?? [];
+        const featured = data.filter((service) => service.is_featured !== false);
+        const normalized = (featured.length > 0 ? featured : data).slice(0, 8);
+        setServices(normalized);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedServices();
+  }, []);
+
+  const fallbackServices = [
+    {
+      id: 'srv-1',
+      title: 'Diseno arquitectonico residencial',
+      category: 'Arquitectura',
+      cover_image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800',
+      short_description: 'Planos, renders y expediente de licencia para tu vivienda.',
+      is_featured: true,
+    },
+    {
+      id: 'srv-2',
+      title: 'Gestion de licencias y regularizaciones',
+      category: 'Tramites',
+      cover_image: 'https://images.unsplash.com/photo-1472220625704-91e1462799b2?w=800',
+      short_description: 'Licencia de construccion, declaratoria de fabrica e independizaciones.',
+      is_featured: true,
+    },
+    {
+      id: 'srv-3',
+      title: 'Supervision y gerencia de obra',
+      category: 'Construccion',
+      cover_image: 'https://images.unsplash.com/photo-1431576901776-e539bd916ba2?w=800',
+      short_description: 'Acompanamos la ejecucion de tu proyecto con control de calidad.',
+      is_featured: true,
+    },
+    {
+      id: 'srv-4',
+      title: 'Comercializacion y servicios inmobiliarios',
+      category: 'Inmobiliaria',
+      cover_image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?w=800',
+      short_description: 'Venta y alquiler con marketing inmobiliario y asesoria legal.',
+      is_featured: true,
+    },
+  ];
+
+  const displayServices = services.length > 0 ? services : fallbackServices;
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-[#f8f5ef]">
+        <div className="container-custom text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#e15f0b] border-t-transparent" />
+          <p className="mt-4 text-[#9a98a0]">Cargando servicios...</p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="py-20 bg-[#f8f5ef]">
+      <div className="container-custom">
+        <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center gap-3">
+            <Sparkles className="w-8 h-8 text-[#e15f0b]" />
+            <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">Servicios destacados</h2>
+          </div>
+          <Link
+            to="/services"
+            className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold"
+          >
+            Ver todos los servicios
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {displayServices.map((service) => (
+            <Link
+              key={service.id}
+              to={`/services/${service.slug || service.id}`}
+              className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 border border-[#9a98a0]"
+            >
+              <div className="p-4 pb-0">
+                {(service.is_featured ?? true) && (
+                  <span className="inline-flex bg-[#e15f0b] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                    Destacado
+                  </span>
+                )}
+              </div>
+
+              <div className="relative overflow-hidden bg-white aspect-[4/3]">
+                <img
+                  src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x300'}
+                  alt={service.title}
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              </div>
+
+              <div className="p-5 space-y-3">
+                <div className="flex items-center gap-2 text-sm text-[#9a98a0]">
+                  <Briefcase className="w-4 h-4 text-[#e15f0b]" />
+                  <span>{service.category || 'Servicio'}</span>
+                </div>
+
+                <h3 className="text-xl font-bold text-[#233274] leading-tight line-clamp-2">{service.title}</h3>
+
+                <p className="text-sm text-[#4b4b4b] line-clamp-2">
+                  {service.short_description || 'Conoce mas sobre este servicio especializado.'}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default FeaturedServiceSection;
