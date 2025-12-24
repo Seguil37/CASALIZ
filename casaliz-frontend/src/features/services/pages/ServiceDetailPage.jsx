@@ -84,7 +84,9 @@ const ServiceDetailPage = () => {
 
               <div className="flex pt-4">
                 <a
-                  href="/contacto"
+                  href="https://tinyurl.com/CasalizArquitectura"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#e15f0b] to-[#f59e0b] text-white font-bold px-8 py-4 rounded-full hover:shadow-lg hover:shadow-[#e15f0b]/40 transition-all duration-300 transform hover:scale-105"
                 >
                   Cotizar Servicio

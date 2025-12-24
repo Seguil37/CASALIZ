@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone, Facebook } from 'lucide-react';
+import { Mail, MapPin, Phone, Facebook, MessageCircle } from 'lucide-react';
 
 const ContactPage = () => {
   return (
@@ -120,18 +120,29 @@ const ContactPage = () => {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-300 flex gap-3">
+                  <div className="pt-4 border-t border-gray-300 flex flex-col items-start gap-2">
                     <a
                       href="https://www.facebook.com/CASALIZEIRL"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center w-12 h-12 rounded-lg bg-[#e15f0b] hover:bg-[#d14a00] transition-colors"
+                      className="flex items-center gap-3"
                     >
-                      <Facebook className="w-6 h-6 text-white" />
+                      <span className="flex items-center justify-center w-12 h-12 rounded-lg bg-[#1877f2] hover:bg-[#0f5ad2] transition-colors">
+                        <Facebook className="w-6 h-6 text-white" />
+                      </span>
+                      <span className="text-sm font-semibold text-[#233274]">Síguenos en Facebook</span>
                     </a>
-                    <span className="flex items-center text-sm text-[#9a98a0]">
-                      Síguenos en Facebook
-                    </span>
+                    <a
+                      href="https://tinyurl.com/CasalizArquitectura"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3"
+                    >
+                      <span className="flex items-center justify-center w-12 h-12 rounded-lg bg-[#25d366] hover:bg-[#1ebe57] transition-colors">
+                        <MessageCircle className="w-6 h-6 text-white" />
+                      </span>
+                      <span className="text-sm font-semibold text-[#233274]">Escríbenos por WhatsApp</span>
+                    </a>
                   </div>
                 </div>
               </div>
