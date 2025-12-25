@@ -93,7 +93,7 @@ html {
   background-color: var(--slate-50);
 }
 
-.section-bg.bg-[#f8f5ef] {
+.section-bg {
   background-color: #f8f5ef;
 }
 
