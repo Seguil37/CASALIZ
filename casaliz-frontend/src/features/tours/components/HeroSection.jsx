@@ -42,7 +42,7 @@ const HeroSection = () => {
   const onChange = mode === 'services' ? setServiceQuery : setProjectQuery;
 
   return (
-    <section className="relative h-[600px] lg:h-[700px] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[760px] lg:min-h-[820px] flex items-center justify-center overflow-hidden px-3 sm:px-6 py-10">
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70 z-10" />
         <img
@@ -55,15 +55,15 @@ const HeroSection = () => {
       <div className="container-custom relative z-20 text-center">
         <div className="animate-fade-in">
           <div className="mb-6">
-            <h1 className="text-5xl lg:text-7xl font-black text-[#f8f5ef] mb-4 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black text-[#f8f5ef] mb-4 tracking-tight leading-tight">
               Diseñamos espacios que hablan por ti.
             </h1>
-            <p className="text-xl lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide">
+            <p className="text-base sm:text-lg lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide">
               Arquitectura y gestion de proyectos para viviendas, oficinas y espacios comerciales.
             </p>
           </div>
 
-          <div className="flex justify-center gap-2 mb-4">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-4">
             {['services', 'projects', 'about'].map((value) => (
               <button
                 key={value}
