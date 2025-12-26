@@ -1,8 +1,21 @@
 // src/shared/utils/api.js
 import axios from 'axios';
 
+// Backend (Laravel) en subdominio
+export const API_ORIGIN = 'https://api.casaliz-arquitectura.com';
+export const API_BASE = `${API_ORIGIN}/api/v1`;
+
+// Helpers para URLs públicas (imágenes /storage)
+export const toPublicUrl = (path) => {
+  if (!path) return '';
+  const clean = String(path).replaceAll('\\', '/'); // por si llega con \ de Windows
+  if (clean.startsWith('http://') || clean.startsWith('https://')) return clean;
+  if (clean.startsWith('/')) return `${API_ORIGIN}${clean}`;
+  return `${API_ORIGIN}/${clean}`;
+};
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/v1',
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -13,9 +26,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error)
@@ -41,9 +52,7 @@ const postWithData = (url, data) =>
 
 const putWithData = (url, data) => {
   if (isFormData(data)) {
-    if (!data.has('_method')) {
-      data.append('_method', 'PUT');
-    }
+    if (!data.has('_method')) data.append('_method', 'PUT');
     return api.post(url, data, { headers: { 'Content-Type': 'multipart/form-data' } });
   }
   return api.put(url, data);
