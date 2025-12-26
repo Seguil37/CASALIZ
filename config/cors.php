@@ -8,6 +8,9 @@ return [
         'http://localhost:5174',  // 👈 AGREGAR ESTE
         'http://127.0.0.1:5173',
         'http://127.0.0.1:5174',
+        'https://casaliz-arquitectura.com',
+        'https://www.casaliz-arquitectura.com',
+        'https://api.casaliz-arquitectura.com',
     ],
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],

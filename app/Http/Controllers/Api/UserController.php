@@ -14,7 +14,21 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $users = User::whereIn('role', ['admin', 'master_admin'])
+        $users = User::query()
+            ->select([
+                'id',
+                'name',
+                'email',
+                'role',
+                'is_active',
+                'phone',
+                'country',
+                'state',
+                'city',
+                'created_at',
+                'updated_at',
+            ])
+            ->whereIn('role', ['admin', 'master_admin'])
             ->orderBy('name')
             ->paginate(20);
 
