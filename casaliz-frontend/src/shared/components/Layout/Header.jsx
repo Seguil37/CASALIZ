@@ -153,6 +153,33 @@ const Header = () => {
                     </Link>
                   )}
 
+                  {isAdminRole(user?.role) && (
+                    <Link
+                      to="/agency/tramites/dashboard"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Dashboard de trámites
+                    </Link>
+                  )}
+
+                  {isAdminRole(user?.role) && (
+                    <Link
+                      to="/agency/tramites/registro"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Registrar trámite
+                    </Link>
+                  )}
+
+                  {user?.role === ROLES.MASTER_ADMIN && (
+                    <Link
+                      to="/agency/tramites/plantillas"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Plantillas de trámites
+                    </Link>
+                  )}
+
                   {user?.role === ROLES.MASTER_ADMIN && (
                     <Link
                       to="/admin/users"
@@ -233,6 +260,33 @@ const Header = () => {
               >
                 Nosotros
               </Link>
+              {isAuthenticated && isAdminRole(user?.role) && (
+                <>
+                  <Link
+                    to="/agency/tramites/dashboard"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Dashboard de trámites
+                  </Link>
+                  <Link
+                    to="/agency/tramites/registro"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Registrar trámite
+                  </Link>
+                </>
+              )}
+              {isAuthenticated && user?.role === ROLES.MASTER_ADMIN && (
+                <Link
+                  to="/agency/tramites/plantillas"
+                  className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Plantillas de trámites
+                </Link>
+              )}
               <div className="border-t border-[#9a98a0] my-2 pt-2">
                 <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors">
                   <Phone className="w-4 h-4 text-[#e15f0b]" />

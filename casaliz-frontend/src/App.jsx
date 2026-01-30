@@ -29,6 +29,9 @@ import ServicesPage from './features/services/pages/ServicesPage';
 import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
 import AdminServicesPage from './features/services/pages/AdminServicesPage';
 import AboutPage from './features/about/pages/AboutPage';
+import ProcedureDashboardPage from './features/tramites/pages/ProcedureDashboardPage';
+import ProcedureRegistryPage from './features/tramites/pages/ProcedureRegistryPage';
+import ProcedureTemplatesPage from './features/tramites/pages/ProcedureTemplatesPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -189,6 +192,31 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
                   <AdminUsersPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="agency/tramites/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <ProcedureDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/registro"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <ProcedureRegistryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/plantillas"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
+                  <ProcedureTemplatesPage />
                 </ProtectedRoute>
               }
             />
