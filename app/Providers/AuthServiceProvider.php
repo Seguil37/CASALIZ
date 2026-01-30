@@ -5,11 +5,17 @@ namespace App\Providers;
 use App\Models\Favorite;
 use App\Models\Project;
 use App\Models\ProjectReview;
+use App\Models\Procedure;
+use App\Models\ProcedureSubphase;
+use App\Models\ProcedureTemplate;
 use App\Models\Service;
 use App\Models\User;
 use App\Policies\FavoritePolicy;
 use App\Policies\ProjectPolicy;
 use App\Policies\ProjectReviewPolicy;
+use App\Policies\ProcedurePolicy;
+use App\Policies\ProcedureSubphasePolicy;
+use App\Policies\ProcedureTemplatePolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -28,6 +34,9 @@ class AuthServiceProvider extends ServiceProvider
         Favorite::class => FavoritePolicy::class,
         Service::class => ServicePolicy::class,
         User::class => UserPolicy::class,
+        ProcedureTemplate::class => ProcedureTemplatePolicy::class,
+        Procedure::class => ProcedurePolicy::class,
+        ProcedureSubphase::class => ProcedureSubphasePolicy::class,
     ];
 
     /**
