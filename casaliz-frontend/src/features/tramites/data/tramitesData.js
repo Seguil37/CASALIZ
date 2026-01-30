@@ -1,0 +1,222 @@
+export const tramiteTemplates = [
+  {
+    id: 'lic-obra',
+    name: 'Licencia de Obra',
+    description: 'Plantilla base para licencias de obra municipales.',
+    phases: [
+      {
+        id: 'fase-1',
+        name: 'Solicitud de parámetros urbanísticos',
+        required: true,
+        subphases: [
+          { id: 'sub-1', name: 'Plano de ubicación', required: true },
+          { id: 'sub-2', name: 'Solicitud de parámetros', required: true },
+          { id: 'sub-3', name: 'Programación de visita', required: false },
+          { id: 'sub-4', name: 'Recojo del parámetro', required: true },
+        ],
+      },
+      {
+        id: 'fase-2',
+        name: 'Anteproyecto',
+        required: true,
+        subphases: [
+          { id: 'sub-5', name: '1ra propuesta', required: true },
+          { id: 'sub-6', name: '2da propuesta', required: false },
+          { id: 'sub-7', name: '3ra propuesta', required: false },
+          { id: 'sub-8', name: 'Presentación', required: true },
+          { id: 'sub-9', name: 'Evaluación', required: true },
+          { id: 'sub-10', name: 'Observaciones', required: true },
+          { id: 'sub-11', name: 'Dictamen', required: true },
+        ],
+      },
+      {
+        id: 'fase-3',
+        name: 'Proyecto',
+        required: true,
+        subphases: [
+          { id: 'sub-12', name: 'Estudio de suelos', required: true },
+          { id: 'sub-13', name: 'Planos eléctricos', required: true },
+          { id: 'sub-14', name: 'Planos sanitarios', required: true },
+          { id: 'sub-15', name: 'Planos de estructuras', required: true },
+          { id: 'sub-16', name: 'Presentación', required: true },
+          { id: 'sub-17', name: 'Evaluación', required: true },
+          { id: 'sub-18', name: 'Observaciones', required: true },
+          { id: 'sub-19', name: 'Dictamen favorable', required: true },
+        ],
+      },
+      {
+        id: 'fase-4',
+        name: 'Entrega del expediente',
+        required: true,
+        subphases: [{ id: 'sub-20', name: 'Impresión de juegos de planos', required: true }],
+      },
+    ],
+  },
+  {
+    id: 'hab-urbana',
+    name: 'Habilitación Urbana',
+    description: 'Flujo estándar para habilitaciones urbanas y saneamiento.',
+    phases: [
+      {
+        id: 'fase-5',
+        name: 'Diagnóstico inicial',
+        required: true,
+        subphases: [
+          { id: 'sub-21', name: 'Levantamiento topográfico', required: true },
+          { id: 'sub-22', name: 'Verificación legal', required: true },
+        ],
+      },
+      {
+        id: 'fase-6',
+        name: 'Aprobaciones municipales',
+        required: true,
+        subphases: [
+          { id: 'sub-23', name: 'Mesa de partes', required: true },
+          { id: 'sub-24', name: 'Seguimiento y observaciones', required: true },
+        ],
+      },
+    ],
+  },
+];
+
+export const tramitesInstances = [
+  {
+    id: 'tram-001',
+    code: 'TR-001',
+    client: 'Constructora Miraflores SAC',
+    projectName: 'Edificio Comercial San Isidro',
+    propertyName: 'Torre San Isidro',
+    location: 'Av. República de Panamá 2450',
+    generalResponsible: 'Ana Ruiz',
+    status: 'En proceso',
+    mode: 'Pendiente de dictamen',
+    createdAt: '2024-11-02',
+    startDate: '2024-11-05',
+    estimatedEnd: '2025-02-15',
+    realEnd: '',
+    templateId: 'lic-obra',
+    currentPhase: 'Proyecto',
+    lastUpdate: '2024-12-16',
+    nextDue: '2024-12-22',
+    alerts: 'Observaciones pendientes en evaluación municipal.',
+    progress: 68,
+    phases: [
+      {
+        name: 'Solicitud de parámetros urbanísticos',
+        progress: 100,
+        subphases: [
+          { name: 'Plano de ubicación', status: 'Hecho', assignee: 'María Torres', due: '2024-11-08' },
+          { name: 'Solicitud de parámetros', status: 'Hecho', assignee: 'María Torres', due: '2024-11-10' },
+          { name: 'Programación de visita', status: 'Hecho', assignee: 'José León', due: '2024-11-12' },
+          { name: 'Recojo del parámetro', status: 'Hecho', assignee: 'José León', due: '2024-11-15' },
+        ],
+      },
+      {
+        name: 'Anteproyecto',
+        progress: 85,
+        subphases: [
+          { name: '1ra propuesta', status: 'Hecho', assignee: 'Laura Ramos', due: '2024-11-25' },
+          { name: '2da propuesta', status: 'Hecho', assignee: 'Laura Ramos', due: '2024-11-28' },
+          { name: '3ra propuesta', status: 'En proceso', assignee: 'Laura Ramos', due: '2024-12-02' },
+          { name: 'Presentación', status: 'Hecho', assignee: 'Ana Ruiz', due: '2024-12-04' },
+          { name: 'Evaluación', status: 'Observado', assignee: 'Ana Ruiz', due: '2024-12-06' },
+          { name: 'Observaciones', status: 'Pendiente', assignee: 'Equipo técnico', due: '2024-12-09' },
+          { name: 'Dictamen', status: 'Pendiente', assignee: 'Ana Ruiz', due: '2024-12-10' },
+        ],
+      },
+      {
+        name: 'Proyecto',
+        progress: 55,
+        subphases: [
+          { name: 'Estudio de suelos', status: 'Hecho', assignee: 'Miguel Campos', due: '2024-12-05' },
+          { name: 'Planos eléctricos', status: 'En proceso', assignee: 'Equipo técnico', due: '2024-12-15' },
+          { name: 'Planos sanitarios', status: 'Pendiente', assignee: 'Equipo técnico', due: '2024-12-18' },
+          { name: 'Planos de estructuras', status: 'Pendiente', assignee: 'Equipo técnico', due: '2024-12-20' },
+          { name: 'Presentación', status: 'Pendiente', assignee: 'Ana Ruiz', due: '2024-12-22' },
+          { name: 'Evaluación', status: 'Pendiente', assignee: 'Ana Ruiz', due: '2024-12-23' },
+          { name: 'Observaciones', status: 'Pendiente', assignee: 'Equipo técnico', due: '2024-12-24' },
+          { name: 'Dictamen favorable', status: 'Pendiente', assignee: 'Ana Ruiz', due: '2024-12-28' },
+        ],
+      },
+    ],
+    tasks: [
+      {
+        name: 'Planos eléctricos',
+        assignee: 'Equipo técnico',
+        priority: 'Alta',
+        status: 'En proceso',
+        due: '2024-12-15',
+        progress: 60,
+        notes: 'Revisar normativa de luminarias en sótano.',
+      },
+      {
+        name: 'Observaciones anteproyecto',
+        assignee: 'Ana Ruiz',
+        priority: 'Media',
+        status: 'Pendiente',
+        due: '2024-12-09',
+        progress: 0,
+        notes: 'Reunión con cliente para ajustes.',
+      },
+    ],
+  },
+  {
+    id: 'tram-002',
+    code: 'TR-002',
+    client: 'Familia López',
+    projectName: 'Vivienda Unifamiliar Surco',
+    propertyName: 'Casa Los Pinos',
+    location: 'Jr. Los Pinos 334',
+    generalResponsible: 'David Castañeda',
+    status: 'Observado',
+    mode: 'En revisión municipal',
+    createdAt: '2024-10-14',
+    startDate: '2024-10-20',
+    estimatedEnd: '2025-01-30',
+    realEnd: '',
+    templateId: 'lic-obra',
+    currentPhase: 'Anteproyecto',
+    lastUpdate: '2024-12-12',
+    nextDue: '2024-12-18',
+    alerts: 'Pendiente respuesta a observaciones del municipio.',
+    progress: 52,
+    phases: [
+      {
+        name: 'Solicitud de parámetros urbanísticos',
+        progress: 100,
+        subphases: [
+          { name: 'Plano de ubicación', status: 'Hecho', assignee: 'Equipo técnico', due: '2024-10-24' },
+          { name: 'Solicitud de parámetros', status: 'Hecho', assignee: 'Equipo técnico', due: '2024-10-26' },
+          { name: 'Programación de visita', status: 'Hecho', assignee: 'Equipo técnico', due: '2024-10-28' },
+          { name: 'Recojo del parámetro', status: 'Hecho', assignee: 'Equipo técnico', due: '2024-10-31' },
+        ],
+      },
+      {
+        name: 'Anteproyecto',
+        progress: 60,
+        subphases: [
+          { name: '1ra propuesta', status: 'Hecho', assignee: 'David Castañeda', due: '2024-11-10' },
+          { name: '2da propuesta', status: 'Hecho', assignee: 'David Castañeda', due: '2024-11-20' },
+          { name: '3ra propuesta', status: 'Observado', assignee: 'Equipo técnico', due: '2024-11-28' },
+          { name: 'Presentación', status: 'En proceso', assignee: 'David Castañeda', due: '2024-12-05' },
+          { name: 'Evaluación', status: 'Pendiente', assignee: 'David Castañeda', due: '2024-12-18' },
+        ],
+      },
+    ],
+    tasks: [
+      {
+        name: 'Respuesta a observaciones',
+        assignee: 'Equipo técnico',
+        priority: 'Alta',
+        status: 'Observado',
+        due: '2024-12-18',
+        progress: 30,
+        notes: 'Se requiere nueva firma del propietario.',
+      },
+    ],
+  },
+];
+
+export const teamMembers = ['Ana Ruiz', 'David Castañeda', 'María Torres', 'José León', 'Laura Ramos', 'Miguel Campos', 'Equipo técnico'];
+
+export const statusOptions = ['Pendiente', 'En proceso', 'Observado', 'Aprobado', 'Finalizado', 'Hecho'];

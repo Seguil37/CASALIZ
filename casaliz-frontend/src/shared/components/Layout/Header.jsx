@@ -153,6 +153,15 @@ const Header = () => {
                     </Link>
                   )}
 
+                  {isAdminRole(user?.role) && (
+                    <Link
+                      to="/agency/tramites"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Gestión de trámites
+                    </Link>
+                  )}
+
                   {user?.role === ROLES.MASTER_ADMIN && (
                     <Link
                       to="/admin/users"

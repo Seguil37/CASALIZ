@@ -29,6 +29,10 @@ import ServicesPage from './features/services/pages/ServicesPage';
 import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
 import AdminServicesPage from './features/services/pages/AdminServicesPage';
 import AboutPage from './features/about/pages/AboutPage';
+import TramitesDashboardPage from './features/tramites/pages/TramitesDashboardPage';
+import TramiteTemplatePage from './features/tramites/pages/TramiteTemplatePage';
+import TramiteCreatePage from './features/tramites/pages/TramiteCreatePage';
+import TramiteDetailPage from './features/tramites/pages/TramiteDetailPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -146,6 +150,38 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <AgencyBookingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <TramitesDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/nuevo"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <TramiteCreatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/plantillas"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
+                  <TramiteTemplatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/:id"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <TramiteDetailPage />
                 </ProtectedRoute>
               }
             />
