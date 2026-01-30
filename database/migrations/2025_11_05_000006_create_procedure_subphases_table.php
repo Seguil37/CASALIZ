@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('procedure_subphases', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('procedure_phase_id')->constrained('procedure_phases')->cascadeOnDelete();
+            $table->string('name');
+            $table->unsignedInteger('position')->default(0);
+            $table->boolean('is_required')->default(true);
+            $table->foreignId('assigned_to_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->date('due_at')->nullable();
+            $table->string('priority')->default('medium');
+            $table->string('status')->default('pending');
+            $table->unsignedTinyInteger('progress')->default(0);
+            $table->text('notes')->nullable();
+            $table->timestamp('completed_at')->nullable();
+            $table->timestamp('last_commented_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('procedure_subphases');
+    }
+};

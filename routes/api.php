@@ -8,6 +8,9 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SystemSettingsController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ProcedureController;
+use App\Http\Controllers\Api\ProcedureSubphaseController;
+use App\Http\Controllers\Api\ProcedureTemplateController;
 
 Route::prefix('v1')->group(function () {
     // Autenticación
@@ -79,5 +82,19 @@ Route::prefix('v1')->group(function () {
         Route::get('/favorites', [FavoriteController::class, 'index']);
         Route::post('/favorites', [FavoriteController::class, 'store']);
         Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy']);
+
+        Route::get('/procedure-templates', [ProcedureTemplateController::class, 'index']);
+        Route::post('/procedure-templates', [ProcedureTemplateController::class, 'store']);
+        Route::get('/procedure-templates/{procedureTemplate}', [ProcedureTemplateController::class, 'show']);
+        Route::put('/procedure-templates/{procedureTemplate}', [ProcedureTemplateController::class, 'update']);
+        Route::delete('/procedure-templates/{procedureTemplate}', [ProcedureTemplateController::class, 'destroy']);
+
+        Route::get('/procedures', [ProcedureController::class, 'index']);
+        Route::post('/procedures', [ProcedureController::class, 'store']);
+        Route::get('/procedures/{procedure}', [ProcedureController::class, 'show']);
+        Route::put('/procedures/{procedure}', [ProcedureController::class, 'update']);
+        Route::delete('/procedures/{procedure}', [ProcedureController::class, 'destroy']);
+        Route::put('/procedures/{procedure}/subphases/{subphase}', [ProcedureSubphaseController::class, 'update']);
+        Route::post('/procedures/{procedure}/subphases/{subphase}/updates', [ProcedureSubphaseController::class, 'storeUpdate']);
     });
 });
