@@ -121,7 +121,8 @@ class TramiteTaskController extends Controller
         $user = auth()->user();
         if (!$user) abort(401);
 
-        if ($user->isMasterAdmin() || $tramite->responsible_id === $user->id) {
+        // Permiten crear/gestionar tareas: master, admin o responsable del trámite (sin importar rol)
+        if ($user->isAdmin() || $user->isMasterAdmin() || $tramite->responsible_id === $user->id) {
             return;
         }
 
@@ -138,4 +139,3 @@ class TramiteTaskController extends Controller
         ];
     }
 }
-

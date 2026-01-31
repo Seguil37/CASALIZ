@@ -1,5 +1,5 @@
 // src/features/admin-users/components/AdminUserForm.jsx
-import { ShieldCheck, UserCog, X } from 'lucide-react';
+import { ShieldCheck, UserCog, UserRoundCog, X } from 'lucide-react';
 import { ROLES } from '../../../shared/constants/roles';
 
 const AdminUserForm = ({
@@ -118,6 +118,17 @@ const AdminUserForm = ({
                     className="hidden"
                   />
                   <ShieldCheck className="w-4 h-4" /> Master Admin
+                </label>
+                <label className={`admin-role-pill ${formData.role === ROLES.OPERATOR ? 'active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value={ROLES.OPERATOR}
+                    checked={formData.role === ROLES.OPERATOR}
+                    onChange={() => handleChange('role', ROLES.OPERATOR)}
+                    className="hidden"
+                  />
+                  <UserRoundCog className="w-4 h-4" /> Operativo
                 </label>
               </div>
               {errors.role && <p className="text-sm text-red-600">{errors.role}</p>}

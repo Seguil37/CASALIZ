@@ -41,8 +41,7 @@ const TramitesByClientPage = () => {
         tramitesApi.listTypes(),
         tramitesApi.list({ per_page: 20 }),
       ];
-      // Solo master puede listar usuarios (policy viewAny)
-      const shouldLoadUsers = user?.role === ROLES.MASTER_ADMIN;
+      const shouldLoadUsers = user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role);
       if (shouldLoadUsers) promises.push(adminUsersApi.list());
 
       const [typesRes, tramitesRes, usersRes] = await Promise.all(promises);

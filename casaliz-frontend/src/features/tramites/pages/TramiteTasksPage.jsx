@@ -36,7 +36,10 @@ const TramiteTasksPage = () => {
     return tramite.responsible?.id === user.id;
   }, [tramite, user]);
 
-  const canViewStaff = useMemo(() => user?.role === ROLES.MASTER_ADMIN, [user]);
+  const canViewStaff = useMemo(
+    () => user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role),
+    [user]
+  );
 
   useEffect(() => {
     loadData();
