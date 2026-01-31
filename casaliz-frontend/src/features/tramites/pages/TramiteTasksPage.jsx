@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle, ClipboardCheck, Loader2, AlertCircle, PlayCircle } from 'lucide-react';
-import { tramitesApi } from '../../../shared/utils/api';
+import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
 
@@ -17,6 +17,7 @@ const TramiteTasksPage = () => {
   const { user } = useAuthStore();
   const [tramite, setTramite] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -34,6 +35,11 @@ const TramiteTasksPage = () => {
     return tramite.responsible?.id === user.id;
   }, [tramite, user]);
 
+  const canViewStaff = useMemo(
+    () => user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role),
+    [user]
+  );
+
   useEffect(() => {
     loadData();
   }, [id]);
@@ -41,12 +47,17 @@ const TramiteTasksPage = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [tramiteRes, tasksRes] = await Promise.all([
-        tramitesApi.show(id),
-        tramitesApi.listTasks(id),
-      ]);
+      const promises = [tramitesApi.show(id), tramitesApi.listTasks(id)];
+      if (canViewStaff) promises.push(adminUsersApi.list());
+
+      const [tramiteRes, tasksRes, staffRes] = await Promise.all(promises);
       setTramite(tramiteRes.data);
       setTasks(tasksRes.data);
+      if (canViewStaff && staffRes) {
+        setStaff(staffRes.data?.data || staffRes.data || []);
+      } else {
+        setStaff([]);
+      }
     } catch (error) {
       console.error(error);
       alert('No se pudieron cargar las tareas del trámite.');
@@ -130,6 +141,8 @@ const TramiteTasksPage = () => {
                       onUpdate={handleUpdate}
                       isOperator={user?.role === ROLES.OPERATOR}
                       userId={user?.id}
+                      staff={staff}
+                      canManageAssignments={canCreate && canViewStaff}
                     />
                   ))}
                 </div>
@@ -163,12 +176,18 @@ const TramiteTasksPage = () => {
                   </div>
                   <div>
                     <label className={labelClass}>Asignar a (opcional)</label>
-                    <input
+                    <select
                       className={inputClass}
                       value={form.assigned_to}
                       onChange={(e) => setForm({ ...form, assigned_to: e.target.value })}
-                      placeholder="ID de usuario"
-                    />
+                    >
+                      <option value="">Sin asignar</option>
+                      {staff.map((u) => (
+                        <option key={u.id} value={u.id}>
+                          {u.name} ({u.role})
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -224,7 +243,7 @@ const TramiteTasksPage = () => {
   );
 };
 
-const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId }) => {
+const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canManageAssignments }) => {
   const locked = isOperator && task.assignee?.id !== userId;
   return (
     <div className="p-4 rounded-xl border border-[#ebe7df] bg-[#fdfaf5] space-y-2">
@@ -275,6 +294,33 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId }) => {
             disabled={locked}
           />
         </div>
+        <div>
+          <label className="text-xs font-semibold text-[#233274]">Fecha límite</label>
+          <input
+            type="date"
+            className={inputClass}
+            value={task.due_date ? String(task.due_date).slice(0, 10) : ''}
+            onChange={(e) => onUpdate(task.id, { due_date: e.target.value || null })}
+            disabled={locked}
+          />
+        </div>
+        {canManageAssignments && (
+          <div>
+            <label className="text-xs font-semibold text-[#233274]">Asignado a</label>
+            <select
+              className={inputClass}
+              value={task.assignee?.id || ''}
+              onChange={(e) => onUpdate(task.id, { assigned_to: e.target.value || null })}
+            >
+              <option value="">Sin asignar</option>
+              {staff.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name} ({u.role})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
       {task.status === 'blocked' && (
         <div className="flex items-center gap-2 text-orange-600 text-sm">
