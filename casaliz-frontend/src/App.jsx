@@ -29,6 +29,10 @@ import ServicesPage from './features/services/pages/ServicesPage';
 import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
 import AdminServicesPage from './features/services/pages/AdminServicesPage';
 import AboutPage from './features/about/pages/AboutPage';
+import TramitesDashboardPage from './features/tramites/pages/TramitesDashboardPage';
+import TramitesTemplatesPage from './features/tramites/pages/TramitesTemplatesPage';
+import TramitesCreatePage from './features/tramites/pages/TramitesCreatePage';
+import TramitesDetailPage from './features/tramites/pages/TramitesDetailPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -106,6 +110,38 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
                   <AgencyDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <TramitesDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/plantillas"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <TramitesTemplatesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/nuevo"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <TramitesCreatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agency/tramites/:id"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                  <TramitesDetailPage />
                 </ProtectedRoute>
               }
             />
