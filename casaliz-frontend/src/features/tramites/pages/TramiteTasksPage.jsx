@@ -37,7 +37,7 @@ const TramiteTasksPage = () => {
   }, [tramite, user]);
 
   const canViewStaff = useMemo(
-    () => user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role),
+    () => user && [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user.role),
     [user]
   );
 

@@ -8,7 +8,8 @@ class UserPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        // Permite a admin, master y operadores ver el listado (para asignaciones)
+        return $user->isAdmin() || $user->isOperator();
     }
 
     public function view(User $user, User $model): bool

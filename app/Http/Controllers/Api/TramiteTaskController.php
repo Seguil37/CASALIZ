@@ -23,7 +23,10 @@ class TramiteTaskController extends Controller
         ])->orderByDesc('id');
 
         if ($user->isOperator()) {
-            $query->where('assigned_to', $user->id);
+            // Si el operador es responsable general, ve todas; si no, solo las que le asignaron
+            if ($tramite->responsible_id !== $user->id) {
+                $query->where('assigned_to', $user->id);
+            }
         } elseif (!$user->isAdmin() && $tramite->responsible_id !== $user->id) {
             abort(403);
         }
