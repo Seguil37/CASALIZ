@@ -1,0 +1,254 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Tramite;
+use App\Models\TramitePhase;
+use App\Models\TramitePhaseInstance;
+use App\Models\TramiteSubphaseInstance;
+use App\Models\TramiteType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
+class TramiteController extends Controller
+{
+    public function index(Request $request)
+    {
+        $this->ensureAdmin();
+
+        $query = Tramite::with([
+            'type',
+            'client:id,name,email',
+            'responsible:id,name,email',
+            'phases.subphases',
+        ])->orderByDesc('id');
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                    ->orWhere('project_name', 'like', "%{$search}%")
+                    ->orWhere('client_name', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->paginate($request->get('per_page', 15));
+    }
+
+    public function store(Request $request)
+    {
+        $this->ensureMaster();
+
+        $data = $request->validate([
+            'code' => 'required|string|max:50|unique:tramites,code',
+            'tramite_type_id' => 'required|exists:tramite_types,id',
+            'client_id' => 'nullable|exists:users,id',
+            'client_name' => 'nullable|string|max:255',
+            'project_name' => 'required|string|max:255',
+            'property_name' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'responsible_id' => 'nullable|exists:users,id',
+            'status' => ['nullable', Rule::in($this->statusList())],
+            'registered_at' => 'nullable|date',
+            'notes' => 'nullable|string',
+        ]);
+
+        return DB::transaction(function () use ($data) {
+            $tramite = Tramite::create([
+                'code' => $data['code'],
+                'tramite_type_id' => $data['tramite_type_id'],
+                'client_id' => $data['client_id'] ?? null,
+                'client_name' => $data['client_name'] ?? null,
+                'project_name' => $data['project_name'],
+                'property_name' => $data['property_name'] ?? null,
+                'location' => $data['location'] ?? null,
+                'responsible_id' => $data['responsible_id'] ?? null,
+                'status' => $data['status'] ?? Tramite::STATUS_PENDING,
+                'registered_at' => $data['registered_at'] ?? now()->toDateString(),
+                'notes' => $data['notes'] ?? null,
+            ]);
+
+            $this->instantiatePhases($tramite);
+
+            return response()->json($tramite->load(['type', 'phases.subphases']), 201);
+        });
+    }
+
+    public function show(Tramite $tramite)
+    {
+        $this->ensureCanView($tramite);
+
+        return $tramite->load([
+            'type.phases.subphases',
+            'client:id,name,email',
+            'responsible:id,name,email',
+            'phases.subphases',
+            'tasks.assignee:id,name,email',
+        ]);
+    }
+
+    public function update(Request $request, Tramite $tramite)
+    {
+        $this->ensureCanManage($tramite);
+
+        $data = $request->validate([
+            'code' => 'required|string|max:50|unique:tramites,code,' . $tramite->id,
+            'client_id' => 'nullable|exists:users,id',
+            'client_name' => 'nullable|string|max:255',
+            'project_name' => 'required|string|max:255',
+            'property_name' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'responsible_id' => 'nullable|exists:users,id',
+            'status' => ['nullable', Rule::in($this->statusList())],
+            'registered_at' => 'nullable|date',
+            'notes' => 'nullable|string',
+        ]);
+
+        $tramite->update($data);
+
+        return $tramite->load(['type', 'phases.subphases']);
+    }
+
+    public function updatePhaseStatus(Request $request, Tramite $tramite, TramitePhaseInstance $phaseInstance)
+    {
+        $this->ensureCanManage($tramite);
+
+        if ($phaseInstance->tramite_id !== $tramite->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'status' => ['required', Rule::in($this->statusList())],
+            'notes' => 'nullable|string',
+        ]);
+
+        $phaseInstance->update([
+            'status' => $data['status'],
+            'notes' => $data['notes'] ?? $phaseInstance->notes,
+            'started_at' => $phaseInstance->started_at ?? now(),
+            'completed_at' => $data['status'] === Tramite::STATUS_COMPLETED ? now() : null,
+        ]);
+
+        return $phaseInstance->fresh('subphases');
+    }
+
+    public function updateSubphaseStatus(Request $request, Tramite $tramite, TramiteSubphaseInstance $subphaseInstance)
+    {
+        $this->ensureCanManage($tramite);
+
+        if ($subphaseInstance->phase->tramite_id !== $tramite->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'status' => ['required', Rule::in($this->statusList())],
+            'notes' => 'nullable|string',
+        ]);
+
+        $subphaseInstance->update([
+            'status' => $data['status'],
+            'notes' => $data['notes'] ?? $subphaseInstance->notes,
+            'started_at' => $subphaseInstance->started_at ?? now(),
+            'completed_at' => $data['status'] === Tramite::STATUS_COMPLETED ? now() : null,
+        ]);
+
+        return $subphaseInstance->fresh();
+    }
+
+    public function destroy(Tramite $tramite)
+    {
+        $this->ensureMaster();
+        $tramite->delete();
+
+        return response()->json(['message' => 'Trámite eliminado']);
+    }
+
+    private function instantiatePhases(Tramite $tramite): void
+    {
+        $type = TramiteType::with('phases.subphases')->find($tramite->tramite_type_id);
+
+        foreach ($type->phases as $phase) {
+            $phaseInstance = $tramite->phases()->create([
+                'tramite_phase_id' => $phase->id,
+                'name' => $phase->name,
+                'order' => $phase->order,
+                'status' => Tramite::STATUS_PENDING,
+            ]);
+
+            foreach ($phase->subphases as $subphase) {
+                $phaseInstance->subphases()->create([
+                    'tramite_subphase_id' => $subphase->id,
+                    'name' => $subphase->name,
+                    'order' => $subphase->order,
+                    'status' => Tramite::STATUS_PENDING,
+                ]);
+            }
+        }
+    }
+
+    private function ensureAdmin(): void
+    {
+        $user = auth()->user();
+        if (!$user || !$user->isAdmin()) {
+            abort(403, 'Solo administradores pueden acceder a los trámites.');
+        }
+    }
+
+    private function ensureMaster(): void
+    {
+        $user = auth()->user();
+        if (!$user || !$user->isMasterAdmin()) {
+            abort(403, 'Solo el Administrador Master puede realizar esta acción.');
+        }
+    }
+
+    private function ensureCanView(Tramite $tramite): void
+    {
+        $user = auth()->user();
+        if (!$user) abort(401);
+
+        if ($user->isAdmin()) {
+            return;
+        }
+
+        if ($user->isOperator() && $tramite->tasks()->where('assigned_to', $user->id)->exists()) {
+            return;
+        }
+
+        abort(403);
+    }
+
+    private function ensureCanManage(Tramite $tramite): void
+    {
+        $user = auth()->user();
+        if (!$user) abort(401);
+
+        if ($user->isMasterAdmin()) {
+            return;
+        }
+
+        if ($tramite->responsible_id && $tramite->responsible_id === $user->id) {
+            return;
+        }
+
+        abort(403, 'No tienes permisos para editar este trámite');
+    }
+
+    private function statusList(): array
+    {
+        return [
+            Tramite::STATUS_PENDING,
+            Tramite::STATUS_IN_PROGRESS,
+            Tramite::STATUS_OBSERVED,
+            Tramite::STATUS_COMPLETED,
+        ];
+    }
+}
+

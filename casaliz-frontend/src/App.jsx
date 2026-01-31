@@ -29,6 +29,10 @@ import ServicesPage from './features/services/pages/ServicesPage';
 import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
 import AdminServicesPage from './features/services/pages/AdminServicesPage';
 import AboutPage from './features/about/pages/AboutPage';
+import TramiteTypesPage from './features/tramites/pages/TramiteTypesPage';
+import TramitesByClientPage from './features/tramites/pages/TramitesByClientPage';
+import TramiteTasksPage from './features/tramites/pages/TramiteTasksPage';
+import ControlBoardPage from './features/tramites/pages/ControlBoardPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -189,6 +193,38 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
                   <AdminUsersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="tramites/tipos"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
+                  <TramiteTypesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="tramites/gestion"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]}>
+                  <TramitesByClientPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="tramites/control"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                  <ControlBoardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="tramites/:id/tareas"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                  <TramiteTasksPage />
                 </ProtectedRoute>
               }
             />

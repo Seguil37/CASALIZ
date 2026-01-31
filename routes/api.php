@@ -8,6 +8,10 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SystemSettingsController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\TramiteTypeController;
+use App\Http\Controllers\Api\TramiteController;
+use App\Http\Controllers\Api\TramiteTaskController;
+use App\Http\Controllers\Api\TramiteDashboardController;
 
 Route::prefix('v1')->group(function () {
     // Autenticación
@@ -79,5 +83,27 @@ Route::prefix('v1')->group(function () {
         Route::get('/favorites', [FavoriteController::class, 'index']);
         Route::post('/favorites', [FavoriteController::class, 'store']);
         Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy']);
+
+        // Trámites - solo staff
+        Route::get('/tramite-types', [TramiteTypeController::class, 'index']);
+        Route::post('/tramite-types', [TramiteTypeController::class, 'store']);
+        Route::get('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'show']);
+        Route::put('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'update']);
+        Route::delete('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'destroy']);
+
+        Route::get('/tramites', [TramiteController::class, 'index']);
+        Route::post('/tramites', [TramiteController::class, 'store']);
+        Route::get('/tramites/{tramite}', [TramiteController::class, 'show']);
+        Route::put('/tramites/{tramite}', [TramiteController::class, 'update']);
+        Route::delete('/tramites/{tramite}', [TramiteController::class, 'destroy']);
+        Route::put('/tramites/{tramite}/phases/{phaseInstance}', [TramiteController::class, 'updatePhaseStatus']);
+        Route::put('/tramites/{tramite}/subphases/{subphaseInstance}', [TramiteController::class, 'updateSubphaseStatus']);
+
+        Route::get('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'index']);
+        Route::post('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'store']);
+        Route::put('/tramites/{tramite}/tasks/{task}', [TramiteTaskController::class, 'update']);
+        Route::delete('/tramites/{tramite}/tasks/{task}', [TramiteTaskController::class, 'destroy']);
+
+        Route::get('/tramites-dashboard/overview', [TramiteDashboardController::class, 'overview']);
     });
 });

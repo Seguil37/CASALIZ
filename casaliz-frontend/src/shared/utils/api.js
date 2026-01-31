@@ -1,8 +1,10 @@
 // src/shared/utils/api.js
 import axios from 'axios';
 
-// Backend (Laravel) en subdominio
-export const API_ORIGIN = 'https://api.casaliz-arquitectura.com';
+// Backend (Laravel)
+// Usa variable de entorno VITE_API_ORIGIN (ej: http://localhost:8000) y cae al dominio público si no existe.
+export const API_ORIGIN =
+  import.meta.env.VITE_API_ORIGIN || 'https://api.casaliz-arquitectura.com';
 export const API_BASE = `${API_ORIGIN}/api/v1`;
 
 // Helpers para URLs públicas (imágenes /storage)
@@ -108,6 +110,35 @@ export const settingsApi = {
   update: (key, data) => api.put(`/admin/settings/${key}`, data),
   updateGroup: (group, settings) => api.put(`/admin/settings/group/${group}`, { settings }),
   clearCache: () => api.post('/admin/settings/clear-cache'),
+};
+
+export const tramitesApi = {
+  // Tipos de trámite
+  listTypes: () => api.get('/tramite-types'),
+  createType: (data) => api.post('/tramite-types', data),
+  updateType: (id, data) => api.put(`/tramite-types/${id}`, data),
+  showType: (id) => api.get(`/tramite-types/${id}`),
+  deleteType: (id) => api.delete(`/tramite-types/${id}`),
+
+  // Trámites asignados a cliente/proyecto
+  list: (params) => api.get('/tramites', { params }),
+  create: (data) => api.post('/tramites', data),
+  update: (id, data) => api.put(`/tramites/${id}`, data),
+  show: (id) => api.get(`/tramites/${id}`),
+  delete: (id) => api.delete(`/tramites/${id}`),
+  updatePhase: (tramiteId, phaseInstanceId, data) =>
+    api.put(`/tramites/${tramiteId}/phases/${phaseInstanceId}`, data),
+  updateSubphase: (tramiteId, subphaseInstanceId, data) =>
+    api.put(`/tramites/${tramiteId}/subphases/${subphaseInstanceId}`, data),
+
+  // Tareas
+  listTasks: (tramiteId) => api.get(`/tramites/${tramiteId}/tasks`),
+  createTask: (tramiteId, data) => api.post(`/tramites/${tramiteId}/tasks`, data),
+  updateTask: (tramiteId, taskId, data) => api.put(`/tramites/${tramiteId}/tasks/${taskId}`, data),
+  deleteTask: (tramiteId, taskId) => api.delete(`/tramites/${tramiteId}/tasks/${taskId}`),
+
+  // Vista general
+  overview: () => api.get('/tramites-dashboard/overview'),
 };
 
 export default api;

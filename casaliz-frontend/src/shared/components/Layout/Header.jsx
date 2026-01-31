@@ -153,6 +153,32 @@ const Header = () => {
                     </Link>
                   )}
 
+                  {isAdminRole(user?.role) && (
+                    <Link
+                      to="/tramites/gestion"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Gestión de trámites
+                    </Link>
+                  )}
+
+                  {user?.role === ROLES.MASTER_ADMIN && (
+                    <Link
+                      to="/tramites/tipos"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Tipos de trámite
+                    </Link>
+                  )}
+
+                  {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                    <Link
+                      to="/tramites/control"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Vista general trámites
+                    </Link>
+                  )}
                   {user?.role === ROLES.MASTER_ADMIN && (
                     <Link
                       to="/admin/users"

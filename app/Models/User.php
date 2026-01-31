@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->role === 'client';
     }
 
+    public function isOperator(): bool
+    {
+        return $this->role === 'operator';
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin' || $this->role === 'master_admin';

@@ -18,7 +18,7 @@ class UsersSeeder extends Seeder
                 'role' => 'master_admin',
                 'city' => 'Lima',
                 'state' => 'Lima',
-                'country' => 'Perú',
+                'country' => 'PerÃº',
             ],
             [
                 'name' => 'Admin Principal',
@@ -27,7 +27,7 @@ class UsersSeeder extends Seeder
                 'role' => 'admin',
                 'city' => 'Arequipa',
                 'state' => 'Arequipa',
-                'country' => 'Perú',
+                'country' => 'PerÃº',
             ],
             [
                 'name' => 'Cliente Demo',
@@ -36,7 +36,16 @@ class UsersSeeder extends Seeder
                 'role' => 'client',
                 'city' => 'Cusco',
                 'state' => 'Cusco',
-                'country' => 'Perú',
+                'country' => 'PerÃº',
+            ],
+            [
+                'name' => 'Operativo Demo',
+                'email' => 'operativo@demo.com',
+                'password' => Hash::make('password'),
+                'role' => 'operator',
+                'city' => 'Lima',
+                'state' => 'Lima',
+                'country' => 'PerÃº',
             ],
         ];
 
@@ -48,3 +57,4 @@ class UsersSeeder extends Seeder
         }
     }
 }
+

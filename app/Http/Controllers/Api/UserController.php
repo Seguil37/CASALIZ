@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $users = User::whereIn('role', ['admin', 'master_admin'])
+        $users = User::whereIn('role', ['admin', 'master_admin', 'operator'])
             ->orderBy('name')
             ->paginate(20);
 
@@ -29,7 +29,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
-            'role' => 'required|in:admin,master_admin',
+            'role' => 'required|in:admin,master_admin,operator',
             'phone' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
@@ -54,7 +54,7 @@ class UserController extends Controller
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
             'password' => 'sometimes|string|min:8',
-            'role' => 'sometimes|in:admin,master_admin',
+            'role' => 'sometimes|in:admin,master_admin,operator',
             'phone' => 'nullable|string|max:20',
             'country' => 'nullable|string|max:100',
             'state' => 'nullable|string|max:100',
