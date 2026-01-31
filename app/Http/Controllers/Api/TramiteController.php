@@ -218,8 +218,14 @@ class TramiteController extends Controller
             return;
         }
 
-        if ($user->isOperator() && $tramite->tasks()->where('assigned_to', $user->id)->exists()) {
-            return;
+        if ($user->isOperator()) {
+            // Permitir si es responsable general del trámite o tiene tareas asignadas
+            if ($tramite->responsible_id && $tramite->responsible_id === $user->id) {
+                return;
+            }
+            if ($tramite->tasks()->where('assigned_to', $user->id)->exists()) {
+                return;
+            }
         }
 
         abort(403);
@@ -251,4 +257,3 @@ class TramiteController extends Controller
         ];
     }
 }
-

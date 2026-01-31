@@ -37,15 +37,23 @@ const TramitesByClientPage = () => {
   const loadInitial = async () => {
     try {
       setLoading(true);
-      const [typesRes, tramitesRes, usersRes] = await Promise.all([
+      const promises = [
         tramitesApi.listTypes(),
         tramitesApi.list({ per_page: 20 }),
-        adminUsersApi.list(),
-      ]);
+      ];
+      // Solo master puede listar usuarios (policy viewAny)
+      const shouldLoadUsers = user?.role === ROLES.MASTER_ADMIN;
+      if (shouldLoadUsers) promises.push(adminUsersApi.list());
+
+      const [typesRes, tramitesRes, usersRes] = await Promise.all(promises);
 
       setTypes(typesRes.data);
       setTramites(tramitesRes.data.data || tramitesRes.data);
-      setResponsables((usersRes.data?.data || usersRes.data || []).filter((u) => isStaff(u.role)));
+      if (shouldLoadUsers && usersRes) {
+        setResponsables((usersRes.data?.data || usersRes.data || []).filter((u) => isStaff(u.role)));
+      } else {
+        setResponsables([]);
+      }
     } catch (error) {
       console.error(error);
       alert('No se pudo cargar la información inicial.');

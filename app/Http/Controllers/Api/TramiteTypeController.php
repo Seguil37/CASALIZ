@@ -13,7 +13,7 @@ class TramiteTypeController extends Controller
 {
     public function index()
     {
-        $this->ensureMaster();
+        $this->ensureAdminOrMaster();
 
         $types = TramiteType::with(['phases.subphases'])
             ->orderBy('name')
@@ -58,7 +58,7 @@ class TramiteTypeController extends Controller
 
     public function show(TramiteType $tramiteType)
     {
-        $this->ensureMaster();
+        $this->ensureAdminOrMaster();
 
         return $tramiteType->load('phases.subphases');
     }
@@ -121,6 +121,14 @@ class TramiteTypeController extends Controller
         }
     }
 
+    private function ensureAdminOrMaster(): void
+    {
+        $user = auth()->user();
+        if (!$user || (!$user->isMasterAdmin() && !$user->isAdmin())) {
+            abort(403, 'Solo staff autorizado puede ver tipos de trámite.');
+        }
+    }
+
     private function syncPhases(TramiteType $type, array $phases): void
     {
         // Estrategia simple: limpiar y recrear para mantener integridad
@@ -145,4 +153,3 @@ class TramiteTypeController extends Controller
         }
     }
 }
-

@@ -20,6 +20,7 @@ const TramiteTasksPage = () => {
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -35,10 +36,7 @@ const TramiteTasksPage = () => {
     return tramite.responsible?.id === user.id;
   }, [tramite, user]);
 
-  const canViewStaff = useMemo(
-    () => user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role),
-    [user]
-  );
+  const canViewStaff = useMemo(() => user?.role === ROLES.MASTER_ADMIN, [user]);
 
   useEffect(() => {
     loadData();
@@ -46,6 +44,7 @@ const TramiteTasksPage = () => {
 
   const loadData = async () => {
     setLoading(true);
+    setError('');
     try {
       const promises = [tramitesApi.show(id), tramitesApi.listTasks(id)];
       if (canViewStaff) promises.push(adminUsersApi.list());
@@ -60,7 +59,14 @@ const TramiteTasksPage = () => {
       }
     } catch (error) {
       console.error(error);
-      alert('No se pudieron cargar las tareas del trámite.');
+      const status = error.response?.status;
+      if (status === 403) {
+        setError(
+          'No tienes permiso para ver este trámite. Si eres operador, solo puedes ver trámites con tareas asignadas a ti.'
+        );
+      } else {
+        setError('No se pudieron cargar las tareas del trámite.');
+      }
     } finally {
       setLoading(false);
     }
@@ -121,6 +127,10 @@ const TramiteTasksPage = () => {
 
         {loading ? (
           <div className="text-center text-[#9a98a0]">Cargando...</div>
+        ) : error ? (
+          <div className="bg-white border border-red-200 text-red-600 rounded-2xl p-4">
+            {error}
+          </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Tareas */}
