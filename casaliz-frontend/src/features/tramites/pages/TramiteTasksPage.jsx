@@ -258,6 +258,39 @@ const TramiteTasksPage = () => {
 
 const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canManageAssignments }) => {
   const locked = isOperator && task.assignee?.id !== userId;
+  const [local, setLocal] = useState({
+    status: task.status,
+    progress: task.progress,
+    observations: task.observations || '',
+    assigned_to: task.assignee?.id || '',
+    due_date: task.due_date ? String(task.due_date).slice(0, 10) : '',
+  });
+
+  useEffect(() => {
+    setLocal({
+      status: task.status,
+      progress: task.progress,
+      observations: task.observations || '',
+      assigned_to: task.assignee?.id || '',
+      due_date: task.due_date ? String(task.due_date).slice(0, 10) : '',
+    });
+  }, [task]);
+
+  const handleSave = () => {
+    const payload = {
+      status: local.status,
+      progress: Number(local.progress) || 0,
+      observations: local.observations,
+      assigned_to: local.assigned_to || null,
+      due_date: local.due_date || null,
+    };
+    onUpdate(task.id, payload);
+  };
+
+  const handleChange = (field, value) => {
+    setLocal((prev) => ({ ...prev, [field]: value }));
+  };
+
   return (
     <div className="p-4 rounded-xl border border-[#ebe7df] bg-[#fdfaf5] space-y-2">
       <div className="flex items-center justify-between">
@@ -275,8 +308,8 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
           <label className="text-xs font-semibold text-[#233274]">Estado</label>
           <select
             className={inputClass}
-            value={task.status}
-            onChange={(e) => onUpdate(task.id, { status: e.target.value })}
+            value={local.status}
+            onChange={(e) => handleChange('status', e.target.value)}
             disabled={locked}
           >
             {taskStatusOptions.map((opt) => (
@@ -293,8 +326,8 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             className={inputClass}
             min={0}
             max={100}
-            value={task.progress}
-            onChange={(e) => onUpdate(task.id, { progress: Number(e.target.value) })}
+            value={local.progress}
+            onChange={(e) => handleChange('progress', e.target.value)}
             disabled={locked}
           />
         </div>
@@ -302,8 +335,8 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
           <label className="text-xs font-semibold text-[#233274]">Observaciones</label>
           <input
             className={inputClass}
-            value={task.observations || ''}
-            onChange={(e) => onUpdate(task.id, { observations: e.target.value })}
+            value={local.observations}
+            onChange={(e) => handleChange('observations', e.target.value)}
             disabled={locked}
           />
         </div>
@@ -312,8 +345,8 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
           <input
             type="date"
             className={inputClass}
-            value={task.due_date ? String(task.due_date).slice(0, 10) : ''}
-            onChange={(e) => onUpdate(task.id, { due_date: e.target.value || null })}
+            value={local.due_date}
+            onChange={(e) => handleChange('due_date', e.target.value)}
             disabled={locked}
           />
         </div>
@@ -322,8 +355,8 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             <label className="text-xs font-semibold text-[#233274]">Asignado a</label>
             <select
               className={inputClass}
-              value={task.assignee?.id || ''}
-              onChange={(e) => onUpdate(task.id, { assigned_to: e.target.value || null })}
+              value={local.assigned_to}
+              onChange={(e) => handleChange('assigned_to', e.target.value)}
             >
               <option value="">Sin asignar</option>
               {staff.map((u) => (
@@ -338,6 +371,16 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
       {task.status === 'blocked' && (
         <div className="flex items-center gap-2 text-orange-600 text-sm">
           <AlertCircle className="w-4 h-4" /> Esta tarea está bloqueada, agrega observaciones.
+        </div>
+      )}
+      {!locked && (
+        <div className="flex justify-end">
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+          >
+            Guardar
+          </button>
         </div>
       )}
     </div>
