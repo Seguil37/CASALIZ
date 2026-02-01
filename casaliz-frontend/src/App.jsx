@@ -33,6 +33,7 @@ import TramiteTypesPage from './features/tramites/pages/TramiteTypesPage';
 import TramitesByClientPage from './features/tramites/pages/TramitesByClientPage';
 import TramiteTasksPage from './features/tramites/pages/TramiteTasksPage';
 import ControlBoardPage from './features/tramites/pages/ControlBoardPage';
+import TramiteDetailPage from './features/tramites/pages/TramiteDetailPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -225,6 +226,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
                   <TramiteTasksPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="tramites/:id/detalle"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                  <TramiteDetailPage />
                 </ProtectedRoute>
               }
             />

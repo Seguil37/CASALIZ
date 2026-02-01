@@ -136,6 +136,8 @@ class TramiteController extends Controller
             'completed_at' => $data['status'] === Tramite::STATUS_COMPLETED ? now() : null,
         ]);
 
+        $this->recalculateStatus($tramite);
+
         return $phaseInstance->fresh('subphases');
     }
 
@@ -158,6 +160,8 @@ class TramiteController extends Controller
             'started_at' => $subphaseInstance->started_at ?? now(),
             'completed_at' => $data['status'] === Tramite::STATUS_COMPLETED ? now() : null,
         ]);
+
+        $this->recalculateStatus($tramite);
 
         return $subphaseInstance->fresh();
     }
@@ -255,5 +259,35 @@ class TramiteController extends Controller
             Tramite::STATUS_OBSERVED,
             Tramite::STATUS_COMPLETED,
         ];
+    }
+
+    private function recalculateStatus(Tramite $tramite): void
+    {
+        $tramite->loadMissing('phases.subphases');
+
+        $phases = $tramite->phases;
+        if ($phases->isEmpty()) {
+            return;
+        }
+
+        $completedPhases = $phases->where('status', Tramite::STATUS_COMPLETED)->count();
+        $totalPhases = $phases->count();
+
+        $allCompleted = $completedPhases === $totalPhases;
+        $hasObserved = $phases->contains(fn($p) => $p->status === Tramite::STATUS_OBSERVED);
+        $hasInProgress = $phases->contains(fn($p) => $p->status === Tramite::STATUS_IN_PROGRESS);
+
+        $newStatus = Tramite::STATUS_PENDING;
+        if ($allCompleted) {
+            $newStatus = Tramite::STATUS_COMPLETED;
+        } elseif ($hasObserved) {
+            $newStatus = Tramite::STATUS_OBSERVED;
+        } elseif ($hasInProgress || $completedPhases > 0) {
+            $newStatus = Tramite::STATUS_IN_PROGRESS;
+        }
+
+        if ($tramite->status !== $newStatus) {
+            $tramite->update(['status' => $newStatus]);
+        }
     }
 }

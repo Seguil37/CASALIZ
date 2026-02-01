@@ -104,12 +104,35 @@ const ControlBoardPage = () => {
                       <p className="text-xs uppercase text-[#9a98a0]">Observaciones</p>
                       <p className="font-semibold text-[#233274]">{row.notes || '—'}</p>
                     </div>
-                    <div className="md:col-span-3 flex justify-end">
+                    <div className="md:col-span-3 bg-white border border-[#ebe7df] rounded-xl p-4">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="text-sm text-[#233274] font-semibold">
+                          Fases: {row.phases_progress?.completed || 0}/{row.phases_progress?.total || 0}
+                        </div>
+                        <div className="text-sm text-[#233274] font-semibold">
+                          Subfases: {row.subphases_progress?.completed || 0}/{row.subphases_progress?.total || 0}
+                        </div>
+                        <div className="flex-1 h-2 bg-[#ebe7df] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00]"
+                            style={{ width: `${row.progress_percent || 0}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-semibold text-[#233274]">{row.progress_percent || 0}%</span>
+                      </div>
+                    </div>
+                    <div className="md:col-span-3 flex justify-end gap-3">
+                      <a
+                        href={`/tramites/${row.id}/detalle`}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+                      >
+                        Ver fases
+                      </a>
                       <a
                         href={`/tramites/${row.id}/tareas`}
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
                       >
-                        Ver tareas y avances
+                        Ver tareas
                       </a>
                     </div>
                   </div>
