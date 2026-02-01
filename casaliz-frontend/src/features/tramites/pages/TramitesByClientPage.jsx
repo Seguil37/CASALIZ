@@ -19,6 +19,10 @@ const TramitesByClientPage = () => {
   const [responsables, setResponsables] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [updating, setUpdating] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+  const [editErrors, setEditErrors] = useState({});
   const [form, setForm] = useState({
     code: '',
     tramite_type_id: '',
@@ -250,7 +254,7 @@ const TramitesByClientPage = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold ${
                           statusBadges[t.status] || 'bg-gray-100 text-gray-700'
@@ -264,6 +268,33 @@ const TramitesByClientPage = () => {
                       >
                         Ver tareas
                       </Link>
+                      <button
+                        onClick={() => {
+                          setEditErrors({});
+                          setEditing(t);
+                        }}
+                        className="px-4 py-2 rounded-lg border border-[#e15f0b] text-[#e15f0b] font-semibold hover:bg-[#fff3e6] transition"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (!window.confirm('¿Eliminar este trámite?')) return;
+                          try {
+                            setDeletingId(t.id);
+                            await tramitesApi.delete(t.id);
+                            setTramites((prev) => prev.filter((x) => x.id !== t.id));
+                          } catch (err) {
+                            alert('No se pudo eliminar el trámite');
+                          } finally {
+                            setDeletingId(null);
+                          }
+                        }}
+                        disabled={deletingId === t.id}
+                        className="px-4 py-2 rounded-lg border border-red-500 text-red-600 font-semibold hover:bg-red-50 transition disabled:opacity-50"
+                      >
+                        {deletingId === t.id ? 'Eliminando...' : 'Eliminar'}
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -272,6 +303,153 @@ const TramitesByClientPage = () => {
           </div>
         </div>
       </div>
+
+      {editing && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold text-[#233274]">Editar trámite</h3>
+              <button onClick={() => setEditing(null)} className="text-[#9a98a0] hover:text-[#233274]">
+                ✕
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className={labelClass}>Código</label>
+                <input
+                  className={`${inputClass} ${editErrors.code ? 'border-red-500 focus:border-red-500' : ''}`}
+                  value={editing.code}
+                  onChange={(e) => {
+                    setEditErrors((prev) => ({ ...prev, code: '' }));
+                    setEditing({ ...editing, code: e.target.value });
+                  }}
+                />
+                {editErrors.code && <p className="text-sm text-red-600 mt-1">{editErrors.code}</p>}
+              </div>
+              <div>
+                <label className={labelClass}>Tipo</label>
+                <select
+                  className={inputClass}
+                  value={editing.tramite_type_id}
+                  onChange={(e) => setEditing({ ...editing, tramite_type_id: e.target.value })}
+                >
+                  <option value="">Seleccione</option>
+                  {types.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.code} - {type.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Cliente</label>
+                <input
+                  className={inputClass}
+                  value={editing.client_name || ''}
+                  onChange={(e) => setEditing({ ...editing, client_name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Proyecto</label>
+                <input
+                  className={inputClass}
+                  value={editing.project_name || ''}
+                  onChange={(e) => setEditing({ ...editing, project_name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Inmueble</label>
+                <input
+                  className={inputClass}
+                  value={editing.property_name || ''}
+                  onChange={(e) => setEditing({ ...editing, property_name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Ubicación</label>
+                <input
+                  className={inputClass}
+                  value={editing.location || ''}
+                  onChange={(e) => setEditing({ ...editing, location: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Responsable</label>
+                <select
+                  className={inputClass}
+                  value={editing.responsible_id || ''}
+                  onChange={(e) => setEditing({ ...editing, responsible_id: e.target.value })}
+                >
+                  <option value="">Sin responsable</option>
+                  {responsables.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.name} ({r.role})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className={labelClass}>Estado</label>
+                <select
+                  className={inputClass}
+                  value={editing.status}
+                  onChange={(e) => setEditing({ ...editing, status: e.target.value })}
+                >
+                  <option value="pending">Pendiente</option>
+                  <option value="in_progress">En proceso</option>
+                  <option value="observed">Observado</option>
+                  <option value="completed">Finalizado</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setEditing(null)}
+                className="px-4 py-2 rounded-lg border border-[#ebe7df] text-[#6c6b70]"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    setUpdating(true);
+                    setEditErrors({});
+                    await tramitesApi.update(editing.id, {
+                      code: editing.code,
+                      tramite_type_id: editing.tramite_type_id,
+                      client_name: editing.client_name,
+                      project_name: editing.project_name,
+                      property_name: editing.property_name,
+                      location: editing.location,
+                      responsible_id: editing.responsible_id || null,
+                      status: editing.status,
+                    });
+                    setTramites((prev) =>
+                      prev.map((t) => (t.id === editing.id ? { ...t, ...editing } : t))
+                    );
+                    setEditing(null);
+                  } catch (err) {
+                    const e = err.response?.data?.errors;
+                    if (e?.code?.length) {
+                      setEditErrors({ code: 'El código ya existe.' });
+                    } else {
+                      alert('No se pudo actualizar el trámite');
+                    }
+                  } finally {
+                    setUpdating(false);
+                  }
+                }}
+                disabled={updating}
+                className="px-5 py-2 rounded-lg bg-gradient-primary text-[#233274] font-bold shadow-md hover:shadow-lg disabled:opacity-60"
+              >
+                {updating ? 'Guardando...' : 'Guardar cambios'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
