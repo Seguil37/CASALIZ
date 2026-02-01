@@ -238,19 +238,11 @@ class TramiteController extends Controller
         $user = auth()->user();
         if (!$user) abort(401);
 
-        if ($user->isAdmin()) {
-            return;
-        }
+        // Admin y master: acceso total
+        if ($user->isAdmin()) return;
 
-        if ($user->isOperator()) {
-            // Permitir si es responsable general del trámite o tiene tareas asignadas
-            if ($tramite->responsible_id && $tramite->responsible_id === $user->id) {
-                return;
-            }
-            if ($tramite->tasks()->where('assigned_to', $user->id)->exists()) {
-                return;
-            }
-        }
+        // Operador: permitir visualización aunque no tenga tareas (solo lectura)
+        if ($user->isOperator()) return;
 
         abort(403);
     }
