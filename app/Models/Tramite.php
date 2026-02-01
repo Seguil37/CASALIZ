@@ -25,11 +25,13 @@ class Tramite extends Model
         'responsible_id',
         'status',
         'registered_at',
+        'due_date',
         'notes',
     ];
 
     protected $casts = [
         'registered_at' => 'date',
+        'due_date' => 'date',
     ];
 
     public function type()
@@ -66,4 +68,3 @@ class Tramite extends Model
             ?? $this->phases()->orderByDesc('order')->first();
     }
 }
-

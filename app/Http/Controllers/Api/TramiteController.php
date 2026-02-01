@@ -57,6 +57,7 @@ class TramiteController extends Controller
             'responsible_id' => 'nullable|exists:users,id',
             'status' => ['nullable', Rule::in($this->statusList())],
             'registered_at' => 'nullable|date',
+            'due_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
 
@@ -72,6 +73,7 @@ class TramiteController extends Controller
                 'responsible_id' => $data['responsible_id'] ?? null,
                 'status' => $data['status'] ?? Tramite::STATUS_PENDING,
                 'registered_at' => $data['registered_at'] ?? now()->toDateString(),
+                'due_date' => $data['due_date'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
 
@@ -108,6 +110,7 @@ class TramiteController extends Controller
             'responsible_id' => 'nullable|exists:users,id',
             'status' => ['nullable', Rule::in($this->statusList())],
             'registered_at' => 'nullable|date',
+            'due_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
 
@@ -164,6 +167,23 @@ class TramiteController extends Controller
         $this->recalculateStatus($tramite);
 
         return $subphaseInstance->fresh();
+    }
+
+    public function updateNotes(Request $request, Tramite $tramite)
+    {
+        $this->ensureCanManage($tramite);
+
+        $data = $request->validate([
+            'notes' => 'nullable|string',
+            'due_date' => 'nullable|date',
+        ]);
+
+        $tramite->update([
+            'notes' => $data['notes'] ?? $tramite->notes,
+            'due_date' => array_key_exists('due_date', $data) ? $data['due_date'] : $tramite->due_date,
+        ]);
+
+        return $tramite->fresh();
     }
 
     public function destroy(Tramite $tramite)

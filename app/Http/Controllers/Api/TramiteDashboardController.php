@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Tramite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class TramiteDashboardController extends Controller
 {
@@ -19,8 +20,8 @@ class TramiteDashboardController extends Controller
             'client:id,name',
             'responsible:id,name',
             'phases' => fn($q) => $q->orderBy('order')->with('subphases'),
+            'tasks'
         ])
-            ->withCount('tasks')
             ->orderByDesc('registered_at')
             ->get()
             ->map(function (Tramite $tramite) {
@@ -39,6 +40,31 @@ class TramiteDashboardController extends Controller
                     $progressPercent = round(($completedSubphases / $totalSubphases) * 100);
                 }
 
+                $tasks = $tramite->tasks;
+                $tasksTotal = $tasks->count();
+                $tasksDone = $tasks->where('status', 'done')->count();
+                $tasksOpen = $tasksTotal - $tasksDone;
+                $tasksProgress = $tasksTotal > 0 ? round(($tasksDone / $tasksTotal) * 100) : 0;
+
+                $due = $tramite->due_date ? Carbon::parse($tramite->due_date) : null;
+                $today = Carbon::today();
+                $sla = 'none';
+                if ($due) {
+                    if ($tramite->status === Tramite::STATUS_COMPLETED) {
+                        $sla = 'green';
+                    } elseif ($today->greaterThan($due)) {
+                        $sla = 'red';
+                    } elseif ($today->diffInDays($due) <= 3) {
+                        $sla = 'yellow';
+                    } else {
+                        $sla = 'green';
+                    }
+                }
+
+                $lastPhaseUpdate = $phases->max('updated_at');
+                $lastSubUpdate = $subphases->max('updated_at');
+                $lastProgress = Carbon::parse(max($lastPhaseUpdate ?? '1970-01-01', $lastSubUpdate ?? '1970-01-01'))->toDateTimeString();
+
                 return [
                     'id' => $tramite->id,
                     'code' => $tramite->code,
@@ -48,9 +74,14 @@ class TramiteDashboardController extends Controller
                     'responsible' => $tramite->responsible?->name,
                     'current_phase' => $currentPhase?->name,
                     'registered_at' => optional($tramite->registered_at)->toDateString(),
+                    'updated_at' => optional($tramite->updated_at)->toDateTimeString(),
+                    'due_date' => $tramite->due_date ? $tramite->due_date->toDateString() : null,
                     'status' => $tramite->status,
                     'notes' => $tramite->notes,
-                    'tasks_count' => $tramite->tasks_count,
+                    'tasks_total' => $tasksTotal,
+                    'tasks_done' => $tasksDone,
+                    'tasks_open' => $tasksOpen,
+                    'tasks_progress' => $tasksProgress,
                     'phases_progress' => [
                         'completed' => $completedPhases,
                         'total' => $totalPhases,
@@ -60,6 +91,8 @@ class TramiteDashboardController extends Controller
                         'total' => $totalSubphases,
                     ],
                     'progress_percent' => $progressPercent,
+                    'sla' => $sla,
+                    'last_progress_at' => $lastProgress,
                 ];
             });
 

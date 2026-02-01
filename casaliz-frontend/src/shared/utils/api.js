@@ -130,6 +130,7 @@ export const tramitesApi = {
     api.put(`/tramites/${tramiteId}/phases/${phaseInstanceId}`, data),
   updateSubphase: (tramiteId, subphaseInstanceId, data) =>
     api.put(`/tramites/${tramiteId}/subphases/${subphaseInstanceId}`, data),
+  updateNotes: (id, data) => api.put(`/tramites/${id}/notes`, data),
 
   // Tareas
   listTasks: (tramiteId) => api.get(`/tramites/${tramiteId}/tasks`),

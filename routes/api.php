@@ -98,6 +98,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('/tramites/{tramite}', [TramiteController::class, 'destroy']);
         Route::put('/tramites/{tramite}/phases/{phaseInstance}', [TramiteController::class, 'updatePhaseStatus']);
         Route::put('/tramites/{tramite}/subphases/{subphaseInstance}', [TramiteController::class, 'updateSubphaseStatus']);
+        Route::put('/tramites/{tramite}/notes', [TramiteController::class, 'updateNotes']);
 
         Route::get('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'index']);
         Route::post('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'store']);

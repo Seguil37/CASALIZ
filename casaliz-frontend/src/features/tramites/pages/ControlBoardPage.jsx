@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, MapPin, UserCircle, ClipboardList } from 'lucide-react';
+import { ChevronDown, ChevronUp, MapPin, UserCircle, ClipboardList, Calendar, Clock3 } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
-import { isStaff } from '../../../shared/constants/roles';
+import { isStaff, ROLES } from '../../../shared/constants/roles';
 
 const ControlBoardPage = () => {
   const { user } = useAuthStore();
   const [rows, setRows] = useState([]);
   const [openId, setOpenId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [savingNoteId, setSavingNoteId] = useState(null);
+  const [noteDrafts, setNoteDrafts] = useState({});
+  const [dueDrafts, setDueDrafts] = useState({});
 
   useEffect(() => {
     loadData();
@@ -19,6 +22,12 @@ const ControlBoardPage = () => {
       setLoading(true);
       const { data } = await tramitesApi.overview();
       setRows(data);
+      setNoteDrafts(
+        Object.fromEntries(data.map((r) => [r.id, r.notes || '']))
+      );
+      setDueDrafts(
+        Object.fromEntries(data.map((r) => [r.id, r.due_date || '']))
+      );
     } catch (error) {
       console.error(error);
       alert('No se pudo cargar la vista general.');
@@ -26,6 +35,8 @@ const ControlBoardPage = () => {
       setLoading(false);
     }
   };
+
+  const canEditNotes = user && user.role !== ROLES.OPERATOR;
 
   if (!isStaff(user?.role)) {
     return (
@@ -102,7 +113,56 @@ const ControlBoardPage = () => {
                     </div>
                     <div>
                       <p className="text-xs uppercase text-[#9a98a0]">Observaciones</p>
-                      <p className="font-semibold text-[#233274]">{row.notes || '—'}</p>
+                      {canEditNotes ? (
+                        <div className="space-y-2">
+                          <textarea
+                            className="w-full px-3 py-2 border border-[#ebe7df] rounded-lg text-sm"
+                            value={noteDrafts[row.id] || ''}
+                            onChange={(e) =>
+                              setNoteDrafts((prev) => ({ ...prev, [row.id]: e.target.value }))
+                            }
+                          />
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-[#233274] font-semibold">Vence</span>
+                          {canEditNotes ? (
+                            <input
+                              type="date"
+                              className="px-3 py-2 border border-[#ebe7df] rounded-lg"
+                              value={dueDrafts[row.id] || ''}
+                              onChange={(e) =>
+                                setDueDrafts((prev) => ({ ...prev, [row.id]: e.target.value }))
+                              }
+                            />
+                          ) : (
+                            <span className="text-[#233274] font-semibold">
+                              {row.due_date || 'Sin fecha'}
+                            </span>
+                          )}
+                        </div>
+                          <button
+                            disabled={savingNoteId === row.id}
+                            onClick={async () => {
+                              try {
+                                setSavingNoteId(row.id);
+                                await tramitesApi.updateNotes(row.id, {
+                                  notes: noteDrafts[row.id],
+                                  due_date: dueDrafts[row.id] || null,
+                                });
+                                await loadData();
+                              } catch (err) {
+                                alert('No se pudo guardar la nota');
+                              } finally {
+                                setSavingNoteId(null);
+                              }
+                            }}
+                            className="px-3 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition disabled:opacity-50"
+                          >
+                            {savingNoteId === row.id ? 'Guardando...' : 'Guardar'}
+                          </button>
+                        </div>
+                      ) : (
+                        <p className="font-semibold text-[#233274] whitespace-pre-line">{row.notes || '—'}</p>
+                      )}
                     </div>
                     <div className="md:col-span-3 bg-white border border-[#ebe7df] rounded-xl p-4">
                       <div className="flex flex-wrap items-center gap-3">
@@ -119,6 +179,20 @@ const ControlBoardPage = () => {
                           />
                         </div>
                         <span className="text-sm font-semibold text-[#233274]">{row.progress_percent || 0}%</span>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:col-span-3">
+                      <InfoChip icon={Calendar} label="Registrado" value={row.registered_at || 'N/D'} />
+                      <InfoChip icon={Clock3} label="Actualizado" value={row.updated_at || 'N/D'} />
+                      <InfoChip icon={Calendar} label="Vence" value={row.due_date || 'Sin fecha'} />
+                    </div>
+                    <div className="md:col-span-3 flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-[#233274]">SLA</span>
+                        <SlaBadge sla={row.sla} />
+                      </div>
+                      <div className="text-sm text-[#233274] font-semibold">
+                        Tareas: {row.tasks_done}/{row.tasks_total} ({row.tasks_progress}%)
                       </div>
                     </div>
                     <div className="md:col-span-3 flex justify-end gap-3">
@@ -156,5 +230,32 @@ const StatusBadge = ({ status }) => {
   const data = map[status] || { label: status, className: 'bg-gray-100 text-gray-700' };
   return <span className={`px-3 py-1 rounded-full text-xs font-semibold ${data.className}`}>{data.label}</span>;
 };
+
+const SlaBadge = ({ sla }) => {
+  const map = {
+    green: 'bg-green-100 text-green-700',
+    yellow: 'bg-yellow-100 text-yellow-700',
+    red: 'bg-red-100 text-red-700',
+    none: 'bg-gray-100 text-gray-700',
+  };
+  const labels = {
+    green: 'En tiempo',
+    yellow: 'Próximo a vencer',
+    red: 'Vencido',
+    none: 'Sin fecha',
+  };
+  const cls = map[sla] || map.none;
+  return <span className={`px-3 py-1 rounded-full text-xs font-semibold ${cls}`}>{labels[sla] || labels.none}</span>;
+};
+
+const InfoChip = ({ icon: Icon, label, value }) => (
+  <div className="flex items-center gap-2 bg-white border border-[#ebe7df] rounded-lg px-3 py-2">
+    <Icon className="w-4 h-4 text-[#e15f0b]" />
+    <div>
+      <p className="text-[11px] uppercase text-[#9a98a0]">{label}</p>
+      <p className="text-sm font-semibold text-[#233274]">{value}</p>
+    </div>
+  </div>
+);
 
 export default ControlBoardPage;
