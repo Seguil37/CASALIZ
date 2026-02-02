@@ -4,8 +4,8 @@ import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
 
-const emptyPhase = () => ({ name: '', order: 1, description: '', subphases: [] });
-const emptySubphase = () => ({ name: '', order: 1, description: '' });
+const emptyPhase = (order = 1) => ({ name: '', order, description: '', subphases: [] });
+const emptySubphase = (order = 1) => ({ name: '', order, description: '' });
 
 const TramiteTypesPage = () => {
   const { user } = useAuthStore();
@@ -103,11 +103,15 @@ const TramiteTypesPage = () => {
     setForm({ ...form, phases: updated });
   };
 
-  const addPhase = () => setForm({ ...form, phases: [...form.phases, emptyPhase()] });
+  const addPhase = () => {
+    const nextOrder = form.phases.length + 1;
+    setForm({ ...form, phases: [...form.phases, emptyPhase(nextOrder)] });
+  };
 
   const addSubphase = (phaseIndex) => {
     const updated = [...form.phases];
-    updated[phaseIndex].subphases.push(emptySubphase());
+    const nextOrder = (updated[phaseIndex].subphases?.length || 0) + 1;
+    updated[phaseIndex].subphases.push(emptySubphase(nextOrder));
     setForm({ ...form, phases: updated });
   };
 
