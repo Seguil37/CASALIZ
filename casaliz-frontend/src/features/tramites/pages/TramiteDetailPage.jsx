@@ -210,7 +210,7 @@ const TramiteDetailPage = () => {
               <div className="flex justify-between"><span>Responsable</span><span>{tramite.responsible?.name || 'N/D'}</span></div>
               <div className="flex justify-between"><span>Estado</span><span>{statusOptions.find(s => s.value === tramite.status)?.label || tramite.status}</span></div>
               <div className="flex justify-between"><span>Ubicación</span><span>{tramite.location || 'N/D'}</span></div>
-              <div className="flex justify-between"><span>Registrado</span><span>{tramite.registered_at || 'N/D'}</span></div>
+              <div className="flex justify-between"><span>Registrado</span><span>{formatDate(tramite.registered_at)}</span></div>
               <Link
                 to={`/tramites/${tramite.id}/tareas`}
                 className="block mt-2 text-center px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
@@ -226,3 +226,13 @@ const TramiteDetailPage = () => {
 };
 
 export default TramiteDetailPage;
+
+const formatDate = (value) => {
+  if (!value) return 'N/D';
+  try {
+    const date = new Date(value);
+    return date.toLocaleDateString('es-PE', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  } catch {
+    return value;
+  }
+};

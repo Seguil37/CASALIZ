@@ -164,6 +164,18 @@ class TramiteController extends Controller
             'completed_at' => $data['status'] === Tramite::STATUS_COMPLETED ? now() : null,
         ]);
 
+        // Si todas las subfases de la fase están completadas, marcar fase como completada
+        $phase = $subphaseInstance->phase;
+        $phase->loadMissing('subphases');
+        $allSubCompleted = $phase->subphases->every(fn($s) => $s->status === Tramite::STATUS_COMPLETED);
+        if ($allSubCompleted && $phase->status !== Tramite::STATUS_COMPLETED) {
+            $phase->update([
+                'status' => Tramite::STATUS_COMPLETED,
+                'completed_at' => now(),
+                'started_at' => $phase->started_at ?? now(),
+            ]);
+        }
+
         $this->recalculateStatus($tramite);
 
         return $subphaseInstance->fresh();

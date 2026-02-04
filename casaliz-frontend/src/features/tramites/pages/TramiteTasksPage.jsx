@@ -202,7 +202,7 @@ const TramiteTasksPage = () => {
                       ))}
                     </select>
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                       <label className={labelClass}>Estado</label>
                       <select
@@ -220,13 +220,15 @@ const TramiteTasksPage = () => {
                     <div>
                       <label className={labelClass}>Progreso (%)</label>
                       <input
-                        type="number"
+                        type="range"
                         min={0}
                         max={100}
-                        className={inputClass}
+                        step={1}
                         value={form.progress}
                         onChange={(e) => setForm({ ...form, progress: Number(e.target.value) })}
+                        className="w-full accent-[#e15f0b]"
                       />
+                      <div className="text-xs text-[#233274] font-semibold mt-1">{form.progress}%</div>
                     </div>
                   </div>
                   <div>
@@ -322,14 +324,16 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
         <div>
           <label className="text-xs font-semibold text-[#233274]">Progreso</label>
           <input
-            type="number"
-            className={inputClass}
+            type="range"
             min={0}
             max={100}
+            step={1}
+            className="w-full accent-[#e15f0b]"
             value={local.progress}
             onChange={(e) => handleChange('progress', e.target.value)}
             disabled={locked}
           />
+          <div className="text-xs text-[#233274] font-semibold mt-1">{local.progress}%</div>
         </div>
         <div>
           <label className="text-xs font-semibold text-[#233274]">Observaciones</label>
@@ -347,7 +351,8 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             className={inputClass}
             value={local.due_date}
             onChange={(e) => handleChange('due_date', e.target.value)}
-            disabled={locked}
+            disabled={locked || isOperator}
+            readOnly={isOperator}
           />
         </div>
         {canManageAssignments && (

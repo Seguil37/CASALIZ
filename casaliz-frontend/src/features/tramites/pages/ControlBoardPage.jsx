@@ -182,9 +182,9 @@ const ControlBoardPage = () => {
                       </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:col-span-3">
-                      <InfoChip icon={Calendar} label="Registrado" value={row.registered_at || 'N/D'} />
-                      <InfoChip icon={Clock3} label="Actualizado" value={row.updated_at || 'N/D'} />
-                      <InfoChip icon={Calendar} label="Vence" value={row.due_date || 'Sin fecha'} />
+                      <InfoChip icon={Calendar} label="Registrado" value={formatDate(row.registered_at)} />
+                      <InfoChip icon={Clock3} label="Último avance" value={formatDateTime(row.last_progress_at || row.updated_at)} />
+                      <InfoChip icon={Calendar} label="Vence" value={formatDate(row.due_date)} />
                     </div>
                     <div className="md:col-span-3 flex justify-between items-center">
                       <div className="flex items-center gap-2">
@@ -259,3 +259,34 @@ const InfoChip = ({ icon: Icon, label, value }) => (
 );
 
 export default ControlBoardPage;
+
+const formatDate = (value) => {
+  if (!value) return 'N/D';
+  try {
+    return new Date(value).toLocaleDateString('es-PE', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'America/Lima',
+    });
+  } catch {
+    return value;
+  }
+};
+
+const formatDateTime = (value) => {
+  if (!value) return 'N/D';
+  try {
+    return new Date(value).toLocaleString('es-PE', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'America/Lima',
+    });
+  } catch {
+    return value;
+  }
+};
