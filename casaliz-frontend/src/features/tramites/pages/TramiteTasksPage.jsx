@@ -6,10 +6,10 @@ import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
 
 const taskStatusOptions = [
-  { value: 'pending', label: 'Pendiente' },
-  { value: 'in_progress', label: 'En proceso' },
-  { value: 'blocked', label: 'Bloqueado' },
-  { value: 'done', label: 'Completado' },
+  { value: 'pending', label: 'Pendiente', color: 'bg-yellow-100 text-yellow-700' },
+  { value: 'in_progress', label: 'En proceso', color: 'bg-blue-100 text-blue-700' },
+  { value: 'blocked', label: 'Bloqueado', color: 'bg-orange-100 text-orange-700' },
+  { value: 'done', label: 'Completado', color: 'bg-green-100 text-green-700' },
 ];
 
 const TramiteTasksPage = () => {
@@ -320,6 +320,13 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
               </option>
             ))}
           </select>
+          <div
+            className={`inline-flex mt-2 px-3 py-1 rounded-full text-xs font-semibold ${
+              taskStatusOptions.find((o) => o.value === local.status)?.color || 'bg-gray-100 text-gray-700'
+            }`}
+          >
+            {taskStatusOptions.find((o) => o.value === local.status)?.label || local.status}
+          </div>
         </div>
         <div>
           <label className="text-xs font-semibold text-[#233274]">Progreso</label>

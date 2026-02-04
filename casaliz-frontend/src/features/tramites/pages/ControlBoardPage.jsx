@@ -56,6 +56,13 @@ const ControlBoardPage = () => {
             <p className="text-[#9a98a0]">Monitor de todos los clientes y trámites en tiempo real.</p>
           </div>
         </div>
+        <div className="flex flex-wrap gap-3 items-center text-sm text-[#233274] bg-white border border-[#ebe7df] rounded-xl px-4 py-3 shadow-sm">
+          <span className="font-semibold text-[#9a98a0] uppercase text-xs">Leyenda SLA:</span>
+          <SlaBadge sla="green" /> <span>En tiempo</span>
+          <SlaBadge sla="yellow" /> <span>Próximo a vencer (≤3 días)</span>
+          <SlaBadge sla="red" /> <span>Vencido</span>
+          <SlaBadge sla="none" /> <span>Sin fecha</span>
+        </div>
 
         <div className="bg-white border border-[#ebe7df] rounded-2xl shadow-lg overflow-hidden">
           <div className="grid grid-cols-9 bg-[#233274] text-white text-xs font-semibold uppercase tracking-wide">
@@ -260,10 +267,19 @@ const InfoChip = ({ icon: Icon, label, value }) => (
 
 export default ControlBoardPage;
 
+const normalizeDate = (value) => {
+  if (!value) return null;
+  // Manejar microsegundos "YYYY-MM-DDTHH:mm:ss.ffffffZ"
+  const fixed = typeof value === 'string' ? value.replace(/\.\d+Z$/, 'Z') : value;
+  const d = new Date(fixed);
+  return isNaN(d.getTime()) ? null : d;
+};
+
 const formatDate = (value) => {
-  if (!value) return 'N/D';
+  const d = normalizeDate(value);
+  if (!d) return 'N/D';
   try {
-    return new Date(value).toLocaleDateString('es-PE', {
+    return d.toLocaleDateString('es-PE', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -275,15 +291,17 @@ const formatDate = (value) => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'N/D';
+  const d = normalizeDate(value);
+  if (!d) return 'N/D';
   try {
-    return new Date(value).toLocaleString('es-PE', {
+    return d.toLocaleString('es-PE', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
+      hour12: false,
       timeZone: 'America/Lima',
     });
   } catch {
