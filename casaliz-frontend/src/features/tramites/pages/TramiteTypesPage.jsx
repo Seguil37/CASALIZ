@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Save, Layers, ListChecks } from 'lucide-react';
+import { Plus, Save, Layers, ListChecks, Trash2 } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
@@ -115,6 +115,35 @@ const TramiteTypesPage = () => {
     setForm({ ...form, phases: updated });
   };
 
+  const removePhase = (phaseIndex) => {
+    const updated = form.phases
+      .filter((_, index) => index !== phaseIndex)
+      .map((phase, index) => ({
+        ...phase,
+        order: index + 1,
+      }));
+
+    setForm({
+      ...form,
+      phases: updated.length > 0 ? updated : [emptyPhase()],
+    });
+  };
+
+  const removeSubphase = (phaseIndex, subIndex) => {
+    const updated = [...form.phases];
+    updated[phaseIndex] = {
+      ...updated[phaseIndex],
+      subphases: updated[phaseIndex].subphases
+        .filter((_, index) => index !== subIndex)
+        .map((subphase, index) => ({
+          ...subphase,
+          order: index + 1,
+        })),
+    };
+
+    setForm({ ...form, phases: updated });
+  };
+
   if (user?.role !== ROLES.MASTER_ADMIN) {
     return (
       <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center text-[#233274] font-semibold">
@@ -184,6 +213,16 @@ const TramiteTypesPage = () => {
 
               {form.phases.map((phase, idx) => (
                 <div key={idx} className="rounded-xl border border-[#ebe7df] p-4 bg-[#fdfaf5]">
+                  <div className="mb-3 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => removePhase(idx)}
+                      className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Eliminar fase
+                    </button>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                       <label className={labelClass}>Nombre</label>
@@ -230,7 +269,10 @@ const TramiteTypesPage = () => {
                     </div>
                     <div className="space-y-2">
                       {phase.subphases.map((sub, sIdx) => (
-                        <div key={sIdx} className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <div
+                          key={sIdx}
+                          className="grid grid-cols-1 gap-2 md:grid-cols-[1fr_140px_1fr_auto]"
+                        >
                           <input
                             value={sub.name}
                             onChange={(e) =>
@@ -256,6 +298,15 @@ const TramiteTypesPage = () => {
                             placeholder="Descripción"
                             className={inputClass}
                           />
+                          <button
+                            type="button"
+                            onClick={() => removeSubphase(idx, sIdx)}
+                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2 font-semibold text-red-600 transition hover:bg-red-50"
+                            title="Eliminar subfase"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            Eliminar
+                          </button>
                         </div>
                       ))}
                     </div>
@@ -264,10 +315,18 @@ const TramiteTypesPage = () => {
               ))}
             </div>
 
-            <div className="flex items-center gap-3">
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition"
+	            <div className="flex items-center gap-3">
+	              <button
+	                type="button"
+	                onClick={addPhase}
+	                className="order-last ml-auto inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#233274] text-white font-semibold hover:bg-[#1b285c] transition"
+	              >
+	                <Plus className="w-4 h-4" />
+	                Añadir fase
+	              </button>
+	              <button
+	                type="submit"
+	                className="inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition"
                 disabled={saving}
               >
                 <Save className="w-4 h-4" />

@@ -200,38 +200,38 @@ const ServicesPage = () => {
       </div>
 
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 -mt-10 relative z-10">
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-6 space-y-5">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 -mt-8 relative z-10">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs uppercase tracking-wide text-[#9a98a0]">Especialidades</p>
-                <h2 className="text-xl font-bold text-[#233274]">Estos son los servicios que hacemos</h2>
+                <p className="text-[11px] uppercase tracking-wide text-[#9a98a0]">Especialidades</p>
+                <h2 className="text-lg font-bold text-[#233274]">Estos son los servicios que hacemos</h2>
               </div>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2">
               {serviceHighlights.map((item) => (
                 <span
                   key={item}
-                  className="px-4 py-2 bg-[#fdfaf5] text-[#233274] rounded-full shadow-sm border border-[#e2dfd7] text-sm font-semibold"
+                  className="px-3 py-1.5 bg-[#fdfaf5] text-[#233274] rounded-full shadow-sm border border-[#e2dfd7] text-xs font-semibold"
                 >
                   {item}
                 </span>
               ))}
             </div>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-6 space-y-4">
-            <p className="text-sm font-semibold text-[#233274] uppercase tracking-wide">SOLUCIONES PROFESIONALES</p>
-            <p className="text-lg text-[#4b4b4b]">
+          <div className="bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-4 space-y-3">
+            <p className="text-xs font-semibold text-[#233274] uppercase tracking-wide">SOLUCIONES PROFESIONALES</p>
+            <p className="text-base leading-8 text-[#4b4b4b]">
               Gestionamos licencias, diseño, obra y venta. Cada servicio incluye seguimiento y asesoria personalizada.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm text-[#233274]">
-              <span className="px-3 py-2 rounded-xl bg-[#fdf1df] border border-[#f3d7a6] font-semibold text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[#233274]">
+              <span className="px-3 py-1.5 rounded-xl bg-[#fdf1df] border border-[#f3d7a6] font-semibold text-center">
                 Arquitectura
               </span>
-              <span className="px-3 py-2 rounded-xl bg-[#e8f2ff] border border-[#c6dbff] font-semibold text-center">
+              <span className="px-3 py-1.5 rounded-xl bg-[#e8f2ff] border border-[#c6dbff] font-semibold text-center">
                 Construccion
               </span>
-              <span className="px-3 py-2 rounded-xl bg-[#eaf8ef] border border-[#c6e8d2] font-semibold text-center">
+              <span className="px-3 py-1.5 rounded-xl bg-[#eaf8ef] border border-[#c6e8d2] font-semibold text-center">
                 Inmobiliaria
               </span>
             </div>

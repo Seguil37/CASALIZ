@@ -1,5 +1,5 @@
 // src/features/tours/pages/TourDetailPage.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Home, ArrowLeft, Heart, X, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import api from '../../../shared/utils/api';
@@ -15,6 +15,7 @@ const TourDetailPage = () => {
   const [favoriteError, setFavoriteError] = useState('');
   const [lightboxImage, setLightboxImage] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const gallerySectionRef = useRef(null);
   const { favorites, toggleFavorite, fetchFavorites } = useFavoriteStore();
   const { isAuthenticated, user } = useAuthStore();
   useEffect(() => {
@@ -79,6 +80,9 @@ const TourDetailPage = () => {
     const newIndex = (currentImageIndex + 1) % project.images.length;
     setCurrentImageIndex(newIndex);
     setLightboxImage(project.images[newIndex]);
+  };
+  const scrollToGallery = () => {
+    gallerySectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   return (
     <div className="bg-gradient-to-b from-[#f6f2e8] via-white to-[#f6f2e8] min-h-screen">
@@ -171,10 +175,14 @@ const TourDetailPage = () => {
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Tipo de Proyecto</p>
             <p className="text-lg font-bold text-[#233274] mt-2">{project.type || 'Residencial'}</p>
           </div>
-          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <button
+            type="button"
+            onClick={scrollToGallery}
+            className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 text-left hover:-translate-y-1 hover:shadow-xl transition"
+          >
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Galería</p>
             <p className="text-lg font-bold text-[#233274] mt-2">{project.images?.length || 0} imagen(es)</p>
-          </div>
+          </button>
         </div>
       </section>
       {/* MAIN CONTENT */}
@@ -194,7 +202,7 @@ const TourDetailPage = () => {
         </div>
         {/* GALERÍA DE IMÁGENES MEJORADA */}
         {project.images?.length > 0 && (
-          <div className="space-y-8">
+          <div ref={gallerySectionRef} className="space-y-8 scroll-mt-24">
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-2">
@@ -214,7 +222,7 @@ const TourDetailPage = () => {
                     type="button"
                     key={image.id}
                     onClick={() => openImage(image, index)}
-                    className="group relative w-full h-64 overflow-hidden rounded-2xl border-2 border-[#ebe7df] bg-[#f8f5ef] focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                    className="group relative w-full h-64 overflow-hidden border-2 border-[#ebe7df] bg-[#f8f5ef] focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
                   >
                     <img
                       src={image.path}
@@ -310,7 +318,7 @@ const TourDetailPage = () => {
             >
               <X className="w-8 h-8" />
             </button>
-            <div className="rounded-3xl overflow-hidden bg-[#0d0d0d] border-2 border-[#e15f0b]/40 shadow-2xl">
+            <div className="overflow-hidden bg-[#0d0d0d] border-2 border-[#e15f0b]/40 shadow-2xl">
               <div className="relative bg-black">
                 <img
                   src={lightboxImage.path}
