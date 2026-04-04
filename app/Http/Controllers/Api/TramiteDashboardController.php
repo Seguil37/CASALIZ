@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tramite;
+use App\Models\TramiteTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -97,5 +98,70 @@ class TramiteDashboardController extends Controller
             });
 
         return response()->json($tramites);
+    }
+
+    public function assignedTasks(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user || (!$user->isAdmin() && !$user->isOperator())) {
+            abort(403);
+        }
+
+        $query = TramiteTask::with([
+            'tramite:id,code,project_name,client_name,responsible_id,due_date,status',
+            'tramite.responsible:id,name',
+            'assignee:id,name,email,role',
+            'creator:id,name',
+            'phase:id,name',
+            'subphase:id,name',
+        ])->orderByDesc('id');
+
+        if ($user->isOperator()) {
+            $query->where('assigned_to', $user->id);
+        }
+
+        $tasks = $query->get()->map(function (TramiteTask $task) {
+            return [
+                'id' => $task->id,
+                'title' => $task->title,
+                'description' => $task->description,
+                'status' => $task->status,
+                'progress' => $task->progress,
+                'due_date' => optional($task->due_date)->toDateString(),
+                'completed_at' => optional($task->completed_at)->toDateTimeString(),
+                'observations' => $task->observations,
+                'assigned_to' => $task->assignee ? [
+                    'id' => $task->assignee->id,
+                    'name' => $task->assignee->name,
+                    'email' => $task->assignee->email,
+                    'role' => $task->assignee->role,
+                ] : null,
+                'creator' => $task->creator ? [
+                    'id' => $task->creator->id,
+                    'name' => $task->creator->name,
+                ] : null,
+                'phase' => $task->phase ? [
+                    'id' => $task->phase->id,
+                    'name' => $task->phase->name,
+                ] : null,
+                'subphase' => $task->subphase ? [
+                    'id' => $task->subphase->id,
+                    'name' => $task->subphase->name,
+                ] : null,
+                'tramite' => $task->tramite ? [
+                    'id' => $task->tramite->id,
+                    'code' => $task->tramite->code,
+                    'project_name' => $task->tramite->project_name,
+                    'client_name' => $task->tramite->client_name,
+                    'status' => $task->tramite->status,
+                    'due_date' => optional($task->tramite->due_date)->toDateString(),
+                    'responsible' => $task->tramite->responsible?->name,
+                ] : null,
+                'created_at' => optional($task->created_at)->toDateTimeString(),
+                'updated_at' => optional($task->updated_at)->toDateTimeString(),
+            ];
+        });
+
+        return response()->json($tasks);
     }
 }

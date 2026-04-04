@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Tramite;
 use App\Models\TramiteTask;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -63,6 +65,8 @@ class TramiteTaskController extends Controller
             'observations' => $data['observations'] ?? null,
         ]);
 
+        $this->notifyAssignee($tramite, $task, null, $request->user());
+
         return response()->json($task->load(['assignee', 'creator', 'phase', 'subphase']), 201);
     }
 
@@ -89,6 +93,8 @@ class TramiteTaskController extends Controller
             'observations' => 'nullable|string',
         ]);
 
+        $previousAssigneeId = $task->assigned_to;
+
         // Operativo solo puede actualizar estado, progreso y observaciones
         if ($user->isOperator() && $isOwner) {
             $task->update([
@@ -102,6 +108,8 @@ class TramiteTaskController extends Controller
                 'completed_at' => ($data['status'] ?? $task->status) === TramiteTask::STATUS_DONE ? now() : $task->completed_at,
             ]));
         }
+
+        $this->notifyAssignee($tramite, $task->fresh(), $previousAssigneeId, $user);
 
         return $task->fresh(['assignee', 'creator']);
     }
@@ -140,5 +148,46 @@ class TramiteTaskController extends Controller
             TramiteTask::STATUS_BLOCKED,
             TramiteTask::STATUS_DONE,
         ];
+    }
+
+    private function notifyAssignee(Tramite $tramite, TramiteTask $task, ?int $previousAssigneeId, ?User $actor): void
+    {
+        if (!$task->assigned_to) {
+            return;
+        }
+
+        $assigneeChanged = $previousAssigneeId !== $task->assigned_to;
+        if (!$assigneeChanged) {
+            return;
+        }
+
+        $assignee = $task->assignee()->first();
+        if (!$assignee || ($actor && $assignee->id === $actor->id)) {
+            return;
+        }
+
+        $message = $previousAssigneeId
+            ? "Se te asignó la tarea pendiente '{$task->title}' en el trámite {$tramite->code}."
+            : "Tienes una nueva tarea pendiente '{$task->title}' en el trámite {$tramite->code}.";
+
+        DB::table('notifications')->insert([
+            'type' => 'task_assigned',
+            'notifiable_type' => User::class,
+            'notifiable_id' => $assignee->id,
+            'data' => json_encode([
+                'type' => 'task_assigned',
+                'tramite_id' => $tramite->id,
+                'tramite_code' => $tramite->code,
+                'tramite_project_name' => $tramite->project_name,
+                'task_id' => $task->id,
+                'task_title' => $task->title,
+                'task_status' => $task->status,
+                'message' => $message,
+                'url' => "/tramites/{$tramite->id}/tareas",
+            ], JSON_UNESCAPED_UNICODE),
+            'read_at' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

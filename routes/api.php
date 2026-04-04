@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SystemSettingsController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\TramiteTypeController;
 use App\Http\Controllers\Api\TramiteController;
 use App\Http\Controllers\Api\TramiteTaskController;
@@ -83,6 +84,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/favorites', [FavoriteController::class, 'index']);
         Route::post('/favorites', [FavoriteController::class, 'store']);
         Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy']);
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+        Route::post('/notifications/{notificationId}/read', [NotificationController::class, 'markAsRead']);
 
         // Trámites - solo staff
         Route::get('/tramite-types', [TramiteTypeController::class, 'index']);
@@ -106,5 +110,6 @@ Route::prefix('v1')->group(function () {
         Route::delete('/tramites/{tramite}/tasks/{task}', [TramiteTaskController::class, 'destroy']);
 
         Route::get('/tramites-dashboard/overview', [TramiteDashboardController::class, 'overview']);
+        Route::get('/tramites-dashboard/assigned-tasks', [TramiteDashboardController::class, 'assignedTasks']);
     });
 });

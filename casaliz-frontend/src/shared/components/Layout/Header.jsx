@@ -1,22 +1,83 @@
 // src/shared/components/Layout/Header.jsx
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, Menu, X, Mail, Phone } from 'lucide-react';
+import { Search, User, Menu, X, Mail, Bell } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
+import { notificationsApi } from '../../utils/api';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
 import { ROLES, roleLabels, isAdminRole } from '../../constants/roles';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setNotifications([]);
+      setUnreadCount(0);
+      setNotificationOpen(false);
+      return;
+    }
+
+    let active = true;
+
+    const loadNotifications = async () => {
+      try {
+        const { data } = await notificationsApi.list();
+        if (!active) return;
+        setNotifications(data.items || []);
+        setUnreadCount(data.unread_count || 0);
+      } catch (error) {
+        console.error('No se pudieron cargar las notificaciones', error);
+      }
+    };
+
+    loadNotifications();
+    const intervalId = setInterval(loadNotifications, 60000);
+
+    return () => {
+      active = false;
+      clearInterval(intervalId);
+    };
+  }, [isAuthenticated]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/projects?search=${searchQuery}`);
+    }
+  };
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      if (!notification.read_at) {
+        await notificationsApi.markAsRead(notification.id);
+        setNotifications((prev) =>
+          prev.map((item) => (item.id === notification.id ? { ...item, read_at: new Date().toISOString() } : item))
+        );
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      }
+    } catch (error) {
+      console.error('No se pudo marcar la notificación como leída', error);
+    } finally {
+      setNotificationOpen(false);
+      if (notification.data?.url) navigate(notification.data.url);
+    }
+  };
+
+  const handleMarkAllNotificationsRead = async () => {
+    try {
+      await notificationsApi.markAllAsRead();
+      setNotifications((prev) => prev.map((item) => ({ ...item, read_at: item.read_at || new Date().toISOString() })));
+      setUnreadCount(0);
+    } catch (error) {
+      console.error('No se pudieron marcar las notificaciones', error);
     }
   };
 
@@ -91,13 +152,82 @@ const Header = () => {
               </Link>
             </div>
 
-            {/* Usuario */}
-            {isAuthenticated ? (
-              <div className="relative group">
-                <button className="flex items-center gap-2 p-2 hover:bg-white rounded-full transition-all">
-                  {user?.avatar ? (
-                    <img
-                      src={user.avatar}
+	            {/* Usuario */}
+	            {isAuthenticated ? (
+	              <div className="flex items-center gap-2">
+	                <div className="relative">
+	                  <button
+	                    type="button"
+	                    onClick={() => setNotificationOpen((prev) => !prev)}
+	                    className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-white transition-all"
+	                  >
+	                    <Bell className="w-5 h-5 text-[#233274]" />
+	                    {unreadCount > 0 && (
+	                      <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-[#e15f0b] text-white text-[11px] font-bold flex items-center justify-center">
+	                        {unreadCount > 9 ? '9+' : unreadCount}
+	                      </span>
+	                    )}
+	                  </button>
+
+	                  {notificationOpen && (
+	                    <div className="absolute right-0 mt-2 w-[360px] max-w-[90vw] bg-[#f8f5ef] rounded-xl shadow-xl border border-[#9a98a0] overflow-hidden">
+	                      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e5e2da]">
+	                        <div>
+	                          <p className="text-sm font-bold text-[#233274]">Notificaciones</p>
+	                          <p className="text-xs text-[#9a98a0]">Tareas pendientes y asignaciones</p>
+	                        </div>
+	                        {unreadCount > 0 && (
+	                          <button
+	                            type="button"
+	                            onClick={handleMarkAllNotificationsRead}
+	                            className="text-xs font-semibold text-[#e15f0b] hover:underline"
+	                          >
+	                            Marcar todas
+	                          </button>
+	                        )}
+	                      </div>
+	                      <div className="max-h-[420px] overflow-y-auto">
+	                        {notifications.length === 0 ? (
+	                          <div className="px-4 py-6 text-sm text-[#9a98a0]">No tienes notificaciones por ahora.</div>
+	                        ) : (
+	                          notifications.map((notification) => (
+	                            <button
+	                              key={notification.id}
+	                              type="button"
+	                              onClick={() => handleNotificationClick(notification)}
+	                              className={`w-full text-left px-4 py-3 border-b border-[#ece8df] hover:bg-white transition-colors ${
+	                                notification.read_at ? 'bg-[#f8f5ef]' : 'bg-[#fff4e8]'
+	                              }`}
+	                            >
+	                              <div className="flex items-start justify-between gap-3">
+	                                <div className="space-y-1">
+	                                  <p className="text-sm font-semibold text-[#233274]">
+	                                    {notification.data?.task_title || 'Tarea asignada'}
+	                                  </p>
+	                                  <p className="text-xs text-[#4b4b4b]">
+	                                    {notification.data?.message || 'Tienes una tarea pendiente por revisar.'}
+	                                  </p>
+	                                  <p className="text-[11px] text-[#9a98a0]">
+	                                    {notification.data?.tramite_code || 'Trámite'}
+	                                  </p>
+	                                </div>
+	                                {!notification.read_at && (
+	                                  <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#e15f0b] flex-shrink-0" />
+	                                )}
+	                              </div>
+	                            </button>
+	                          ))
+	                        )}
+	                      </div>
+	                    </div>
+	                  )}
+	                </div>
+
+	                <div className="relative group">
+	                <button className="flex items-center gap-2 p-2 hover:bg-white rounded-full transition-all">
+	                  {user?.avatar ? (
+	                    <img
+	                      src={user.avatar}
                       alt={user.name}
                       className="w-8 h-8 rounded-full object-cover"
                     />
@@ -114,9 +244,9 @@ const Header = () => {
                       {roleLabels[user?.role] || 'Usuario'}
                     </span>
                   </div>
-                </button>
+	                  </button>
 
-                {/* Dropdown Menu */}
+	                {/* Dropdown Menu */}
                 <div className="absolute right-0 mt-2 w-48 bg-[#f8f5ef] rounded-xl shadow-xl border border-[#9a98a0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <Link
                     to="/profile"
@@ -179,6 +309,14 @@ const Header = () => {
                       Vista general trámites
                     </Link>
                   )}
+                  {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                    <Link
+                      to="/tramites/resumen-tareas"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Resumen de tareas
+                    </Link>
+                  )}
                   {user?.role === ROLES.MASTER_ADMIN && (
                     <Link
                       to="/admin/users"
@@ -193,10 +331,11 @@ const Header = () => {
                     className="block w-full text-left px-4 py-3 hover:bg-red-50 text-red-600 rounded-b-xl transition-colors border-t"
                   >
                     Cerrar Sesión
-                  </button>
-                </div>
-              </div>
-            ) : (
+	                  </button>
+	                </div>
+	                </div>
+	              </div>
+	            ) : (
               <Link
                 to="/login"
                 className="flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"

@@ -97,6 +97,12 @@ export const favoritesApi = {
   remove: (projectId) => api.delete(`/favorites/${projectId}`),
 };
 
+export const notificationsApi = {
+  list: () => api.get('/notifications'),
+  markAsRead: (id) => api.post(`/notifications/${id}/read`),
+  markAllAsRead: () => api.post('/notifications/read-all'),
+};
+
 export const adminUsersApi = {
   list: (page = 1) => api.get('/users', { params: { page } }),
   create: (data) => api.post('/users', data),
@@ -140,6 +146,7 @@ export const tramitesApi = {
 
   // Vista general
   overview: () => api.get('/tramites-dashboard/overview'),
+  assignedTasks: () => api.get('/tramites-dashboard/assigned-tasks'),
 };
 
 export default api;

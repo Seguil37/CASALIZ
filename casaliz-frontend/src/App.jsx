@@ -34,6 +34,7 @@ import TramitesByClientPage from './features/tramites/pages/TramitesByClientPage
 import TramiteTasksPage from './features/tramites/pages/TramiteTasksPage';
 import ControlBoardPage from './features/tramites/pages/ControlBoardPage';
 import TramiteDetailPage from './features/tramites/pages/TramiteDetailPage';
+import AssignedTasksSummaryPage from './features/tramites/pages/AssignedTasksSummaryPage';
 
 // Agency Pages
 import AgencyDashboard from './features/agency/pages/AgencyDashboard';
@@ -218,6 +219,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
                   <ControlBoardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="tramites/resumen-tareas"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                  <AssignedTasksSummaryPage />
                 </ProtectedRoute>
               }
             />
