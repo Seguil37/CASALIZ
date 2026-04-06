@@ -91,7 +91,7 @@ const PopularCountriesSection = () => {
             </h2>
           </div>
           <Link
-            to="/services"
+            to="/services#servicios-listado"
             className="hidden md:inline-flex items-center gap-2 text-[#e15f0b] font-semibold hover:text-[#d14a00] transition-colors"
           >
             <Star className="w-5 h-5 fill-current" />
@@ -126,7 +126,7 @@ const PopularCountriesSection = () => {
                     <p className="text-sm text-[#233274] font-semibold">{country.subtitle}</p>
                   </div>
                   <Link
-                    to="/services"
+                    to="/services#servicios-listado"
                     state={{ prefill: country.name }}
                     className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100 text-center block"
                   >

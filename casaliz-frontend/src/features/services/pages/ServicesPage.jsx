@@ -241,7 +241,7 @@ const ServicesPage = () => {
         {filteredServices.length === 0 ? (
           <p className="text-[#9a98a0]">No hay servicios publicados.</p>
         ) : (
-          <div id="servicios-listado" className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+          <div id="servicios-listado" className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 scroll-mt-24">
             {filteredServices.map((service) => (
               <Link
                 key={service.id}

@@ -265,6 +265,15 @@ const Header = () => {
                     </Link>
                   )}
 
+                  {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                    <Link
+                      to="/admin/panel"
+                      className="block px-4 py-3 bg-[#233274] text-white font-semibold transition-colors border-t border-[#233274] hover:bg-[#1b285c]"
+                    >
+                      Panel administrativo
+                    </Link>
+                  )}
+
                   {isAdminRole(user?.role) && (
                     <Link
                       to="/agency/dashboard"
@@ -273,7 +282,6 @@ const Header = () => {
                       Dashboard Proyectos
                     </Link>
                   )}
-
                   {isAdminRole(user?.role) && (
                     <Link
                       to="/agency/services"
@@ -282,7 +290,6 @@ const Header = () => {
                       Gestión de servicios
                     </Link>
                   )}
-
                   {isAdminRole(user?.role) && (
                     <Link
                       to="/tramites/gestion"
@@ -291,7 +298,6 @@ const Header = () => {
                       Gestión de trámites
                     </Link>
                   )}
-
                   {user?.role === ROLES.MASTER_ADMIN && (
                     <Link
                       to="/tramites/tipos"
@@ -300,7 +306,6 @@ const Header = () => {
                       Tipos de trámite
                     </Link>
                   )}
-
                   {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
                     <Link
                       to="/tramites/control"

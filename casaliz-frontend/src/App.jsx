@@ -25,6 +25,7 @@ import FavoritesPage from './features/customer/pages/FavoritesPage';
 import ContactPage from './features/contact/pages/ContactPage';
 import { ROLES } from './shared/constants/roles';
 import AdminUsersPage from './features/admin-users/pages/AdminUsersPage';
+import AdminPanelPage from './features/admin-users/pages/AdminPanelPage';
 import ServicesPage from './features/services/pages/ServicesPage';
 import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
 import AdminServicesPage from './features/services/pages/AdminServicesPage';
@@ -195,6 +196,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
                   <AdminUsersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="admin/panel"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                  <AdminPanelPage />
                 </ProtectedRoute>
               }
             />
