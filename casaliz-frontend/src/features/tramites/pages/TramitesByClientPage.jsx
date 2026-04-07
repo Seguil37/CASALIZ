@@ -30,6 +30,7 @@ const TramitesByClientPage = () => {
     project_name: '',
     property_name: '',
     location: '',
+    due_date: '',
     responsible_id: '',
     status: 'pending',
   });
@@ -78,6 +79,7 @@ const TramitesByClientPage = () => {
         project_name: '',
         property_name: '',
         location: '',
+        due_date: '',
         responsible_id: '',
         status: 'pending',
       });
@@ -190,6 +192,15 @@ const TramitesByClientPage = () => {
                 />
               </div>
               <div>
+                <label className={labelClass}>Fecha de vencimiento</label>
+                <input
+                  type="date"
+                  className={inputClass}
+                  value={form.due_date}
+                  onChange={(e) => setForm({ ...form, due_date: e.target.value })}
+                />
+              </div>
+              <div>
                 <label className={labelClass}>Responsable general</label>
                 <select
                   className={inputClass}
@@ -251,6 +262,9 @@ const TramitesByClientPage = () => {
                         </span>
                         <span className="flex items-center gap-1">
                           <MapPin className="w-4 h-4 text-[#e15f0b]" /> {t.location || 'Ubicación N/D'}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <ClipboardList className="w-4 h-4 text-[#e15f0b]" /> Fecha de vencimiento: {formatDate(t.due_date)}
                         </span>
                       </div>
                     </div>
@@ -375,6 +389,15 @@ const TramitesByClientPage = () => {
                 />
               </div>
               <div>
+                <label className={labelClass}>Fecha de vencimiento</label>
+                <input
+                  type="date"
+                  className={inputClass}
+                  value={editing.due_date ? String(editing.due_date).slice(0, 10) : ''}
+                  onChange={(e) => setEditing({ ...editing, due_date: e.target.value })}
+                />
+              </div>
+              <div>
                 <label className={labelClass}>Responsable</label>
                 <select
                   className={inputClass}
@@ -423,6 +446,7 @@ const TramitesByClientPage = () => {
                       project_name: editing.project_name,
                       property_name: editing.property_name,
                       location: editing.location,
+                      due_date: editing.due_date || null,
                       responsible_id: editing.responsible_id || null,
                       status: editing.status,
                     });
@@ -466,6 +490,26 @@ const statusLabel = (status) => {
       return 'Finalizado';
     default:
       return status;
+  }
+};
+
+const formatDate = (value) => {
+  if (!value) return 'Sin fecha';
+
+  const fixed = typeof value === 'string' ? value.replace(/\.\d+Z$/, 'Z') : value;
+  const date = new Date(fixed);
+
+  if (Number.isNaN(date.getTime())) return value;
+
+  try {
+    return date.toLocaleDateString('es-PE', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'America/Lima',
+    });
+  } catch {
+    return value;
   }
 };
 

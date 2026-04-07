@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, MapPin, UserCircle, ClipboardList, Calendar, Clock3 } from 'lucide-react';
+import { ChevronDown, ChevronUp, ClipboardList, MapPin, UserCircle } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { isStaff, ROLES } from '../../../shared/constants/roles';
@@ -22,12 +22,8 @@ const ControlBoardPage = () => {
       setLoading(true);
       const { data } = await tramitesApi.overview();
       setRows(data);
-      setNoteDrafts(
-        Object.fromEntries(data.map((r) => [r.id, r.notes || '']))
-      );
-      setDueDrafts(
-        Object.fromEntries(data.map((r) => [r.id, r.due_date || '']))
-      );
+      setNoteDrafts(Object.fromEntries(data.map((row) => [row.id, row.notes || ''])));
+      setDueDrafts(Object.fromEntries(data.map((row) => [row.id, row.due_date || ''])));
     } catch (error) {
       console.error(error);
       alert('No se pudo cargar la vista general.');
@@ -40,7 +36,7 @@ const ControlBoardPage = () => {
 
   if (!isStaff(user?.role)) {
     return (
-      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center text-[#233274] font-semibold">
+      <div className="flex min-h-screen items-center justify-center bg-[#f8f5ef] font-semibold text-[#233274]">
         Solo el equipo interno puede ver la vista de control.
       </div>
     );
@@ -50,102 +46,105 @@ const ControlBoardPage = () => {
     <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom space-y-6">
         <div className="flex items-center gap-3">
-          <ClipboardList className="w-6 h-6 text-[#e15f0b]" />
+          <ClipboardList className="h-6 w-6 text-[#e15f0b]" />
           <div>
             <h1 className="text-3xl font-black text-[#233274]">Vista General de Control</h1>
-            <p className="text-[#9a98a0]">Monitor de todos los clientes y trámites en tiempo real.</p>
+            <p className="text-[#9a98a0]">Monitor de todos los clientes y tramites en tiempo real.</p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-3 items-center text-sm text-[#233274] bg-white border border-[#ebe7df] rounded-xl px-4 py-3 shadow-sm">
-          <span className="font-semibold text-[#9a98a0] uppercase text-xs">Leyenda SLA:</span>
+
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#ebe7df] bg-white px-4 py-3 text-sm text-[#233274] shadow-sm">
+          <span className="text-xs font-semibold uppercase text-[#9a98a0]">Leyenda SLA:</span>
           <SlaBadge sla="green" /> <span>En tiempo</span>
-          <SlaBadge sla="yellow" /> <span>Próximo a vencer (≤3 días)</span>
+          <SlaBadge sla="yellow" /> <span>Proximo a vencer (3 dias o menos)</span>
           <SlaBadge sla="red" /> <span>Vencido</span>
           <SlaBadge sla="none" /> <span>Sin fecha</span>
         </div>
 
-        <div className="bg-white border border-[#ebe7df] rounded-2xl shadow-lg overflow-hidden">
-          <div className="grid grid-cols-9 bg-[#233274] text-white text-xs font-semibold uppercase tracking-wide">
-            <div className="p-3">Código</div>
-            <div className="p-3 col-span-2">Cliente</div>
-            <div className="p-3 col-span-2">Proyecto / Trámite</div>
+        <div className="overflow-hidden rounded-2xl border border-[#ebe7df] bg-white shadow-lg">
+          <div className="grid grid-cols-10 bg-[#233274] text-xs font-semibold uppercase tracking-wide text-white">
+            <div className="p-3">Codigo</div>
+            <div className="col-span-2 p-3">Cliente</div>
+            <div className="col-span-2 p-3">Proyecto / Tramite</div>
             <div className="p-3">Responsable</div>
             <div className="p-3">Fase actual</div>
-            <div className="p-3">Fecha</div>
+            <div className="p-3">Fecha de registro</div>
+            <div className="p-3">Fecha de vencimiento</div>
             <div className="p-3 text-center">Estado</div>
           </div>
+
           {loading ? (
             <div className="p-6 text-[#9a98a0]">Cargando...</div>
           ) : rows.length === 0 ? (
-            <div className="p-6 text-[#9a98a0]">No hay trámites registrados.</div>
+            <div className="p-6 text-[#9a98a0]">No hay tramites registrados.</div>
           ) : (
             rows.map((row) => (
               <div key={row.id} className="border-t border-[#ebe7df]">
                 <button
-                  className="grid grid-cols-9 w-full text-left hover:bg-[#fdfaf5] transition"
+                  className="grid w-full grid-cols-10 text-left transition hover:bg-[#fdfaf5]"
                   onClick={() => setOpenId(openId === row.id ? null : row.id)}
                 >
-                  <div className="p-3 font-semibold text-[#233274] flex items-center gap-2">
+                  <div className="flex items-center gap-2 p-3 font-semibold text-[#233274]">
                     <span>{row.code}</span>
                     {openId === row.id ? (
-                      <ChevronUp className="w-4 h-4 text-[#e15f0b]" />
+                      <ChevronUp className="h-4 w-4 text-[#e15f0b]" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-[#e15f0b]" />
+                      <ChevronDown className="h-4 w-4 text-[#e15f0b]" />
                     )}
                   </div>
-                  <div className="p-3 col-span-2 text-[#233274]">{row.client || 'N/D'}</div>
-                  <div className="p-3 col-span-2 text-[#233274]">{row.project}</div>
+                  <div className="col-span-2 p-3 text-[#233274]">{row.client || 'N/D'}</div>
+                  <div className="col-span-2 p-3 text-[#233274]">{row.project}</div>
                   <div className="p-3 text-[#233274]">{row.responsible || 'Sin asignar'}</div>
                   <div className="p-3 text-[#233274]">{row.current_phase || '-'}</div>
                   <div className="p-3 text-[#233274]">{row.registered_at || '-'}</div>
-                  <div className="p-3 flex items-center justify-center">
+                  <div className="p-3 text-[#233274]">{row.due_date || 'Sin fecha'}</div>
+                  <div className="flex items-center justify-center p-3">
                     <StatusBadge status={row.status} />
                   </div>
                 </button>
+
                 {openId === row.id && (
-                  <div className="px-4 py-4 bg-[#fdfaf5] border-t border-[#ebe7df] grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-3 border-t border-[#ebe7df] bg-[#fdfaf5] px-4 py-4 md:grid-cols-3">
                     <div className="flex items-start gap-2 text-[#233274]">
-                      <UserCircle className="w-5 h-5 text-[#e15f0b]" />
+                      <UserCircle className="h-5 w-5 text-[#e15f0b]" />
                       <div>
                         <p className="text-xs uppercase text-[#9a98a0]">Responsable</p>
                         <p className="font-semibold">{row.responsible || 'Sin asignar'}</p>
                       </div>
                     </div>
+
                     <div className="flex items-start gap-2 text-[#233274]">
-                      <MapPin className="w-5 h-5 text-[#e15f0b]" />
+                      <MapPin className="h-5 w-5 text-[#e15f0b]" />
                       <div>
-                        <p className="text-xs uppercase text-[#9a98a0]">Ubicación</p>
+                        <p className="text-xs uppercase text-[#9a98a0]">Ubicacion</p>
                         <p className="font-semibold">{row.location || 'No definida'}</p>
                       </div>
                     </div>
+
                     <div>
                       <p className="text-xs uppercase text-[#9a98a0]">Observaciones</p>
                       {canEditNotes ? (
                         <div className="space-y-2">
                           <textarea
-                            className="w-full px-3 py-2 border border-[#ebe7df] rounded-lg text-sm"
+                            className="w-full rounded-lg border border-[#ebe7df] px-3 py-2 text-sm"
                             value={noteDrafts[row.id] || ''}
                             onChange={(e) =>
                               setNoteDrafts((prev) => ({ ...prev, [row.id]: e.target.value }))
                             }
                           />
-                        <div className="flex items-center gap-2 text-sm">
-                          <span className="text-[#233274] font-semibold">Vence</span>
-                          {canEditNotes ? (
+
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="font-semibold text-[#233274]">Vence</span>
                             <input
                               type="date"
-                              className="px-3 py-2 border border-[#ebe7df] rounded-lg"
+                              className="rounded-lg border border-[#ebe7df] px-3 py-2"
                               value={dueDrafts[row.id] || ''}
                               onChange={(e) =>
                                 setDueDrafts((prev) => ({ ...prev, [row.id]: e.target.value }))
                               }
                             />
-                          ) : (
-                            <span className="text-[#233274] font-semibold">
-                              {row.due_date || 'Sin fecha'}
-                            </span>
-                          )}
-                        </div>
+                          </div>
+
                           <button
                             disabled={savingNoteId === row.id}
                             onClick={async () => {
@@ -156,62 +155,64 @@ const ControlBoardPage = () => {
                                   due_date: dueDrafts[row.id] || null,
                                 });
                                 await loadData();
-                              } catch (err) {
+                              } catch (error) {
                                 alert('No se pudo guardar la nota');
                               } finally {
                                 setSavingNoteId(null);
                               }
                             }}
-                            className="px-3 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition disabled:opacity-50"
+                            className="rounded-lg border border-[#233274] px-3 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white disabled:opacity-50"
                           >
                             {savingNoteId === row.id ? 'Guardando...' : 'Guardar'}
                           </button>
                         </div>
                       ) : (
-                        <p className="font-semibold text-[#233274] whitespace-pre-line">{row.notes || '—'}</p>
+                        <p className="whitespace-pre-line font-semibold text-[#233274]">
+                          {row.notes || '-'}
+                        </p>
                       )}
                     </div>
-                    <div className="md:col-span-3 bg-white border border-[#ebe7df] rounded-xl p-4">
+
+                    <div className="md:col-span-3 rounded-xl border border-[#ebe7df] bg-white p-4">
                       <div className="flex flex-wrap items-center gap-3">
-                        <div className="text-sm text-[#233274] font-semibold">
+                        <div className="text-sm font-semibold text-[#233274]">
                           Fases: {row.phases_progress?.completed || 0}/{row.phases_progress?.total || 0}
                         </div>
-                        <div className="text-sm text-[#233274] font-semibold">
+                        <div className="text-sm font-semibold text-[#233274]">
                           Subfases: {row.subphases_progress?.completed || 0}/{row.subphases_progress?.total || 0}
                         </div>
-                        <div className="flex-1 h-2 bg-[#ebe7df] rounded-full overflow-hidden">
+                        <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#ebe7df]">
                           <div
                             className="h-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00]"
                             style={{ width: `${row.progress_percent || 0}%` }}
                           />
                         </div>
-                        <span className="text-sm font-semibold text-[#233274]">{row.progress_percent || 0}%</span>
+                        <span className="text-sm font-semibold text-[#233274]">
+                          {row.progress_percent || 0}%
+                        </span>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:col-span-3">
-                      <InfoChip icon={Calendar} label="Registrado" value={formatDate(row.registered_at)} />
-                      <InfoChip icon={Clock3} label="Último avance" value={formatDateTime(row.last_progress_at || row.updated_at)} />
-                      <InfoChip icon={Calendar} label="Vence" value={formatDate(row.due_date)} />
-                    </div>
-                    <div className="md:col-span-3 flex justify-between items-center">
+
+                    <div className="md:col-span-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-semibold text-[#233274]">SLA</span>
                         <SlaBadge sla={row.sla} />
                       </div>
-                      <div className="text-sm text-[#233274] font-semibold">
+                      <div className="text-sm font-semibold text-[#233274]">
                         Tareas: {row.tasks_done}/{row.tasks_total} ({row.tasks_progress}%)
                       </div>
                     </div>
+
                     <div className="md:col-span-3 flex justify-end gap-3">
                       <a
                         href={`/tramites/${row.id}/detalle`}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+                        className="inline-flex items-center gap-2 rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
                       >
                         Ver fases
                       </a>
                       <a
                         href={`/tramites/${row.id}/tareas`}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+                        className="inline-flex items-center gap-2 rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
                       >
                         Ver tareas
                       </a>
@@ -234,8 +235,14 @@ const StatusBadge = ({ status }) => {
     observed: { label: 'Observado', className: 'bg-orange-100 text-orange-700' },
     completed: { label: 'Finalizado', className: 'bg-green-100 text-green-700' },
   };
+
   const data = map[status] || { label: status, className: 'bg-gray-100 text-gray-700' };
-  return <span className={`px-3 py-1 rounded-full text-xs font-semibold ${data.className}`}>{data.label}</span>;
+
+  return (
+    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${data.className}`}>
+      {data.label}
+    </span>
+  );
 };
 
 const SlaBadge = ({ sla }) => {
@@ -245,66 +252,21 @@ const SlaBadge = ({ sla }) => {
     red: 'bg-red-100 text-red-700',
     none: 'bg-gray-100 text-gray-700',
   };
+
   const labels = {
     green: 'En tiempo',
-    yellow: 'Próximo a vencer',
+    yellow: 'Proximo a vencer',
     red: 'Vencido',
     none: 'Sin fecha',
   };
-  const cls = map[sla] || map.none;
-  return <span className={`px-3 py-1 rounded-full text-xs font-semibold ${cls}`}>{labels[sla] || labels.none}</span>;
-};
 
-const InfoChip = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center gap-2 bg-white border border-[#ebe7df] rounded-lg px-3 py-2">
-    <Icon className="w-4 h-4 text-[#e15f0b]" />
-    <div>
-      <p className="text-[11px] uppercase text-[#9a98a0]">{label}</p>
-      <p className="text-sm font-semibold text-[#233274]">{value}</p>
-    </div>
-  </div>
-);
+  const cls = map[sla] || map.none;
+
+  return (
+    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${cls}`}>
+      {labels[sla] || labels.none}
+    </span>
+  );
+};
 
 export default ControlBoardPage;
-
-const normalizeDate = (value) => {
-  if (!value) return null;
-  // Manejar microsegundos "YYYY-MM-DDTHH:mm:ss.ffffffZ"
-  const fixed = typeof value === 'string' ? value.replace(/\.\d+Z$/, 'Z') : value;
-  const d = new Date(fixed);
-  return isNaN(d.getTime()) ? null : d;
-};
-
-const formatDate = (value) => {
-  const d = normalizeDate(value);
-  if (!d) return 'N/D';
-  try {
-    return d.toLocaleDateString('es-PE', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      timeZone: 'America/Lima',
-    });
-  } catch {
-    return value;
-  }
-};
-
-const formatDateTime = (value) => {
-  const d = normalizeDate(value);
-  if (!d) return 'N/D';
-  try {
-    return d.toLocaleString('es-PE', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-      timeZone: 'America/Lima',
-    });
-  } catch {
-    return value;
-  }
-};
