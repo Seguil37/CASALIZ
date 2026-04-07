@@ -48,6 +48,12 @@ const ServicesPage = () => {
     setFeaturedOnly(featuredFromUrl === '1' || featuredFromUrl === 'true');
   }, [searchParams, location.state]);
 
+  useEffect(() => {
+    if (!loading && location.hash === '#servicios-listado') {
+      scrollToResults();
+    }
+  }, [loading, location.hash]);
+
   const scrollToResults = () => {
     setTimeout(() => {
       document.getElementById('servicios-listado')?.scrollIntoView({

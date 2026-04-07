@@ -26,6 +26,15 @@ const ToursPage = () => {
     fetchProjects();
   }, [searchParams]);
 
+  useEffect(() => {
+    setFilters({
+      search: searchParams.get('search') || '',
+      city: searchParams.get('city') || '',
+      type: searchParams.get('type') || '',
+      featured: searchParams.get('featured') || '',
+    });
+  }, [searchParams]);
+
   const fetchProjects = async (page = 1) => {
     setLoading(true);
     try {
@@ -155,13 +164,21 @@ const ToursPage = () => {
         </div>
       </section>
 
-      <div className="sticky top-20 z-40 border-b border-[#e8dfd3] bg-[#f8f5ef]/95 shadow-sm backdrop-blur">
+      <div className="sticky top-20 z-40 border-b border-[#e8dfd3] bg-[#f8f5ef]/95 shadow-sm backdrop-blur lg:hidden">
         <div className="container-custom py-4">
-          <div className="flex flex-col gap-4 lg:flex-row">
-            <div className="flex-1">
+          <div className="flex flex-col gap-4">
+            <div className="min-w-0">
               <SearchBar filters={filters} onFilterChange={handleFilterChange} onSearch={applyFilters} />
             </div>
-            <div className="hidden w-full max-w-sm flex-shrink-0 lg:block">
+          </div>
+        </div>
+      </div>
+
+      <div className="container-custom pt-4 pb-8">
+        <div className="grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
+          <aside className="hidden lg:block lg:sticky lg:top-24">
+            <div className="space-y-4">
+              <SearchBar filters={filters} onFilterChange={handleFilterChange} onSearch={applyFilters} />
               <FilterSidebar
                 filters={filters}
                 onFilterChange={handleFilterChange}
@@ -169,16 +186,12 @@ const ToursPage = () => {
                 onClear={clearFilters}
               />
             </div>
-          </div>
-        </div>
-      </div>
+          </aside>
 
-      <div className="container-custom py-8">
-        <div className="flex gap-8">
-          <div className="flex-1">
+          <div className="min-w-0">
             <div
               id="projects-results"
-              className="mb-6 rounded-[28px] border border-[#e5ddd1] bg-white p-6 shadow-[0_18px_45px_rgba(77,58,31,0.07)] transition-all duration-500 hover:-translate-y-1 scroll-mt-32"
+              className="mb-4 rounded-[28px] border border-[#e5ddd1] bg-white p-6 shadow-[0_18px_45px_rgba(77,58,31,0.07)] transition-all duration-500 hover:-translate-y-1 scroll-mt-32"
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>

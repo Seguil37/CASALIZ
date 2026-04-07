@@ -50,7 +50,11 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/projects?search=${searchQuery}`);
+      navigate({
+        pathname: '/projects',
+        search: `?search=${encodeURIComponent(searchQuery)}`,
+        hash: '#projects-results',
+      });
     }
   };
 
@@ -86,7 +90,7 @@ const Header = () => {
       <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           {/* Logo y Buscador */}
-          <div className="flex items-center gap-8 flex-1">
+          <div className="flex items-center gap-5 flex-1 min-w-0">
             <Link to="/" className="flex items-center">
               <div className="h-12 md:h-14 lg:h-16 max-w-[180px] flex items-center">
                 <img
@@ -97,19 +101,19 @@ const Header = () => {
               </div>
             </Link>
             {/* Barra de búsqueda */}
-            <form onSubmit={handleSearch} className="hidden lg:flex flex-1 max-w-xl">
+            <form onSubmit={handleSearch} className="hidden lg:flex w-full max-w-md xl:max-w-lg flex-shrink">
               <div className="relative w-full">
                 <input
                   type="text"
                   placeholder="¿Que proyecto buscas?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all bg-[#f8f5ef] text-[#233274] placeholder-[#9a98a0]"
+                  className="w-full pl-12 pr-32 py-3 rounded-full border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all bg-[#f8f5ef] text-[#233274] placeholder-[#9a98a0]"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-6 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-5 py-2 rounded-full transition-all shadow-md hover:shadow-lg"
                 >
                   Buscar
                 </button>
@@ -118,7 +122,7 @@ const Header = () => {
           </div>
 
           {/* Botones de acción */}
-          <div className="flex items-center gap-4 ml-6">
+          <div className="flex items-center gap-4 ml-4">
             {/* Navegación Principal - Desktop */}
             <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold">
               <Link
