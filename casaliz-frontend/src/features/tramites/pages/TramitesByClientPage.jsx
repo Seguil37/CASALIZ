@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ClipboardList, MapPin, UserCircle, Building2, Plus, Loader2 } from 'lucide-react';
+import { Building2, ClipboardList, Loader2, MapPin, Plus, UserCircle } from 'lucide-react';
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import { ROLES, isStaff } from '../../../shared/constants/roles';
 import useAuthStore from '../../../store/authStore';
@@ -10,6 +10,48 @@ const statusBadges = {
   in_progress: 'bg-blue-100 text-blue-700',
   observed: 'bg-orange-100 text-orange-700',
   completed: 'bg-green-100 text-green-700',
+};
+
+const PERU_DEPARTMENTS = [
+  'Amazonas',
+  'Ancash',
+  'Apurimac',
+  'Arequipa',
+  'Ayacucho',
+  'Cajamarca',
+  'Callao',
+  'Cusco',
+  'Huancavelica',
+  'Huanuco',
+  'Ica',
+  'Junin',
+  'La Libertad',
+  'Lambayeque',
+  'Lima',
+  'Loreto',
+  'Madre de Dios',
+  'Moquegua',
+  'Pasco',
+  'Piura',
+  'Puno',
+  'San Martin',
+  'Tacna',
+  'Tumbes',
+  'Ucayali',
+];
+
+const emptyForm = {
+  code: '',
+  tramite_type_id: '',
+  client_name: '',
+  project_name: '',
+  property_name: '',
+  location_department: '',
+  location_province: '',
+  location_district: '',
+  due_date: '',
+  responsible_id: '',
+  status: 'pending',
 };
 
 const TramitesByClientPage = () => {
@@ -23,17 +65,7 @@ const TramitesByClientPage = () => {
   const [updating, setUpdating] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [editErrors, setEditErrors] = useState({});
-  const [form, setForm] = useState({
-    code: '',
-    tramite_type_id: '',
-    client_name: '',
-    project_name: '',
-    property_name: '',
-    location: '',
-    due_date: '',
-    responsible_id: '',
-    status: 'pending',
-  });
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     loadInitial();
@@ -42,95 +74,95 @@ const TramitesByClientPage = () => {
   const loadInitial = async () => {
     try {
       setLoading(true);
-      const promises = [
-        tramitesApi.listTypes(),
-        tramitesApi.list({ per_page: 20 }),
-      ];
+      const promises = [tramitesApi.listTypes(), tramitesApi.list({ per_page: 20 })];
       const shouldLoadUsers = user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role);
+
       if (shouldLoadUsers) promises.push(adminUsersApi.list());
 
       const [typesRes, tramitesRes, usersRes] = await Promise.all(promises);
 
       setTypes(typesRes.data);
       setTramites(tramitesRes.data.data || tramitesRes.data);
+
       if (shouldLoadUsers && usersRes) {
-        setResponsables((usersRes.data?.data || usersRes.data || []).filter((u) => isStaff(u.role)));
+        setResponsables((usersRes.data?.data || usersRes.data || []).filter((item) => isStaff(item.role)));
       } else {
         setResponsables([]);
       }
     } catch (error) {
       console.error(error);
-      alert('No se pudo cargar la información inicial.');
+      alert('No se pudo cargar la informacion inicial.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setSaving(true);
+
     try {
-      await tramitesApi.create(form);
+      await tramitesApi.create(buildPayload(form));
       await loadInitial();
-      setForm({
-        code: '',
-        tramite_type_id: '',
-        client_name: '',
-        project_name: '',
-        property_name: '',
-        location: '',
-        due_date: '',
-        responsible_id: '',
-        status: 'pending',
-      });
+      setForm(emptyForm);
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.message || 'No se pudo crear el trámite.');
+      alert(error.response?.data?.message || 'No se pudo crear el tramite.');
     } finally {
       setSaving(false);
     }
   };
 
+  const startEdit = (tramite) => {
+    setEditErrors({});
+    setEditing({
+      ...tramite,
+      ...parseLocation(tramite.location),
+      due_date: tramite.due_date ? String(tramite.due_date).slice(0, 10) : '',
+    });
+  };
+
   if (!user || !user.role || ![ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role)) {
     return (
-      <div className="min-h-screen bg-[#f8f5ef] flex items-center justify-center text-[#233274] font-semibold">
-        Solo el Administrador puede gestionar trámites por cliente/proyecto.
+      <div className="flex min-h-screen items-center justify-center bg-[#f8f5ef] font-semibold text-[#233274]">
+        Solo el Administrador puede gestionar tramites por cliente/proyecto.
       </div>
     );
   }
 
   const inputClass =
-    'w-full px-4 py-2 rounded-xl border border-[#ebe7df] bg-[#f8f5ef] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a] outline-none text-[#233274] placeholder-[#9a98a0]';
-  const labelClass = 'text-sm font-semibold text-[#233274] mb-1 block';
+    'w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 text-[#233274] outline-none placeholder-[#9a98a0] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]';
+  const labelClass = 'mb-1 block text-sm font-semibold text-[#233274]';
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-black text-[#233274]">Trámites por Cliente / Proyecto</h1>
+            <h1 className="text-3xl font-black text-[#233274]">Tramites por Cliente / Proyecto</h1>
             <p className="text-[#9a98a0]">
-              Asigna un flujo de trámite ya definido a un cliente o proyecto específico.
+              Asigna un flujo de tramite ya definido a un cliente o proyecto especifico.
             </p>
           </div>
           <Link
             to="/tramites/control"
-            className="inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-5 py-3 rounded-xl shadow-md hover:shadow-lg"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-primary px-5 py-3 font-bold text-[#233274] shadow-md hover:shadow-lg"
           >
-            <ClipboardList className="w-4 h-4" />
+            <ClipboardList className="h-4 w-4" />
             Vista general
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-1 bg-white border border-[#ebe7df] shadow-lg rounded-2xl p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Plus className="w-5 h-5 text-[#e15f0b]" />
-              <h2 className="text-xl font-black text-[#233274]">Registrar trámite</h2>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="rounded-2xl border border-[#ebe7df] bg-white p-6 shadow-lg lg:col-span-1">
+            <div className="mb-4 flex items-center gap-2">
+              <Plus className="h-5 w-5 text-[#e15f0b]" />
+              <h2 className="text-xl font-black text-[#233274]">Registrar tramite</h2>
             </div>
+
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label className={labelClass}>Código / Identificador</label>
+                <label className={labelClass}>Codigo / Identificador</label>
                 <input
                   className={inputClass}
                   value={form.code}
@@ -138,8 +170,9 @@ const TramitesByClientPage = () => {
                   required
                 />
               </div>
+
               <div>
-                <label className={labelClass}>Tipo de trámite</label>
+                <label className={labelClass}>Tipo de tramite</label>
                 <select
                   className={inputClass}
                   value={form.tramite_type_id}
@@ -154,6 +187,7 @@ const TramitesByClientPage = () => {
                   ))}
                 </select>
               </div>
+
               <div>
                 <label className={labelClass}>Cliente / Propietario</label>
                 <input
@@ -163,16 +197,18 @@ const TramitesByClientPage = () => {
                   placeholder="Nombre completo"
                 />
               </div>
+
               <div>
-                <label className={labelClass}>Proyecto / Trámite</label>
+                <label className={labelClass}>Proyecto / Tramite</label>
                 <input
                   className={inputClass}
                   value={form.project_name}
                   onChange={(e) => setForm({ ...form, project_name: e.target.value })}
-                  required
                   placeholder="Nombre del proyecto"
+                  required
                 />
               </div>
+
               <div>
                 <label className={labelClass}>Nombre del Inmueble / Establecimiento</label>
                 <input
@@ -182,15 +218,57 @@ const TramitesByClientPage = () => {
                   placeholder="Ej: Torre A, Local 102"
                 />
               </div>
-              <div>
-                <label className={labelClass}>Ubicación</label>
-                <input
-                  className={inputClass}
-                  value={form.location}
-                  onChange={(e) => setForm({ ...form, location: e.target.value })}
-                  placeholder="Distrito, Ciudad"
-                />
+
+              <div className="space-y-3 rounded-2xl border border-[#f0e8dd] bg-[#fcfaf6] p-4">
+                <div>
+                  <label className={labelClass}>Departamento</label>
+                  <select
+                    className={inputClass}
+                    value={form.location_department}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        location_department: e.target.value,
+                      })
+                    }
+                    required
+                  >
+                    <option value="">Selecciona un departamento</option>
+                    {PERU_DEPARTMENTS.map((department) => (
+                      <option key={department} value={department}>
+                        {department}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className={labelClass}>Provincia</label>
+                  <input
+                    className={inputClass}
+                    value={form.location_province}
+                    onChange={(e) => setForm({ ...form, location_province: e.target.value })}
+                    placeholder="Ej: Cusco"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className={labelClass}>Distrito</label>
+                  <input
+                    className={inputClass}
+                    value={form.location_district}
+                    onChange={(e) => setForm({ ...form, location_district: e.target.value })}
+                    placeholder="Ej: San Sebastian"
+                    required
+                  />
+                </div>
+
+                <p className="text-xs text-[#9a98a0]">
+                  Se guardara como: Distrito, Provincia, Departamento.
+                </p>
               </div>
+
               <div>
                 <label className={labelClass}>Fecha de vencimiento</label>
                 <input
@@ -200,6 +278,7 @@ const TramitesByClientPage = () => {
                   onChange={(e) => setForm({ ...form, due_date: e.target.value })}
                 />
               </div>
+
               <div>
                 <label className={labelClass}>Responsable general</label>
                 <select
@@ -208,106 +287,114 @@ const TramitesByClientPage = () => {
                   onChange={(e) => setForm({ ...form, responsible_id: e.target.value })}
                 >
                   <option value="">Selecciona un responsable</option>
-                  {responsables.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.name} ({r.role})
+                  {responsables.map((responsable) => (
+                    <option key={responsable.id} value={responsable.id}>
+                      {responsable.name} ({responsable.role})
                     </option>
                   ))}
                 </select>
               </div>
+
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 bg-gradient-primary text-[#233274] font-bold px-4 py-3 rounded-xl shadow-md hover:shadow-lg transition"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-primary px-4 py-3 font-bold text-[#233274] shadow-md transition hover:shadow-lg"
                 disabled={saving}
               >
                 {saving ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Guardando...
+                    <Loader2 className="h-4 w-4 animate-spin" /> Guardando...
                   </>
                 ) : (
                   <>
-                    <Plus className="w-4 h-4" />
-                    Registrar trámite
+                    <Plus className="h-4 w-4" />
+                    Registrar tramite
                   </>
                 )}
               </button>
             </form>
           </div>
 
-          <div className="lg:col-span-2 bg-white border border-[#ebe7df] shadow-lg rounded-2xl p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <ClipboardList className="w-5 h-5 text-[#e15f0b]" />
-              <h2 className="text-xl font-black text-[#233274]">Trámites recientes</h2>
+          <div className="rounded-2xl border border-[#ebe7df] bg-white p-6 shadow-lg lg:col-span-2">
+            <div className="mb-4 flex items-center gap-2">
+              <ClipboardList className="h-5 w-5 text-[#e15f0b]" />
+              <h2 className="text-xl font-black text-[#233274]">Tramites recientes</h2>
             </div>
+
             {loading ? (
               <div className="text-[#9a98a0]">Cargando...</div>
             ) : tramites.length === 0 ? (
-              <div className="text-[#9a98a0]">Aún no hay trámites asignados.</div>
+              <div className="text-[#9a98a0]">Aun no hay tramites asignados.</div>
             ) : (
               <div className="space-y-3">
-                {tramites.map((t) => (
+                {tramites.map((tramite) => (
                   <div
-                    key={t.id}
-                    className="p-4 rounded-xl border border-[#ebe7df] bg-[#fdfaf5] flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+                    key={tramite.id}
+                    className="flex flex-col gap-3 rounded-xl border border-[#ebe7df] bg-[#fdfaf5] p-4 md:flex-row md:items-center md:justify-between"
                   >
                     <div className="flex-1 space-y-1">
-                      <p className="text-xs font-semibold text-[#e15f0b]">{t.code}</p>
-                      <p className="text-lg font-bold text-[#233274]">{t.project_name}</p>
+                      <p className="text-xs font-semibold text-[#e15f0b]">{tramite.code}</p>
+                      <p className="text-lg font-bold text-[#233274]">{tramite.project_name}</p>
                       <div className="flex flex-wrap gap-3 text-sm text-[#233274]">
                         <span className="flex items-center gap-1">
-                          <UserCircle className="w-4 h-4 text-[#e15f0b]" /> {t.client_name || 'Cliente N/D'}
+                          <UserCircle className="h-4 w-4 text-[#e15f0b]" />
+                          {tramite.client_name || 'Cliente N/D'}
                         </span>
                         <span className="flex items-center gap-1">
-                          <Building2 className="w-4 h-4 text-[#e15f0b]" /> {t.property_name || 'Inmueble N/D'}
+                          <Building2 className="h-4 w-4 text-[#e15f0b]" />
+                          {tramite.property_name || 'Inmueble N/D'}
                         </span>
                         <span className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4 text-[#e15f0b]" /> {t.location || 'Ubicación N/D'}
+                          <MapPin className="h-4 w-4 text-[#e15f0b]" />
+                          {tramite.location || 'Ubicacion N/D'}
                         </span>
                         <span className="flex items-center gap-1">
-                          <ClipboardList className="w-4 h-4 text-[#e15f0b]" /> Fecha de vencimiento: {formatDate(t.due_date)}
+                          <ClipboardList className="h-4 w-4 text-[#e15f0b]" />
+                          Fecha de vencimiento: {formatDate(tramite.due_date)}
                         </span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 flex-wrap">
+
+                    <div className="flex flex-wrap items-center gap-3">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          statusBadges[t.status] || 'bg-gray-100 text-gray-700'
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                          statusBadges[tramite.status] || 'bg-gray-100 text-gray-700'
                         }`}
                       >
-                        {statusLabel(t.status)}
+                        {statusLabel(tramite.status)}
                       </span>
+
                       <Link
-                        to={`/tramites/${t.id}/tareas`}
-                        className="px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+                        to={`/tramites/${tramite.id}/tareas`}
+                        className="rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
                       >
                         Ver tareas
                       </Link>
+
                       <button
-                        onClick={() => {
-                          setEditErrors({});
-                          setEditing(t);
-                        }}
-                        className="px-4 py-2 rounded-lg border border-[#e15f0b] text-[#e15f0b] font-semibold hover:bg-[#fff3e6] transition"
+                        onClick={() => startEdit(tramite)}
+                        className="rounded-lg border border-[#e15f0b] px-4 py-2 font-semibold text-[#e15f0b] transition hover:bg-[#fff3e6]"
                       >
                         Editar
                       </button>
+
                       <button
                         onClick={async () => {
-                          if (!window.confirm('¿Eliminar este trámite?')) return;
+                          if (!window.confirm('Eliminar este tramite?')) return;
+
                           try {
-                            setDeletingId(t.id);
-                            await tramitesApi.delete(t.id);
-                            setTramites((prev) => prev.filter((x) => x.id !== t.id));
-                          } catch (err) {
-                            alert('No se pudo eliminar el trámite');
+                            setDeletingId(tramite.id);
+                            await tramitesApi.delete(tramite.id);
+                            setTramites((prev) => prev.filter((item) => item.id !== tramite.id));
+                          } catch (error) {
+                            alert('No se pudo eliminar el tramite');
                           } finally {
                             setDeletingId(null);
                           }
                         }}
-                        disabled={deletingId === t.id}
-                        className="px-4 py-2 rounded-lg border border-red-500 text-red-600 font-semibold hover:bg-red-50 transition disabled:opacity-50"
+                        disabled={deletingId === tramite.id}
+                        className="rounded-lg border border-red-500 px-4 py-2 font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
                       >
-                        {deletingId === t.id ? 'Eliminando...' : 'Eliminar'}
+                        {deletingId === tramite.id ? 'Eliminando...' : 'Eliminar'}
                       </button>
                     </div>
                   </div>
@@ -319,18 +406,18 @@ const TramitesByClientPage = () => {
       </div>
 
       {editing && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-3xl space-y-4 rounded-2xl bg-white p-6 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold text-[#233274]">Editar trámite</h3>
+              <h3 className="text-xl font-bold text-[#233274]">Editar tramite</h3>
               <button onClick={() => setEditing(null)} className="text-[#9a98a0] hover:text-[#233274]">
-                ✕
+                x
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div>
-                <label className={labelClass}>Código</label>
+                <label className={labelClass}>Codigo</label>
                 <input
                   className={`${inputClass} ${editErrors.code ? 'border-red-500 focus:border-red-500' : ''}`}
                   value={editing.code}
@@ -339,8 +426,9 @@ const TramitesByClientPage = () => {
                     setEditing({ ...editing, code: e.target.value });
                   }}
                 />
-                {editErrors.code && <p className="text-sm text-red-600 mt-1">{editErrors.code}</p>}
+                {editErrors.code && <p className="mt-1 text-sm text-red-600">{editErrors.code}</p>}
               </div>
+
               <div>
                 <label className={labelClass}>Tipo</label>
                 <select
@@ -356,6 +444,7 @@ const TramitesByClientPage = () => {
                   ))}
                 </select>
               </div>
+
               <div>
                 <label className={labelClass}>Cliente</label>
                 <input
@@ -364,6 +453,7 @@ const TramitesByClientPage = () => {
                   onChange={(e) => setEditing({ ...editing, client_name: e.target.value })}
                 />
               </div>
+
               <div>
                 <label className={labelClass}>Proyecto</label>
                 <input
@@ -372,6 +462,7 @@ const TramitesByClientPage = () => {
                   onChange={(e) => setEditing({ ...editing, project_name: e.target.value })}
                 />
               </div>
+
               <div>
                 <label className={labelClass}>Inmueble</label>
                 <input
@@ -380,23 +471,56 @@ const TramitesByClientPage = () => {
                   onChange={(e) => setEditing({ ...editing, property_name: e.target.value })}
                 />
               </div>
+
               <div>
-                <label className={labelClass}>Ubicación</label>
+                <label className={labelClass}>Departamento</label>
+                <select
+                  className={inputClass}
+                  value={editing.location_department || ''}
+                  onChange={(e) =>
+                    setEditing({
+                      ...editing,
+                      location_department: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Selecciona un departamento</option>
+                  {PERU_DEPARTMENTS.map((department) => (
+                    <option key={department} value={department}>
+                      {department}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className={labelClass}>Provincia</label>
                 <input
                   className={inputClass}
-                  value={editing.location || ''}
-                  onChange={(e) => setEditing({ ...editing, location: e.target.value })}
+                  value={editing.location_province || ''}
+                  onChange={(e) => setEditing({ ...editing, location_province: e.target.value })}
                 />
               </div>
+
+              <div>
+                <label className={labelClass}>Distrito</label>
+                <input
+                  className={inputClass}
+                  value={editing.location_district || ''}
+                  onChange={(e) => setEditing({ ...editing, location_district: e.target.value })}
+                />
+              </div>
+
               <div>
                 <label className={labelClass}>Fecha de vencimiento</label>
                 <input
                   type="date"
                   className={inputClass}
-                  value={editing.due_date ? String(editing.due_date).slice(0, 10) : ''}
+                  value={editing.due_date || ''}
                   onChange={(e) => setEditing({ ...editing, due_date: e.target.value })}
                 />
               </div>
+
               <div>
                 <label className={labelClass}>Responsable</label>
                 <select
@@ -405,13 +529,14 @@ const TramitesByClientPage = () => {
                   onChange={(e) => setEditing({ ...editing, responsible_id: e.target.value })}
                 >
                   <option value="">Sin responsable</option>
-                  {responsables.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.name} ({r.role})
+                  {responsables.map((responsable) => (
+                    <option key={responsable.id} value={responsable.id}>
+                      {responsable.name} ({responsable.role})
                     </option>
                   ))}
                 </select>
               </div>
+
               <div>
                 <label className={labelClass}>Estado</label>
                 <select
@@ -430,7 +555,7 @@ const TramitesByClientPage = () => {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setEditing(null)}
-                className="px-4 py-2 rounded-lg border border-[#ebe7df] text-[#6c6b70]"
+                className="rounded-lg border border-[#ebe7df] px-4 py-2 text-[#6c6b70]"
               >
                 Cancelar
               </button>
@@ -439,34 +564,31 @@ const TramitesByClientPage = () => {
                   try {
                     setUpdating(true);
                     setEditErrors({});
-                    await tramitesApi.update(editing.id, {
-                      code: editing.code,
-                      tramite_type_id: editing.tramite_type_id,
-                      client_name: editing.client_name,
-                      project_name: editing.project_name,
-                      property_name: editing.property_name,
-                      location: editing.location,
-                      due_date: editing.due_date || null,
-                      responsible_id: editing.responsible_id || null,
-                      status: editing.status,
-                    });
+
+                    const payload = buildPayload(editing);
+
+                    await tramitesApi.update(editing.id, payload);
                     setTramites((prev) =>
-                      prev.map((t) => (t.id === editing.id ? { ...t, ...editing } : t))
+                      prev.map((tramite) =>
+                        tramite.id === editing.id
+                          ? { ...tramite, ...editing, location: payload.location, due_date: payload.due_date }
+                          : tramite
+                      )
                     );
                     setEditing(null);
-                  } catch (err) {
-                    const e = err.response?.data?.errors;
-                    if (e?.code?.length) {
-                      setEditErrors({ code: 'El código ya existe.' });
+                  } catch (error) {
+                    const errors = error.response?.data?.errors;
+                    if (errors?.code?.length) {
+                      setEditErrors({ code: 'El codigo ya existe.' });
                     } else {
-                      alert('No se pudo actualizar el trámite');
+                      alert('No se pudo actualizar el tramite');
                     }
                   } finally {
                     setUpdating(false);
                   }
                 }}
                 disabled={updating}
-                className="px-5 py-2 rounded-lg bg-gradient-primary text-[#233274] font-bold shadow-md hover:shadow-lg disabled:opacity-60"
+                className="rounded-lg bg-gradient-primary px-5 py-2 font-bold text-[#233274] shadow-md hover:shadow-lg disabled:opacity-60"
               >
                 {updating ? 'Guardando...' : 'Guardar cambios'}
               </button>
@@ -476,6 +598,65 @@ const TramitesByClientPage = () => {
       )}
     </div>
   );
+};
+
+const buildLocation = (values) => {
+  const parts = [
+    values.location_district?.trim(),
+    values.location_province?.trim(),
+    values.location_department?.trim(),
+  ].filter(Boolean);
+
+  return parts.length ? parts.join(', ') : null;
+};
+
+const buildPayload = (values) => ({
+  code: values.code,
+  tramite_type_id: values.tramite_type_id,
+  client_name: values.client_name,
+  project_name: values.project_name,
+  property_name: values.property_name,
+  location: buildLocation(values),
+  due_date: values.due_date || null,
+  responsible_id: values.responsible_id || null,
+  status: values.status,
+});
+
+const parseLocation = (value) => {
+  if (!value) {
+    return {
+      location_department: '',
+      location_province: '',
+      location_district: '',
+    };
+  }
+
+  const parts = String(value)
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  if (parts.length >= 3) {
+    return {
+      location_district: parts[0],
+      location_province: parts[1],
+      location_department: parts.slice(2).join(', '),
+    };
+  }
+
+  if (parts.length === 2) {
+    return {
+      location_district: '',
+      location_province: parts[0],
+      location_department: parts[1],
+    };
+  }
+
+  return {
+    location_district: '',
+    location_province: '',
+    location_department: parts[0] || '',
+  };
 };
 
 const statusLabel = (status) => {
