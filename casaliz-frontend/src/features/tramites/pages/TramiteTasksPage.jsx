@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { CheckCircle, ClipboardCheck, Loader2, AlertCircle, PlayCircle } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { AlertCircle, CheckCircle, ClipboardCheck, Loader2, PlayCircle } from 'lucide-react';
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
@@ -12,6 +12,25 @@ const taskStatusOptions = [
   { value: 'done', label: 'Completado', color: 'bg-green-100 text-green-700' },
 ];
 
+const emptyForm = {
+  title: '',
+  description: '',
+  tramite_phase_instance_id: '',
+  tramite_subphase_instance_id: '',
+  assigned_to: '',
+  status: 'pending',
+  progress: 0,
+  due_date: '',
+};
+
+const syncStatusAndProgress = (status, progress) => {
+  if (status === 'pending') return 0;
+  if (status === 'done') return 100;
+  if (status === 'in_progress') return Math.min(99, Math.max(1, Number(progress) || 1));
+  if (status === 'blocked') return Math.min(99, Math.max(1, Number(progress) || 1));
+  return Number(progress) || 0;
+};
+
 const TramiteTasksPage = () => {
   const { id } = useParams();
   const { user } = useAuthStore();
@@ -21,14 +40,7 @@ const TramiteTasksPage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    assigned_to: '',
-    status: 'pending',
-    progress: 0,
-    due_date: '',
-  });
+  const [form, setForm] = useState(emptyForm);
 
   const canCreate = useMemo(() => {
     if (!tramite || !user) return false;
@@ -41,13 +53,31 @@ const TramiteTasksPage = () => {
     [user]
   );
 
+  const currentStep = useMemo(() => getCurrentStep(tramite), [tramite]);
+  const createSubphaseOptions = useMemo(
+    () => getSubphaseOptions(tramite?.phases || [], form.tramite_phase_instance_id),
+    [tramite, form.tramite_phase_instance_id]
+  );
+
   useEffect(() => {
     loadData();
   }, [id]);
 
+  useEffect(() => {
+    if (!tramite) return;
+
+    setForm((prev) => ({
+      ...prev,
+      tramite_phase_instance_id: prev.tramite_phase_instance_id || (currentStep.phase?.id ? String(currentStep.phase.id) : ''),
+      tramite_subphase_instance_id:
+        prev.tramite_subphase_instance_id || (currentStep.subphase?.id ? String(currentStep.subphase.id) : ''),
+    }));
+  }, [tramite, currentStep.phase?.id, currentStep.subphase?.id]);
+
   const loadData = async () => {
     setLoading(true);
     setError('');
+
     try {
       const promises = [tramitesApi.show(id), tramitesApi.listTasks(id)];
       if (canViewStaff) promises.push(adminUsersApi.list());
@@ -55,42 +85,43 @@ const TramiteTasksPage = () => {
       const [tramiteRes, tasksRes, staffRes] = await Promise.all(promises);
       setTramite(tramiteRes.data);
       setTasks(tasksRes.data);
+
       if (canViewStaff && staffRes) {
         setStaff(staffRes.data?.data || staffRes.data || []);
       } else {
         setStaff([]);
       }
-    } catch (error) {
-      console.error(error);
-      const status = error.response?.status;
+    } catch (requestError) {
+      console.error(requestError);
+      const status = requestError.response?.status;
+
       if (status === 403) {
         setError(
-          'No tienes permiso para ver este trámite. Si eres operador, solo puedes ver trámites con tareas asignadas a ti.'
+          'No tienes permiso para ver este tramite. Si eres operador, solo puedes ver tramites con tareas asignadas a ti.'
         );
       } else {
-        setError('No se pudieron cargar las tareas del trámite.');
+        setError('No se pudieron cargar las tareas del tramite.');
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
+  const handleCreate = async (event) => {
+    event.preventDefault();
     setSaving(true);
+
     try {
-      const payload = {
-        ...form,
-        assigned_to: form.assigned_to ? Number(form.assigned_to) : null,
-        progress: Number(form.progress) || 0,
-        due_date: form.due_date || null,
-        description: form.description || null,
-      };
+      const payload = normalizeTaskPayload(form);
       await tramitesApi.createTask(id, payload);
-      setForm({ title: '', description: '', assigned_to: '', status: 'pending', progress: 0, due_date: '' });
+      setForm({
+        ...emptyForm,
+        tramite_phase_instance_id: currentStep.phase?.id ? String(currentStep.phase.id) : '',
+        tramite_subphase_instance_id: currentStep.subphase?.id ? String(currentStep.subphase.id) : '',
+      });
       await loadData();
-    } catch (error) {
-      console.error(error);
+    } catch (requestError) {
+      console.error(requestError);
       alert('No se pudo crear la tarea.');
     } finally {
       setSaving(false);
@@ -101,28 +132,40 @@ const TramiteTasksPage = () => {
     try {
       await tramitesApi.updateTask(id, taskId, payload);
       await loadData();
-    } catch (error) {
-      console.error(error);
+    } catch (requestError) {
+      console.error(requestError);
       alert('No se pudo actualizar la tarea.');
     }
   };
 
   const inputClass =
-    'w-full px-4 py-2 rounded-xl border border-[#ebe7df] bg-[#f8f5ef] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a] outline-none text-[#233274] placeholder-[#9a98a0]';
-  const labelClass = 'text-sm font-semibold text-[#233274] mb-1 block';
+    'w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 text-[#233274] outline-none placeholder-[#9a98a0] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]';
+  const labelClass = 'mb-1 block text-sm font-semibold text-[#233274]';
+  const formProgressLocked = form.status === 'pending' || form.status === 'done';
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom space-y-6">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold text-[#e15f0b]">TRÁMITE</p>
+            <p className="text-xs font-semibold text-[#e15f0b]">TRAMITE</p>
             <h1 className="text-3xl font-black text-[#233274]">{tramite?.project_name || 'Cargando...'}</h1>
             <p className="text-sm text-[#9a98a0]">{tramite?.code}</p>
+            {tramite && (
+              <div className="mt-3 flex flex-wrap gap-2 text-sm">
+                <span className="rounded-full bg-[#233274] px-3 py-1 font-semibold text-white">
+                  Fase actual: {currentStep.phase?.name || 'Sin fase'}
+                </span>
+                <span className="rounded-full bg-[#fff3e6] px-3 py-1 font-semibold text-[#e15f0b]">
+                  Subfase actual: {currentStep.subphase?.name || 'Sin subfase'}
+                </span>
+              </div>
+            )}
           </div>
+
           <Link
             to="/tramites/control"
-            className="px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+            className="rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
           >
             Volver a vista general
           </Link>
@@ -131,19 +174,17 @@ const TramiteTasksPage = () => {
         {loading ? (
           <div className="text-center text-[#9a98a0]">Cargando...</div>
         ) : error ? (
-          <div className="bg-white border border-red-200 text-red-600 rounded-2xl p-4">
-            {error}
-          </div>
+          <div className="rounded-2xl border border-red-200 bg-white p-4 text-red-600">{error}</div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Tareas */}
-            <div className="lg:col-span-2 bg-white border border-[#ebe7df] shadow-lg rounded-2xl p-6 space-y-4">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="space-y-4 rounded-2xl border border-[#ebe7df] bg-white p-6 shadow-lg lg:col-span-2">
               <div className="flex items-center gap-2">
-                <ClipboardCheck className="w-5 h-5 text-[#e15f0b]" />
+                <ClipboardCheck className="h-5 w-5 text-[#e15f0b]" />
                 <h2 className="text-xl font-black text-[#233274]">Tareas asignadas</h2>
               </div>
+
               {tasks.length === 0 ? (
-                <div className="text-[#9a98a0]">Aún no hay tareas.</div>
+                <div className="text-[#9a98a0]">Aun no hay tareas.</div>
               ) : (
                 <div className="space-y-3">
                   {tasks.map((task) => (
@@ -156,22 +197,23 @@ const TramiteTasksPage = () => {
                       userId={user?.id}
                       staff={staff}
                       canManageAssignments={canCreate && canViewStaff}
+                      phases={tramite?.phases || []}
                     />
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Crear tarea */}
             {canCreate && (
-              <div className="bg-white border border-[#ebe7df] shadow-lg rounded-2xl p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <PlayCircle className="w-5 h-5 text-[#e15f0b]" />
+              <div className="rounded-2xl border border-[#ebe7df] bg-white p-6 shadow-lg">
+                <div className="mb-4 flex items-center gap-2">
+                  <PlayCircle className="h-5 w-5 text-[#e15f0b]" />
                   <h3 className="text-lg font-black text-[#233274]">Nueva tarea</h3>
                 </div>
+
                 <form onSubmit={handleCreate} className="space-y-3">
                   <div>
-                    <label className={labelClass}>Título</label>
+                    <label className={labelClass}>Titulo</label>
                     <input
                       className={inputClass}
                       value={form.title}
@@ -179,14 +221,56 @@ const TramiteTasksPage = () => {
                       required
                     />
                   </div>
+
                   <div>
-                    <label className={labelClass}>Descripción</label>
+                    <label className={labelClass}>Descripcion</label>
                     <textarea
                       className={`${inputClass} min-h-[80px]`}
                       value={form.description}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
                     />
                   </div>
+
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                    <div>
+                      <label className={labelClass}>Fase</label>
+                      <select
+                        className={inputClass}
+                        value={form.tramite_phase_instance_id}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            tramite_phase_instance_id: e.target.value,
+                            tramite_subphase_instance_id: '',
+                          })
+                        }
+                      >
+                        <option value="">Sin fase</option>
+                        {(tramite?.phases || []).map((phase) => (
+                          <option key={phase.id} value={phase.id}>
+                            {phase.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className={labelClass}>Subfase</label>
+                      <select
+                        className={inputClass}
+                        value={form.tramite_subphase_instance_id}
+                        onChange={(e) => setForm({ ...form, tramite_subphase_instance_id: e.target.value })}
+                      >
+                        <option value="">Sin subfase</option>
+                        {createSubphaseOptions.map((subphase) => (
+                          <option key={subphase.id} value={subphase.id}>
+                            {subphase.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
                   <div>
                     <label className={labelClass}>Asignar a (opcional)</label>
                     <select
@@ -195,44 +279,80 @@ const TramiteTasksPage = () => {
                       onChange={(e) => setForm({ ...form, assigned_to: e.target.value })}
                     >
                       <option value="">Sin asignar</option>
-                      {staff.map((u) => (
-                        <option key={u.id} value={u.id}>
-                          {u.name} ({u.role})
+                      {staff.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name} ({item.role})
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <div>
                       <label className={labelClass}>Estado</label>
                       <select
                         className={inputClass}
                         value={form.status}
-                        onChange={(e) => setForm({ ...form, status: e.target.value })}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            status: e.target.value,
+                            progress: syncStatusAndProgress(e.target.value, prev.progress),
+                          }))
+                        }
                       >
-                        {taskStatusOptions.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
+                        {taskStatusOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
                           </option>
                         ))}
                       </select>
                     </div>
+
                     <div>
                       <label className={labelClass}>Progreso (%)</label>
-                      <input
-                        type="range"
-                        min={0}
-                        max={100}
-                        step={1}
-                        value={form.progress}
-                        onChange={(e) => setForm({ ...form, progress: Number(e.target.value) })}
-                        className="w-full accent-[#e15f0b]"
-                      />
-                      <div className="text-xs text-[#233274] font-semibold mt-1">{form.progress}%</div>
+                      <div className="space-y-2">
+                        <input
+                          type="range"
+                          min={form.status === 'pending' ? 0 : 1}
+                          max={form.status === 'done' ? 100 : 99}
+                          step={1}
+                          value={form.progress}
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              progress: syncStatusAndProgress(prev.status, e.target.value),
+                            }))
+                          }
+                          className="w-full accent-[#e15f0b]"
+                          disabled={formProgressLocked}
+                        />
+                        <input
+                          type="number"
+                          min={form.status === 'pending' ? 0 : 1}
+                          max={form.status === 'done' ? 100 : 99}
+                          value={form.progress}
+                          onChange={(e) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              progress: syncStatusAndProgress(prev.status, e.target.value),
+                            }))
+                          }
+                          className={inputClass}
+                          disabled={formProgressLocked}
+                        />
+                        <div className="text-xs font-semibold text-[#233274]">
+                          {form.status === 'pending' && 'Pendiente siempre usa 0%.'}
+                          {form.status === 'done' && 'Completado siempre usa 100%.'}
+                          {(form.status === 'in_progress' || form.status === 'blocked') &&
+                            'En proceso y bloqueado permiten un avance entre 1% y 99%.'}
+                        </div>
+                      </div>
                     </div>
                   </div>
+
                   <div>
-                    <label className={labelClass}>Fecha límite</label>
+                    <label className={labelClass}>Fecha limite</label>
                     <input
                       type="date"
                       className={inputClass}
@@ -240,12 +360,13 @@ const TramiteTasksPage = () => {
                       onChange={(e) => setForm({ ...form, due_date: e.target.value })}
                     />
                   </div>
+
                   <button
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 bg-gradient-primary text-[#233274] font-bold px-4 py-3 rounded-xl shadow-md hover:shadow-lg transition"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-primary px-4 py-3 font-bold text-[#233274] shadow-md transition hover:shadow-lg"
                     disabled={saving}
                   >
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
                     {saving ? 'Creando...' : 'Crear tarea'}
                   </button>
                 </form>
@@ -258,7 +379,7 @@ const TramiteTasksPage = () => {
   );
 };
 
-const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canManageAssignments }) => {
+const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canManageAssignments, phases }) => {
   const locked = isOperator && task.assignee?.id !== userId;
   const [local, setLocal] = useState({
     status: task.status,
@@ -266,7 +387,10 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
     observations: task.observations || '',
     assigned_to: task.assignee?.id || '',
     due_date: task.due_date ? String(task.due_date).slice(0, 10) : '',
+    tramite_phase_instance_id: task.phase?.id ? String(task.phase.id) : '',
+    tramite_subphase_instance_id: task.subphase?.id ? String(task.subphase.id) : '',
   });
+  const progressLocked = local.status === 'pending' || local.status === 'done';
 
   useEffect(() => {
     setLocal({
@@ -275,18 +399,13 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
       observations: task.observations || '',
       assigned_to: task.assignee?.id || '',
       due_date: task.due_date ? String(task.due_date).slice(0, 10) : '',
+      tramite_phase_instance_id: task.phase?.id ? String(task.phase.id) : '',
+      tramite_subphase_instance_id: task.subphase?.id ? String(task.subphase.id) : '',
     });
   }, [task]);
 
   const handleSave = () => {
-    const payload = {
-      status: local.status,
-      progress: Number(local.progress) || 0,
-      observations: local.observations,
-      assigned_to: local.assigned_to || null,
-      due_date: local.due_date || null,
-    };
-    onUpdate(task.id, payload);
+    onUpdate(task.id, normalizeTaskPayload(local));
   };
 
   const handleChange = (field, value) => {
@@ -294,54 +413,83 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
   };
 
   return (
-    <div className="p-4 rounded-xl border border-[#ebe7df] bg-[#fdfaf5] space-y-2">
+    <div className="space-y-2 rounded-xl border border-[#ebe7df] bg-[#fdfaf5] p-4">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold text-[#e15f0b]">{task.phase?.name}</p>
+          <p className="text-xs font-semibold text-[#e15f0b]">
+            {task.phase?.name || 'Sin fase'}
+            {task.subphase?.name ? ` / ${task.subphase.name}` : ''}
+          </p>
           <p className="text-lg font-bold text-[#233274]">{task.title}</p>
           <p className="text-sm text-[#9a98a0]">{task.description}</p>
         </div>
-        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#233274] text-white">
+
+        <span className="rounded-full bg-[#233274] px-3 py-1 text-xs font-semibold text-white">
           {task.assignee?.name || 'Sin asignar'}
         </span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+
+      <div className="grid grid-cols-1 items-center gap-3 md:grid-cols-3">
         <div>
           <label className="text-xs font-semibold text-[#233274]">Estado</label>
           <select
             className={inputClass}
             value={local.status}
-            onChange={(e) => handleChange('status', e.target.value)}
+            onChange={(e) =>
+              setLocal((prev) => ({
+                ...prev,
+                status: e.target.value,
+                progress: syncStatusAndProgress(e.target.value, prev.progress),
+              }))
+            }
             disabled={locked}
           >
-            {taskStatusOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
+            {taskStatusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>
           <div
-            className={`inline-flex mt-2 px-3 py-1 rounded-full text-xs font-semibold ${
-              taskStatusOptions.find((o) => o.value === local.status)?.color || 'bg-gray-100 text-gray-700'
+            className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+              taskStatusOptions.find((item) => item.value === local.status)?.color || 'bg-gray-100 text-gray-700'
             }`}
           >
-            {taskStatusOptions.find((o) => o.value === local.status)?.label || local.status}
+            {taskStatusOptions.find((item) => item.value === local.status)?.label || local.status}
           </div>
         </div>
+
         <div>
           <label className="text-xs font-semibold text-[#233274]">Progreso</label>
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={1}
-            className="w-full accent-[#e15f0b]"
-            value={local.progress}
-            onChange={(e) => handleChange('progress', e.target.value)}
-            disabled={locked}
-          />
-          <div className="text-xs text-[#233274] font-semibold mt-1">{local.progress}%</div>
+          <div className="space-y-2">
+            <input
+              type="range"
+              min={local.status === 'pending' ? 0 : 1}
+              max={local.status === 'done' ? 100 : 99}
+              step={1}
+              className="w-full accent-[#e15f0b]"
+              value={local.progress}
+              onChange={(e) => handleChange('progress', syncStatusAndProgress(local.status, e.target.value))}
+              disabled={locked || progressLocked}
+            />
+            <input
+              type="number"
+              min={local.status === 'pending' ? 0 : 1}
+              max={local.status === 'done' ? 100 : 99}
+              className={inputClass}
+              value={local.progress}
+              onChange={(e) => handleChange('progress', syncStatusAndProgress(local.status, e.target.value))}
+              disabled={locked || progressLocked}
+            />
+            <div className="text-xs font-semibold text-[#233274]">
+              {local.status === 'pending' && 'Pendiente siempre usa 0%.'}
+              {local.status === 'done' && 'Completado siempre usa 100%.'}
+              {(local.status === 'in_progress' || local.status === 'blocked') &&
+                'En proceso y bloqueado permiten un avance entre 1% y 99%.'}
+            </div>
+          </div>
         </div>
+
         <div>
           <label className="text-xs font-semibold text-[#233274]">Observaciones</label>
           <input
@@ -351,8 +499,49 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             disabled={locked}
           />
         </div>
+
         <div>
-          <label className="text-xs font-semibold text-[#233274]">Fecha límite</label>
+          <label className="text-xs font-semibold text-[#233274]">Fase</label>
+          <select
+            className={inputClass}
+            value={local.tramite_phase_instance_id}
+            onChange={(e) =>
+              setLocal((prev) => ({
+                ...prev,
+                tramite_phase_instance_id: e.target.value,
+                tramite_subphase_instance_id: '',
+              }))
+            }
+            disabled={locked}
+          >
+            <option value="">Sin fase</option>
+            {phases.map((phase) => (
+              <option key={phase.id} value={phase.id}>
+                {phase.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="text-xs font-semibold text-[#233274]">Subfase</label>
+          <select
+            className={inputClass}
+            value={local.tramite_subphase_instance_id}
+            onChange={(e) => handleChange('tramite_subphase_instance_id', e.target.value)}
+            disabled={locked}
+          >
+            <option value="">Sin subfase</option>
+            {getSubphaseOptions(phases, local.tramite_phase_instance_id).map((subphase) => (
+              <option key={subphase.id} value={subphase.id}>
+                {subphase.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="text-xs font-semibold text-[#233274]">Fecha limite</label>
           <input
             type="date"
             className={inputClass}
@@ -362,6 +551,7 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             readOnly={isOperator}
           />
         </div>
+
         {canManageAssignments && (
           <div>
             <label className="text-xs font-semibold text-[#233274]">Asignado a</label>
@@ -371,25 +561,27 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
               onChange={(e) => handleChange('assigned_to', e.target.value)}
             >
               <option value="">Sin asignar</option>
-              {staff.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.name} ({u.role})
+              {staff.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} ({item.role})
                 </option>
               ))}
             </select>
           </div>
         )}
       </div>
+
       {task.status === 'blocked' && (
-        <div className="flex items-center gap-2 text-orange-600 text-sm">
-          <AlertCircle className="w-4 h-4" /> Esta tarea está bloqueada, agrega observaciones.
+        <div className="flex items-center gap-2 text-sm text-orange-600">
+          <AlertCircle className="h-4 w-4" /> Esta tarea esta bloqueada, agrega observaciones.
         </div>
       )}
+
       {!locked && (
         <div className="flex justify-end">
           <button
             onClick={handleSave}
-            className="px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+            className="rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
           >
             Guardar
           </button>
@@ -397,6 +589,32 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
       )}
     </div>
   );
+};
+
+const normalizeTaskPayload = (values) => ({
+  title: values.title,
+  description: values.description || null,
+  tramite_phase_instance_id: values.tramite_phase_instance_id ? Number(values.tramite_phase_instance_id) : null,
+  tramite_subphase_instance_id: values.tramite_subphase_instance_id ? Number(values.tramite_subphase_instance_id) : null,
+  assigned_to: values.assigned_to ? Number(values.assigned_to) : null,
+  status: values.status,
+  progress: Number(values.progress) || 0,
+  due_date: values.due_date || null,
+  observations: values.observations || null,
+});
+
+const getSubphaseOptions = (phases, phaseId) => {
+  if (!phaseId) return [];
+  const phase = phases.find((item) => String(item.id) === String(phaseId));
+  return phase?.subphases || [];
+};
+
+const getCurrentStep = (tramite) => {
+  const phases = tramite?.phases || [];
+  const phase = phases.find((item) => item.status !== 'completed') || phases[phases.length - 1] || null;
+  const subphases = phase?.subphases || [];
+  const subphase = subphases.find((item) => item.status !== 'completed') || subphases[subphases.length - 1] || null;
+  return { phase, subphase };
 };
 
 export default TramiteTasksPage;

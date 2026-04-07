@@ -34,6 +34,14 @@ const PERU_REGIONS = [
   'Tumbes',
   'Ucayali',
 ];
+const CITY_SUGGESTIONS = {
+  Lima: ['Miraflores', 'San Isidro', 'Santiago de Surco', 'La Molina', 'Barranco', 'Cieneguilla'],
+  Cusco: ['Cusco', 'San Sebastian', 'San Jeronimo', 'Wanchaq', 'Santiago', 'Zurite'],
+  Arequipa: ['Cercado', 'Yanahuara', 'Cayma', 'Cerro Colorado'],
+  Piura: ['Piura', 'Castilla', 'Catacaos'],
+  'La Libertad': ['Trujillo', 'Victor Larco', 'Huanchaco'],
+};
+const SUMMARY_MAX = 180;
 
 const CreateTourPage = () => {
   const navigate = useNavigate();
@@ -195,6 +203,7 @@ const CreateTourPage = () => {
   };
 
   const heroPreviewSrc = heroPreview || formData.hero_image.trim();
+  const cityHints = CITY_SUGGESTIONS[formData.state] || [];
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-8">
@@ -237,7 +246,9 @@ const CreateTourPage = () => {
                   onChange={(e) => handleChange('title', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Casa de campo en Cieneguilla"
+                  minLength={4}
                 />
+                <p className="mt-1 text-xs text-[#9a98a0]">Usa un nombre claro y comercial para el portafolio.</p>
                 {errors.title && <p className="text-sm text-red-600 mt-1">{errors.title}</p>}
               </div>
 
@@ -250,17 +261,29 @@ const CreateTourPage = () => {
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Residencial, comercial, interiorismo..."
                 />
+                <p className="mt-1 text-xs text-[#9a98a0]">Puedes escribir el tipo libremente segun el proyecto.</p>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Ciudad o distrito</label>
                 <input
                   type="text"
+                  list="project-city-suggestions"
                   value={formData.city}
                   onChange={(e) => handleChange('city', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Ej: Miraflores, San Isidro, Cusco"
                 />
+                <datalist id="project-city-suggestions">
+                  {cityHints.map((city) => (
+                    <option key={city} value={city} />
+                  ))}
+                </datalist>
+                <p className="mt-1 text-xs text-[#9a98a0]">
+                  {formData.state
+                    ? `Sugerencias para ${formData.state}: ${cityHints.join(', ') || 'sin sugerencias cargadas'}`
+                    : 'Primero elige una region para ver sugerencias.'}
+                </p>
               </div>
 
               <div>
@@ -285,6 +308,7 @@ const CreateTourPage = () => {
                   value={formData.country}
                   onChange={(e) => handleChange('country', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  disabled
                 >
                   {COUNTRIES.map((country) => (
                     <option key={country} value={country}>
@@ -306,6 +330,7 @@ const CreateTourPage = () => {
                     <option value="published">Publicado</option>
                     <option value="archived">Archivado</option>
                   </select>
+                  <p className="mt-1 text-xs text-[#9a98a0]">Publicado aparece en la web. Borrador queda interno.</p>
                   {errors.status && <p className="text-sm text-red-600 mt-1">{errors.status}</p>}
                 </div>
 
@@ -330,10 +355,12 @@ const CreateTourPage = () => {
                 <textarea
                   value={formData.summary}
                   ref={summaryRef}
-                  onChange={(e) => handleChange('summary', e.target.value)}
+                  onChange={(e) => handleChange('summary', e.target.value.slice(0, SUMMARY_MAX))}
                   className="w-full min-h-[140px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
-                  placeholder="Descripcion corta del proyecto"
+                  placeholder="Resume en una frase que se hizo y para quien fue pensado el proyecto."
+                  maxLength={SUMMARY_MAX}
                 />
+                <p className="mt-1 text-xs text-[#9a98a0]">{formData.summary.length}/{SUMMARY_MAX} caracteres</p>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Descripcion detallada *</label>
@@ -342,7 +369,7 @@ const CreateTourPage = () => {
                   ref={descriptionRef}
                   onChange={(e) => handleChange('description', e.target.value)}
                   className="w-full min-h-[180px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
-                  placeholder="Detalles, objetivos y resultados del proyecto"
+                  placeholder="Describe el contexto, el objetivo del proyecto, la solucion propuesta y el resultado final."
                 />
                 {errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}
               </div>

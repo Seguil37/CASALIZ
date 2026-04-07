@@ -54,6 +54,18 @@ class Tramite extends Model
         return $this->hasMany(TramitePhaseInstance::class)->orderBy('order');
     }
 
+    public function subphases()
+    {
+        return $this->hasManyThrough(
+            TramiteSubphaseInstance::class,
+            TramitePhaseInstance::class,
+            'tramite_id',
+            'tramite_phase_instance_id',
+            'id',
+            'id'
+        )->orderBy('order');
+    }
+
     public function tasks()
     {
         return $this->hasMany(TramiteTask::class);

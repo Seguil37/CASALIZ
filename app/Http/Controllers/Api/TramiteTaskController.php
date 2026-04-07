@@ -52,6 +52,8 @@ class TramiteTaskController extends Controller
             'observations' => 'nullable|string',
         ]);
 
+        $data = $this->normalizePhaseSelection($tramite, $data);
+
         $task = $tramite->tasks()->create([
             'title' => $data['title'],
             'description' => $data['description'] ?? null,
@@ -86,12 +88,16 @@ class TramiteTaskController extends Controller
         $data = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
+            'tramite_phase_instance_id' => 'nullable|exists:tramite_instance_phases,id',
+            'tramite_subphase_instance_id' => 'nullable|exists:tramite_instance_subphases,id',
             'assigned_to' => 'nullable|exists:users,id',
             'status' => ['nullable', Rule::in($this->statusList())],
             'progress' => 'nullable|integer|min:0|max:100',
             'due_date' => 'nullable|date',
             'observations' => 'nullable|string',
         ]);
+
+        $data = $this->normalizePhaseSelection($tramite, $data, $task);
 
         $previousAssigneeId = $task->assigned_to;
 
@@ -111,7 +117,7 @@ class TramiteTaskController extends Controller
 
         $this->notifyAssignee($tramite, $task->fresh(), $previousAssigneeId, $user);
 
-        return $task->fresh(['assignee', 'creator']);
+        return $task->fresh(['assignee', 'creator', 'phase', 'subphase']);
     }
 
     public function destroy(Tramite $tramite, TramiteTask $task)
@@ -189,5 +195,41 @@ class TramiteTaskController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+    }
+
+    private function normalizePhaseSelection(Tramite $tramite, array $data, ?TramiteTask $task = null): array
+    {
+        $phaseId = array_key_exists('tramite_phase_instance_id', $data)
+            ? $data['tramite_phase_instance_id']
+            : $task?->tramite_phase_instance_id;
+
+        $subphaseId = array_key_exists('tramite_subphase_instance_id', $data)
+            ? $data['tramite_subphase_instance_id']
+            : $task?->tramite_subphase_instance_id;
+
+        if ($phaseId) {
+            $phase = $tramite->phases()->whereKey($phaseId)->first();
+            if (!$phase) {
+                abort(422, 'La fase seleccionada no pertenece a este trámite.');
+            }
+        }
+
+        if ($subphaseId) {
+            $subphase = $tramite->subphases()
+                ->with('phase:id,tramite_id')
+                ->whereKey($subphaseId)
+                ->first();
+
+            if (!$subphase) {
+                abort(422, 'La subfase seleccionada no pertenece a este trámite.');
+            }
+
+            $phaseId = $subphase->tramite_phase_instance_id;
+        }
+
+        $data['tramite_phase_instance_id'] = $phaseId ?: null;
+        $data['tramite_subphase_instance_id'] = $subphaseId ?: null;
+
+        return $data;
     }
 }
