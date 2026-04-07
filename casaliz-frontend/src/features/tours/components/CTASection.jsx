@@ -21,12 +21,12 @@ const CTASection = () => {
       <div className="container-custom relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Título principal */}
-          <h2 className="text-4xl lg:text-5xl font-black text-[#f8f5ef] mb-6 animate-fade-in">
+          <h2 className="text-4xl lg:text-5xl font-black text-[#f8f5ef] mb-6 animate-fade-in transition-transform duration-500 hover:-translate-y-1">
             Accede a tu cuenta Casaliz
           </h2>
 
           {/* Subtítulo */}
-          <p className="text-xl text-[#f8f5ef] mb-8 animate-fade-in">
+          <p className="text-xl text-[#f8f5ef] mb-8 animate-fade-in transition-colors duration-500 hover:text-white">
             Inicia sesión para dejar reseñas, descubrir proyectos destacados y guardar tus favoritos.
           </p>
 
@@ -34,7 +34,7 @@ const CTASection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">
             <Link
               to="/login"
-              className="group bg-[#233274] hover:bg-[#1a2555] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center gap-3 min-w-[200px] justify-center"
+              className="group bg-[#233274] hover:bg-[#1a2555] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3 min-w-[200px] justify-center"
             >
               <LogIn className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               Iniciar sesión
@@ -42,7 +42,7 @@ const CTASection = () => {
 
             <Link
               to="/register"
-              className="group bg-[#f8f5ef] hover:bg-[#f8f5ef] text-[#233274] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center gap-3 min-w-[200px] justify-center border-2 border-[#233274]"
+              className="group bg-[#f8f5ef] hover:bg-[#f8f5ef] text-[#233274] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center gap-3 min-w-[200px] justify-center border-2 border-[#233274]"
             >
               <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform" />
               Crear cuenta
@@ -71,10 +71,10 @@ const CTASection = () => {
               return (
                 <div
                   key={index}
-                  className="bg-[#f8f5ef]/80 backdrop-blur-sm rounded-xl p-6 shadow-lg animate-fade-in"
+                  className="bg-[#f8f5ef]/80 backdrop-blur-sm rounded-xl p-6 shadow-lg animate-fade-in transition-all duration-500 hover:-translate-y-2 hover:bg-white"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <div className={`w-12 h-12 bg-gradient-to-br ${benefit.color} rounded-full flex items-center justify-center mx-auto mb-3`}>
+                  <div className={`w-12 h-12 bg-gradient-to-br ${benefit.color} rounded-full flex items-center justify-center mx-auto mb-3 transition-transform duration-500 hover:scale-110`}>
                     <Icon className="w-6 h-6 text-[#f8f5ef]" />
                   </div>
                   <p className="text-[#233274] text-center">

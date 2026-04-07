@@ -37,11 +37,11 @@ const WhyUsSection = () => {
     <section id="nosotros" className="py-20 bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef]">
       <div className="container-custom">
         {/* Título */}
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-4">
+        <div className="text-center mb-16 animate-fade-in transition-transform duration-500 hover:-translate-y-1">
+          <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-4 transition-transform duration-500 hover:scale-[1.01]">
             ¿Por qué diseñar tu proyecto con Casaliz?
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] mx-auto rounded-full"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] mx-auto rounded-full transition-all duration-500 hover:w-32"></div>
         </div>
 
         {/* Cards */}
@@ -51,7 +51,7 @@ const WhyUsSection = () => {
             return (
               <div
                 key={index}
-                className="group bg-[#f8f5ef] rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
+                className="group bg-[#f8f5ef] rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
                 {/* Icono con gradiente */}
@@ -85,11 +85,11 @@ const WhyUsSection = () => {
             return (
               <div
                 key={index}
-                className="relative overflow-hidden bg-gradient-to-br from-[#233274] via-[#2f3f8c] to-[#d67a2b] rounded-2xl p-8 text-center animate-fade-in shadow-xl"
+                className="relative overflow-hidden bg-gradient-to-br from-[#233274] via-[#2f3f8c] to-[#d67a2b] rounded-2xl p-8 text-center animate-fade-in shadow-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(35,50,116,0.20)]"
                 style={{ animationDelay: `${0.6 + index * 0.1}s` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10 pointer-events-none" />
-                <div className="relative w-16 h-16 bg-gradient-to-br from-[#f59e0b] to-[#d14a00] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <div className="relative w-16 h-16 bg-gradient-to-br from-[#f59e0b] to-[#d14a00] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg transition-transform duration-500 hover:scale-110">
                   <Icon className="w-8 h-8 text-white" />
                 </div>
                 <div className="relative text-4xl font-black text-white drop-shadow mb-2">{stat.value}</div>

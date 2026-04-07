@@ -83,13 +83,13 @@ const FeaturedServiceSection = () => {
     <section className="py-20 bg-[#f8f5ef]">
       <div className="container-custom">
         <div className="flex items-center justify-between mb-12">
-          <div className="flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-[#e15f0b]" />
+          <div className="flex items-center gap-3 transition-transform duration-500 hover:translate-x-1">
+            <Sparkles className="w-8 h-8 text-[#e15f0b] transition-transform duration-500 hover:scale-110 hover:rotate-6" />
             <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">Servicios destacados</h2>
           </div>
           <Link
             to="/services"
-            className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold"
+            className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold transition-all duration-300 hover:translate-x-1"
           >
             Ver todos los servicios
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,11 +103,11 @@ const FeaturedServiceSection = () => {
             <Link
               key={service.id}
               to={`/services/${service.slug || service.id}`}
-              className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 border border-[#9a98a0]"
+              className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden hover:-translate-y-2 border border-[#9a98a0]"
             >
               <div className="p-4 pb-0">
                 {isFeaturedService(service) && (
-                  <span className="inline-flex bg-[#e15f0b] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                  <span className="inline-flex bg-[#e15f0b] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md transition-transform duration-300 group-hover:scale-105">
                     Destacado
                   </span>
                 )}
@@ -124,11 +124,11 @@ const FeaturedServiceSection = () => {
 
               <div className="p-5 space-y-3">
                 <div className="flex items-center gap-2 text-sm text-[#9a98a0]">
-                  <Briefcase className="w-4 h-4 text-[#e15f0b]" />
+                  <Briefcase className="w-4 h-4 text-[#e15f0b] transition-transform duration-300 group-hover:rotate-6" />
                   <span>{service.category || 'Servicio'}</span>
                 </div>
 
-                <h3 className="text-xl font-bold text-[#233274] leading-tight line-clamp-2">{service.title}</h3>
+                <h3 className="text-xl font-bold text-[#233274] leading-tight line-clamp-2 transition-colors duration-300 group-hover:text-[#e15f0b]">{service.title}</h3>
 
                 <p className="text-sm text-[#4b4b4b] line-clamp-2">
                   {service.short_description || 'Conoce mas sobre este servicio especializado.'}

@@ -84,15 +84,15 @@ const PopularCountriesSection = () => {
     <section className="py-20 bg-[#f8f5ef] overflow-hidden">
       <div className="container-custom">
         <div className="flex items-center justify-between mb-12 animate-fade-in">
-          <div className="flex items-center gap-3">
-            <Globe className="w-8 h-8 text-[#e15f0b]" />
+          <div className="flex items-center gap-3 transition-transform duration-500 hover:translate-x-1">
+            <Globe className="w-8 h-8 text-[#e15f0b] transition-transform duration-500 hover:scale-110 hover:rotate-6" />
             <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
               Nuestros servicios principales
             </h2>
           </div>
           <Link
             to="/services#servicios-listado"
-            className="hidden md:inline-flex items-center gap-2 text-[#e15f0b] font-semibold hover:text-[#d14a00] transition-colors"
+            className="hidden md:inline-flex items-center gap-2 text-[#e15f0b] font-semibold hover:text-[#d14a00] transition-all duration-300 hover:translate-x-1"
           >
             <Star className="w-5 h-5 fill-current" />
             <span className="font-semibold">Explora nuestros servicios clave</span>
@@ -109,7 +109,7 @@ const PopularCountriesSection = () => {
               key={`${country.name}-${index}`}
               className="flex-shrink-0 w-80 group cursor-pointer"
             >
-              <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
+              <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
                 <img
                   src={country.image}
                   alt={country.name}
@@ -128,7 +128,7 @@ const PopularCountriesSection = () => {
                   <Link
                     to="/services#servicios-listado"
                     state={{ prefill: country.name }}
-                    className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all opacity-0 group-hover:opacity-100 text-center block"
+                  className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-center block"
                   >
                     Explorar servicios de este tipo
                   </Link>

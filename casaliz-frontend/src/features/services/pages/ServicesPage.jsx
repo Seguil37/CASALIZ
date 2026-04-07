@@ -116,21 +116,21 @@ const ServicesPage = () => {
         </div>
         <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <div className="space-y-5">
-            <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/15 rounded-full text-sm font-semibold uppercase tracking-wide border border-white/25">
-              <span className="h-2 w-2 rounded-full bg-[#fbbf24]" />
+            <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/15 rounded-full text-sm font-semibold uppercase tracking-wide border border-white/25 transition-transform duration-500 hover:translate-x-1">
+              <span className="h-2 w-2 rounded-full bg-[#fbbf24] transition-transform duration-500 hover:scale-125" />
               Servicios CASALIZ
             </div>
-            <h1 className="text-4xl sm:text-5xl font-black leading-tight">
+            <h1 className="text-4xl sm:text-5xl font-black leading-tight transition-transform duration-500 hover:translate-x-1">
               Soluciones de diseño, construccion e inmobiliaria en un solo equipo.
             </h1>
-            <p className="text-lg max-w-2xl text-white/90">
+            <p className="text-lg max-w-2xl text-white/90 transition-colors duration-500 hover:text-white">
               Conecta con el servicio que necesitas: licencias, diseño, obra y gestion comercial. Te acompanamos desde la
               idea hasta la entrega final.
             </p>
             <div className="flex flex-wrap gap-4">
               <a
                 href="#servicios-listado"
-                className="px-5 py-3 rounded-xl bg-white text-[#233274] font-bold shadow-lg hover:-translate-y-0.5 transition-transform"
+                className="px-5 py-3 rounded-xl bg-white text-[#233274] font-bold shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
               >
                 Ver catalogo
               </a>
@@ -138,9 +138,9 @@ const ServicesPage = () => {
             </div>
           </div>
 
-          <div className="bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl backdrop-blur">
+          <div className="bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
             <div className="flex items-center gap-2 text-sm font-semibold uppercase text-white/80 mb-4">
-              <Briefcase className="w-5 h-5" />
+              <Briefcase className="w-5 h-5 transition-transform duration-500 hover:scale-110 hover:rotate-6" />
               Encuentra tu servicio
             </div>
             <form onSubmit={handleSearch} className="space-y-3">
@@ -151,7 +151,7 @@ const ServicesPage = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Licencias, diseño, topografia..."
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/60"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder-white/70 transition-all duration-300 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/60"
                 />
               </div>
               <div className="relative">
@@ -161,7 +161,7 @@ const ServicesPage = () => {
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
                   placeholder="Categoria o especialidad"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/60"
+                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/15 border border-white/25 text-white placeholder-white/70 transition-all duration-300 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/60"
                 />
               </div>
               <label className="flex items-center gap-2 text-sm font-semibold text-white/80">
@@ -176,7 +176,7 @@ const ServicesPage = () => {
               </label>
               <button
                 type="submit"
-                className="w-full bg-white text-[#233274] font-bold py-3 rounded-xl hover:-translate-y-0.5 transition-transform shadow-lg"
+                className="w-full bg-white text-[#233274] font-bold py-3 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01]"
               >
                 Buscar servicios
               </button>
@@ -188,7 +188,7 @@ const ServicesPage = () => {
                     key={tag}
                     type="button"
                     onClick={() => setSearchTerm(tag)}
-                    className="px-3 py-1 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+                    className="px-3 py-1 rounded-full bg-white/10 border border-white/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/20"
                   >
                     {tag}
                   </button>
@@ -201,7 +201,7 @@ const ServicesPage = () => {
 
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 -mt-8 relative z-10">
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-4 space-y-3">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-4 space-y-3 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(35,50,116,0.08)]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[11px] uppercase tracking-wide text-[#9a98a0]">Especialidades</p>
@@ -212,26 +212,26 @@ const ServicesPage = () => {
               {serviceHighlights.map((item) => (
                 <span
                   key={item}
-                  className="px-3 py-1.5 bg-[#fdfaf5] text-[#233274] rounded-full shadow-sm border border-[#e2dfd7] text-xs font-semibold"
+                  className="px-3 py-1.5 bg-[#fdfaf5] text-[#233274] rounded-full shadow-sm border border-[#e2dfd7] text-xs font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:bg-white"
                 >
                   {item}
                 </span>
               ))}
             </div>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-4 space-y-3">
+          <div className="bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-4 space-y-3 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(225,95,11,0.10)]">
             <p className="text-xs font-semibold text-[#233274] uppercase tracking-wide">SOLUCIONES PROFESIONALES</p>
             <p className="text-base leading-8 text-[#4b4b4b]">
               Gestionamos licencias, diseño, obra y venta. Cada servicio incluye seguimiento y asesoria personalizada.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[#233274]">
-              <span className="px-3 py-1.5 rounded-xl bg-[#fdf1df] border border-[#f3d7a6] font-semibold text-center">
+              <span className="px-3 py-1.5 rounded-xl bg-[#fdf1df] border border-[#f3d7a6] font-semibold text-center transition-transform duration-300 hover:-translate-y-0.5">
                 Arquitectura
               </span>
-              <span className="px-3 py-1.5 rounded-xl bg-[#e8f2ff] border border-[#c6dbff] font-semibold text-center">
+              <span className="px-3 py-1.5 rounded-xl bg-[#e8f2ff] border border-[#c6dbff] font-semibold text-center transition-transform duration-300 hover:-translate-y-0.5">
                 Construccion
               </span>
-              <span className="px-3 py-1.5 rounded-xl bg-[#eaf8ef] border border-[#c6e8d2] font-semibold text-center">
+              <span className="px-3 py-1.5 rounded-xl bg-[#eaf8ef] border border-[#c6e8d2] font-semibold text-center transition-transform duration-300 hover:-translate-y-0.5">
                 Inmobiliaria
               </span>
             </div>
@@ -246,7 +246,7 @@ const ServicesPage = () => {
               <Link
                 key={service.id}
                 to={`/services/${service.slug}`}
-                className="group relative rounded-2xl shadow-lg overflow-hidden block h-full bg-gradient-to-br from-[#1b274f] via-[#1f2f63] to-[#0f193a]"
+                className="group relative rounded-2xl shadow-lg overflow-hidden block h-full bg-gradient-to-br from-[#1b274f] via-[#1f2f63] to-[#0f193a] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(15,25,58,0.26)]"
               >
                 <div className="p-4 pb-0">
                   <div className="flex items-center gap-2 flex-wrap">

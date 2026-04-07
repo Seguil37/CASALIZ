@@ -55,10 +55,10 @@ const HeroSection = () => {
       <div className="container-custom relative z-20 text-center">
         <div className="animate-fade-in">
           <div className="mb-6">
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black text-[#f8f5ef] mb-4 tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black text-[#f8f5ef] mb-4 tracking-tight leading-tight transition-transform duration-500 hover:-translate-y-1">
               Diseñamos espacios que hablan por ti.
             </h1>
-            <p className="text-base sm:text-lg lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide">
+            <p className="text-base sm:text-lg lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide transition-colors duration-500 hover:text-white">
               Arquitectura y gestion de proyectos para viviendas, oficinas y espacios comerciales.
             </p>
           </div>
@@ -72,7 +72,7 @@ const HeroSection = () => {
                 className={`px-4 py-2 rounded-full text-sm font-bold transition-all border ${
                   mode === value
                     ? 'bg-white text-[#233274] border-white shadow-lg'
-                    : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+                    : 'bg-white/10 text-white border-white/20 hover:bg-white/20 hover:-translate-y-0.5'
                 }`}
               >
                 {value === 'projects' && 'Proyectos'}
@@ -83,7 +83,7 @@ const HeroSection = () => {
           </div>
 
           {isAbout ? (
-            <div className="max-w-5xl mx-auto bg-[#0f1b35]/80 border border-white/30 rounded-3xl p-8 text-white shadow-2xl backdrop-blur">
+            <div className="max-w-5xl mx-auto bg-[#0f1b35]/80 border border-white/30 rounded-3xl p-8 text-white shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-[#0f1b35]/85">
               <p className="text-3xl md:text-4xl font-black mb-3">10+ años de experiencia combinada</p>
               <p className="text-white/85 mb-6 text-lg max-w-3xl mx-auto">
                 Equipo de arquitectos e ingenieros que lidera licencias, diseño, construccion y supervision.
@@ -93,13 +93,13 @@ const HeroSection = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/contacto')}
-                  className="px-6 py-3 rounded-full bg-white text-[#233274] font-bold shadow-lg hover:-translate-y-0.5 transition-transform"
+                  className="px-6 py-3 rounded-full bg-white text-[#233274] font-bold shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
                 >
                   Hablemos ahora
                 </button>
                 <a
                   href="#nosotros"
-                  className="px-6 py-3 rounded-full border border-white/60 text-white font-bold hover:bg-white/10 transition-colors"
+                  className="px-6 py-3 rounded-full border border-white/60 text-white font-bold transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
                 >
                   Ver fortalezas
                 </a>
@@ -108,7 +108,7 @@ const HeroSection = () => {
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="max-w-5xl mx-auto mt-8 bg-[#f8f5ef] rounded-2xl shadow-2xl p-4 lg:p-6 animate-slide-up"
+              className="max-w-5xl mx-auto mt-8 bg-[#f8f5ef] rounded-2xl shadow-2xl p-4 lg:p-6 animate-slide-up transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_55px_rgba(15,27,53,0.20)]"
             >
               <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_auto] gap-4 items-end">
                 <div className="text-left">
@@ -120,7 +120,7 @@ const HeroSection = () => {
                       placeholder={inputPlaceholder}
                       value={value}
                       onChange={(e) => onChange(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all text-[#233274] font-medium"
+                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all text-[#233274] font-medium hover:border-[#e15f0b]/60"
                     />
                   </div>
                 </div>
@@ -128,7 +128,7 @@ const HeroSection = () => {
                 <div className="flex items-end">
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
+                    className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2 group"
                   >
                     <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
                     {mode === 'services' ? 'Buscar servicios' : 'Buscar proyectos'}
@@ -146,7 +146,7 @@ const HeroSection = () => {
               return (
                 <div
                   key={index}
-                  className="bg-[#f8f5ef]/10 backdrop-blur-sm rounded-lg p-4 text-[#f8f5ef] animate-fade-in"
+                  className="bg-[#f8f5ef]/10 backdrop-blur-sm rounded-lg p-4 text-[#f8f5ef] animate-fade-in transition-all duration-500 hover:-translate-y-1 hover:bg-[#f8f5ef]/15"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div className="flex items-center justify-center gap-2 mb-2">

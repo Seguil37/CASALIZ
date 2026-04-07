@@ -70,15 +70,15 @@ const FeaturedToursSection = () => {
     <section className="py-20 bg-[#f8f5ef]">
       <div className="container-custom">
         <div className="flex items-center justify-between mb-12">
-          <div className="flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-[#e15f0b]" />
+          <div className="flex items-center gap-3 transition-transform duration-500 hover:translate-x-1">
+            <Sparkles className="w-8 h-8 text-[#e15f0b] transition-transform duration-500 hover:scale-110 hover:rotate-6" />
             <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
               Proyectos destacados
             </h2>
           </div>
           <Link
             to="/projects"
-            className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold"
+            className="hidden md:flex items-center gap-2 text-[#e15f0b] hover:text-[#d14a00] font-semibold transition-all duration-300 hover:translate-x-1"
           >
             Ver todos los proyectos
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
