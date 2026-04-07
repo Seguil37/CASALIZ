@@ -89,6 +89,13 @@ const ToursPage = () => {
     setSearchParams({});
   };
 
+  const showAllProjects = () => {
+    const resetFilters = { search: '', city: '', type: '', featured: '' };
+    setFilters(resetFilters);
+    setSearchParams({});
+    scrollToResults();
+  };
+
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
       <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] px-4 py-14 text-white sm:px-6 lg:px-8">
@@ -110,6 +117,21 @@ const ToursPage = () => {
               Explora viviendas, remodelaciones, oficinas e intervenciones integrales desarrolladas con una visión técnica, estética y
               estratégica desde la primera idea hasta la entrega.
             </p>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="#projects-results"
+                className="rounded-xl bg-white px-5 py-3 font-bold text-[#233274] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
+              >
+                Ver proyectos
+              </a>
+              <button
+                type="button"
+                onClick={showAllProjects}
+                className="rounded-xl border border-white/35 bg-white/10 px-5 py-3 font-bold text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/18"
+              >
+                Mostrar todos
+              </button>
+            </div>
           </div>
 
           <div className="rounded-[30px] border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">

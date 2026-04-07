@@ -78,6 +78,15 @@ const ServicesPage = () => {
     scrollToResults();
   };
 
+  const showAllServices = () => {
+    setSearchTerm('');
+    setAppliedSearchTerm('');
+    setCategoryFilter('');
+    setFeaturedOnly(false);
+    setSearchParams({});
+    scrollToResults();
+  };
+
   const isFeaturedService = (service) => {
     const value = service?.is_featured ?? service?.featured;
     if (typeof value === 'string') return value === '1' || value.toLowerCase() === 'true';
@@ -157,7 +166,13 @@ const ServicesPage = () => {
               >
                 Ver catalogo
               </a>
-              
+              <button
+                type="button"
+                onClick={showAllServices}
+                className="px-5 py-3 rounded-xl border border-white/35 bg-white/10 text-white font-bold shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-white/18"
+              >
+                Mostrar todos
+              </button>
             </div>
           </div>
 
@@ -202,6 +217,13 @@ const ServicesPage = () => {
                 className="w-full bg-white text-[#233274] font-bold py-3 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01]"
               >
                 Buscar servicios
+              </button>
+              <button
+                type="button"
+                onClick={showAllServices}
+                className="w-full rounded-xl border border-white/25 bg-white/10 py-3 font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-white/18"
+              >
+                Mostrar todos los servicios
               </button>
               <div className="flex flex-wrap gap-2 text-xs text-white/80">
                 <Sparkles className="w-4 h-4 text-[#fbbf24]" />

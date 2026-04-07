@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, Menu, X, Mail, Bell } from 'lucide-react';
+import { Search, User, Menu, X, Mail, Bell, Phone } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import { notificationsApi } from '../../utils/api';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
@@ -379,9 +379,9 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden pb-4 animate-fade-in">
-            <div className="flex flex-col gap-2">
+	      {mobileMenuOpen && (
+	        <div className="lg:hidden pb-4 animate-fade-in">
+	          <div className="flex flex-col gap-2">
               <Link
                 to="/services"
                 className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
@@ -396,16 +396,121 @@ const Header = () => {
               >
                 Nuestros Proyectos
               </Link>
-              <Link
-                to="/about"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Nosotros
-              </Link>
-              <div className="border-t border-[#9a98a0] my-2 pt-2">
-                <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors">
-                  <Phone className="w-4 h-4 text-[#e15f0b]" />
+	              <Link
+	                to="/about"
+	                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+	                onClick={() => setMobileMenuOpen(false)}
+	              >
+	                Nosotros
+	              </Link>
+
+              {isAuthenticated && (
+                <>
+                  <div className="border-t border-[#9a98a0] my-2 pt-2">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Mi Perfil
+                    </Link>
+
+                    {user?.role === ROLES.CLIENT && (
+                      <Link
+                        to="/favorites"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Favoritos
+                      </Link>
+                    )}
+
+                    {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                      <Link
+                        to="/admin/panel"
+                        className="flex items-center gap-2 px-4 py-2 bg-[#233274] text-white rounded-lg transition-colors font-semibold hover:bg-[#1b285c]"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Panel administrativo
+                      </Link>
+                    )}
+
+                    {isAdminRole(user?.role) && (
+                      <Link
+                        to="/agency/dashboard"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Dashboard Proyectos
+                      </Link>
+                    )}
+
+                    {isAdminRole(user?.role) && (
+                      <Link
+                        to="/agency/services"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Gestión de servicios
+                      </Link>
+                    )}
+
+                    {isAdminRole(user?.role) && (
+                      <Link
+                        to="/tramites/gestion"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Gestión de trámites
+                      </Link>
+                    )}
+
+                    {user?.role === ROLES.MASTER_ADMIN && (
+                      <Link
+                        to="/tramites/tipos"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Tipos de trámite
+                      </Link>
+                    )}
+
+                    {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                      <Link
+                        to="/tramites/control"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Vista general trámites
+                      </Link>
+                    )}
+
+                    {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                      <Link
+                        to="/tramites/resumen-tareas"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Resumen de tareas
+                      </Link>
+                    )}
+
+                    {user?.role === ROLES.MASTER_ADMIN && (
+                      <Link
+                        to="/admin/users"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Gestión de administradores
+                      </Link>
+                    )}
+                  </div>
+                </>
+              )}
+
+	              <div className="border-t border-[#9a98a0] my-2 pt-2">
+	                <a href="tel:+51990179027" className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors">
+	                  <Phone className="w-4 h-4 text-[#e15f0b]" />
                   <span>+51 990 179 027</span>
                 </a>
                 <Link
@@ -413,12 +518,23 @@ const Header = () => {
                   className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <Mail className="w-4 h-4 text-[#e15f0b]" />
-                  <span>Contactanos</span>
-                </Link>
-              </div>
-            </div>
-          </div>
+	                  <Mail className="w-4 h-4 text-[#e15f0b]" />
+	                  <span>Contactanos</span>
+	                </Link>
+                  {isAuthenticated && (
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="flex w-full items-center gap-2 px-4 py-2 text-left text-red-600 rounded-lg transition-colors hover:bg-red-50"
+                    >
+                      Cerrar sesión
+                    </button>
+                  )}
+	              </div>
+	            </div>
+	          </div>
         )}
       </div>
     </header>
