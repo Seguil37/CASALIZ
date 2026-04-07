@@ -6,6 +6,34 @@ import { ArrowLeft, Save, Loader2, PlusCircle, Trash2, ImagePlus } from 'lucide-
 import { projectsApi } from '../../../shared/utils/api';
 
 const emptyImage = { path: '', caption: '', file: null, preview: '' };
+const COUNTRIES = ['Peru'];
+const PERU_REGIONS = [
+  'Amazonas',
+  'Ancash',
+  'Apurimac',
+  'Arequipa',
+  'Ayacucho',
+  'Cajamarca',
+  'Callao',
+  'Cusco',
+  'Huancavelica',
+  'Huanuco',
+  'Ica',
+  'Junin',
+  'La Libertad',
+  'Lambayeque',
+  'Lima',
+  'Loreto',
+  'Madre de Dios',
+  'Moquegua',
+  'Pasco',
+  'Piura',
+  'Puno',
+  'San Martin',
+  'Tacna',
+  'Tumbes',
+  'Ucayali',
+];
 
 const EditTourPage = () => {
   const { id } = useParams();
@@ -254,36 +282,45 @@ const EditTourPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#233274] mb-1">Ciudad</label>
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Ciudad o distrito</label>
                 <input
                   type="text"
                   value={formData.city}
                   onChange={(e) => handleChange('city', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Lima"
+                  placeholder="Ej: Miraflores, San Isidro, Cusco"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#233274] mb-1">Region/Estado</label>
-                <input
-                  type="text"
+                <label className="block text-sm font-semibold text-[#233274] mb-1">Departamento / region</label>
+                <select
                   value={formData.state}
                   onChange={(e) => handleChange('state', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Lima"
-                />
+                >
+                  <option value="">Selecciona una region</option>
+                  {PERU_REGIONS.map((region) => (
+                    <option key={region} value={region}>
+                      {region}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Pais</label>
-                <input
-                  type="text"
+                <select
                   value={formData.country}
                   onChange={(e) => handleChange('country', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Peru"
-                />
+                >
+                  {COUNTRIES.map((country) => (
+                    <option key={country} value={country}>
+                      {country}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
