@@ -3,6 +3,8 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, Briefcase } from 'lucide-react';
 import { servicesApi } from '../../../shared/utils/api';
 
+const SERVICES_PER_PAGE = 6;
+
 const normalizeText = (value) =>
   (value || '')
     .toString()
@@ -22,6 +24,7 @@ const ServicesPage = () => {
   const [featuredOnly, setFeaturedOnly] = useState(
     searchParams.get('featured') === '1' || searchParams.get('featured') === 'true'
   );
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -118,6 +121,28 @@ const ServicesPage = () => {
       return matchesText && matchesCategory && matchesFeatured;
     });
   }, [services, appliedSearchTerm, categoryFilter, featuredOnly]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedSearchTerm, categoryFilter, featuredOnly]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredServices.length / SERVICES_PER_PAGE));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedServices = useMemo(() => {
+    const startIndex = (currentPage - 1) * SERVICES_PER_PAGE;
+    return filteredServices.slice(startIndex, startIndex + SERVICES_PER_PAGE);
+  }, [filteredServices, currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    scrollToResults();
+  };
 
   const serviceHighlights = [
     'Viviendas unifamiliares y multifamiliares',
@@ -292,40 +317,77 @@ const ServicesPage = () => {
         {filteredServices.length === 0 ? (
           <p className="text-[#9a98a0]">No hay servicios publicados.</p>
         ) : (
-          <div id="servicios-listado" className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 scroll-mt-32">
-            {filteredServices.map((service) => (
-              <Link
-                key={service.id}
-                to={`/services/${service.slug}`}
-                className="group relative rounded-2xl shadow-lg overflow-hidden block h-full bg-gradient-to-br from-[#1b274f] via-[#1f2f63] to-[#0f193a] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(15,25,58,0.26)]"
-              >
-                <div className="p-4 pb-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="inline-flex bg-[#f8f5ef] text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full border border-[#ebe7df]">
-                      {service.category || 'Servicio'}
-                    </span>
-                    {isFeaturedService(service) && (
-                      <span className="inline-flex items-center gap-1 bg-[#e15f0b] text-white text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
-                        <Sparkles className="w-4 h-4" />
-                        Destacado
+          <>
+            <div id="servicios-listado" className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 scroll-mt-32">
+              {paginatedServices.map((service) => (
+                <Link
+                  key={service.id}
+                  to={`/services/${service.slug}`}
+                  className="group relative rounded-2xl shadow-lg overflow-hidden block h-full bg-gradient-to-br from-[#1b274f] via-[#1f2f63] to-[#0f193a] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(15,25,58,0.26)]"
+                >
+                  <div className="p-4 pb-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="inline-flex bg-[#f8f5ef] text-[#233274] text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full border border-[#ebe7df]">
+                        {service.category || 'Servicio'}
                       </span>
-                    )}
+                      {isFeaturedService(service) && (
+                        <span className="inline-flex items-center gap-1 bg-[#e15f0b] text-white text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full shadow-md">
+                          <Sparkles className="w-4 h-4" />
+                          Destacado
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="relative aspect-[4/3] w-full bg-[#f8f5ef] flex items-center justify-center">
-                  <img
-                    src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x240'}
-                    alt={service.title}
-                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-center px-6 text-white">
-                    <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
-                    <p className="text-sm font-medium">Haz clic para ver el detalle</p>
+                  <div className="relative aspect-[4/3] w-full bg-[#f8f5ef] flex items-center justify-center">
+                    <img
+                      src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x240'}
+                      alt={service.title}
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center text-center px-6 text-white">
+                      <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
+                      <p className="text-sm font-medium">Haz clic para ver el detalle</p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="rounded-full border border-[#d8d1c6] bg-white px-5 py-2.5 font-semibold text-[#233274] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#233274] disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Anterior
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => handlePageChange(page)}
+                    className={`h-11 w-11 rounded-full border text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 ${
+                      page === currentPage
+                        ? 'border-[#e15f0b] bg-[#e15f0b] text-white shadow-md'
+                        : 'border-[#d8d1c6] bg-white text-[#233274] hover:border-[#233274]'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="rounded-full border border-[#d8d1c6] bg-white px-5 py-2.5 font-semibold text-[#233274] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#233274] disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Siguiente
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

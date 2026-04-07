@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp, ClipboardList, MapPin, UserCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, ClipboardList, MapPin, UserCircle, Search, Filter } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { isStaff, ROLES } from '../../../shared/constants/roles';
+
+const ITEMS_PER_PAGE = 8;
 
 const ControlBoardPage = () => {
   const { user } = useAuthStore();
@@ -12,6 +14,9 @@ const ControlBoardPage = () => {
   const [savingNoteId, setSavingNoteId] = useState(null);
   const [noteDrafts, setNoteDrafts] = useState({});
   const [dueDrafts, setDueDrafts] = useState({});
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     loadData();
@@ -33,6 +38,26 @@ const ControlBoardPage = () => {
   };
 
   const canEditNotes = user && user.role !== ROLES.OPERATOR;
+
+  const filteredRows = rows.filter((row) => {
+    const text = `${row.code || ''} ${row.client || ''} ${row.project || ''} ${row.responsible || ''} ${row.current_phase || ''}`.toLowerCase();
+    const matchesSearch = search ? text.includes(search.toLowerCase()) : true;
+    const matchesStatus = statusFilter === 'all' ? true : row.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, rows.length]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / ITEMS_PER_PAGE));
+  const paginatedRows = filteredRows.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   if (!isStaff(user?.role)) {
     return (
@@ -61,6 +86,34 @@ const ControlBoardPage = () => {
           <SlaBadge sla="none" /> <span>Sin fecha</span>
         </div>
 
+        <div className="flex flex-col gap-3 rounded-2xl border border-[#ebe7df] bg-white p-4 shadow-sm lg:flex-row lg:items-center">
+          <div className="flex items-center gap-2 font-semibold text-[#233274]">
+            <Filter className="h-4 w-4 text-[#e15f0b]" />
+            Filtros
+          </div>
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9a98a0]" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar por código, cliente, proyecto, responsable o fase"
+              className="w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] py-2 pl-10 pr-4 outline-none focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]"
+            />
+          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 outline-none focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="pending">Pendiente</option>
+            <option value="in_progress">En proceso</option>
+            <option value="observed">Observado</option>
+            <option value="completed">Finalizado</option>
+          </select>
+        </div>
+
         <div className="overflow-hidden rounded-2xl border border-[#ebe7df] bg-white shadow-lg">
           <div className="grid grid-cols-10 bg-[#233274] text-xs font-semibold uppercase tracking-wide text-white">
             <div className="p-3">Codigo</div>
@@ -75,10 +128,10 @@ const ControlBoardPage = () => {
 
           {loading ? (
             <div className="p-6 text-[#9a98a0]">Cargando...</div>
-          ) : rows.length === 0 ? (
-            <div className="p-6 text-[#9a98a0]">No hay tramites registrados.</div>
+          ) : filteredRows.length === 0 ? (
+            <div className="p-6 text-[#9a98a0]">No hay trámites que coincidan con el filtro actual.</div>
           ) : (
-            rows.map((row) => (
+            paginatedRows.map((row) => (
               <div key={row.id} className="border-t border-[#ebe7df]">
                 <button
                   className="grid w-full grid-cols-10 text-left transition hover:bg-[#fdfaf5]"
@@ -223,6 +276,50 @@ const ControlBoardPage = () => {
             ))
           )}
         </div>
+
+        {!loading && filteredRows.length > 0 && (
+          <div className="flex flex-col gap-4 rounded-2xl border border-[#ebe7df] bg-white px-4 py-4 shadow-sm md:flex-row md:items-center md:justify-between">
+            <p className="text-sm text-[#9a98a0]">
+              Página <span className="font-bold text-[#233274]">{currentPage}</span> de{' '}
+              <span className="font-bold text-[#233274]">{totalPages}</span>
+            </p>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="rounded-lg border border-[#d8d1c7] px-4 py-2 text-sm font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Anterior
+              </button>
+
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  className={`h-10 min-w-10 rounded-lg px-3 text-sm font-bold transition ${
+                    currentPage === page
+                      ? 'bg-[#233274] text-white shadow-md'
+                      : 'border border-[#d8d1c7] text-[#233274] hover:bg-[#f8f5ef]'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-[#d8d1c7] px-4 py-2 text-sm font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

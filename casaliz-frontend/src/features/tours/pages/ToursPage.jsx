@@ -105,6 +105,11 @@ const ToursPage = () => {
     scrollToResults();
   };
 
+  const handlePageChange = (page) => {
+    fetchProjects(page);
+    scrollToResults();
+  };
+
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
       <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] px-4 py-14 text-white sm:px-6 lg:px-8">
@@ -243,13 +248,48 @@ const ToursPage = () => {
                   ))}
                 </div>
 
-                {pagination.currentPage < pagination.lastPage && (
+                {false && pagination.currentPage < pagination.lastPage && (
                   <div className="mt-10 flex justify-center">
                     <button
                       onClick={() => fetchProjects(pagination.currentPage + 1)}
                       className="rounded-full bg-[#233274] px-6 py-3 text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1a255c]"
                     >
                       Cargar más
+                    </button>
+                  </div>
+                )}
+
+                {pagination.lastPage > 1 && (
+                  <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => handlePageChange(Math.max(1, pagination.currentPage - 1))}
+                      disabled={pagination.currentPage === 1}
+                      className="rounded-full border border-[#d8d1c6] bg-white px-5 py-2.5 font-semibold text-[#233274] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#233274] disabled:cursor-not-allowed disabled:opacity-45"
+                    >
+                      Anterior
+                    </button>
+                    {Array.from({ length: pagination.lastPage }, (_, index) => index + 1).map((page) => (
+                      <button
+                        key={page}
+                        type="button"
+                        onClick={() => handlePageChange(page)}
+                        className={`h-11 w-11 rounded-full border text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 ${
+                          page === pagination.currentPage
+                            ? 'border-[#e15f0b] bg-[#e15f0b] text-white shadow-md'
+                            : 'border-[#d8d1c6] bg-white text-[#233274] hover:border-[#233274]'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => handlePageChange(Math.min(pagination.lastPage, pagination.currentPage + 1))}
+                      disabled={pagination.currentPage === pagination.lastPage}
+                      className="rounded-full border border-[#d8d1c6] bg-white px-5 py-2.5 font-semibold text-[#233274] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#233274] disabled:cursor-not-allowed disabled:opacity-45"
+                    >
+                      Siguiente
                     </button>
                   </div>
                 )}

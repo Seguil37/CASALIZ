@@ -12,12 +12,15 @@ const statusMeta = {
   done: { label: 'Completada', className: 'bg-green-100 text-green-700' },
 };
 
+const ITEMS_PER_PAGE = 8;
+
 const AssignedTasksSummaryPage = () => {
   const { user } = useAuthStore();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     loadTasks();
@@ -46,6 +49,22 @@ const AssignedTasksSummaryPage = () => {
       return matchesStatus && matchesSearch;
     });
   }, [tasks, statusFilter, search]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, search, tasks.length]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredTasks.length / ITEMS_PER_PAGE));
+  const paginatedTasks = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredTasks.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredTasks, currentPage]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const stats = useMemo(() => ({
     total: tasks.length,
@@ -121,7 +140,7 @@ const AssignedTasksSummaryPage = () => {
             <div className="p-8 text-center text-[#9a98a0]">No hay tareas que coincidan con el filtro actual.</div>
           ) : (
             <div className="divide-y divide-[#ebe7df]">
-              {filteredTasks.map((task) => (
+              {paginatedTasks.map((task) => (
                 <div key={task.id} className="p-4 hover:bg-[#fdfaf5] transition">
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div className="space-y-2">
@@ -178,6 +197,50 @@ const AssignedTasksSummaryPage = () => {
             </div>
           )}
         </div>
+
+        {!loading && filteredTasks.length > 0 && (
+          <div className="flex flex-col gap-4 rounded-2xl border border-[#ebe7df] bg-white px-4 py-4 shadow-sm md:flex-row md:items-center md:justify-between">
+            <p className="text-sm text-[#9a98a0]">
+              Página <span className="font-bold text-[#233274]">{currentPage}</span> de{' '}
+              <span className="font-bold text-[#233274]">{totalPages}</span>
+            </p>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="rounded-lg border border-[#d8d1c7] px-4 py-2 text-sm font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Anterior
+              </button>
+
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => setCurrentPage(page)}
+                  className={`h-10 min-w-10 rounded-lg px-3 text-sm font-bold transition ${
+                    currentPage === page
+                      ? 'bg-[#233274] text-white shadow-md'
+                      : 'border border-[#d8d1c7] text-[#233274] hover:bg-[#f8f5ef]'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-[#d8d1c7] px-4 py-2 text-sm font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
