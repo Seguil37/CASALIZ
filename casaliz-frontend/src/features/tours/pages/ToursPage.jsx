@@ -1,7 +1,7 @@
 // src/features/tours/pages/ToursPage.jsx
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { MapPin } from 'lucide-react';
+import { MapPin, Sparkles } from 'lucide-react';
 import TourCard from '../components/TourCard';
 import SearchBar from '../components/SearchBar';
 import FilterSidebar from '../components/FilterSidebar';
@@ -67,26 +67,79 @@ const ToursPage = () => {
     setFilters(updatedFilters);
   };
 
+  const scrollToResults = () => {
+    setTimeout(() => {
+      document.getElementById('projects-results')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 50);
+  };
+
   const applyFilters = (customFilters = filters) => {
     setFilters(customFilters);
     const params = buildParams(customFilters);
     setSearchParams(params);
+    scrollToResults();
   };
 
   const clearFilters = () => {
-    setFilters(defaultFilters);
+    const resetFilters = { search: '', city: '', type: '', featured: '' };
+    setFilters(resetFilters);
     setSearchParams({});
   };
 
   return (
     <div className="min-h-screen bg-[#f8f5ef]">
-      <div className="bg-[#f8f5ef] border-b sticky top-20 z-40 shadow-sm">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] px-4 py-14 text-white sm:px-6 lg:px-8">
+        <div className="absolute inset-0 opacity-15" aria-hidden>
+          <div className="absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#fbbf24] blur-3xl" />
+          <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-white/20 blur-3xl" />
+        </div>
+
+        <div className="container-custom relative z-10 grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="space-y-5">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#f9d29f] transition-transform duration-500 hover:translate-x-1">
+              <Sparkles className="h-4 w-4 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
+              Portafolio Casaliz
+            </div>
+            <h1 className="max-w-4xl text-4xl font-black leading-tight transition-transform duration-500 hover:translate-x-1 md:text-5xl lg:text-6xl">
+              Proyectos que convierten ideas en espacios reales.
+            </h1>
+            <p className="max-w-3xl text-lg text-white/88 transition-colors duration-500 hover:text-white md:text-xl">
+              Explora viviendas, remodelaciones, oficinas e intervenciones integrales desarrolladas con una visión técnica, estética y
+              estratégica desde la primera idea hasta la entrega.
+            </p>
+          </div>
+
+          <div className="rounded-[30px] border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#f9d29f]">Resumen</p>
+            <div className="mt-5 space-y-3">
+              {[
+                { label: 'Resultados encontrados', value: loading ? '...' : `${pagination.total}` },
+                { label: 'Página actual', value: `${pagination.currentPage}` },
+                { label: 'Filtros activos', value: `${Object.values(filters).filter(Boolean).length}` },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center justify-between rounded-2xl bg-white/8 px-4 py-3 transition-all duration-300 hover:bg-white/14">
+                  <span className="text-sm text-white/80">{item.label}</span>
+                  <span className="text-lg font-black text-white">{item.value}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 rounded-2xl border border-white/15 bg-white/10 p-4 text-sm leading-6 text-white/85">
+              Usa el buscador y los filtros para encontrar referencias por ciudad, tipo de proyecto o proyectos destacados.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="sticky top-20 z-40 border-b border-[#e8dfd3] bg-[#f8f5ef]/95 shadow-sm backdrop-blur">
         <div className="container-custom py-4">
-          <div className="flex flex-col lg:flex-row gap-4">
+          <div className="flex flex-col gap-4 lg:flex-row">
             <div className="flex-1">
               <SearchBar filters={filters} onFilterChange={handleFilterChange} onSearch={applyFilters} />
             </div>
-            <div className="hidden lg:block w-full max-w-sm flex-shrink-0">
+            <div className="hidden w-full max-w-sm flex-shrink-0 lg:block">
               <FilterSidebar
                 filters={filters}
                 onFilterChange={handleFilterChange}
@@ -101,58 +154,65 @@ const ToursPage = () => {
       <div className="container-custom py-8">
         <div className="flex gap-8">
           <div className="flex-1">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h1 className="text-3xl font-black text-[#233274] mb-2 flex items-center gap-2">
-                  {filters.search && <MapPin className="w-6 h-6 text-[#e15f0b]" />}
-                  {filters.search || 'Todos los proyectos'}
-                </h1>
-                <p className="text-[#9a98a0]">
-                  {loading ? 'Cargando...' : (
-                    <span>
-                      <span className="font-semibold">{pagination.total}</span> proyectos encontrados
-                    </span>
-                  )}
-                </p>
+            <div
+              id="projects-results"
+              className="mb-6 rounded-[28px] border border-[#e5ddd1] bg-white p-6 shadow-[0_18px_45px_rgba(77,58,31,0.07)] transition-all duration-500 hover:-translate-y-1 scroll-mt-32"
+            >
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#d14a00]">Listado de proyectos</p>
+                  <h2 className="mt-2 mb-2 flex items-center gap-2 text-3xl font-black text-[#233274]">
+                    {filters.search && <MapPin className="h-6 w-6 text-[#e15f0b]" />}
+                    {filters.search || 'Todos los proyectos'}
+                  </h2>
+                  <p className="text-[#9a98a0]">
+                    {loading ? 'Cargando...' : (
+                      <span>
+                        <span className="font-semibold">{pagination.total}</span> proyectos encontrados
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setShowFilters(true)}
+                  className="inline-flex w-fit items-center gap-2 rounded-full border border-[#e5ddd1] bg-[#f8f5ef] px-4 py-2 font-semibold text-[#233274] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white lg:hidden"
+                >
+                  Filtros
+                </button>
               </div>
-              <button
-                onClick={() => setShowFilters(true)}
-                className="lg:hidden inline-flex items-center gap-2 px-4 py-2 bg-white border rounded-full text-[#233274]"
-              >
-                Filtros
-              </button>
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-80 bg-gray-200 animate-pulse rounded-2xl" />
+                  <div key={i} className="h-80 rounded-2xl bg-gray-200 animate-pulse" />
                 ))}
               </div>
             ) : projects.length === 0 ? (
-              <div className="bg-white rounded-2xl p-8 text-center border border-dashed border-gray-200">
-                <h3 className="text-xl font-bold text-[#233274] mb-2">No encontramos proyectos</h3>
-                <p className="text-[#9a98a0] mb-4">Prueba ajustando los filtros o buscando otra ciudad.</p>
+              <div className="rounded-[28px] border border-dashed border-[#d7ccbd] bg-white p-8 text-center shadow-sm">
+                <h3 className="mb-2 text-xl font-bold text-[#233274]">No encontramos proyectos</h3>
+                <p className="mb-4 text-[#9a98a0]">Prueba ajustando los filtros o buscando otra ciudad.</p>
                 <button
                   onClick={clearFilters}
-                  className="px-4 py-2 bg-[#233274] text-white rounded-full hover:bg-[#1a255c]"
+                  className="rounded-full bg-[#233274] px-4 py-2 text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1a255c]"
                 >
                   Limpiar filtros
                 </button>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
                   {projects.map((project) => (
                     <TourCard key={project.id} tour={project} />
                   ))}
                 </div>
 
                 {pagination.currentPage < pagination.lastPage && (
-                  <div className="flex justify-center mt-10">
+                  <div className="mt-10 flex justify-center">
                     <button
                       onClick={() => fetchProjects(pagination.currentPage + 1)}
-                      className="px-6 py-3 bg-[#233274] text-white rounded-full hover:bg-[#1a255c]"
+                      className="rounded-full bg-[#233274] px-6 py-3 text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1a255c]"
                     >
                       Cargar más
                     </button>
@@ -165,8 +225,8 @@ const ToursPage = () => {
       </div>
 
       {showFilters && (
-        <div className="lg:hidden fixed inset-0 bg-black/50 z-50 flex">
-          <div className="bg-white w-80 p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex bg-black/50 lg:hidden">
+          <div className="w-80 overflow-y-auto bg-white p-4">
             <FilterSidebar
               filters={filters}
               onFilterChange={handleFilterChange}

@@ -3,6 +3,14 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, Briefcase } from 'lucide-react';
 import { servicesApi } from '../../../shared/utils/api';
 
+const normalizeText = (value) =>
+  (value || '')
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
 const ServicesPage = () => {
   const location = useLocation();
   const [services, setServices] = useState([]);
@@ -40,6 +48,15 @@ const ServicesPage = () => {
     setFeaturedOnly(featuredFromUrl === '1' || featuredFromUrl === 'true');
   }, [searchParams, location.state]);
 
+  const scrollToResults = () => {
+    setTimeout(() => {
+      document.getElementById('servicios-listado')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 50);
+  };
+
   const applyFiltersToQuery = (nextSearchTerm, nextCategory, nextFeatured) => {
     const params = new URLSearchParams();
     if (nextSearchTerm) params.append('search', nextSearchTerm);
@@ -52,11 +69,13 @@ const ServicesPage = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     applyFiltersToQuery(searchTerm, categoryFilter, featuredOnly);
+    scrollToResults();
   };
 
   const handleFeaturedToggle = (checked) => {
     setFeaturedOnly(checked);
     applyFiltersToQuery(searchTerm, categoryFilter, checked);
+    scrollToResults();
   };
 
   const isFeaturedService = (service) => {
@@ -68,13 +87,17 @@ const ServicesPage = () => {
 
   const filteredServices = useMemo(() => {
     return services.filter((service) => {
+      const searchableText = normalizeText(
+        `${service.title} ${service.short_description || ''} ${service.category || ''}`
+      );
+      const normalizedSearch = normalizeText(appliedSearchTerm);
+      const normalizedCategory = normalizeText(categoryFilter);
+
       const matchesText = appliedSearchTerm
-        ? `${service.title} ${service.short_description || ''} ${service.category || ''}`
-            .toLowerCase()
-            .includes(appliedSearchTerm.toLowerCase())
+        ? searchableText.includes(normalizedSearch)
         : true;
       const matchesCategory = categoryFilter
-        ? (service.category || '').toLowerCase().includes(categoryFilter.toLowerCase())
+        ? normalizeText(service.category || '').includes(normalizedCategory)
         : true;
       const matchesFeatured = featuredOnly ? isFeaturedService(service) : true;
       return matchesText && matchesCategory && matchesFeatured;
@@ -241,7 +264,7 @@ const ServicesPage = () => {
         {filteredServices.length === 0 ? (
           <p className="text-[#9a98a0]">No hay servicios publicados.</p>
         ) : (
-          <div id="servicios-listado" className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 scroll-mt-24">
+          <div id="servicios-listado" className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 scroll-mt-32">
             {filteredServices.map((service) => (
               <Link
                 key={service.id}

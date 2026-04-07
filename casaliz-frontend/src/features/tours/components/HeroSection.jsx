@@ -17,20 +17,39 @@ const HeroSection = () => {
     if (mode === 'services') {
       const params = new URLSearchParams();
       if (serviceQuery) params.append('search', serviceQuery);
-      navigate(`/services?${params.toString()}`);
+      navigate({
+        pathname: '/services',
+        search: params.toString() ? `?${params.toString()}` : '',
+        hash: '#servicios-listado',
+      });
       return;
     }
 
     const params = new URLSearchParams();
     if (projectQuery) {
       params.append('search', projectQuery);
-      params.append('city', projectQuery);
     }
-    navigate(`/projects?${params.toString()}`);
+    navigate({
+      pathname: '/projects',
+      search: params.toString() ? `?${params.toString()}` : '',
+      hash: '#projects-results',
+    });
   };
 
-  const projectSuggestions = ['Casa Miraflores', 'Oficina abierta', 'Remodelacion integral', 'Interiorismo boutique', 'Edificio mixto'];
-  const serviceSuggestions = ['Licencias y tramites', 'Diseño arquitectonico', 'Habilitaciones urbanas', 'Topografia'];
+  const projectSuggestions = [
+    'Edificio Multifamiliar Ecológica Plaza',
+    'Casa de Campo Zurite',
+    'Vivienda unifamiliar',
+    'Remodelación integral',
+    'Oficina comercial',
+  ];
+  const serviceSuggestions = [
+    'Diseño, Construcción y Regularización Inmobiliaria',
+    'Servicios Inmobiliarios',
+    'Trámites y Regularización Inmobiliaria',
+    'Diseño de interiores',
+    'Topografía',
+  ];
 
   const isAbout = mode === 'about';
   const inputLabel = mode === 'services' ? 'Servicio o palabra clave' : 'Ciudad o destino';
@@ -134,6 +153,22 @@ const HeroSection = () => {
                     {mode === 'services' ? 'Buscar servicios' : 'Buscar proyectos'}
                   </button>
                 </div>
+              </div>
+
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-left">
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#9a98a0]">
+                    Prueba con:
+                </span>
+                {suggestions.slice(0, 4).map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => onChange(item)}
+                    className="rounded-full border border-[#eadfce] bg-white px-3 py-1 text-xs font-semibold text-[#7a6e61] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#e15f0b]/30 hover:text-[#d14a00]"
+                  >
+                    {item}
+                  </button>
+                ))}
               </div>
 
               
