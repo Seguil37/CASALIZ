@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, Briefcase } from 'lucide-react';
-import { servicesApi } from '../../../shared/utils/api';
+import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
 
 const SERVICES_PER_PAGE = 6;
 
@@ -340,7 +340,7 @@ const ServicesPage = () => {
                   </div>
                   <div className="relative aspect-[4/3] w-full bg-[#f8f5ef] flex items-center justify-center">
                     <img
-                      src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x240'}
+                      src={toPublicUrl(service.cover_image || service.gallery?.[0]?.path) || 'https://via.placeholder.com/400x240'}
                       alt={service.title}
                       className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
                     />

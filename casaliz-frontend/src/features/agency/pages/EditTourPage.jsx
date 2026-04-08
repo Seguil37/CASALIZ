@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Loader2, PlusCircle, Trash2, ImagePlus } from 'lucide-react';
-import { projectsApi } from '../../../shared/utils/api';
+import { projectsApi, toPublicUrl } from '../../../shared/utils/api';
 
 const emptyImage = { path: '', caption: '', file: null, preview: '' };
 const COUNTRIES = ['Peru'];
@@ -88,10 +88,10 @@ const EditTourPage = () => {
             path: img.path || '',
             caption: img.caption || '',
             file: null,
-            preview: img.path || '',
+	            preview: toPublicUrl(img.path || ''),
           })),
         });
-        setHeroPreview(project.hero_image || '');
+	        setHeroPreview(toPublicUrl(project.hero_image || ''));
       } catch (error) {
         console.error('Error fetching project:', error);
         setSubmitError('No se pudo cargar el proyecto');
@@ -105,7 +105,7 @@ const EditTourPage = () => {
 
   const openPreview = (url) => {
     if (!url || !url.trim()) return;
-    window.open(url.trim(), '_blank', 'noopener,noreferrer');
+    window.open(toPublicUrl(url.trim()), '_blank', 'noopener,noreferrer');
   };
 
   const handleChange = (field, value) => {
@@ -117,7 +117,7 @@ const EditTourPage = () => {
     if (heroPreview && heroPreview.startsWith('blob:')) {
       URL.revokeObjectURL(heroPreview);
     }
-    setHeroPreview(file ? URL.createObjectURL(file) : formData.hero_image || '');
+    setHeroPreview(file ? URL.createObjectURL(file) : toPublicUrl(formData.hero_image || ''));
     setFormData((prev) => ({
       ...prev,
       heroImageFile: file || null,
@@ -225,7 +225,7 @@ const EditTourPage = () => {
     }
   };
 
-  const heroPreviewSrc = heroPreview || formData.hero_image.trim();
+  const heroPreviewSrc = heroPreview || toPublicUrl(formData.hero_image.trim());
   const cityHints = CITY_SUGGESTIONS[formData.state] || [];
 
   if (loading) {

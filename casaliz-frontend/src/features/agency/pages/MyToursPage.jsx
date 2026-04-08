@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Eye, Edit, Trash2, Search, ChevronLeft, ChevronRight, Archive } from 'lucide-react';
-import { projectsApi } from '../../../shared/utils/api';
+import { projectsApi, toPublicUrl } from '../../../shared/utils/api';
 
 const STATUS_CONFIG = {
   published: {
@@ -147,7 +147,7 @@ const MyToursPage = () => {
                     >
                       <div className="flex items-center gap-4">
                         <img
-                          src={project.hero_image || project.featuredImages?.[0]?.path || 'https://via.placeholder.com/100'}
+                          src={toPublicUrl(project.hero_image || project.featuredImages?.[0]?.path) || 'https://via.placeholder.com/100'}
                           alt={project.title}
                           className="w-24 h-24 rounded-xl object-cover"
                         />

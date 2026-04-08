@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { servicesApi } from '../../../shared/utils/api';
+import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
 import {
   Plus,
   Pencil,
@@ -101,7 +101,7 @@ const AdminServicesPage = () => {
 
   const openPreview = (url) => {
     if (!url || !url.trim()) return;
-    window.open(url.trim(), '_blank', 'noopener,noreferrer');
+    window.open(toPublicUrl(url.trim()), '_blank', 'noopener,noreferrer');
   };
 
   const viewService = (service) => {
@@ -147,7 +147,7 @@ const AdminServicesPage = () => {
     if (coverPreview && coverPreview.startsWith('blob:')) {
       URL.revokeObjectURL(coverPreview);
     }
-    setCoverPreview(file ? URL.createObjectURL(file) : form.cover_image || '');
+    setCoverPreview(file ? URL.createObjectURL(file) : toPublicUrl(form.cover_image || ''));
     setForm({ ...form, coverImageFile: file || null, cover_image: file ? '' : form.cover_image });
   };
 
@@ -230,11 +230,11 @@ const AdminServicesPage = () => {
               path: image.path || '',
               caption: image.caption || '',
               file: null,
-              preview: image.path || '',
+              preview: toPublicUrl(image.path || ''),
             }))
           : [emptyImage],
     });
-    setCoverPreview(service.cover_image || '');
+    setCoverPreview(toPublicUrl(service.cover_image || ''));
   };
 
   const handleDelete = async (id) => {
@@ -293,7 +293,7 @@ const AdminServicesPage = () => {
     );
   }
 
-  const coverPreviewSrc = coverPreview || form.cover_image.trim();
+  const coverPreviewSrc = coverPreview || toPublicUrl(form.cover_image.trim());
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-8">
@@ -324,7 +324,7 @@ const AdminServicesPage = () => {
             {paginatedServices.map((service) => (
               <div key={service.id} className="bg-white rounded-2xl shadow p-4 flex gap-4 items-center">
                 <img
-                  src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/120x90'}
+                  src={toPublicUrl(service.cover_image || service.gallery?.[0]?.path) || 'https://via.placeholder.com/120x90'}
                   alt={service.title}
                   className="w-24 h-20 object-cover rounded-xl"
                 />

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Home, Users, TrendingUp, Eye, Edit, Trash2, CheckCircle, ChevronLeft, ChevronRight, Archive } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
-import { projectsApi } from '../../../shared/utils/api';
+import { projectsApi, toPublicUrl } from '../../../shared/utils/api';
 
 const STATUS_CONFIG = {
   published: {
@@ -219,7 +219,7 @@ const ProjectRow = ({ project, onDelete }) => {
     <div className="bg-white rounded-2xl p-4 border border-[#ebe7df] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div className="flex items-start gap-4">
         <img
-          src={project.hero_image || project.images?.[0]?.path || 'https://images.unsplash.com/photo-1505691938895-1758d7feb511'}
+          src={toPublicUrl(project.hero_image || project.images?.[0]?.path) || 'https://images.unsplash.com/photo-1505691938895-1758d7feb511'}
           alt={project.title}
           className="w-16 h-16 object-cover rounded-xl"
         />

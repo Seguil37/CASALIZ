@@ -1,10 +1,24 @@
 // src/shared/utils/api.js
 import axios from 'axios';
 
+const DEFAULT_API_ORIGIN = 'https://api.casaliz-arquitectura.com';
+
+const isLocalHostname = (hostname) =>
+  ['localhost', '127.0.0.1', '::1'].includes(hostname);
+
+const envApiOrigin = import.meta.env.VITE_API_ORIGIN?.trim();
+const appHostname =
+  typeof window !== 'undefined' ? window.location.hostname : '';
+
+// Evita que un build público use accidentalmente una URL local inyectada al compilar.
+const resolvedApiOrigin =
+  envApiOrigin &&
+  !(appHostname && !isLocalHostname(appHostname) && /localhost|127\.0\.0\.1/i.test(envApiOrigin))
+    ? envApiOrigin
+    : DEFAULT_API_ORIGIN;
+
 // Backend (Laravel)
-// Usa variable de entorno VITE_API_ORIGIN (ej: http://localhost:8000) y cae al dominio público si no existe.
-export const API_ORIGIN =
-  import.meta.env.VITE_API_ORIGIN || 'https://api.casaliz-arquitectura.com';
+export const API_ORIGIN = resolvedApiOrigin;
 export const API_BASE = `${API_ORIGIN}/api/v1`;
 
 // Helpers para URLs públicas (imágenes /storage)

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Home, ArrowLeft, Heart, X, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
-import api from '../../../shared/utils/api';
+import api, { toPublicUrl } from '../../../shared/utils/api';
 import ReviewsSection from '../components/ReviewsSection';
 import useFavoriteStore from '../../../store/favoriteStore';
 import useAuthStore from '../../../store/authStore';
@@ -50,7 +50,7 @@ const TourDetailPage = () => {
       </div>
     );
   }
-  const hero = project.hero_image || project.images?.[0]?.path;
+  const hero = toPublicUrl(project.hero_image || project.images?.[0]?.path);
   const isFavorite = favorites.includes(Number(id));
   const handleToggleFavorite = async () => {
     setFavoriteError('');
@@ -225,7 +225,7 @@ const TourDetailPage = () => {
                     className="group relative w-full h-64 overflow-hidden border-2 border-[#ebe7df] bg-[#f8f5ef] focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
                   >
                     <img
-                      src={image.path}
+                      src={toPublicUrl(image.path)}
                       alt={image.caption || project.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
@@ -321,7 +321,7 @@ const TourDetailPage = () => {
             <div className="overflow-hidden bg-[#0d0d0d] border-2 border-[#e15f0b]/40 shadow-2xl">
               <div className="relative bg-black">
                 <img
-                  src={lightboxImage.path}
+                  src={toPublicUrl(lightboxImage.path)}
                   alt={lightboxImage.caption || project.title}
                   className="w-full max-h-[75vh] object-contain"
                 />

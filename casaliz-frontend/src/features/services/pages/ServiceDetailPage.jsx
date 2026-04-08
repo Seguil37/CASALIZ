@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { servicesApi } from '../../../shared/utils/api';
+import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
 import { ChevronRight, Zap, CheckCircle, ChevronLeft } from 'lucide-react';
 
 const ServiceDetailPage = () => {
@@ -47,7 +47,9 @@ const ServiceDetailPage = () => {
     );
   }
 
-  const coverImage = service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/800x500';
+  const coverImage =
+    toPublicUrl(service.cover_image || service.gallery?.[0]?.path) ||
+    'https://via.placeholder.com/800x500';
 
   return (
     <div className="bg-gradient-to-b from-[#f6f2e8] via-white to-[#f6f2e8] min-h-screen pb-16">
@@ -158,7 +160,7 @@ const ServiceDetailPage = () => {
                   className="group relative w-full overflow-hidden rounded-2xl border-2 border-[#ebe7df] shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50"
                 >
                   <img
-                    src={image.path}
+                    src={toPublicUrl(image.path)}
                     alt={image.caption || service.title}
                     className="w-full aspect-[4/3] object-contain bg-[#f8f5ef] transition-transform duration-500 group-hover:scale-105"
                   />
@@ -240,7 +242,7 @@ const ServiceDetailPage = () => {
             <div className="rounded-3xl overflow-hidden bg-black border-2 border-[#e15f0b]/40 shadow-2xl">
               <div className="relative bg-black">
                 <img
-                  src={lightboxImage.path}
+                  src={toPublicUrl(lightboxImage.path)}
                   alt={lightboxImage.caption || 'Galeria'}
                   className="w-full max-h-[75vh] object-contain"
                 />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Briefcase } from 'lucide-react';
-import { servicesApi } from '../../../shared/utils/api';
+import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
 
 const FeaturedServiceSection = () => {
   const [services, setServices] = useState([]);
@@ -115,7 +115,7 @@ const FeaturedServiceSection = () => {
 
               <div className="relative overflow-hidden bg-white aspect-[4/3]">
                 <img
-                  src={service.cover_image || service.gallery?.[0]?.path || 'https://via.placeholder.com/400x300'}
+                  src={toPublicUrl(service.cover_image || service.gallery?.[0]?.path) || 'https://via.placeholder.com/400x300'}
                   alt={service.title}
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                 />

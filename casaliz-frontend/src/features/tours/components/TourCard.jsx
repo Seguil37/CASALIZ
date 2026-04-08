@@ -1,9 +1,12 @@
 // src/features/tours/components/TourCard.jsx
 import { Link } from 'react-router-dom';
 import { MapPin, Home } from 'lucide-react';
+import { toPublicUrl } from '../../../shared/utils/api';
 
 const TourCard = ({ tour }) => {
-  const image = tour.hero_image || tour.featured_image || (tour.images?.[0]?.path ?? 'https://images.unsplash.com/photo-1505691938895-1758d7feb511');
+  const image =
+    toPublicUrl(tour.hero_image || tour.featured_image || tour.images?.[0]?.path) ||
+    'https://images.unsplash.com/photo-1505691938895-1758d7feb511';
 
   return (
     <Link

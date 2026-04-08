@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, ImagePlus, PlusCircle, Trash2 } from 'lucide-react';
-import { projectsApi } from '../../../shared/utils/api';
+import { projectsApi, toPublicUrl } from '../../../shared/utils/api';
 
 const emptyImage = { path: '', caption: '', file: null, preview: '' };
 const COUNTRIES = ['Peru'];
@@ -82,7 +82,7 @@ const CreateTourPage = () => {
 
   const openPreview = (url) => {
     if (!url || !url.trim()) return;
-    window.open(url.trim(), '_blank', 'noopener,noreferrer');
+    window.open(toPublicUrl(url.trim()), '_blank', 'noopener,noreferrer');
   };
 
   const handleChange = (field, value) => {
@@ -202,7 +202,7 @@ const CreateTourPage = () => {
     }
   };
 
-  const heroPreviewSrc = heroPreview || formData.hero_image.trim();
+  const heroPreviewSrc = heroPreview || toPublicUrl(formData.hero_image.trim());
   const cityHints = CITY_SUGGESTIONS[formData.state] || [];
 
   return (
