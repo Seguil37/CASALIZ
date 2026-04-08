@@ -47,7 +47,7 @@ const PopularCountriesSection = () => {
     if (!scrollContainer) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.2;
+    const scrollSpeed = 0.35;
     let animationFrame;
 
     const autoScroll = () => {
@@ -63,21 +63,8 @@ const PopularCountriesSection = () => {
 
     animationFrame = requestAnimationFrame(autoScroll);
 
-    const handleMouseEnter = () => {
-      cancelAnimationFrame(animationFrame);
-    };
-
-    const handleMouseLeave = () => {
-      animationFrame = requestAnimationFrame(autoScroll);
-    };
-
-    scrollContainer.addEventListener('mouseenter', handleMouseEnter);
-    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
-
     return () => {
       cancelAnimationFrame(animationFrame);
-      scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
-      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
 
