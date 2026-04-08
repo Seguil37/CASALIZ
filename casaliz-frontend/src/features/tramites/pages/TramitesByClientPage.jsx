@@ -39,6 +39,24 @@ const PERU_DEPARTMENTS = [
   'Tumbes',
   'Ucayali',
 ];
+const LOCATION_SUGGESTIONS = {
+  Lima: {
+    provinces: ['Lima', 'Huaral', 'Cañete', 'Huaura'],
+    districts: ['Miraflores', 'San Isidro', 'Surco', 'La Molina', 'Barranco', 'Cieneguilla'],
+  },
+  Cusco: {
+    provinces: ['Cusco', 'Anta', 'Urubamba', 'Calca'],
+    districts: ['Cusco', 'San Sebastian', 'San Jeronimo', 'Wanchaq', 'Santiago', 'Zurite'],
+  },
+  Arequipa: {
+    provinces: ['Arequipa', 'Camana', 'Caylloma'],
+    districts: ['Yanahuara', 'Cayma', 'Cerro Colorado', 'Jose Luis Bustamante'],
+  },
+  Piura: {
+    provinces: ['Piura', 'Sullana', 'Paita'],
+    districts: ['Piura', 'Castilla', 'Catacaos'],
+  },
+};
 
 const emptyForm = {
   code: '',
@@ -66,6 +84,8 @@ const TramitesByClientPage = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [editErrors, setEditErrors] = useState({});
   const [form, setForm] = useState(emptyForm);
+  const provinceHints = LOCATION_SUGGESTIONS[form.location_department]?.provinces || [];
+  const districtHints = LOCATION_SUGGESTIONS[form.location_department]?.districts || [];
 
   useEffect(() => {
     loadInitial();
@@ -133,6 +153,7 @@ const TramitesByClientPage = () => {
   const inputClass =
     'w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 text-[#233274] outline-none placeholder-[#9a98a0] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]';
   const labelClass = 'mb-1 block text-sm font-semibold text-[#233274]';
+  const codePlaceholder = form.tramite_type_id ? `Ej: ${buildTramiteCodeSuggestion(types, form.tramite_type_id)}` : 'Ej: TR-001';
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
@@ -166,9 +187,26 @@ const TramitesByClientPage = () => {
                 <input
                   className={inputClass}
                   value={form.code}
-                  onChange={(e) => setForm({ ...form, code: e.target.value })}
+                  onChange={(e) => setForm({ ...form, code: normalizeTramiteCode(e.target.value) })}
+                  placeholder={codePlaceholder}
                   required
                 />
+                <div className="mt-1 flex items-center justify-between text-xs text-[#9a98a0]">
+                  <span>Usa un codigo corto y facil de rastrear.</span>
+                  <button
+                    type="button"
+                    className="font-semibold text-[#e15f0b]"
+                    onClick={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        code: buildTramiteCodeSuggestion(types, prev.tramite_type_id),
+                      }))
+                    }
+                    disabled={!form.tramite_type_id}
+                  >
+                    Sugerir codigo
+                  </button>
+                </div>
               </div>
 
               <div>
@@ -196,21 +234,22 @@ const TramitesByClientPage = () => {
                   onChange={(e) => setForm({ ...form, client_name: e.target.value })}
                   placeholder="Nombre completo"
                 />
+                <p className="mt-1 text-xs text-[#9a98a0]">Escribe el nombre tal como quieres verlo en el seguimiento.</p>
               </div>
 
               <div>
-                <label className={labelClass}>Proyecto / Tramite</label>
+                <label className={labelClass}>Nombre del tramite</label>
                 <input
                   className={inputClass}
                   value={form.project_name}
                   onChange={(e) => setForm({ ...form, project_name: e.target.value })}
-                  placeholder="Nombre del proyecto"
+                  placeholder="Ej: Licencia de obra de vivienda unifamiliar"
                   required
                 />
               </div>
 
               <div>
-                <label className={labelClass}>Nombre del Inmueble / Establecimiento</label>
+                <label className={labelClass}>Nombre del inmueble / establecimiento (opcional)</label>
                 <input
                   className={inputClass}
                   value={form.property_name}
@@ -249,8 +288,14 @@ const TramitesByClientPage = () => {
                     value={form.location_province}
                     onChange={(e) => setForm({ ...form, location_province: e.target.value })}
                     placeholder="Ej: Cusco"
+                    list="tramite-province-suggestions"
                     required
                   />
+                  <datalist id="tramite-province-suggestions">
+                    {provinceHints.map((province) => (
+                      <option key={province} value={province} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div>
@@ -260,12 +305,20 @@ const TramitesByClientPage = () => {
                     value={form.location_district}
                     onChange={(e) => setForm({ ...form, location_district: e.target.value })}
                     placeholder="Ej: San Sebastian"
+                    list="tramite-district-suggestions"
                     required
                   />
+                  <datalist id="tramite-district-suggestions">
+                    {districtHints.map((district) => (
+                      <option key={district} value={district} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <p className="text-xs text-[#9a98a0]">
-                  Se guardara como: Distrito, Provincia, Departamento.
+                  {form.location_department
+                    ? `Sugerencias para ${form.location_department}: provincias ${provinceHints.join(', ') || 'sin datos'}; distritos ${districtHints.join(', ') || 'sin datos'}.`
+                    : 'Primero elige un departamento para ver sugerencias de provincia y distrito.'}
                 </p>
               </div>
 
@@ -423,7 +476,7 @@ const TramitesByClientPage = () => {
                   value={editing.code}
                   onChange={(e) => {
                     setEditErrors((prev) => ({ ...prev, code: '' }));
-                    setEditing({ ...editing, code: e.target.value });
+                    setEditing({ ...editing, code: normalizeTramiteCode(e.target.value) });
                   }}
                 />
                 {editErrors.code && <p className="mt-1 text-sm text-red-600">{editErrors.code}</p>}
@@ -455,7 +508,7 @@ const TramitesByClientPage = () => {
               </div>
 
               <div>
-                <label className={labelClass}>Proyecto</label>
+                <label className={labelClass}>Nombre del tramite</label>
                 <input
                   className={inputClass}
                   value={editing.project_name || ''}
@@ -464,7 +517,7 @@ const TramitesByClientPage = () => {
               </div>
 
               <div>
-                <label className={labelClass}>Inmueble</label>
+                <label className={labelClass}>Inmueble / establecimiento (opcional)</label>
                 <input
                   className={inputClass}
                   value={editing.property_name || ''}
@@ -499,7 +552,13 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={editing.location_province || ''}
                   onChange={(e) => setEditing({ ...editing, location_province: e.target.value })}
+                  list="edit-tramite-province-suggestions"
                 />
+                <datalist id="edit-tramite-province-suggestions">
+                  {(LOCATION_SUGGESTIONS[editing.location_department]?.provinces || []).map((province) => (
+                    <option key={province} value={province} />
+                  ))}
+                </datalist>
               </div>
 
               <div>
@@ -508,7 +567,13 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={editing.location_district || ''}
                   onChange={(e) => setEditing({ ...editing, location_district: e.target.value })}
+                  list="edit-tramite-district-suggestions"
                 />
+                <datalist id="edit-tramite-district-suggestions">
+                  {(LOCATION_SUGGESTIONS[editing.location_department]?.districts || []).map((district) => (
+                    <option key={district} value={district} />
+                  ))}
+                </datalist>
               </div>
 
               <div>
@@ -608,6 +673,20 @@ const buildLocation = (values) => {
   ].filter(Boolean);
 
   return parts.length ? parts.join(', ') : null;
+};
+
+const normalizeTramiteCode = (value = '') =>
+  value
+    .toUpperCase()
+    .replace(/[^A-Z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+const buildTramiteCodeSuggestion = (types, typeId) => {
+  const type = types.find((item) => String(item.id) === String(typeId));
+  const base = normalizeTramiteCode(type?.code || 'TR');
+  const year = new Date().getFullYear();
+  return `${base}-${year}`;
 };
 
 const buildPayload = (values) => ({

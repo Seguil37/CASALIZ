@@ -24,6 +24,15 @@ const SERVICE_STATUS_CONFIG = {
 };
 
 const emptyImage = { path: '', caption: '', file: null, preview: '' };
+const SERVICE_CATEGORIES = [
+  'Tramites y regularizacion inmobiliaria',
+  'Arquitectura',
+  'Ingenieria',
+  'Diseño interior',
+  'Asesoria inmobiliaria',
+  'Tasaciones',
+];
+const SUMMARY_MAX = 180;
 
 const emptyForm = {
   title: '',
@@ -435,6 +444,7 @@ const AdminServicesPage = () => {
                 className="w-full border rounded-lg p-2"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
+                placeholder="Ej: Apertura de carpeta predial"
               />
             </div>
 
@@ -444,7 +454,17 @@ const AdminServicesPage = () => {
                 className="w-full border rounded-lg p-2"
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
+                list="service-category-suggestions"
+                placeholder="Selecciona o escribe una categoria"
               />
+              <datalist id="service-category-suggestions">
+                {SERVICE_CATEGORIES.map((category) => (
+                  <option key={category} value={category} />
+                ))}
+              </datalist>
+              <p className="mt-1 text-xs text-[#9a98a0]">
+                Usa una categoria consistente para que luego sea facil filtrar y agrupar.
+              </p>
             </div>
 
             <div>
@@ -454,9 +474,11 @@ const AdminServicesPage = () => {
                 ref={summaryRef}
                 className="w-full border rounded-lg p-3 min-h-[100px] resize-none overflow-hidden"
                 value={form.short_description}
-                onChange={(e) => setForm({ ...form, short_description: e.target.value })}
-                placeholder="Resumen breve del servicio"
+                onChange={(e) => setForm({ ...form, short_description: e.target.value.slice(0, SUMMARY_MAX) })}
+                placeholder="Resume en una frase que problema resuelve el servicio y para quien es."
+                maxLength={SUMMARY_MAX}
               />
+              <p className="mt-1 text-xs text-[#9a98a0]">{form.short_description.length}/{SUMMARY_MAX} caracteres</p>
             </div>
 
             <div>
@@ -467,13 +489,14 @@ const AdminServicesPage = () => {
                 className="w-full border rounded-lg p-3 min-h-[140px] resize-none overflow-hidden"
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="Descripcion detallada del servicio"
+                placeholder="Explica que incluye el servicio, a quien va dirigido, que documentos pide y cual es el resultado esperado."
               />
             </div>
 
             <div>
               <label className="text-sm text-[#555]">Imagen principal</label>
               <div className="space-y-3">
+                <p className="text-xs text-[#9a98a0]">Prioriza subir un archivo. Usa URL solo si ya tienes una imagen publicada.</p>
                 <input
                   type="file"
                   accept="image/*"
@@ -485,7 +508,7 @@ const AdminServicesPage = () => {
                     className="w-full border rounded-lg p-2"
                     value={form.cover_image}
                     onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
-                    placeholder="https://... (opcional)"
+                    placeholder="URL publica de respaldo (opcional)"
                   />
                   <button
                     type="button"
@@ -512,16 +535,17 @@ const AdminServicesPage = () => {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-sm text-[#555]">Estado</label>
-                <select
-                  className="w-full border rounded-lg p-2"
-                  value={form.status || 'published'}
-                  onChange={(e) => setForm({ ...form, status: e.target.value })}
-                >
+                  <select
+                    className="w-full border rounded-lg p-2"
+                    value={form.status || 'published'}
+                    onChange={(e) => setForm({ ...form, status: e.target.value })}
+                  >
                   <option value="draft">Borrador</option>
                   <option value="published">Publicado</option>
                   <option value="archived">Archivado</option>
-                </select>
-              </div>
+                  </select>
+                  <p className="mt-1 text-xs text-[#9a98a0]">Publicado aparece en la web. Borrador queda interno.</p>
+                </div>
 
               <label className="flex items-center gap-2 text-sm text-[#555] mt-6">
                 <input

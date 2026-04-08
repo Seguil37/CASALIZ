@@ -218,6 +218,7 @@ const TramiteTasksPage = () => {
                       className={inputClass}
                       value={form.title}
                       onChange={(e) => setForm({ ...form, title: e.target.value })}
+                      placeholder="Ej: Desarrollo de planos arquitectonicos"
                       required
                     />
                   </div>
@@ -228,6 +229,7 @@ const TramiteTasksPage = () => {
                       className={`${inputClass} min-h-[80px]`}
                       value={form.description}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
+                      placeholder="Detalla el entregable esperado y el alcance de esta tarea."
                     />
                   </div>
 
@@ -347,6 +349,20 @@ const TramiteTasksPage = () => {
                           {(form.status === 'in_progress' || form.status === 'blocked') &&
                             'En proceso y bloqueado permiten un avance entre 1% y 99%.'}
                         </div>
+                        {(form.status === 'in_progress' || form.status === 'blocked') && (
+                          <div className="flex flex-wrap gap-2">
+                            {[10, 25, 50, 75].map((preset) => (
+                              <button
+                                key={preset}
+                                type="button"
+                                className="rounded-full border border-[#ebe7df] px-3 py-1 text-xs font-semibold text-[#233274] hover:border-[#e15f0b] hover:text-[#e15f0b]"
+                                onClick={() => setForm((prev) => ({ ...prev, progress: preset }))}
+                              >
+                                {preset}%
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -487,15 +503,30 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
               {(local.status === 'in_progress' || local.status === 'blocked') &&
                 'En proceso y bloqueado permiten un avance entre 1% y 99%.'}
             </div>
+            {(local.status === 'in_progress' || local.status === 'blocked') && (
+              <div className="flex flex-wrap gap-2">
+                {[10, 25, 50, 75].map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    className="rounded-full border border-[#ebe7df] px-3 py-1 text-xs font-semibold text-[#233274] hover:border-[#e15f0b] hover:text-[#e15f0b]"
+                    onClick={() => handleChange('progress', preset)}
+                  >
+                    {preset}%
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-[#233274]">Observaciones</label>
+          <label className="text-xs font-semibold text-[#233274]">Observaciones de avance</label>
           <input
             className={inputClass}
             value={local.observations}
             onChange={(e) => handleChange('observations', e.target.value)}
+            placeholder="Ej: Planos preliminares listos, falta revision estructural."
             disabled={locked}
           />
         </div>
