@@ -48,6 +48,7 @@ const PopularCountriesSection = () => {
 
     let scrollPosition = 0;
     const scrollSpeed = 0.2;
+    let animationFrame;
 
     const autoScroll = () => {
       scrollPosition += scrollSpeed;
@@ -57,17 +58,17 @@ const PopularCountriesSection = () => {
         scrollPosition = 0;
       }
 
-      requestAnimationFrame(autoScroll);
+      animationFrame = requestAnimationFrame(autoScroll);
     };
 
-    const animationFrame = requestAnimationFrame(autoScroll);
+    animationFrame = requestAnimationFrame(autoScroll);
 
     const handleMouseEnter = () => {
       cancelAnimationFrame(animationFrame);
     };
 
     const handleMouseLeave = () => {
-      requestAnimationFrame(autoScroll);
+      animationFrame = requestAnimationFrame(autoScroll);
     };
 
     scrollContainer.addEventListener('mouseenter', handleMouseEnter);
@@ -128,7 +129,7 @@ const PopularCountriesSection = () => {
                   <Link
                     to="/services#servicios-listado"
                     state={{ prefill: country.name }}
-                  className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-center block"
+                    className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-3 rounded-xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 text-center block"
                   >
                     Explorar servicios de este tipo
                   </Link>
