@@ -45,24 +45,24 @@ const socialLinks = [
 const ContactPage = () => {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(35,50,116,0.12),_transparent_30%),linear-gradient(180deg,#fbf7f1_0%,#f6f1ea_100%)] pb-14">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] px-4 py-16 text-white sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16">
         <div className="absolute inset-0 opacity-15" aria-hidden>
           <div className="absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#fbbf24] blur-3xl" />
           <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-white/20 blur-3xl" />
         </div>
 
-        <div className="container-custom relative z-10 grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-          <div className="space-y-6">
+        <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div className="space-y-5">
             <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#f9d29f] transition-transform duration-500 hover:translate-x-1">
               <Sparkles className="h-4 w-4 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
               Contacto Casaliz
             </div>
 
-            <h1 className="max-w-4xl text-4xl font-black leading-tight transition-transform duration-500 hover:translate-x-1 md:text-5xl lg:text-6xl">
+            <h1 className="text-4xl sm:text-5xl font-black leading-tight transition-transform duration-500 hover:translate-x-1">
               Hablemos de tu proyecto con una propuesta clara, técnica y bien ejecutada.
             </h1>
 
-            <p className="max-w-3xl text-lg text-white/88 transition-colors duration-500 hover:text-white md:text-xl">
+            <p className="text-lg max-w-2xl text-white/88 transition-colors duration-500 hover:text-white">
               En Casaliz integramos arquitectura, gestión técnica y acompañamiento cercano. Si estás evaluando una obra, licencia,
               remodelación o proyecto inmobiliario, aquí empieza la conversación correcta.
             </p>
@@ -86,7 +86,7 @@ const ContactPage = () => {
             </div>
           </div>
 
-          <div className="rounded-[30px] border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
+          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#f9d29f]">Atención directa</p>
             <div className="mt-5 space-y-3">
               {[

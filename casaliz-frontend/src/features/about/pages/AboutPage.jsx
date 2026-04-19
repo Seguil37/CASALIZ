@@ -65,24 +65,24 @@ const companyPrinciples = [
 const AboutPage = () => {
   return (
     <div className="bg-[#f8f5ef] text-[#233274]">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16">
         <div className="absolute inset-0 opacity-10" aria-hidden>
           <div className="absolute -left-12 -top-12 h-72 w-72 rounded-full bg-[#fbbf24] blur-3xl" />
           <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-[#e15f0b] blur-3xl" />
         </div>
 
-        <div className="container-custom relative grid items-center gap-12 py-20 lg:grid-cols-[1.2fr_auto] lg:py-28">
-          <div className="space-y-6">
+        <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div className="space-y-5">
             <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#f9c991] transition-transform duration-500 hover:translate-x-1">
               <Sparkles className="h-5 w-5 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
               <span>Arquitectura con años de experiencia</span>
             </div>
 
-            <h1 className="text-4xl font-black leading-tight transition-transform duration-500 hover:translate-x-1 md:text-5xl lg:text-6xl">
+            <h1 className="text-4xl sm:text-5xl font-black leading-tight transition-transform duration-500 hover:translate-x-1">
               Diseñamos, habilitamos y construimos proyectos con visión integral.
             </h1>
 
-            <p className="max-w-3xl text-lg text-white/85 transition-colors duration-500 hover:text-white md:text-xl">
+            <p className="text-lg max-w-2xl text-white/85 transition-colors duration-500 hover:text-white">
               Casaliz coordina cada etapa con precisión: conceptualización, gestión normativa, dirección de obra e interiorismo. Nos
               enfocamos en resultados habitables, eficientes y alineados a la identidad de cada cliente.
             </p>
@@ -103,7 +103,7 @@ const AboutPage = () => {
             </div>
           </div>
 
-          <div className="w-full max-w-sm rounded-3xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
+          <div className="w-full rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
             <p className="mb-3 text-sm uppercase tracking-[0.3em] text-[#f9c991]">Credenciales clave</p>
             <div className="space-y-3">
               {[
