@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, Menu, X, Mail, Bell, Phone } from 'lucide-react';
+import { Search, User, Menu, X, Mail, Bell, Phone, LogOut } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import { notificationsApi } from '../../utils/api';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
@@ -162,7 +162,13 @@ const Header = () => {
 	                <div className="relative">
 	                  <button
 	                    type="button"
-	                    onClick={() => setNotificationOpen((prev) => !prev)}
+	                    onClick={() => {
+	                      setNotificationOpen((prev) => {
+	                        const nextOpen = !prev;
+	                        if (nextOpen) setMobileMenuOpen(false);
+	                        return nextOpen;
+	                      });
+	                    }}
 	                    className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-white transition-all"
 	                  >
 	                    <Bell className="w-5 h-5 text-[#233274]" />
@@ -173,8 +179,8 @@ const Header = () => {
 	                    )}
 	                  </button>
 
-	                  {notificationOpen && (
-	                    <div className="absolute right-0 mt-2 w-[360px] max-w-[90vw] bg-[#f8f5ef] rounded-xl shadow-xl border border-[#9a98a0] overflow-hidden">
+		                  {notificationOpen && (
+		                    <div className="fixed left-4 right-4 top-24 z-[80] max-h-[70vh] overflow-hidden rounded-xl border border-[#9a98a0] bg-[#f8f5ef] shadow-xl lg:absolute lg:left-auto lg:right-0 lg:top-auto lg:mt-2 lg:w-[360px] lg:max-w-[90vw]">
 	                      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e5e2da]">
 	                        <div>
 	                          <p className="text-sm font-bold text-[#233274]">Notificaciones</p>
@@ -283,7 +289,7 @@ const Header = () => {
                       to="/agency/dashboard"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
-                      Dashboard Proyectos
+                      Gestion de proyectos publicados
                     </Link>
                   )}
                   {isAdminRole(user?.role) && (
@@ -356,7 +362,10 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => {
+                setMobileMenuOpen(!mobileMenuOpen);
+                setNotificationOpen(false);
+              }}
               className="lg:hidden p-2 hover:bg-white rounded-full"
             >
               {mobileMenuOpen ? (
@@ -384,7 +393,7 @@ const Header = () => {
 
         {/* Mobile Menu */}
 	      {mobileMenuOpen && (
-	        <div className="lg:hidden pb-4 animate-fade-in">
+	        <div className="lg:hidden max-h-[calc(100vh-5rem)] overflow-y-auto pb-4 animate-fade-in">
 	          <div className="flex flex-col gap-2">
               <Link
                 to="/services"
@@ -407,19 +416,37 @@ const Header = () => {
 	              >
 	                Nosotros
 	              </Link>
+              <Link
+                to="/contacto"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Mail className="w-4 h-4 text-[#e15f0b]" />
+                Contactanos
+              </Link>
 
               {isAuthenticated && (
                 <>
-                  <div className="border-t border-[#9a98a0] my-2 pt-2">
-                    <Link
-                      to="/profile"
+	                  <div className="border-t border-[#9a98a0] my-2 pt-2">
+	                    <Link
+	                      to="/profile"
                       className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                       onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Mi Perfil
-                    </Link>
+	                    >
+	                      Mi Perfil
+	                    </Link>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-red-600 rounded-lg transition-colors hover:bg-red-50 font-semibold"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Cerrar sesion
+                      </button>
 
-                    {user?.role === ROLES.CLIENT && (
+	                    {user?.role === ROLES.CLIENT && (
                       <Link
                         to="/favorites"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
@@ -445,7 +472,7 @@ const Header = () => {
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        Dashboard Proyectos
+                        Gestion de proyectos publicados
                       </Link>
                     )}
 

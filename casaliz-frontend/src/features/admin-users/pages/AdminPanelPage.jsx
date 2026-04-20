@@ -6,7 +6,9 @@ import {
   FolderKanban,
   Layers3,
   ListTodo,
+  Megaphone,
   Settings2,
+  UserRound,
   Users,
 } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
@@ -15,9 +17,10 @@ import { ROLES } from '../../../shared/constants/roles';
 const adminItems = [
   {
     key: 'projects',
-    title: 'Dashboard Proyectos',
-    description: 'Gestiona proyectos, tours y contenido general.',
-    eyebrow: 'Contenido',
+    group: 'announcements',
+    title: 'Gestion de proyectos publicados',
+    description: 'Administra los proyectos visibles en la web y su contenido comercial.',
+    eyebrow: 'Anuncios',
     to: '/agency/dashboard',
     roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
     icon: FolderKanban,
@@ -27,9 +30,10 @@ const adminItems = [
   },
   {
     key: 'services',
+    group: 'announcements',
     title: 'Gestion de servicios',
     description: 'Administra los servicios publicados y sus contenidos.',
-    eyebrow: 'Catalogo',
+    eyebrow: 'Anuncios',
     to: '/agency/services',
     roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
     icon: BriefcaseBusiness,
@@ -39,6 +43,7 @@ const adminItems = [
   },
   {
     key: 'tramites',
+    group: 'operations',
     title: 'Gestion de tramites',
     description: 'Crea, organiza y controla los tramites registrados.',
     eyebrow: 'Operacion',
@@ -51,6 +56,7 @@ const adminItems = [
   },
   {
     key: 'types',
+    group: 'operations',
     title: 'Tipos de tramite',
     description: 'Configura fases, subfases y estructuras de tramite.',
     eyebrow: 'Configuracion',
@@ -63,6 +69,7 @@ const adminItems = [
   },
   {
     key: 'control',
+    group: 'operations',
     title: 'Vista general tramites',
     description: 'Supervisa el avance global de todos los tramites.',
     eyebrow: 'Seguimiento',
@@ -75,6 +82,7 @@ const adminItems = [
   },
   {
     key: 'tasks',
+    group: 'operations',
     title: 'Resumen de tareas',
     description: 'Consulta tareas asignadas por proyecto, usuario y estado.',
     eyebrow: 'Productividad',
@@ -87,6 +95,7 @@ const adminItems = [
   },
   {
     key: 'admins',
+    group: 'operations',
     title: 'Gestion de administradores',
     description: 'Controla cuentas internas, roles y accesos.',
     eyebrow: 'Equipo',
@@ -99,6 +108,33 @@ const adminItems = [
   },
 ];
 
+const adminGroups = [
+  {
+    key: 'operations',
+    title: 'Tramites y operacion interna',
+    eyebrow: 'Control operativo',
+    description:
+      'Organizacion, seguimiento y administracion de tramites, tareas, plantillas y accesos internos.',
+    icon: ClipboardList,
+  },
+  {
+    key: 'announcements',
+    title: 'Anuncios',
+    eyebrow: 'Contenido visible',
+    description:
+      'Publicacion y gestion de contenido comercial que aparece en la web: proyectos y servicios.',
+    icon: Megaphone,
+  },
+];
+
+const futureClientBlock = {
+  title: 'Clientes',
+  eyebrow: 'Proximamente',
+  description:
+    'Espacio reservado para separar la experiencia de clientes de la administracion interna.',
+  icon: UserRound,
+};
+
 const roleCopy = {
   [ROLES.MASTER_ADMIN]: 'Acceso total a configuracion, usuarios y operacion.',
   [ROLES.ADMIN]: 'Accesos de gestion y seguimiento operativo.',
@@ -108,6 +144,13 @@ const roleCopy = {
 const AdminPanelPage = () => {
   const { user } = useAuthStore();
   const items = adminItems.filter((item) => item.roles.includes(user?.role));
+  const groupedItems = adminGroups
+    .map((group) => ({
+      ...group,
+      items: items.filter((item) => item.group === group.key),
+    }))
+    .filter((group) => group.items.length > 0);
+  const FutureClientIcon = futureClientBlock.icon;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(35,50,116,0.14),_transparent_34%),linear-gradient(180deg,#fbf7f1_0%,#f6f1ea_100%)] py-8 md:py-10">
@@ -120,11 +163,11 @@ const AdminPanelPage = () => {
                 Panel administrativo
               </p>
               <h1 className="mt-3 max-w-2xl text-3xl font-black leading-tight text-[#233274] sm:text-4xl">
-                Accesos rapidos para gestionar la operacion interna
+                Accesos rapidos organizados por funcion
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-7 text-[#726c78] sm:text-base">
-                Entra directo a proyectos, tramites, servicios y tareas desde un panel
-                visual mas claro y compacto.
+                Separa anuncios web, tramites internos y el futuro espacio de clientes
+                desde un panel mas claro y escalable.
               </p>
             </div>
             <div className="border-t border-[#eee5d9] bg-[#fcfaf6] px-6 py-8 sm:px-8 lg:border-l lg:border-t-0">
@@ -143,46 +186,86 @@ const AdminPanelPage = () => {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {items.map((item) => {
-            const Icon = item.icon;
+        {groupedItems.map((group) => {
+          const GroupIcon = group.icon;
 
-            return (
-              <Link
-                key={item.key}
-                to={item.to}
-                className={`group relative overflow-hidden rounded-[30px] border border-white/70 bg-white ${item.glow} transition duration-300 hover:-translate-y-1`}
-              >
-                <div className={`h-28 bg-gradient-to-br ${item.accent} p-6 text-white`}>
-                  <div className="flex items-start justify-between">
-                    <span className="rounded-full border border-white/30 bg-white/12 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em]">
-                      {item.eyebrow}
-                    </span>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/14 backdrop-blur-sm">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                  </div>
+          return (
+            <section key={group.key} className="space-y-4">
+              <div className="flex flex-col gap-3 rounded-[24px] border border-[#eadfce] bg-white/80 p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#e15f0b]">
+                    {group.eyebrow}
+                  </p>
+                  <h2 className="mt-2 text-2xl font-black text-[#233274]">{group.title}</h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-[#726c78]">
+                    {group.description}
+                  </p>
                 </div>
-
-                <div className="flex min-h-[220px] flex-col p-6">
-                  <span className="inline-flex w-fit rounded-full bg-[#f3eee5] px-3 py-1 text-xs font-bold text-[#7d6e57]">
-                    {item.badge}
-                  </span>
-                  <h2 className="mt-4 text-2xl font-black leading-tight text-[#233274] transition-colors group-hover:text-[#e15f0b]">
-                    {item.title}
-                  </h2>
-                  <p className="mt-3 text-sm leading-6 text-[#78727d]">{item.description}</p>
-
-                  <div className="mt-auto pt-6">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-[#233274] px-4 py-2 text-sm font-bold text-white transition group-hover:bg-[#e15f0b]">
-                      Entrar
-                      <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </div>
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#233274] text-white">
+                  <GroupIcon className="h-6 w-6" />
                 </div>
-              </Link>
-            );
-          })}
+              </div>
+
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <Link
+                      key={item.key}
+                      to={item.to}
+                      className={`group relative overflow-hidden rounded-[30px] border border-white/70 bg-white ${item.glow} transition duration-300 hover:-translate-y-1`}
+                    >
+                      <div className={`h-28 bg-gradient-to-br ${item.accent} p-6 text-white`}>
+                        <div className="flex items-start justify-between">
+                          <span className="rounded-full border border-white/30 bg-white/12 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em]">
+                            {item.eyebrow}
+                          </span>
+                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/14 backdrop-blur-sm">
+                            <Icon className="h-6 w-6" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex min-h-[220px] flex-col p-6">
+                        <span className="inline-flex w-fit rounded-full bg-[#f3eee5] px-3 py-1 text-xs font-bold text-[#7d6e57]">
+                          {item.badge}
+                        </span>
+                        <h3 className="mt-4 text-2xl font-black leading-tight text-[#233274] transition-colors group-hover:text-[#e15f0b]">
+                          {item.title}
+                        </h3>
+                        <p className="mt-3 text-sm leading-6 text-[#78727d]">{item.description}</p>
+
+                        <div className="mt-auto pt-6">
+                          <span className="inline-flex items-center gap-2 rounded-full bg-[#233274] px-4 py-2 text-sm font-bold text-white transition group-hover:bg-[#e15f0b]">
+                            Entrar
+                            <ArrowRight className="h-4 w-4" />
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
+
+        <section className="space-y-4">
+          <div className="flex flex-col gap-3 rounded-[24px] border border-dashed border-[#d8cfc3] bg-white/60 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#9a6a43]">
+                {futureClientBlock.eyebrow}
+              </p>
+              <h2 className="mt-2 text-2xl font-black text-[#233274]">{futureClientBlock.title}</h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#726c78]">
+                {futureClientBlock.description}
+              </p>
+            </div>
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#f3eee5] text-[#7d6e57]">
+              <FutureClientIcon className="h-6 w-6" />
+            </div>
+          </div>
         </section>
       </div>
     </div>

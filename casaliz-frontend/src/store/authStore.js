@@ -3,6 +3,23 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import api from '../shared/utils/api';
 
+const DEFAULT_AUTH_ERROR = 'No pudimos conectarnos con el servicio en este momento. Intenta nuevamente en unos minutos.';
+
+const hasTechnicalDetails = (message = '') =>
+  /SQLSTATE|select \* from|Connection:|mysql|PDOException|QueryException|users`\.`deleted_at/i.test(message);
+
+const sanitizeAuthError = (error, fallback = DEFAULT_AUTH_ERROR) => {
+  const validationError = error.response?.data?.errors?.email?.[0];
+  const serverMessage = error.response?.data?.message;
+  const message = validationError || serverMessage || fallback;
+
+  if (!error.response || hasTechnicalDetails(message)) {
+    return fallback;
+  }
+
+  return message;
+};
+
 const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -40,7 +57,7 @@ const useAuthStore = create(
 
           return { success: true };
         } catch (error) {
-          const errorMessage = error.response?.data?.message || 'Error al iniciar sesión';
+          const errorMessage = sanitizeAuthError(error);
           
           set({
             user: null,
@@ -79,11 +96,14 @@ const useAuthStore = create(
         } catch (error) {
           const serverMessage = error.response?.data?.message;
           const emailError = error.response?.data?.errors?.email?.[0];
-          let errorMessage = 'Error al registrarse';
+          let errorMessage = sanitizeAuthError(
+            error,
+            'No pudimos completar el registro en este momento. Intenta nuevamente en unos minutos.'
+          );
 
           if (emailError) {
             errorMessage = emailError;
-          } else if (serverMessage) {
+          } else if (serverMessage && !hasTechnicalDetails(serverMessage)) {
             errorMessage = serverMessage;
           }
 
