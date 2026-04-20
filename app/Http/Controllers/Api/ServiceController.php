@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Support\ModuleAccess;
 
 class ServiceController extends Controller
 {
@@ -26,7 +27,7 @@ class ServiceController extends Controller
 
         $user = $request->user('sanctum');
 
-        if (!$user || !$user->isAdmin()) {
+        if (!$user || !$user->isAdmin() || !ModuleAccess::can($user, ModuleAccess::SERVICES)) {
             $query->where('status', 'published');
         } elseif ($request->filled('status') && $request->input('status') !== 'all') {
             $query->where('status', $request->input('status'));
@@ -43,7 +44,7 @@ class ServiceController extends Controller
     {
         $user = $request->user('sanctum');
 
-        if ($service->status !== 'published' && (!$user || !$user->isAdmin())) {
+        if ($service->status !== 'published' && (!$user || !$user->isAdmin() || !ModuleAccess::can($user, ModuleAccess::SERVICES))) {
             abort(404);
         }
 

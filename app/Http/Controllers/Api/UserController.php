@@ -4,19 +4,31 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\ModuleAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', User::class);
 
+        $search = trim((string) $request->query('search', ''));
+
         $users = User::whereIn('role', ['admin', 'master_admin', 'operator'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($innerQuery) use ($search) {
+                    $innerQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('role', 'like', "%{$search}%");
+                });
+            })
             ->orderBy('name')
-            ->paginate(20);
+            ->paginate(8)
+            ->withQueryString();
 
         return response()->json($users);
     }
@@ -43,7 +55,9 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return response()->json($user, 201);
+        ModuleAccess::syncUserDefaults($user);
+
+        return response()->json($user->fresh(), 201);
     }
 
     public function update(Request $request, User $user)
@@ -114,11 +128,17 @@ class UserController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
 
+        $roleChanged = array_key_exists('role', $validated) && $validated['role'] !== $user->role;
+
         $user->update($validated);
+
+        if ($roleChanged) {
+            ModuleAccess::syncUserDefaults($user->fresh());
+        }
 
         return response()->json([
             'message' => 'Usuario actualizado correctamente',
-            'user' => $user,
+            'user' => $user->fresh(),
         ]);
     }
 

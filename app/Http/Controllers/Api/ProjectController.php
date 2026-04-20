@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Support\ModuleAccess;
 
 class ProjectController extends Controller
 {
@@ -43,7 +44,7 @@ class ProjectController extends Controller
 
         $user = $request->user('sanctum');
 
-        if (!$user || !$user->isAdmin()) {
+        if (!$user || !$user->isAdmin() || !ModuleAccess::can($user, ModuleAccess::PROJECTS)) {
             $query->where('status', 'published');
         }
 
@@ -72,7 +73,11 @@ class ProjectController extends Controller
         $user = $request->user('sanctum');
 
         // Permitir ver si: está publicado O el usuario es admin O el usuario es el creador
-        if ($project->status !== 'published' && (!$user || (!$user->isAdmin() && $project->created_by !== $user->id))) {
+        $canSeeInternalProject = $user
+            && ModuleAccess::can($user, ModuleAccess::PROJECTS)
+            && ($user->isAdmin() || $project->created_by === $user->id);
+
+        if ($project->status !== 'published' && !$canSeeInternalProject) {
             abort(404);
         }
 

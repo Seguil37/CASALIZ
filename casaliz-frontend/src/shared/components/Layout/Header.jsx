@@ -6,7 +6,7 @@ import { Search, User, Menu, X, Mail, Bell, Phone, LogOut } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import { notificationsApi } from '../../utils/api';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
-import { ROLES, roleLabels, isAdminRole } from '../../constants/roles';
+import { ROLES, roleLabels, canAccessModule, MODULES } from '../../constants/roles';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,6 +16,15 @@ const Header = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const canAccessAnyInternalModule = [
+    MODULES.PROJECTS,
+    MODULES.SERVICES,
+    MODULES.TRAMITES_MANAGE,
+    MODULES.TRAMITE_TYPES,
+    MODULES.TRAMITES_CONTROL,
+    MODULES.TASKS_SUMMARY,
+    MODULES.ADMIN_USERS,
+  ].some((moduleKey) => canAccessModule(user, moduleKey));
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -275,7 +284,7 @@ const Header = () => {
                     </Link>
                   )}
 
-                  {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                  {canAccessAnyInternalModule && (
                     <Link
                       to="/admin/panel"
                       className="block px-4 py-3 bg-[#233274] text-white font-semibold transition-colors border-t border-[#233274] hover:bg-[#1b285c]"
@@ -284,7 +293,7 @@ const Header = () => {
                     </Link>
                   )}
 
-                  {isAdminRole(user?.role) && (
+                  {canAccessModule(user, MODULES.PROJECTS) && (
                     <Link
                       to="/agency/dashboard"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -292,7 +301,7 @@ const Header = () => {
                       Gestion de proyectos publicados
                     </Link>
                   )}
-                  {isAdminRole(user?.role) && (
+                  {canAccessModule(user, MODULES.SERVICES) && (
                     <Link
                       to="/agency/services"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -300,7 +309,7 @@ const Header = () => {
                       Gestión de servicios
                     </Link>
                   )}
-                  {isAdminRole(user?.role) && (
+                  {canAccessModule(user, MODULES.TRAMITES_MANAGE) && (
                     <Link
                       to="/tramites/gestion"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -308,7 +317,7 @@ const Header = () => {
                       Gestión de trámites
                     </Link>
                   )}
-                  {user?.role === ROLES.MASTER_ADMIN && (
+                  {canAccessModule(user, MODULES.TRAMITE_TYPES) && (
                     <Link
                       to="/tramites/tipos"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -316,7 +325,7 @@ const Header = () => {
                       Tipos de trámite
                     </Link>
                   )}
-                  {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                  {canAccessModule(user, MODULES.TRAMITES_CONTROL) && (
                     <Link
                       to="/tramites/control"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -324,7 +333,7 @@ const Header = () => {
                       Vista general trámites
                     </Link>
                   )}
-                  {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                  {canAccessModule(user, MODULES.TASKS_SUMMARY) && (
                     <Link
                       to="/tramites/resumen-tareas"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -332,7 +341,7 @@ const Header = () => {
                       Resumen de tareas
                     </Link>
                   )}
-                  {user?.role === ROLES.MASTER_ADMIN && (
+                  {canAccessModule(user, MODULES.ADMIN_USERS) && (
                     <Link
                       to="/admin/users"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
@@ -456,7 +465,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                    {canAccessAnyInternalModule && (
                       <Link
                         to="/admin/panel"
                         className="flex items-center gap-2 px-4 py-2 bg-[#233274] text-white rounded-lg transition-colors font-semibold hover:bg-[#1b285c]"
@@ -466,7 +475,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {isAdminRole(user?.role) && (
+                    {canAccessModule(user, MODULES.PROJECTS) && (
                       <Link
                         to="/agency/dashboard"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
@@ -476,7 +485,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {isAdminRole(user?.role) && (
+                    {canAccessModule(user, MODULES.SERVICES) && (
                       <Link
                         to="/agency/services"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
@@ -486,7 +495,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {isAdminRole(user?.role) && (
+                    {canAccessModule(user, MODULES.TRAMITES_MANAGE) && (
                       <Link
                         to="/tramites/gestion"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
@@ -496,7 +505,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {user?.role === ROLES.MASTER_ADMIN && (
+                    {canAccessModule(user, MODULES.TRAMITE_TYPES) && (
                       <Link
                         to="/tramites/tipos"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
@@ -506,7 +515,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                    {canAccessModule(user, MODULES.TRAMITES_CONTROL) && (
                       <Link
                         to="/tramites/control"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
@@ -516,7 +525,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR].includes(user?.role) && (
+                    {canAccessModule(user, MODULES.TASKS_SUMMARY) && (
                       <Link
                         to="/tramites/resumen-tareas"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"
@@ -526,7 +535,7 @@ const Header = () => {
                       </Link>
                     )}
 
-                    {user?.role === ROLES.MASTER_ADMIN && (
+                    {canAccessModule(user, MODULES.ADMIN_USERS) && (
                       <Link
                         to="/admin/users"
                         className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors"

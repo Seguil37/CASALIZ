@@ -23,7 +23,7 @@ import BookingSuccessPage from './features/booking/pages/BookingSuccessPage';
 import MyBookingsPage from './features/customer/pages/MyBookingsPage';
 import FavoritesPage from './features/customer/pages/FavoritesPage';
 import ContactPage from './features/contact/pages/ContactPage';
-import { ROLES } from './shared/constants/roles';
+import { ROLES, MODULES, canAccessModule } from './shared/constants/roles';
 import AdminUsersPage from './features/admin-users/pages/AdminUsersPage';
 import AdminPanelPage from './features/admin-users/pages/AdminPanelPage';
 import ServicesPage from './features/services/pages/ServicesPage';
@@ -55,7 +55,7 @@ const queryClient = new QueryClient({
 });
 
 // Protected Route
-const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+const ProtectedRoute = ({ children, allowedRoles = [], requiredModule = null }) => {
   const { isAuthenticated, user } = useAuthStore();
 
   if (!isAuthenticated) {
@@ -64,6 +64,10 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
     return <Navigate to="/" replace />;
+  }
+
+  if (requiredModule && !canAccessModule(user, requiredModule)) {
+    return <Navigate to="/admin/panel" replace />;
   }
 
   return children;
@@ -111,7 +115,7 @@ function App() {
             <Route
               path="agency/dashboard"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
                   <AgencyDashboard />
                 </ProtectedRoute>
               }
@@ -119,7 +123,7 @@ function App() {
             <Route
               path="agency/tours"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
                   <MyToursPage />
                 </ProtectedRoute>
               }
@@ -127,7 +131,7 @@ function App() {
             <Route
               path="agency/services"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.SERVICES}>
                   <AdminServicesPage />
                 </ProtectedRoute>
               }
@@ -135,7 +139,7 @@ function App() {
             <Route
               path="agency/tours/create"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
                   <CreateTourPage />
                 </ProtectedRoute>
               }
@@ -143,7 +147,7 @@ function App() {
             <Route
               path="agency/tours/:id/edit"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
                   <EditTourPage />
                 </ProtectedRoute>
               }
@@ -151,7 +155,7 @@ function App() {
             <Route
               path="agency/bookings"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
                   <AgencyBookingsPage />
                 </ProtectedRoute>
               }
@@ -194,7 +198,7 @@ function App() {
             <Route
               path="admin/users"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.ADMIN_USERS}>
                   <AdminUsersPage />
                 </ProtectedRoute>
               }
@@ -210,7 +214,7 @@ function App() {
             <Route
               path="tramites/tipos"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.TRAMITE_TYPES}>
                   <TramiteTypesPage />
                 </ProtectedRoute>
               }
@@ -218,7 +222,7 @@ function App() {
             <Route
               path="tramites/gestion"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]}>
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]} requiredModule={MODULES.TRAMITES_MANAGE}>
                   <TramitesByClientPage />
                 </ProtectedRoute>
               }
@@ -226,7 +230,7 @@ function App() {
             <Route
               path="tramites/control"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
                   <ControlBoardPage />
                 </ProtectedRoute>
               }
@@ -234,7 +238,7 @@ function App() {
             <Route
               path="tramites/resumen-tareas"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
                   <AssignedTasksSummaryPage />
                 </ProtectedRoute>
               }
@@ -242,7 +246,7 @@ function App() {
             <Route
               path="tramites/:id/tareas"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
                   <TramiteTasksPage />
                 </ProtectedRoute>
               }
@@ -250,7 +254,7 @@ function App() {
             <Route
               path="tramites/:id/detalle"
               element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
                   <TramiteDetailPage />
                 </ProtectedRoute>
               }

@@ -12,11 +12,12 @@ import {
   Users,
 } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
-import { ROLES } from '../../../shared/constants/roles';
+import { ROLES, MODULES, canAccessModule } from '../../../shared/constants/roles';
 
 const adminItems = [
   {
     key: 'projects',
+    module: MODULES.PROJECTS,
     group: 'announcements',
     title: 'Gestion de proyectos publicados',
     description: 'Administra los proyectos visibles en la web y su contenido comercial.',
@@ -30,6 +31,7 @@ const adminItems = [
   },
   {
     key: 'services',
+    module: MODULES.SERVICES,
     group: 'announcements',
     title: 'Gestion de servicios',
     description: 'Administra los servicios publicados y sus contenidos.',
@@ -43,6 +45,7 @@ const adminItems = [
   },
   {
     key: 'tramites',
+    module: MODULES.TRAMITES_MANAGE,
     group: 'operations',
     title: 'Gestion de tramites',
     description: 'Crea, organiza y controla los tramites registrados.',
@@ -56,6 +59,7 @@ const adminItems = [
   },
   {
     key: 'types',
+    module: MODULES.TRAMITE_TYPES,
     group: 'operations',
     title: 'Tipos de tramite',
     description: 'Configura fases, subfases y estructuras de tramite.',
@@ -69,6 +73,7 @@ const adminItems = [
   },
   {
     key: 'control',
+    module: MODULES.TRAMITES_CONTROL,
     group: 'operations',
     title: 'Vista general tramites',
     description: 'Supervisa el avance global de todos los tramites.',
@@ -82,6 +87,7 @@ const adminItems = [
   },
   {
     key: 'tasks',
+    module: MODULES.TASKS_SUMMARY,
     group: 'operations',
     title: 'Resumen de tareas',
     description: 'Consulta tareas asignadas por proyecto, usuario y estado.',
@@ -95,6 +101,7 @@ const adminItems = [
   },
   {
     key: 'admins',
+    module: MODULES.ADMIN_USERS,
     group: 'operations',
     title: 'Gestion de administradores',
     description: 'Controla cuentas internas, roles y accesos.',
@@ -143,7 +150,7 @@ const roleCopy = {
 
 const AdminPanelPage = () => {
   const { user } = useAuthStore();
-  const items = adminItems.filter((item) => item.roles.includes(user?.role));
+  const items = adminItems.filter((item) => item.roles.includes(user?.role) && canAccessModule(user, item.module));
   const groupedItems = adminGroups
     .map((group) => ({
       ...group,

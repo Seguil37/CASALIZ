@@ -118,10 +118,16 @@ export const notificationsApi = {
 };
 
 export const adminUsersApi = {
-  list: (page = 1) => api.get('/users', { params: { page } }),
+  list: (page = 1, search = '') => api.get('/users', { params: { page, search } }),
   create: (data) => api.post('/users', data),
   update: (id, data) => api.put(`/users/${id}`, data),
   delete: (id) => api.delete(`/users/${id}`),
+};
+
+export const modulePermissionsApi = {
+  list: () => api.get('/module-permissions'),
+  update: (role, permissions) => api.put('/module-permissions', { role, permissions }),
+  updateUser: (userId, permissions) => api.put(`/module-permissions/users/${userId}`, { permissions }),
 };
 
 export const settingsApi = {

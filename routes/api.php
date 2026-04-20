@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\SystemSettingsController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ModulePermissionController;
 use App\Http\Controllers\Api\TramiteTypeController;
 use App\Http\Controllers\Api\TramiteController;
 use App\Http\Controllers\Api\TramiteTaskController;
@@ -38,46 +39,46 @@ Route::prefix('v1')->group(function () {
 
     // Rutas protegidas
     Route::middleware('auth:sanctum')->group(function () {
-        Route::middleware('can:create,App\\Models\\Project')->group(function () {
+        Route::middleware(['module:projects', 'can:create,App\\Models\\Project'])->group(function () {
             Route::post('/projects', [ProjectController::class, 'store']);
         });
 
-        Route::middleware('can:create,App\\Models\\Service')->group(function () {
+        Route::middleware(['module:services', 'can:create,App\\Models\\Service'])->group(function () {
             Route::post('/services', [ServiceController::class, 'store']);
         });
 
-        Route::middleware('can:update,project')->group(function () {
+        Route::middleware(['module:projects', 'can:update,project'])->group(function () {
             Route::put('/projects/{project}', [ProjectController::class, 'update']);
         });
 
-        Route::middleware('can:update,service')->group(function () {
+        Route::middleware(['module:services', 'can:update,service'])->group(function () {
             Route::put('/services/{service}', [ServiceController::class, 'update']);
         });
 
-        Route::middleware('can:delete,project')->group(function () {
+        Route::middleware(['module:projects', 'can:delete,project'])->group(function () {
             Route::delete('/projects/{project}', [ProjectController::class, 'destroy']);
         });
 
-        Route::middleware('can:delete,service')->group(function () {
+        Route::middleware(['module:services', 'can:delete,service'])->group(function () {
             Route::delete('/services/{service}', [ServiceController::class, 'destroy']);
         });
 
         Route::post('/reviews', [ReviewController::class, 'store']);
         Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
 
-        Route::middleware('can:viewAny,App\\Models\\User')->group(function () {
+        Route::middleware(['module:admin_users,tramites_manage,tasks_summary', 'can:viewAny,App\\Models\\User'])->group(function () {
             Route::get('/users', [UserController::class, 'index']);
         });
 
-        Route::middleware('can:create,App\\Models\\User')->group(function () {
+        Route::middleware(['module:admin_users', 'can:create,App\\Models\\User'])->group(function () {
             Route::post('/users', [UserController::class, 'store']);
         });
 
-        Route::middleware('can:update,user')->group(function () {
+        Route::middleware(['module:admin_users', 'can:update,user'])->group(function () {
             Route::put('/users/{user}', [UserController::class, 'update']);
         });
 
-        Route::middleware('can:delete,user')->group(function () {
+        Route::middleware(['module:admin_users', 'can:delete,user'])->group(function () {
             Route::delete('/users/{user}', [UserController::class, 'destroy']);
         });
 
@@ -88,28 +89,43 @@ Route::prefix('v1')->group(function () {
         Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
         Route::post('/notifications/{notificationId}/read', [NotificationController::class, 'markAsRead']);
 
-        // Trámites - solo staff
-        Route::get('/tramite-types', [TramiteTypeController::class, 'index']);
-        Route::post('/tramite-types', [TramiteTypeController::class, 'store']);
-        Route::get('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'show']);
-        Route::put('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'update']);
-        Route::delete('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'destroy']);
+        Route::get('/module-permissions', [ModulePermissionController::class, 'index']);
+        Route::put('/module-permissions', [ModulePermissionController::class, 'update']);
+        Route::put('/module-permissions/users/{user}', [ModulePermissionController::class, 'updateUser']);
 
-        Route::get('/tramites', [TramiteController::class, 'index']);
-        Route::post('/tramites', [TramiteController::class, 'store']);
-        Route::get('/tramites/{tramite}', [TramiteController::class, 'show']);
-        Route::put('/tramites/{tramite}', [TramiteController::class, 'update']);
-        Route::delete('/tramites/{tramite}', [TramiteController::class, 'destroy']);
-        Route::put('/tramites/{tramite}/phases/{phaseInstance}', [TramiteController::class, 'updatePhaseStatus']);
-        Route::put('/tramites/{tramite}/subphases/{subphaseInstance}', [TramiteController::class, 'updateSubphaseStatus']);
-        Route::put('/tramites/{tramite}/notes', [TramiteController::class, 'updateNotes']);
+        // Trámites - solo módulos autorizados por Master
+        Route::middleware('module:tramite_types,tramites_manage')->group(function () {
+            Route::get('/tramite-types', [TramiteTypeController::class, 'index']);
+            Route::get('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'show']);
+        });
 
-        Route::get('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'index']);
-        Route::post('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'store']);
-        Route::put('/tramites/{tramite}/tasks/{task}', [TramiteTaskController::class, 'update']);
-        Route::delete('/tramites/{tramite}/tasks/{task}', [TramiteTaskController::class, 'destroy']);
+        Route::middleware('module:tramite_types')->group(function () {
+            Route::post('/tramite-types', [TramiteTypeController::class, 'store']);
+            Route::put('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'update']);
+            Route::delete('/tramite-types/{tramiteType}', [TramiteTypeController::class, 'destroy']);
+        });
 
-        Route::get('/tramites-dashboard/overview', [TramiteDashboardController::class, 'overview']);
-        Route::get('/tramites-dashboard/assigned-tasks', [TramiteDashboardController::class, 'assignedTasks']);
+        Route::middleware('module:tramites_manage')->group(function () {
+            Route::get('/tramites', [TramiteController::class, 'index']);
+            Route::post('/tramites', [TramiteController::class, 'store']);
+            Route::put('/tramites/{tramite}', [TramiteController::class, 'update']);
+            Route::delete('/tramites/{tramite}', [TramiteController::class, 'destroy']);
+        });
+
+        Route::middleware('module:tramites_control')->group(function () {
+            Route::get('/tramites/{tramite}', [TramiteController::class, 'show']);
+            Route::put('/tramites/{tramite}/phases/{phaseInstance}', [TramiteController::class, 'updatePhaseStatus']);
+            Route::put('/tramites/{tramite}/subphases/{subphaseInstance}', [TramiteController::class, 'updateSubphaseStatus']);
+            Route::put('/tramites/{tramite}/notes', [TramiteController::class, 'updateNotes']);
+            Route::get('/tramites-dashboard/overview', [TramiteDashboardController::class, 'overview']);
+        });
+
+        Route::middleware('module:tasks_summary')->group(function () {
+            Route::get('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'index']);
+            Route::post('/tramites/{tramite}/tasks', [TramiteTaskController::class, 'store']);
+            Route::put('/tramites/{tramite}/tasks/{task}', [TramiteTaskController::class, 'update']);
+            Route::delete('/tramites/{tramite}/tasks/{task}', [TramiteTaskController::class, 'destroy']);
+            Route::get('/tramites-dashboard/assigned-tasks', [TramiteDashboardController::class, 'assignedTasks']);
+        });
     });
 });

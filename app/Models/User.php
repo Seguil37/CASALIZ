@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Support\ModuleAccess;
 
 class User extends Authenticatable
 {
@@ -26,6 +27,8 @@ class User extends Authenticatable
     ];
 
     protected $hidden = ['password', 'remember_token'];
+
+    protected $appends = ['module_permissions'];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -71,5 +74,15 @@ class User extends Authenticatable
     public function isMasterAdmin(): bool
     {
         return $this->role === 'master_admin';
+    }
+
+    public function getModulePermissionsAttribute(): array
+    {
+        return ModuleAccess::forUser($this);
+    }
+
+    public function canAccessModule(string $module): bool
+    {
+        return ModuleAccess::can($this, $module);
     }
 }

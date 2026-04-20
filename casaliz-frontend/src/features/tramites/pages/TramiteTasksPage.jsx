@@ -45,7 +45,7 @@ const TramiteTasksPage = () => {
   const canCreate = useMemo(() => {
     if (!tramite || !user) return false;
     if ([ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role)) return true;
-    return tramite.responsible?.id === user.id;
+    return String(tramite.responsible?.id) === String(user.id);
   }, [tramite, user]);
 
   const canViewStaff = useMemo(
@@ -396,7 +396,9 @@ const TramiteTasksPage = () => {
 };
 
 const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canManageAssignments, phases }) => {
-  const locked = isOperator && task.assignee?.id !== userId;
+  const isAssignedToCurrentUser = task.assignee?.id && userId && String(task.assignee.id) === String(userId);
+  const locked = isOperator && !isAssignedToCurrentUser;
+  const canEditManagementFields = !isOperator && !locked;
   const [local, setLocal] = useState({
     status: task.status,
     progress: task.progress,
@@ -421,7 +423,15 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
   }, [task]);
 
   const handleSave = () => {
-    onUpdate(task.id, normalizeTaskPayload(local));
+    const payload = isOperator
+      ? {
+          status: local.status,
+          progress: Number(local.progress) || 0,
+          observations: local.observations || null,
+        }
+      : normalizeTaskPayload(local);
+
+    onUpdate(task.id, payload);
   };
 
   const handleChange = (field, value) => {
@@ -543,7 +553,7 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
                 tramite_subphase_instance_id: '',
               }))
             }
-            disabled={locked}
+            disabled={!canEditManagementFields}
           >
             <option value="">Sin fase</option>
             {phases.map((phase) => (
@@ -560,7 +570,7 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             className={inputClass}
             value={local.tramite_subphase_instance_id}
             onChange={(e) => handleChange('tramite_subphase_instance_id', e.target.value)}
-            disabled={locked}
+            disabled={!canEditManagementFields}
           >
             <option value="">Sin subfase</option>
             {getSubphaseOptions(phases, local.tramite_phase_instance_id).map((subphase) => (
@@ -578,12 +588,12 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             className={inputClass}
             value={local.due_date}
             onChange={(e) => handleChange('due_date', e.target.value)}
-            disabled={locked || isOperator}
-            readOnly={isOperator}
+            disabled={!canEditManagementFields}
+            readOnly={!canEditManagementFields}
           />
         </div>
 
-        {canManageAssignments && (
+        {canManageAssignments && !isOperator && (
           <div>
             <label className="text-xs font-semibold text-[#233274]">Asignado a</label>
             <select

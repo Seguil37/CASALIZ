@@ -3,9 +3,12 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\CheckAgencyOwnership;
 use App\Http\Middleware\TrackActivity;
+use App\Http\Middleware\CheckModulePermission;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,8 +23,25 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => CheckRole::class,
             'agency' => CheckAgencyOwnership::class,
             'track' => TrackActivity::class,
+            'module' => CheckModulePermission::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $databaseUnavailableResponse = function (Request $request) {
+            if (!$request->expectsJson() && !$request->is('api/*')) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => 'No pudimos conectarnos con el servicio en este momento. Intenta nuevamente en unos minutos.',
+            ], 503);
+        };
+
+        $exceptions->render(function (QueryException $e, Request $request) use ($databaseUnavailableResponse) {
+            return $databaseUnavailableResponse($request);
+        });
+
+        $exceptions->render(function (\PDOException $e, Request $request) use ($databaseUnavailableResponse) {
+            return $databaseUnavailableResponse($request);
+        });
     })->create();

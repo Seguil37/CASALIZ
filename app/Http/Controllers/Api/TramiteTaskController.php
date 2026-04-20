@@ -26,10 +26,10 @@ class TramiteTaskController extends Controller
 
         if ($user->isOperator()) {
             // Si el operador es responsable general, ve todas; si no, solo las que le asignaron
-            if ($tramite->responsible_id !== $user->id) {
+            if ((int) $tramite->responsible_id !== (int) $user->id) {
                 $query->where('assigned_to', $user->id);
             }
-        } elseif (!$user->isAdmin() && $tramite->responsible_id !== $user->id) {
+        } elseif (!$user->isAdmin() && (int) $tramite->responsible_id !== (int) $user->id) {
             abort(403);
         }
 
@@ -79,7 +79,7 @@ class TramiteTaskController extends Controller
             abort(404);
         }
 
-        $isOwner = $task->assigned_to && $task->assigned_to === $user?->id;
+        $isOwner = $user && $task->assigned_to && (int) $task->assigned_to === (int) $user->id;
 
         if (!$user || (!$user->isAdmin() && !$isOwner && $tramite->responsible_id !== $user->id)) {
             abort(403);
@@ -139,7 +139,7 @@ class TramiteTaskController extends Controller
         if (!$user) abort(401);
 
         // Permiten crear/gestionar tareas: master, admin o responsable del trámite (sin importar rol)
-        if ($user->isAdmin() || $user->isMasterAdmin() || $tramite->responsible_id === $user->id) {
+        if ($user->isAdmin() || $user->isMasterAdmin() || (int) $tramite->responsible_id === (int) $user->id) {
             return;
         }
 
