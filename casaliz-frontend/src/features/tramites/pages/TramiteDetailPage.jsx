@@ -24,7 +24,7 @@ const TramiteDetailPage = () => {
   const canManage = useMemo(() => {
     if (!tramite || !user) return false;
     if ([ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role)) return true;
-    return tramite.responsible?.id === user.id;
+    return String(tramite.responsible?.id || '') === String(user.id || '');
   }, [tramite, user]);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const TramiteDetailPage = () => {
       const { data } = await tramitesApi.show(tramite.id);
       setTramite(data);
     } catch (err) {
-      alert('No se pudo actualizar la fase');
+      alert(err.response?.data?.message || 'No se pudo actualizar la fase');
     } finally {
       setSavingPhase(null);
     }
@@ -66,7 +66,7 @@ const TramiteDetailPage = () => {
       const { data } = await tramitesApi.show(tramite.id);
       setTramite(data);
     } catch (err) {
-      alert('No se pudo actualizar la subfase');
+      alert(err.response?.data?.message || 'No se pudo actualizar la subfase');
     } finally {
       setSavingSub(null);
     }

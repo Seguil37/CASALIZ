@@ -80,8 +80,10 @@ class TramiteTaskController extends Controller
         }
 
         $isOwner = $user && $task->assigned_to && (int) $task->assigned_to === (int) $user->id;
+        $isResponsible = $user && (int) $tramite->responsible_id === (int) $user->id;
+        $isCreator = $user && (int) $task->created_by === (int) $user->id;
 
-        if (!$user || (!$user->isAdmin() && !$isOwner && $tramite->responsible_id !== $user->id)) {
+        if (!$user || (!$user->isAdmin() && !$isOwner && !$isResponsible)) {
             abort(403);
         }
 
@@ -101,14 +103,33 @@ class TramiteTaskController extends Controller
 
         $previousAssigneeId = $task->assigned_to;
 
-        // Operativo solo puede actualizar estado, progreso y observaciones
-        if ($user->isOperator() && $isOwner) {
-            $task->update([
-                'status' => $data['status'] ?? $task->status,
-                'progress' => $data['progress'] ?? $task->progress,
-                'observations' => $data['observations'] ?? $task->observations,
-                'completed_at' => ($data['status'] ?? $task->status) === TramiteTask::STATUS_DONE ? now() : $task->completed_at,
-            ]);
+        if ($user->isOperator()) {
+            if (!$isOwner && !($isResponsible && $isCreator)) {
+                abort(403);
+            }
+
+            $updates = [];
+
+            if ($isOwner) {
+                $nextStatus = $data['status'] ?? $task->status;
+                $updates = [
+                    'status' => $nextStatus,
+                    'progress' => $data['progress'] ?? $task->progress,
+                    'observations' => $data['observations'] ?? $task->observations,
+                    'completed_at' => $nextStatus === TramiteTask::STATUS_DONE ? now() : $task->completed_at,
+                ];
+            }
+
+            if ($isResponsible && ($isCreator || $isOwner)) {
+                $updates['tramite_phase_instance_id'] = $data['tramite_phase_instance_id'];
+                $updates['tramite_subphase_instance_id'] = $data['tramite_subphase_instance_id'];
+
+                if (array_key_exists('due_date', $data)) {
+                    $updates['due_date'] = $data['due_date'];
+                }
+            }
+
+            $task->update($updates);
         } else {
             $task->update(array_merge($data, [
                 'completed_at' => ($data['status'] ?? $task->status) === TramiteTask::STATUS_DONE ? now() : $task->completed_at,

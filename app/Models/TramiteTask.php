@@ -30,6 +30,12 @@ class TramiteTask extends Model
     ];
 
     protected $casts = [
+        'tramite_id' => 'integer',
+        'tramite_phase_instance_id' => 'integer',
+        'tramite_subphase_instance_id' => 'integer',
+        'assigned_to' => 'integer',
+        'created_by' => 'integer',
+        'progress' => 'integer',
         'due_date' => 'date',
         'completed_at' => 'datetime',
     ];
@@ -59,4 +65,3 @@ class TramiteTask extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Support\ModuleAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -16,14 +17,19 @@ class UserController extends Controller
         $this->authorize('viewAny', User::class);
 
         $search = trim((string) $request->query('search', ''));
+        $matchingRoles = $this->matchingRolesForSearch($search);
 
         $users = User::whereIn('role', ['admin', 'master_admin', 'operator'])
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(function ($innerQuery) use ($search) {
+            ->when($search !== '', function ($query) use ($search, $matchingRoles) {
+                $query->where(function ($innerQuery) use ($search, $matchingRoles) {
                     $innerQuery
                         ->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhere('role', 'like', "%{$search}%");
+
+                    if ($matchingRoles !== []) {
+                        $innerQuery->orWhereIn('role', $matchingRoles);
+                    }
                 });
             })
             ->orderBy('name')
@@ -171,5 +177,32 @@ class UserController extends Controller
             ->where('is_active', true)
             ->where('id', '!=', $target->id)
             ->doesntExist();
+    }
+
+    private function matchingRolesForSearch(string $search): array
+    {
+        $term = Str::of($search)->ascii()->lower()->squish()->toString();
+
+        if (Str::length($term) < 3) {
+            return [];
+        }
+
+        if (Str::contains($term, 'master')) {
+            return ['master_admin'];
+        }
+
+        $aliases = [
+            'admin' => ['admin', 'administrador', 'administradora', 'administradores'],
+            'master_admin' => ['master', 'master admin', 'admin master', 'administrador master', 'master_admin'],
+            'operator' => ['operator', 'operador', 'operadora', 'operativo', 'operativa', 'operativos'],
+        ];
+
+        return collect($aliases)
+            ->filter(fn (array $roleAliases) => collect($roleAliases)->contains(
+                fn (string $alias) => Str::contains($alias, $term) || Str::contains($term, $alias)
+            ))
+            ->keys()
+            ->values()
+            ->all();
     }
 }

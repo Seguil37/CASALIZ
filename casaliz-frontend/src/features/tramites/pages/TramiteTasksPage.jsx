@@ -134,7 +134,7 @@ const TramiteTasksPage = () => {
       await loadData();
     } catch (requestError) {
       console.error(requestError);
-      alert('No se pudo actualizar la tarea.');
+      alert(requestError.response?.data?.message || 'No se pudo actualizar la tarea.');
     }
   };
 
@@ -197,6 +197,7 @@ const TramiteTasksPage = () => {
                       userId={user?.id}
                       staff={staff}
                       canManageAssignments={canCreate && canViewStaff}
+                      canManageTaskPlanning={canCreate}
                       phases={tramite?.phases || []}
                     />
                   ))}
@@ -395,10 +396,23 @@ const TramiteTasksPage = () => {
   );
 };
 
-const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canManageAssignments, phases }) => {
+const TaskCard = ({
+  task,
+  inputClass,
+  onUpdate,
+  isOperator,
+  userId,
+  staff,
+  canManageAssignments,
+  canManageTaskPlanning,
+  phases,
+}) => {
   const isAssignedToCurrentUser = task.assignee?.id && userId && String(task.assignee.id) === String(userId);
+  const isCreatedByCurrentUser = task.creator?.id && userId && String(task.creator.id) === String(userId);
   const locked = isOperator && !isAssignedToCurrentUser;
-  const canEditManagementFields = !isOperator && !locked;
+  const canEditProgressFields = !locked;
+  const canEditPlanningFields =
+    canManageTaskPlanning && (!isOperator || isCreatedByCurrentUser || isAssignedToCurrentUser);
   const [local, setLocal] = useState({
     status: task.status,
     progress: task.progress,
@@ -423,13 +437,11 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
   }, [task]);
 
   const handleSave = () => {
-    const payload = isOperator
-      ? {
-          status: local.status,
-          progress: Number(local.progress) || 0,
-          observations: local.observations || null,
-        }
-      : normalizeTaskPayload(local);
+    const payload = normalizeTaskUpdatePayload(local, {
+      includeProgress: canEditProgressFields,
+      includePlanning: canEditPlanningFields,
+      includeAssignment: canManageAssignments && !isOperator,
+    });
 
     onUpdate(task.id, payload);
   };
@@ -519,8 +531,9 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
                   <button
                     key={preset}
                     type="button"
-                    className="rounded-full border border-[#ebe7df] px-3 py-1 text-xs font-semibold text-[#233274] hover:border-[#e15f0b] hover:text-[#e15f0b]"
+                    className="rounded-full border border-[#ebe7df] px-3 py-1 text-xs font-semibold text-[#233274] hover:border-[#e15f0b] hover:text-[#e15f0b] disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={() => handleChange('progress', preset)}
+                    disabled={!canEditProgressFields}
                   >
                     {preset}%
                   </button>
@@ -553,7 +566,7 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
                 tramite_subphase_instance_id: '',
               }))
             }
-            disabled={!canEditManagementFields}
+            disabled={!canEditPlanningFields}
           >
             <option value="">Sin fase</option>
             {phases.map((phase) => (
@@ -570,7 +583,7 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             className={inputClass}
             value={local.tramite_subphase_instance_id}
             onChange={(e) => handleChange('tramite_subphase_instance_id', e.target.value)}
-            disabled={!canEditManagementFields}
+            disabled={!canEditPlanningFields}
           >
             <option value="">Sin subfase</option>
             {getSubphaseOptions(phases, local.tramite_phase_instance_id).map((subphase) => (
@@ -588,8 +601,8 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
             className={inputClass}
             value={local.due_date}
             onChange={(e) => handleChange('due_date', e.target.value)}
-            disabled={!canEditManagementFields}
-            readOnly={!canEditManagementFields}
+            disabled={!canEditPlanningFields}
+            readOnly={!canEditPlanningFields}
           />
         </div>
 
@@ -618,7 +631,7 @@ const TaskCard = ({ task, inputClass, onUpdate, isOperator, userId, staff, canMa
         </div>
       )}
 
-      {!locked && (
+      {(canEditProgressFields || canEditPlanningFields) && (
         <div className="flex justify-end">
           <button
             onClick={handleSave}
@@ -643,6 +656,32 @@ const normalizeTaskPayload = (values) => ({
   due_date: values.due_date || null,
   observations: values.observations || null,
 });
+
+const normalizeTaskUpdatePayload = (values, options = {}) => {
+  const payload = {};
+
+  if (options.includeProgress) {
+    payload.status = values.status;
+    payload.progress = Number(values.progress) || 0;
+    payload.observations = values.observations || null;
+  }
+
+  if (options.includePlanning) {
+    payload.tramite_phase_instance_id = values.tramite_phase_instance_id
+      ? Number(values.tramite_phase_instance_id)
+      : null;
+    payload.tramite_subphase_instance_id = values.tramite_subphase_instance_id
+      ? Number(values.tramite_subphase_instance_id)
+      : null;
+    payload.due_date = values.due_date || null;
+  }
+
+  if (options.includeAssignment) {
+    payload.assigned_to = values.assigned_to ? Number(values.assigned_to) : null;
+  }
+
+  return payload;
+};
 
 const getSubphaseOptions = (phases, phaseId) => {
   if (!phaseId) return [];

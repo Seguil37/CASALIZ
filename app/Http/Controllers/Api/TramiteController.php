@@ -264,11 +264,11 @@ class TramiteController extends Controller
         $user = auth()->user();
         if (!$user) abort(401);
 
-        if ($user->isMasterAdmin()) {
+        if ($user->isAdmin()) {
             return;
         }
 
-        if ($tramite->responsible_id && $tramite->responsible_id === $user->id) {
+        if ($tramite->responsible_id && (int) $tramite->responsible_id === (int) $user->id) {
             return;
         }
 

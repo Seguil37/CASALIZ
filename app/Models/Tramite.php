@@ -30,6 +30,9 @@ class Tramite extends Model
     ];
 
     protected $casts = [
+        'tramite_type_id' => 'integer',
+        'client_id' => 'integer',
+        'responsible_id' => 'integer',
         'registered_at' => 'date',
         'due_date' => 'date',
     ];
