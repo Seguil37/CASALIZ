@@ -15,6 +15,7 @@ const TramiteTypesPage = () => {
   const [types, setTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
     code: '',
@@ -100,6 +101,27 @@ const TramiteTypesPage = () => {
             })) || [],
         })) || [emptyPhase()],
     });
+  };
+
+  const handleDeleteType = async (type) => {
+    if (!window.confirm(`¿Eliminar el tipo de trámite "${type.name}"? Esta acción no se puede deshacer.`)) {
+      return;
+    }
+
+    try {
+      setDeletingId(type.id);
+      await tramitesApi.deleteType(type.id);
+
+      if (editingId === type.id) {
+        resetForm();
+      }
+
+      await loadTypes();
+    } catch (error) {
+      alert(error.response?.data?.message || 'No se pudo eliminar el tipo de tramite.');
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handlePhaseChange = (index, field, value) => {
@@ -377,10 +399,9 @@ const TramiteTypesPage = () => {
           ) : (
             <div className="space-y-3">
               {types.map((type) => (
-                <button
+                <div
                   key={type.id}
-                  onClick={() => handleEdit(type)}
-                  className="w-full rounded-xl border border-[#ebe7df] bg-[#fdfaf5] p-4 text-left transition hover:shadow"
+                  className="w-full rounded-xl border border-[#ebe7df] bg-[#fdfaf5] p-4 transition hover:shadow"
                 >
                   <div className="flex items-center justify-between">
                     <div>
@@ -396,7 +417,25 @@ const TramiteTypesPage = () => {
                       {type.is_active ? 'Activo' : 'Inactivo'}
                     </span>
                   </div>
-                </button>
+                  <div className="mt-3 flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleEdit(type)}
+                      className="rounded-lg border border-[#233274] px-3 py-2 text-sm font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteType(type)}
+                      disabled={deletingId === type.id}
+                      className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      {deletingId === type.id ? 'Eliminando...' : 'Eliminar'}
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           )}

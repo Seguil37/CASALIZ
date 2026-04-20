@@ -304,18 +304,21 @@ const CreateTourPage = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Pais</label>
-                <select
+                <input
+                  type="text"
+                  list="create-project-country-suggestions"
                   value={formData.country}
                   onChange={(e) => handleChange('country', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                  disabled
-                >
+                  placeholder="Ej: Peru"
+                />
+                <datalist id="create-project-country-suggestions">
                   {COUNTRIES.map((country) => (
                     <option key={country} value={country}>
                       {country}
                     </option>
                   ))}
-                </select>
+                </datalist>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

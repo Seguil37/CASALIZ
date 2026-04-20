@@ -1,5 +1,6 @@
 // src/features/admin-users/components/AdminUserForm.jsx
-import { ShieldCheck, UserCog, UserRoundCog, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Eye, EyeOff, ShieldCheck, UserCog, UserRoundCog, X } from 'lucide-react';
 import { ROLES } from '../../../shared/constants/roles';
 
 const AdminUserForm = ({
@@ -12,6 +13,16 @@ const AdminUserForm = ({
   isEditing,
   saving,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setShowPassword(false);
+      setShowPasswordConfirmation(false);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleChange = (field, value) => {
@@ -69,24 +80,46 @@ const AdminUserForm = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-[#233274] mb-1">Contraseña</label>
-              <input
-                type="password"
-                value={formData.password}
-                onChange={(e) => handleChange('password', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#ebe7df] focus:outline-none focus:ring-2 focus:ring-[#e15f0b] bg-[#fdfaf5]"
-                placeholder={isEditing ? 'Dejar vacío para mantener' : 'Mínimo 8 caracteres'}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={(e) => handleChange('password', e.target.value)}
+                  className="w-full px-4 py-3 pr-12 rounded-xl border border-[#ebe7df] focus:outline-none focus:ring-2 focus:ring-[#e15f0b] bg-[#fdfaf5]"
+                  placeholder={isEditing ? 'Dejar vacio para mantener' : 'Minimo 8 caracteres'}
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9a98a0] hover:text-[#233274]"
+                  aria-label={showPassword ? 'Ocultar contrasena' : 'Ver contrasena'}
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
               {errors.password && <p className="text-sm text-red-600 mt-1">{errors.password}</p>}
             </div>
             <div>
               <label className="block text-sm font-semibold text-[#233274] mb-1">Confirmar contraseña</label>
-              <input
-                type="password"
-                value={formData.password_confirmation}
-                onChange={(e) => handleChange('password_confirmation', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#ebe7df] focus:outline-none focus:ring-2 focus:ring-[#e15f0b] bg-[#fdfaf5]"
-                placeholder="Repite la contraseña"
-              />
+              <div className="relative">
+                <input
+                  type={showPasswordConfirmation ? 'text' : 'password'}
+                  value={formData.password_confirmation}
+                  onChange={(e) => handleChange('password_confirmation', e.target.value)}
+                  className="w-full px-4 py-3 pr-12 rounded-xl border border-[#ebe7df] focus:outline-none focus:ring-2 focus:ring-[#e15f0b] bg-[#fdfaf5]"
+                  placeholder="Repite la contrasena"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordConfirmation((value) => !value)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9a98a0] hover:text-[#233274]"
+                  aria-label={showPasswordConfirmation ? 'Ocultar confirmacion de contrasena' : 'Ver confirmacion de contrasena'}
+                >
+                  {showPasswordConfirmation ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
               {errors.password_confirmation && (
                 <p className="text-sm text-red-600 mt-1">{errors.password_confirmation}</p>
               )}
