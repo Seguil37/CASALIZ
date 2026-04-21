@@ -21,6 +21,10 @@ class ModulePermissionController extends Controller
                 'admin' => ModuleAccess::forRole('admin'),
                 'operator' => ModuleAccess::forRole('operator'),
             ],
+            'defaults' => [
+                'admin' => ModuleAccess::defaults()['admin'],
+                'operator' => ModuleAccess::defaults()['operator'],
+            ],
         ]);
     }
 

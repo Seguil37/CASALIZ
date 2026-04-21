@@ -8,6 +8,7 @@ import {
   Crown,
   KeyRound,
   Plus,
+  RotateCcw,
   Save,
   Search,
   Shield,
@@ -45,6 +46,7 @@ const AdminUsersPage = () => {
   const [permissionModules, setPermissionModules] = useState({});
   const [modulePermissions, setModulePermissions] = useState({ admin: {}, operator: {} });
   const [modulePermissionDrafts, setModulePermissionDrafts] = useState({ admin: {}, operator: {} });
+  const [initialModuleDefaults, setInitialModuleDefaults] = useState({ admin: {}, operator: {} });
   const [permissionsLoading, setPermissionsLoading] = useState(false);
   const [permissionSaving, setPermissionSaving] = useState('');
   const [selectedPermissionUser, setSelectedPermissionUser] = useState(null);
@@ -112,6 +114,7 @@ const AdminUsersPage = () => {
       setPermissionModules(data.modules || {});
       setModulePermissions(data.roles || { admin: {}, operator: {} });
       setModulePermissionDrafts(data.roles || { admin: {}, operator: {} });
+      setInitialModuleDefaults(data.defaults || { admin: {}, operator: {} });
     } catch (err) {
       console.error('Error fetching module permissions', err);
       setError('No se pudieron cargar los permisos por modulo.');
@@ -350,6 +353,12 @@ const AdminUsersPage = () => {
       }))
   );
   const hasPermissionChanges = permissionChanges.length > 0;
+  const hasInitialDefaults = editablePermissionRoles.some((role) => Object.keys(initialModuleDefaults[role] || {}).length > 0);
+  const isUsingInitialDefaults = hasInitialDefaults && editablePermissionRoles.every((role) =>
+    moduleOrder.every((moduleKey) => (
+      Boolean(modulePermissionDrafts[role]?.[moduleKey]) === Boolean(initialModuleDefaults[role]?.[moduleKey])
+    ))
+  );
 
   const handleDiscardDefaultPermissionChanges = () => {
     setModulePermissionDrafts(modulePermissions);
@@ -395,6 +404,23 @@ const AdminUsersPage = () => {
     } finally {
       setPermissionSaving('');
     }
+  };
+
+  const handleApplyInitialDefaultPermissions = async () => {
+    if (!hasInitialDefaults) {
+      alert('No se encontro la configuracion inicial de permisos.');
+      return;
+    }
+
+    if (isUsingInitialDefaults) {
+      return;
+    }
+
+    setModulePermissionDrafts((prev) => ({
+      ...prev,
+      admin: { ...(initialModuleDefaults.admin || {}) },
+      operator: { ...(initialModuleDefaults.operator || {}) },
+    }));
   };
 
   return (
@@ -579,8 +605,20 @@ const AdminUsersPage = () => {
         </div>
 
         {authUser?.role === ROLES.MASTER_ADMIN && (
-          <section className="rounded-2xl border border-[#ebe7df] bg-white/80 p-5 shadow-lg">
-            <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+          <section className="space-y-4">
+            <div className="flex justify-center sm:justify-end">
+              <button
+                type="button"
+                onClick={openCreateModal}
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-primary px-6 py-3 font-bold text-[#233274] shadow-lg hover:shadow-xl"
+              >
+                <Plus className="w-5 h-5" />
+                Crear Admin
+              </button>
+            </div>
+
+            <div className="rounded-2xl border border-[#ebe7df] bg-white/80 p-5 shadow-lg">
+              <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
               <div>
                 <p className="text-sm uppercase tracking-[0.2em] text-[#e15f0b] font-semibold">Plantillas por rol</p>
                 <h2 className="mt-2 text-2xl font-black text-[#233274]">Permisos predeterminados</h2>
@@ -589,104 +627,121 @@ const AdminUsersPage = () => {
                 </p>
               </div>
               {permissionsLoading && <span className="text-sm font-semibold text-[#9a98a0]">Cargando permisos...</span>}
-            </div>
+              </div>
 
-            <div className="mt-5 overflow-x-auto">
-              <table className="w-full min-w-[720px] text-left">
-                <thead>
-                  <tr className="border-b border-[#ebe7df] text-xs uppercase tracking-[0.16em] text-[#9a98a0]">
-                    <th className="py-3 pr-4 font-bold">Modulo</th>
-                    {editablePermissionRoles.map((role) => (
-                      <th key={role} className="py-3 px-4 font-bold text-center">{roleLabels[role]}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#f1ece2]">
-                  {moduleOrder.map((moduleKey) => {
-                    const moduleMeta = permissionModules[moduleKey] || {};
+              <div className="mt-5 overflow-x-auto">
+                <table className="w-full min-w-[720px] text-left">
+                  <thead>
+                    <tr className="border-b border-[#ebe7df] text-xs uppercase tracking-[0.16em] text-[#9a98a0]">
+                      <th className="py-3 pr-4 font-bold">Modulo</th>
+                      {editablePermissionRoles.map((role) => (
+                        <th key={role} className="py-3 px-4 font-bold text-center">{roleLabels[role]}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#f1ece2]">
+                    {moduleOrder.map((moduleKey) => {
+                      const moduleMeta = permissionModules[moduleKey] || {};
 
-                    return (
-                      <tr key={moduleKey}>
-                        <td className="py-4 pr-4">
-                          <p className="font-bold text-[#233274]">{moduleMeta.label || moduleLabels[moduleKey]}</p>
-                          <p className="text-xs uppercase tracking-[0.16em] text-[#9a98a0]">
-                            {moduleMeta.group === 'announcements' ? 'Anuncios' : 'Operacion interna'}
-                          </p>
-                        </td>
-                        {editablePermissionRoles.map((role) => {
-                          const checked = Boolean(modulePermissionDrafts[role]?.[moduleKey]);
-                          const changed = Boolean(modulePermissions[role]?.[moduleKey]) !== checked;
+                      return (
+                        <tr key={moduleKey}>
+                          <td className="py-4 pr-4">
+                            <p className="font-bold text-[#233274]">{moduleMeta.label || moduleLabels[moduleKey]}</p>
+                            <p className="text-xs uppercase tracking-[0.16em] text-[#9a98a0]">
+                              {moduleMeta.group === 'announcements' ? 'Anuncios' : 'Operacion interna'}
+                            </p>
+                          </td>
+                          {editablePermissionRoles.map((role) => {
+                            const checked = Boolean(modulePermissionDrafts[role]?.[moduleKey]);
+                            const changed = Boolean(modulePermissions[role]?.[moduleKey]) !== checked;
 
-                          return (
-                            <td key={`${role}-${moduleKey}`} className="py-4 px-4 text-center">
-                              <button
-                                type="button"
-                                onClick={() => handleToggleModulePermission(role, moduleKey)}
-                                disabled={Boolean(permissionSaving)}
-                                className={`inline-flex min-w-[112px] items-center justify-center rounded-full border px-3 py-2 text-sm font-bold transition-colors ${
-                                  checked
-                                    ? 'border-green-200 bg-green-100 text-green-700 hover:bg-green-50'
-                                    : 'border-[#d8d1c6] bg-[#f8f5ef] text-[#7d7783] hover:bg-white'
-                                } ${changed ? 'ring-2 ring-[#e15f0b]/35' : ''} disabled:opacity-60`}
-                              >
-                                {checked ? 'Permitido' : 'Bloqueado'}
-                              </button>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                            return (
+                              <td key={`${role}-${moduleKey}`} className="py-4 px-4 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleModulePermission(role, moduleKey)}
+                                  disabled={Boolean(permissionSaving)}
+                                  className={`inline-flex min-w-[112px] items-center justify-center rounded-full border px-3 py-2 text-sm font-bold transition-colors ${
+                                    checked
+                                      ? 'border-green-200 bg-green-100 text-green-700 hover:bg-green-50'
+                                      : 'border-[#d8d1c6] bg-[#f8f5ef] text-[#7d7783] hover:bg-white'
+                                  } ${changed ? 'ring-2 ring-[#e15f0b]/35' : ''} disabled:opacity-60`}
+                                >
+                                  {checked ? 'Permitido' : 'Bloqueado'}
+                                </button>
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-            <div className="mt-5 rounded-xl border border-[#ebe7df] bg-[#f8f5ef] p-4">
-              {hasPermissionChanges ? (
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-bold text-[#233274]">Estas editando permisos predeterminados</p>
-                    <p className="text-sm text-[#6c6b70]">
-                      Tienes {permissionChanges.length} cambio{permissionChanges.length === 1 ? '' : 's'} sin guardar.
+              <div className="mt-5 rounded-xl border border-[#ebe7df] bg-[#f8f5ef] p-4">
+                {hasPermissionChanges ? (
+                  <div className="space-y-3">
+                    <div>
+                      <p className="font-bold text-[#233274]">Estas editando permisos predeterminados</p>
+                      <p className="text-sm text-[#6c6b70]">
+                        Tienes {permissionChanges.length} cambio{permissionChanges.length === 1 ? '' : 's'} sin guardar.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {permissionChanges.map((change) => (
+                        <span
+                          key={`${change.role}-${change.moduleKey}`}
+                          className={`rounded-full border px-3 py-1 text-xs font-bold ${
+                            change.enabled
+                              ? 'border-green-200 bg-green-100 text-green-700'
+                              : 'border-red-200 bg-red-50 text-red-700'
+                          }`}
+                        >
+                          {change.roleName}: {change.moduleName} {'->'} {change.enabled ? 'Permitido' : 'Bloqueado'}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-[#6c6b70]">No hay cambios pendientes en los permisos predeterminados.</p>
+                )}
+
+                <div className="mt-4 space-y-2">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+                    <button
+                      type="button"
+                      onClick={handleApplyInitialDefaultPermissions}
+                      disabled={permissionsLoading}
+                      className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#e7c8a8] bg-[#fff4e8] px-4 py-2 text-sm font-bold text-[#b55600] hover:bg-[#ffedd8] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Usar configuracion predeterminada
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDiscardDefaultPermissionChanges}
+                      disabled={!hasPermissionChanges || Boolean(permissionSaving)}
+                      className="rounded-lg border border-[#d8d1c6] px-4 py-2 text-sm font-bold text-[#233274] hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Descartar cambios
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSaveDefaultPermissions}
+                      disabled={!hasPermissionChanges || Boolean(permissionSaving)}
+                      className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#233274] px-4 py-2 text-sm font-bold text-white hover:bg-[#1b275d] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <Save className="h-4 w-4" />
+                      {permissionSaving === 'defaults' ? 'Guardando...' : 'Guardar permisos'}
+                    </button>
+                  </div>
+                  {isUsingInitialDefaults && (
+                    <p className="text-sm text-[#9a98a0] sm:text-right">
+                      Ya estas usando la configuracion predeterminada.
                     </p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {permissionChanges.map((change) => (
-                      <span
-                        key={`${change.role}-${change.moduleKey}`}
-                        className={`rounded-full border px-3 py-1 text-xs font-bold ${
-                          change.enabled
-                            ? 'border-green-200 bg-green-100 text-green-700'
-                            : 'border-red-200 bg-red-50 text-red-700'
-                        }`}
-                      >
-                        {change.roleName}: {change.moduleName} {'->'} {change.enabled ? 'Permitido' : 'Bloqueado'}
-                      </span>
-                    ))}
-                  </div>
+                  )}
                 </div>
-              ) : (
-                <p className="text-sm text-[#6c6b70]">No hay cambios pendientes en los permisos predeterminados.</p>
-              )}
-
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
-                <button
-                  type="button"
-                  onClick={handleDiscardDefaultPermissionChanges}
-                  disabled={!hasPermissionChanges || Boolean(permissionSaving)}
-                  className="rounded-lg border border-[#d8d1c6] px-4 py-2 text-sm font-bold text-[#233274] hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Descartar cambios
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSaveDefaultPermissions}
-                  disabled={!hasPermissionChanges || Boolean(permissionSaving)}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#233274] px-4 py-2 text-sm font-bold text-white hover:bg-[#1b275d] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Save className="h-4 w-4" />
-                  {permissionSaving === 'defaults' ? 'Guardando...' : 'Guardar permisos'}
-                </button>
               </div>
             </div>
           </section>
