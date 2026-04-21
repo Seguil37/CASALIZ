@@ -1,9 +1,10 @@
 // src/features/agency/pages/AgencyDashboard.jsx
-import { useState, useEffect } from 'react';
+import { createElement, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Home, Users, TrendingUp, Eye, Edit, Trash2, CheckCircle, ChevronLeft, ChevronRight, Archive } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import { projectsApi, toPublicUrl } from '../../../shared/utils/api';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const STATUS_CONFIG = {
   published: {
@@ -105,13 +106,16 @@ const AgencyDashboard = () => {
             <h1 className="text-3xl font-black text-[#233274] mb-2">Hola, {user?.name} 👋</h1>
             <p className="text-[#9a98a0]">Administra los proyectos del portafolio CASALIZ.</p>
           </div>
-          <Link
-            to="/agency/tours/create"
-            className="mt-4 md:mt-0 inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
-          >
-            <Plus className="w-5 h-5" />
-            Crear proyecto
-          </Link>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row md:mt-0">
+            <AdminPanelBackButton />
+            <Link
+              to="/agency/tours/create"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
+            >
+              <Plus className="w-5 h-5" />
+              Crear proyecto
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
@@ -199,10 +203,10 @@ const AgencyDashboard = () => {
   );
 };
 
-const StatCard = ({ icon: Icon, title, value }) => (
+const StatCard = ({ icon, title, value }) => (
   <div className="bg-white rounded-2xl p-6 shadow-md border border-[#ebe7df] flex items-center gap-4">
     <div className="w-12 h-12 rounded-full bg-[#f8f5ef] flex items-center justify-center">
-      <Icon className="w-6 h-6 text-[#e15f0b]" />
+      {createElement(icon, { className: 'w-6 h-6 text-[#e15f0b]' })}
     </div>
     <div>
       <p className="text-sm text-[#9a98a0]">{title}</p>

@@ -75,16 +75,6 @@ const DateSelector = ({ value, onChange, minDate }) => {
     );
   };
 
-  const isToday = (day) => {
-    const today = new Date();
-    const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    return (
-      today.getDate() === currentDate.getDate() &&
-      today.getMonth() === currentDate.getMonth() &&
-      today.getFullYear() === currentDate.getFullYear()
-    );
-  };
-
   return (
     <div className="relative">
       <div className="flex items-center justify-between p-4 border-2 border-[#9a98a0] rounded-xl focus-within:border-[#e15f0b] focus-within:bg-[#f8f5ef] transition-all cursor-pointer"

@@ -4,6 +4,7 @@ import { ClipboardList, ChevronRight, Loader2, CheckCircle } from 'lucide-react'
 import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const statusOptions = [
   { value: 'pending', label: 'Pendiente', color: 'bg-yellow-100 text-yellow-700' },
@@ -102,12 +103,15 @@ const TramiteDetailPage = () => {
             </h1>
             <p className="text-sm text-[#9a98a0]">{tramite.client_name || tramite.client?.name}</p>
           </div>
-          <Link
-            to="/tramites/control"
-            className="px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
-          >
-            Volver a vista general
-          </Link>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <AdminPanelBackButton />
+            <Link
+              to="/tramites/control"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+            >
+              Volver a vista general
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

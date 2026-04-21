@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
 import { normalizeSentence, normalizeUrl, toTitleCase } from '../../../shared/utils/formNormalization';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 import {
   Plus,
   Pencil,
@@ -288,9 +289,12 @@ const AdminServicesPage = () => {
     <div className="min-h-screen bg-[#f8f5ef] py-8">
       <div className="container-custom grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h1 className="text-3xl font-black text-[#233274]">Servicios</h1>
-            <span className="text-sm text-[#9a98a0]">{filtered.length} servicios</span>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <span className="text-sm text-[#9a98a0]">{filtered.length} servicios</span>
+              <AdminPanelBackButton />
+            </div>
           </div>
 
           <div className="bg-white rounded-2xl shadow p-4 mb-4 flex items-center gap-3">

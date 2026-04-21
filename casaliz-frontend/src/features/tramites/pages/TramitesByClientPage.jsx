@@ -5,6 +5,7 @@ import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import { ROLES, isStaff } from '../../../shared/constants/roles';
 import useAuthStore from '../../../store/authStore';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const statusBadges = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -208,6 +209,7 @@ const TramitesByClientPage = () => {
     'w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 text-[#233274] outline-none placeholder-[#9a98a0] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]';
   const labelClass = 'mb-1 block text-sm font-semibold text-[#233274]';
   const codePlaceholder = form.tramite_type_id ? `Ej: ${buildTramiteCodeSuggestion(types, form.tramite_type_id)}` : 'Ej: TR-001';
+  const canCreateOrDelete = [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user?.role);
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
@@ -219,13 +221,16 @@ const TramitesByClientPage = () => {
               Asigna un flujo de tramite ya definido a un cliente o proyecto especifico.
             </p>
           </div>
-          <Link
-            to="/tramites/control"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-primary px-5 py-3 font-bold text-[#233274] shadow-md hover:shadow-lg"
-          >
-            <ClipboardList className="h-4 w-4" />
-            Vista general
-          </Link>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <AdminPanelBackButton />
+            <Link
+              to="/tramites/control"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-primary px-5 py-3 font-bold text-[#233274] shadow-md hover:shadow-lg"
+            >
+              <ClipboardList className="h-4 w-4" />
+              Vista general
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -536,25 +541,27 @@ const TramitesByClientPage = () => {
                         Editar
                       </button>
 
-                      <button
-                        onClick={async () => {
-                          if (!window.confirm('Eliminar este tramite?')) return;
+                      {canCreateOrDelete && (
+                        <button
+                          onClick={async () => {
+                            if (!window.confirm('Eliminar este tramite?')) return;
 
-                          try {
-                            setDeletingId(tramite.id);
-                            await tramitesApi.delete(tramite.id);
-                            setTramites((prev) => prev.filter((item) => item.id !== tramite.id));
-                          } catch {
-                            alert('No se pudo eliminar el tramite');
-                          } finally {
-                            setDeletingId(null);
-                          }
-                        }}
-                        disabled={deletingId === tramite.id}
-                        className="rounded-lg border border-red-500 px-4 py-2 font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
-                      >
-                        {deletingId === tramite.id ? 'Eliminando...' : 'Eliminar'}
-                      </button>
+                            try {
+                              setDeletingId(tramite.id);
+                              await tramitesApi.delete(tramite.id);
+                              setTramites((prev) => prev.filter((item) => item.id !== tramite.id));
+                            } catch {
+                              alert('No se pudo eliminar el tramite');
+                            } finally {
+                              setDeletingId(null);
+                            }
+                          }}
+                          disabled={deletingId === tramite.id}
+                          className="rounded-lg border border-red-500 px-4 py-2 font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                        >
+                          {deletingId === tramite.id ? 'Eliminando...' : 'Eliminar'}
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}

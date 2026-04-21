@@ -2,7 +2,7 @@
 import create from 'zustand';
 import { couponsApi } from '@/shared/utils/api';
 
-export const useCouponStore = create((set, get) => ({
+export const useCouponStore = create((set) => ({
     currentCoupon: null,
     appliedDiscount: 0,
     isValidating: false,

@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, ClipboardList, MapPin, UserCircle, Search, Filt
 import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { isStaff, ROLES } from '../../../shared/constants/roles';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -70,12 +71,15 @@ const ControlBoardPage = () => {
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom space-y-6">
-        <div className="flex items-center gap-3">
-          <ClipboardList className="h-6 w-6 text-[#e15f0b]" />
-          <div>
-            <h1 className="text-3xl font-black text-[#233274]">Vista General de Control</h1>
-            <p className="text-[#9a98a0]">Monitor de todos los clientes y tramites en tiempo real.</p>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-3">
+            <ClipboardList className="h-6 w-6 text-[#e15f0b]" />
+            <div>
+              <h1 className="text-3xl font-black text-[#233274]">Vista General de Control</h1>
+              <p className="text-[#9a98a0]">Monitor de todos los clientes y tramites en tiempo real.</p>
+            </div>
           </div>
+          <AdminPanelBackButton />
         </div>
 
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#ebe7df] bg-white px-4 py-3 text-sm text-[#233274] shadow-sm">
@@ -209,6 +213,7 @@ const ControlBoardPage = () => {
                                 });
                                 await loadData();
                               } catch (error) {
+                                console.error(error);
                                 alert('No se pudo guardar la nota');
                               } finally {
                                 setSavingNoteId(null);

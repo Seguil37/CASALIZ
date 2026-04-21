@@ -22,7 +22,7 @@ import confetti from 'canvas-confetti';
 const BookingSuccessPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { totalPaid, bookingsCount, paymentMethod } = location.state || {};
+  const { totalPaid } = location.state || {};
 
   useEffect(() => {
     // Si no hay datos de pago, redirigir

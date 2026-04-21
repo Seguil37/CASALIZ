@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { createElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ClipboardList, Filter, UserCircle2, Building2, CircleDashed } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES, roleLabels } from '../../../shared/constants/roles';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const statusMeta = {
   pending: { label: 'Pendiente', className: 'bg-yellow-100 text-yellow-700' },
@@ -92,12 +93,15 @@ const AssignedTasksSummaryPage = () => {
               </p>
             </div>
           </div>
-          <Link
-            to="/tramites/control"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
-          >
-            Volver a control
-          </Link>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <AdminPanelBackButton />
+            <Link
+              to="/tramites/control"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+            >
+              Volver a control
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -253,9 +257,9 @@ const StatCard = ({ label, value, accent = 'text-[#233274]' }) => (
   </div>
 );
 
-const InfoLine = ({ icon: Icon, label, value }) => (
+const InfoLine = ({ icon, label, value }) => (
   <div className="flex items-center gap-2 text-[#233274]">
-    <Icon className="w-4 h-4 text-[#e15f0b]" />
+    {createElement(icon, { className: 'w-4 h-4 text-[#e15f0b]' })}
     <span className="font-semibold">{label}:</span>
     <span>{value}</span>
   </div>

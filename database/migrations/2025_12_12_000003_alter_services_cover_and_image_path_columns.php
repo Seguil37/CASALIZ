@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         // Allow long image URLs for services and gallery items
         Schema::table('services', function () {
             DB::statement('ALTER TABLE services MODIFY cover_image TEXT NULL');
@@ -19,6 +23,10 @@ return new class extends Migration {
 
     public function down(): void
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         // Revert to varchar(255) if needed
         Schema::table('services', function () {
             DB::statement('ALTER TABLE services MODIFY cover_image VARCHAR(255) NULL');

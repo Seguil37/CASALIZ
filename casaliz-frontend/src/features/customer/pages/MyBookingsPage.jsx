@@ -17,11 +17,9 @@ import {
   ChevronRight
 } from 'lucide-react';
 import api from '../../../shared/utils/api';
-import useAuthStore from '../../../store/authStore';
 
 const MyBookingsPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
   
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);

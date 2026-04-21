@@ -26,7 +26,6 @@ const BookingPage = () => {
   const [tour, setTour] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [focusedField, setFocusedField] = useState('');
   const [submitting, setSubmitting] = useState(false);
   
   const [bookingData, setBookingData] = useState({

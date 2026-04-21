@@ -1,6 +1,5 @@
 // src/features/booking/components/GuestSelector.jsx
 
-import { useState } from 'react';
 import { Users, Plus, Minus } from 'lucide-react';
 
 const GuestSelector = ({ 

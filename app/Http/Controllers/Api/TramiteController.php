@@ -61,7 +61,7 @@ class TramiteController extends Controller
 
     public function store(Request $request)
     {
-        $this->ensureMaster();
+        $this->ensureAdmin();
 
         $request->merge([
             'code' => DataNormalizer::code($request->input('code')),
@@ -241,7 +241,7 @@ class TramiteController extends Controller
 
     public function destroy(Tramite $tramite)
     {
-        $this->ensureMaster();
+        $this->ensureAdmin();
         $tramite->delete();
 
         return response()->json(['message' => 'Trámite eliminado']);
@@ -275,14 +275,6 @@ class TramiteController extends Controller
         $user = auth()->user();
         if (!$user || !$user->isAdmin()) {
             abort(403, 'Solo administradores pueden acceder a los trámites.');
-        }
-    }
-
-    private function ensureMaster(): void
-    {
-        $user = auth()->user();
-        if (!$user || !$user->isMasterAdmin()) {
-            abort(403, 'Solo el Administrador Master puede realizar esta acción.');
         }
     }
 

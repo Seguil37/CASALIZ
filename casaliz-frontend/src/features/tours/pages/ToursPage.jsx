@@ -248,17 +248,6 @@ const ToursPage = () => {
                   ))}
                 </div>
 
-                {false && pagination.currentPage < pagination.lastPage && (
-                  <div className="mt-10 flex justify-center">
-                    <button
-                      onClick={() => fetchProjects(pagination.currentPage + 1)}
-                      className="rounded-full bg-[#233274] px-6 py-3 text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1a255c]"
-                    >
-                      Cargar más
-                    </button>
-                  </div>
-                )}
-
                 {pagination.lastPage > 1 && (
                   <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
                     <button

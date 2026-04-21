@@ -1,6 +1,6 @@
 // src/features/agency/pages/AgencyBookingsPage.jsx
 
-import { useState, useEffect } from 'react';
+import { createElement, useState, useEffect } from 'react';
 import { 
   Calendar, 
   Users, 
@@ -186,7 +186,7 @@ const AgencyBookingsPage = () => {
 };
 
 // Stat Card Component
-const StatCard = ({ icon: Icon, title, value, color }) => {
+const StatCard = ({ icon, title, value, color }) => {
   const colorClasses = {
     blue: 'bg-[#f8f5ef] text-[#233274]',
     green: 'bg-[#f8f5ef] text-[#233274]',
@@ -197,7 +197,7 @@ const StatCard = ({ icon: Icon, title, value, color }) => {
   return (
     <div className="bg-[#f8f5ef] rounded-2xl shadow-lg p-6">
       <div className={`w-12 h-12 rounded-xl ${colorClasses[color]} flex items-center justify-center mb-4`}>
-        <Icon className="w-6 h-6" />
+        {createElement(icon, { className: 'w-6 h-6' })}
       </div>
       <p className="text-[#9a98a0] text-sm mb-1">{title}</p>
       <p className="text-3xl font-black text-[#233274]">{value}</p>
@@ -239,11 +239,10 @@ const BookingCard = ({ booking, onStatusChange }) => {
     };
 
     const badge = badges[status] || badges.pending;
-    const Icon = badge.icon;
-    
+
     return (
       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${badge.class}`}>
-        <Icon className="w-4 h-4" />
+        {createElement(badge.icon, { className: 'w-4 h-4' })}
         {badge.text}
       </span>
     );

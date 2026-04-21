@@ -4,6 +4,7 @@ import { AlertCircle, CheckCircle, ClipboardCheck, Loader2, PlayCircle } from 'l
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const taskStatusOptions = [
   { value: 'pending', label: 'Pendiente', color: 'bg-yellow-100 text-yellow-700' },
@@ -163,12 +164,15 @@ const TramiteTasksPage = () => {
             )}
           </div>
 
-          <Link
-            to="/tramites/control"
-            className="rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
-          >
-            Volver a vista general
-          </Link>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <AdminPanelBackButton />
+            <Link
+              to="/tramites/control"
+              className="inline-flex items-center justify-center rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
+            >
+              Volver a vista general
+            </Link>
+          </div>
         </div>
 
         {loading ? (

@@ -22,7 +22,7 @@ const sanitizeAuthError = (error, fallback = DEFAULT_AUTH_ERROR) => {
 
 const useAuthStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       user: null,
       token: null,
       isAuthenticated: false,

@@ -4,6 +4,7 @@ import { tramitesApi } from '../../../shared/utils/api';
 import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const emptyPhase = (order = 1) => ({ name: '', order, description: '', subphases: [] });
 const emptySubphase = (order = 1) => ({ name: '', order, description: '' });
@@ -244,7 +245,11 @@ const TramiteTypesPage = () => {
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
-      <div className="container-custom grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="container-custom space-y-6">
+        <div className="flex justify-end">
+          <AdminPanelBackButton />
+        </div>
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="rounded-2xl border border-[#ebe7df] bg-white p-6 shadow-lg lg:col-span-2">
           <div className="mb-6 flex items-center gap-3">
             <Layers className="h-6 w-6 text-[#e15f0b]" />
@@ -566,6 +571,7 @@ const TramiteTypesPage = () => {
               )}
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

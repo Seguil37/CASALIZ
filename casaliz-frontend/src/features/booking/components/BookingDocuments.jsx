@@ -1,7 +1,7 @@
 // src/features/booking/components/BookingDocuments.jsx
 
-import { useState } from 'react';
-import { bookingDocumentsApi } from '@/shared/utils/api';
+import { useEffect, useState } from 'react';
+import api from '../../../shared/utils/api';
 import { Download, FileText, Clock } from 'lucide-react';
 
 export const BookingDocuments = ({ bookingId }) => {
@@ -15,7 +15,7 @@ export const BookingDocuments = ({ bookingId }) => {
     
     const fetchDocuments = async () => {
         try {
-            const response = await bookingDocumentsApi.list(bookingId);
+            const response = await api.get(`/bookings/${bookingId}/documents`);
             setDocuments(response.data.documents);
         } catch (error) {
             console.error('Error al cargar documentos:', error);
@@ -27,11 +27,14 @@ export const BookingDocuments = ({ bookingId }) => {
     const handleDownloadVoucher = async () => {
         setDownloading(true);
         try {
-            await bookingDocumentsApi.downloadVoucher(bookingId);
-            toast.success('Voucher descargado exitosamente');
+            await api.get(`/bookings/${bookingId}/documents/voucher`, {
+                responseType: 'blob',
+            });
+            alert('Voucher descargado exitosamente');
             fetchDocuments(); // Actualizar lista
         } catch (error) {
-            toast.error('Error al descargar voucher');
+            console.error('Error al descargar voucher:', error);
+            alert('Error al descargar voucher');
         } finally {
             setDownloading(false);
         }
@@ -52,9 +55,10 @@ export const BookingDocuments = ({ bookingId }) => {
             link.click();
             link.remove();
             
-            toast.success('Documento descargado');
+            alert('Documento descargado');
         } catch (error) {
-            toast.error('Error al descargar documento');
+            console.error('Error al descargar documento:', error);
+            alert('Error al descargar documento');
         }
     };
     

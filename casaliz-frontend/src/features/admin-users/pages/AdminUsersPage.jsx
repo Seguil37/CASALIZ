@@ -22,6 +22,7 @@ import { adminUsersApi, modulePermissionsApi } from '../../../shared/utils/api';
 import { MODULES, ROLES, moduleLabels, roleLabels } from '../../../shared/constants/roles';
 import useAuthStore from '../../../store/authStore';
 import AdminUserForm from '../components/AdminUserForm';
+import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const STATUS_STYLES = {
   active: 'bg-green-100 text-green-700 border-green-200',
@@ -434,13 +435,16 @@ const AdminUsersPage = () => {
               Crea, edita y controla el acceso de los administradores. Solo los master admin pueden ver y usar este módulo.
             </p>
           </div>
-          <button
-            onClick={openCreateModal}
-            className="inline-flex items-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl"
-          >
-            <Plus className="w-5 h-5" />
-            Crear Admin
-          </button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <AdminPanelBackButton />
+            <button
+              onClick={openCreateModal}
+              className="inline-flex items-center justify-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl"
+            >
+              <Plus className="w-5 h-5" />
+              Crear Admin
+            </button>
+          </div>
         </div>
 
         <div className="bg-white/70 rounded-2xl shadow-lg border border-[#ebe7df]">

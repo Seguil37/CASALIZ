@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
 
-const TourImages  = ({ formData, updateFormData, errors = {} }) => {
+const TourImages = ({ formData, updateFormData }) => {
   const [imageUrls, setImageUrls] = useState([
     formData.featured_image || '',
     ...(formData.images || []),

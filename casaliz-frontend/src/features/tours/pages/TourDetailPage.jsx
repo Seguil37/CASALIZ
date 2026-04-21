@@ -239,6 +239,43 @@ const TourDetailPage = () => {
             </div>
           </div>
         )}
+      </section>
+
+        {/* LLAMADA A ACCION FINAL */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-[#0f1b35] to-[#1e2f5f]">
+          <div className="absolute inset-0 pointer-events-none opacity-30">
+            <div className="absolute right-[-4rem] top-[-2rem] w-96 h-96 rounded-full bg-[#e15f0b]/20 blur-3xl" />
+          </div>
+
+          <div className="container-custom py-16 relative z-10 text-center space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
+                Listo para comenzar?
+              </h2>
+              <p className="text-lg text-white/80 max-w-2xl mx-auto font-light">
+                Contactanos hoy y solicita una cotizacion personalizada para tu proyecto
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/contacto"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#f59e0b] text-white font-bold px-8 py-4 rounded-full hover:shadow-lg hover:shadow-[#e15f0b]/40 transition-all duration-300 transform hover:scale-105"
+              >
+                Contactar Ahora
+                <ChevronRight className="w-5 h-5" />
+              </a>
+              <Link
+                to="/projects#projects-results"
+                className="inline-flex items-center justify-center gap-2 border-2 border-white text-white font-bold px-8 py-4 rounded-full hover:bg-white hover:text-[#233274] transition-all duration-300"
+              >
+                Ver Otros Proyectos
+              </Link>
+            </div>
+          </div>
+        </section>
+
+      <section className="container-custom pb-16">
         {/* LAYOUT CON SIDEBAR */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* SIDEBAR INFO */}
@@ -300,6 +337,7 @@ const TourDetailPage = () => {
           </div>
         </div>
       </section>
+
       {/* LIGHTBOX MEJORADO */}
       {lightboxImage && (
         <div
