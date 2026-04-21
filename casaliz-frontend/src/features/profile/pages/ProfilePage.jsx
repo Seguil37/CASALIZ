@@ -145,22 +145,6 @@ const ProfilePage = () => {
     }
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result;
-        // Aquí iría la subida del avatar a un servicio de almacenamiento
-        // Simulación
-        setTimeout(() => {
-          updateUser({ ...user, avatar: result });
-        }, 1000);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -318,7 +302,7 @@ const ProfilePage = () => {
                     value={formData.bio}
                     onChange={handleChange}
                     rows={4}
-                    className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none resize-none transition-all"
+                    className="w-full px-4 py-3 border-2 border-[#9a98a0] rounded-xl focus:border-[#e15f0b] focus:outline-none resize-y transition-all"
                     placeholder="Cuéntanos sobre ti..."
                   />
                 </div>

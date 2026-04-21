@@ -169,7 +169,7 @@ const TourBasicInfo = ({ formData, updateFormData, errors = {} }) => {
           value={formData.description}
           onChange={handleChange}
           rows="6"
-          className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-none ${
+          className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none resize-y ${
             errors.description ? 'border-[#d14a00]' : 'border-[#9a98a0] focus:border-primary'
           }`}
           placeholder="Describe tu tour de manera atractiva..."

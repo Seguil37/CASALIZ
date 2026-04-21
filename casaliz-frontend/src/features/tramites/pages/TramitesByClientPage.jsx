@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, ClipboardList, Loader2, MapPin, Plus, UserCircle } from 'lucide-react';
+import { Building2, ChevronLeft, ChevronRight, ClipboardList, Loader2, MapPin, Plus, Search, UserCircle } from 'lucide-react';
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import { ROLES, isStaff } from '../../../shared/constants/roles';
@@ -12,6 +12,8 @@ const statusBadges = {
   observed: 'bg-orange-100 text-orange-700',
   completed: 'bg-green-100 text-green-700',
 };
+
+const TRAMITES_PER_PAGE = 8;
 
 const PERU_DEPARTMENTS = [
   'Amazonas',
@@ -95,18 +97,26 @@ const TramitesByClientPage = () => {
   const [updating, setUpdating] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [editErrors, setEditErrors] = useState({});
+  const [searchDraft, setSearchDraft] = useState('');
+  const [filters, setFilters] = useState({ search: '', status: '' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({ total: 0, lastPage: 1 });
   const [form, setForm] = useState(emptyForm);
   const provinceHints = LOCATION_SUGGESTIONS[form.location_department]?.provinces || [];
   const districtHints = LOCATION_SUGGESTIONS[form.location_department]?.districts || [];
 
-  useEffect(() => {
-    loadInitial();
-  }, []);
-
-  const loadInitial = async () => {
+  const loadInitial = useCallback(async (page = currentPage) => {
     try {
       setLoading(true);
-      const promises = [tramitesApi.listTypes(), tramitesApi.list({ per_page: 20 })];
+      const promises = [
+        tramitesApi.listTypes(),
+        tramitesApi.list({
+          page,
+          per_page: TRAMITES_PER_PAGE,
+          search: filters.search || undefined,
+          status: filters.status || undefined,
+        }),
+      ];
       const shouldLoadUsers = user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role);
 
       if (shouldLoadUsers) promises.push(adminUsersApi.list());
@@ -115,6 +125,10 @@ const TramitesByClientPage = () => {
 
       setTypes(typesRes.data);
       setTramites(tramitesRes.data.data || tramitesRes.data);
+      setPagination({
+        total: tramitesRes.data.total || (tramitesRes.data.data || tramitesRes.data || []).length,
+        lastPage: tramitesRes.data.last_page || 1,
+      });
 
       if (shouldLoadUsers && usersRes) {
         setResponsables((usersRes.data?.data || usersRes.data || []).filter((item) => isStaff(item.role)));
@@ -127,7 +141,11 @@ const TramitesByClientPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, filters.search, filters.status, user]);
+
+  useEffect(() => {
+    loadInitial(currentPage);
+  }, [currentPage, loadInitial]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -141,7 +159,8 @@ const TramitesByClientPage = () => {
 
     try {
       await tramitesApi.create(buildPayload(form));
-      await loadInitial();
+      setCurrentPage(1);
+      await loadInitial(1);
       setForm(emptyForm);
     } catch (error) {
       console.error(error);
@@ -158,6 +177,23 @@ const TramitesByClientPage = () => {
       ...parseLocation(tramite.location),
       due_date: tramite.due_date ? String(tramite.due_date).slice(0, 10) : '',
     });
+  };
+
+  const applySearch = (event) => {
+    event.preventDefault();
+    setCurrentPage(1);
+    setFilters((prev) => ({ ...prev, search: searchDraft.trim() }));
+  };
+
+  const clearFilters = () => {
+    setSearchDraft('');
+    setFilters({ search: '', status: '' });
+    setCurrentPage(1);
+  };
+
+  const handleStatusFilterChange = (value) => {
+    setFilters((prev) => ({ ...prev, status: value }));
+    setCurrentPage(1);
   };
 
   if (!user || !user.role || ![ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role)) {
@@ -400,15 +436,53 @@ const TramitesByClientPage = () => {
           </div>
 
           <div className="rounded-2xl border border-[#ebe7df] bg-white p-6 shadow-lg lg:col-span-2">
-            <div className="mb-4 flex items-center gap-2">
-              <ClipboardList className="h-5 w-5 text-[#e15f0b]" />
-              <h2 className="text-xl font-black text-[#233274]">Tramites recientes</h2>
+            <div className="mb-4 space-y-4">
+              <div className="flex items-center gap-2">
+                <ClipboardList className="h-5 w-5 text-[#e15f0b]" />
+                <h2 className="text-xl font-black text-[#233274]">Tramites recientes</h2>
+              </div>
+
+              <form onSubmit={applySearch} className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_180px_auto_auto]">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9a98a0]" />
+                  <input
+                    className={`${inputClass} pl-10`}
+                    value={searchDraft}
+                    onChange={(e) => setSearchDraft(e.target.value)}
+                    placeholder="Buscar por codigo, nombre, cliente, inmueble, ubicacion o responsable"
+                  />
+                </div>
+                <select
+                  className={inputClass}
+                  value={filters.status}
+                  onChange={(e) => handleStatusFilterChange(e.target.value)}
+                >
+                  <option value="">Todos los estados</option>
+                  <option value="pending">Pendiente</option>
+                  <option value="in_progress">En proceso</option>
+                  <option value="observed">Observado</option>
+                  <option value="completed">Finalizado</option>
+                </select>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-[#233274] px-4 py-2 font-bold text-white transition hover:bg-[#1b285c]"
+                >
+                  Buscar
+                </button>
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="rounded-xl border border-[#ebe7df] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#f8f5ef]"
+                >
+                  Limpiar
+                </button>
+              </form>
             </div>
 
             {loading ? (
               <div className="text-[#9a98a0]">Cargando...</div>
             ) : tramites.length === 0 ? (
-              <div className="text-[#9a98a0]">Aun no hay tramites asignados.</div>
+              <div className="text-[#9a98a0]">No se encontraron tramites con esos filtros.</div>
             ) : (
               <div className="space-y-3">
                 {tramites.map((tramite) => (
@@ -484,6 +558,34 @@ const TramitesByClientPage = () => {
                     </div>
                   </div>
                 ))}
+
+                {pagination.lastPage > 1 && (
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <p className="text-sm text-[#9a98a0]">
+                      Pagina {currentPage} de {pagination.lastPage}. {pagination.total} tramite(s).
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                        disabled={currentPage === 1}
+                        className="inline-flex items-center gap-1 rounded-lg border border-[#ebe7df] px-3 py-2 font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        Anterior
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentPage((page) => Math.min(pagination.lastPage, page + 1))}
+                        disabled={currentPage === pagination.lastPage}
+                        className="inline-flex items-center gap-1 rounded-lg border border-[#ebe7df] px-3 py-2 font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Siguiente
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

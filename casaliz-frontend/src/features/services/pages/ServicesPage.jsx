@@ -3,7 +3,7 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, Briefcase } from 'lucide-react';
 import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
 
-const SERVICES_PER_PAGE = 6;
+const SERVICES_PER_PAGE = 12;
 
 const normalizeText = (value) =>
   (value || '')

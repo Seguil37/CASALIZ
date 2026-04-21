@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, Save, Layers, ListChecks, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Save, Layers, ListChecks, Search, Trash2 } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
 import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import useAuthStore from '../../../store/authStore';
@@ -7,6 +7,7 @@ import { ROLES } from '../../../shared/constants/roles';
 
 const emptyPhase = (order = 1) => ({ name: '', order, description: '', subphases: [] });
 const emptySubphase = (order = 1) => ({ name: '', order, description: '' });
+const TYPES_PER_PAGE = 6;
 
 const TramiteTypesPage = () => {
   const { user } = useAuthStore();
@@ -18,6 +19,8 @@ const TramiteTypesPage = () => {
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [form, setForm] = useState({
     code: '',
     name: '',
@@ -31,6 +34,47 @@ const TramiteTypesPage = () => {
   }, []);
 
   const codeSuggestion = useMemo(() => buildTypeCodeSuggestion(form.name), [form.name]);
+
+  const filteredTypes = useMemo(() => {
+    const words = normalizeSearchText(searchTerm).split(/\s+/).filter(Boolean);
+
+    if (words.length === 0) {
+      return types;
+    }
+
+    return types.filter((type) => {
+      const phaseText = (type.phases || [])
+        .flatMap((phase) => [
+          phase.name,
+          phase.description,
+          ...(phase.subphases || []).flatMap((subphase) => [subphase.name, subphase.description]),
+        ])
+        .join(' ');
+      const statusText = type.is_active ? 'activo disponible publicado' : 'inactivo oculto desactivado';
+      const searchableText = normalizeSearchText(
+        [type.code, type.name, type.description, statusText, phaseText].filter(Boolean).join(' ')
+      );
+
+      return words.every((word) => searchableText.includes(word));
+    });
+  }, [types, searchTerm]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredTypes.length / TYPES_PER_PAGE));
+
+  const paginatedTypes = useMemo(() => {
+    const startIndex = (currentPage - 1) * TYPES_PER_PAGE;
+    return filteredTypes.slice(startIndex, startIndex + TYPES_PER_PAGE);
+  }, [filteredTypes, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   const loadTypes = async () => {
     setLoading(true);
@@ -331,11 +375,11 @@ const TramiteTypesPage = () => {
 
                     <div className="md:col-span-2">
                       <label className={labelClass}>Descripcion (opcional)</label>
-                      <input
+                      <textarea
                         value={phase.description}
                         onChange={(e) => handlePhaseChange(idx, 'description', e.target.value)}
                         onBlur={() => handlePhaseChange(idx, 'description', normalizeSentence(phase.description))}
-                        className={inputClass}
+                        className={`${inputClass} min-h-[72px] resize-y`}
                         placeholder="Ej: Revision inicial de documentos y requisitos."
                       />
                     </div>
@@ -358,10 +402,10 @@ const TramiteTypesPage = () => {
 
                     <div className="space-y-2">
                       {phase.subphases.map((subphase, subIndex) => (
-                        <div
-                          key={subIndex}
-                          className="grid grid-cols-1 gap-2 md:grid-cols-[1fr_140px_1fr_auto]"
-                        >
+	                        <div
+	                          key={subIndex}
+	                          className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(220px,1fr)_80px_minmax(260px,1.2fr)_120px] md:items-start"
+	                        >
                           <input
                             value={subphase.name}
                             onChange={(e) => handleSubphaseChange(idx, subIndex, 'name', e.target.value)}
@@ -369,20 +413,20 @@ const TramiteTypesPage = () => {
                             placeholder="Ej: Validacion de planos"
                             className={inputClass}
                           />
-                          <div className="rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 font-semibold text-[#233274]">
-                            {subIndex + 1}
-                          </div>
-                          <input
+	                          <div className="rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 font-semibold text-[#233274]">
+	                            {subIndex + 1}
+	                          </div>
+                          <textarea
                             value={subphase.description}
                             onChange={(e) => handleSubphaseChange(idx, subIndex, 'description', e.target.value)}
                             onBlur={() => handleSubphaseChange(idx, subIndex, 'description', normalizeSentence(subphase.description))}
                             placeholder="Descripcion opcional"
-                            className={inputClass}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeSubphase(idx, subIndex)}
-                            className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2 font-semibold text-red-600 transition hover:bg-red-50"
+	                            className={`${inputClass} min-h-[44px] resize-y`}
+	                          />
+	                          <button
+	                            type="button"
+	                            onClick={() => removeSubphase(idx, subIndex)}
+	                            className="inline-flex h-[44px] items-center justify-center gap-2 rounded-xl border border-red-200 px-3 py-2 font-semibold text-red-600 transition hover:bg-red-50"
                             title="Eliminar subfase"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -427,17 +471,33 @@ const TramiteTypesPage = () => {
         </div>
 
         <div className="rounded-2xl border border-[#ebe7df] bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center gap-2">
-            <ListChecks className="h-5 w-5 text-[#e15f0b]" />
-            <h2 className="text-xl font-black text-[#233274]">Tipos registrados</h2>
+          <div className="mb-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <ListChecks className="h-5 w-5 text-[#e15f0b]" />
+              <h2 className="text-xl font-black text-[#233274]">Tipos registrados</h2>
+            </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9a98a0]" />
+              <input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={`${inputClass} pl-10`}
+                placeholder="Buscar por codigo, nombre, estado, fase o subfase"
+              />
+            </div>
+            <p className="text-xs text-[#9a98a0]">
+              {filteredTypes.length} tipo(s) encontrado(s).
+            </p>
           </div>
           {loading ? (
             <div className="text-center text-[#9a98a0]">Cargando...</div>
           ) : types.length === 0 ? (
             <div className="text-[#9a98a0]">Aun no hay tipos.</div>
+          ) : filteredTypes.length === 0 ? (
+            <div className="text-[#9a98a0]">No se encontraron tipos con esa busqueda.</div>
           ) : (
             <div className="space-y-3">
-              {types.map((type) => (
+              {paginatedTypes.map((type) => (
                 <div
                   key={type.id}
                   className="w-full rounded-xl border border-[#ebe7df] bg-[#fdfaf5] p-4 transition hover:shadow"
@@ -476,6 +536,34 @@ const TramiteTypesPage = () => {
                   </div>
                 </div>
               ))}
+
+              {totalPages > 1 && (
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                  <p className="text-sm text-[#9a98a0]">
+                    Pagina {currentPage} de {totalPages}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                      disabled={currentPage === 1}
+                      className="inline-flex items-center gap-1 rounded-lg border border-[#ebe7df] px-3 py-2 font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Anterior
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                      disabled={currentPage === totalPages}
+                      className="inline-flex items-center gap-1 rounded-lg border border-[#ebe7df] px-3 py-2 font-semibold text-[#233274] transition hover:bg-[#f8f5ef] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Siguiente
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -501,5 +589,12 @@ const buildTypeCodeSuggestion = (name = '') => {
 
   return words.join('-');
 };
+
+const normalizeSearchText = (value = '') =>
+  String(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
 
 export default TramiteTypesPage;

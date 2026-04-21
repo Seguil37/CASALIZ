@@ -1,6 +1,6 @@
 // src/features/agency/pages/CreateTourPage.jsx
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, ImagePlus, PlusCircle, Trash2 } from 'lucide-react';
 import { projectsApi, toPublicUrl } from '../../../shared/utils/api';
@@ -73,22 +73,10 @@ const CreateTourPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [heroPreview, setHeroPreview] = useState('');
-  const summaryRef = useRef(null);
-  const descriptionRef = useRef(null);
 
   useEffect(() => {
     setFormData((prev) => ({ ...prev, status: 'published' }));
   }, []);
-
-  useEffect(() => {
-    const autoResize = (el) => {
-      if (!el) return;
-      el.style.height = 'auto';
-      el.style.height = `${el.scrollHeight}px`;
-    };
-    autoResize(summaryRef.current);
-    autoResize(descriptionRef.current);
-  }, [formData.summary, formData.description]);
 
   const openPreview = (url) => {
     if (!url || !url.trim()) return;
@@ -375,10 +363,9 @@ const CreateTourPage = () => {
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Resumen</label>
                 <textarea
                   value={formData.summary}
-                  ref={summaryRef}
                   onChange={(e) => handleChange('summary', e.target.value.slice(0, SUMMARY_MAX))}
                   onBlur={() => handleChange('summary', normalizeSentence(formData.summary))}
-                  className="w-full min-h-[140px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
+                  className="w-full min-h-[140px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-y overflow-auto"
                   placeholder="Resume en una frase que se hizo y para quien fue pensado el proyecto."
                   maxLength={SUMMARY_MAX}
                 />
@@ -388,10 +375,9 @@ const CreateTourPage = () => {
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Descripcion detallada *</label>
                 <textarea
                   value={formData.description}
-                  ref={descriptionRef}
                   onChange={(e) => handleChange('description', e.target.value)}
                   onBlur={() => handleChange('description', normalizeSentence(formData.description))}
-                  className="w-full min-h-[180px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
+                  className="w-full min-h-[180px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-y overflow-auto"
                   placeholder="Describe el contexto, el objetivo del proyecto, la solucion propuesta y el resultado final."
                 />
                 {errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}

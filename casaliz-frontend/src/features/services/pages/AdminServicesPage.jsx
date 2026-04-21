@@ -1,6 +1,6 @@
 ﻿// src/features/services/pages/AdminServicesPage.jsx
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
 import { normalizeSentence, normalizeUrl, toTitleCase } from '../../../shared/utils/formNormalization';
@@ -66,8 +66,6 @@ const AdminServicesPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [coverPreview, setCoverPreview] = useState('');
-  const summaryRef = useRef(null);
-  const descriptionRef = useRef(null);
 
   useEffect(() => {
     setForm(emptyForm);
@@ -76,16 +74,6 @@ const AdminServicesPage = () => {
   useEffect(() => {
     loadServices();
   }, []);
-
-  useEffect(() => {
-    const autoResize = (el) => {
-      if (!el) return;
-      el.style.height = 'auto';
-      el.style.height = `${el.scrollHeight}px`;
-    };
-    autoResize(summaryRef.current);
-    autoResize(descriptionRef.current);
-  }, [form.short_description, form.description]);
 
   const loadServices = async () => {
     try {
@@ -477,8 +465,7 @@ const AdminServicesPage = () => {
               <label className="text-sm text-[#555]">Resumen</label>
               <textarea
                 required
-                ref={summaryRef}
-                className="w-full border rounded-lg p-3 min-h-[100px] resize-none overflow-hidden"
+                className="w-full border rounded-lg p-3 min-h-[100px] resize-y overflow-auto"
                 value={form.short_description}
                 onChange={(e) => setForm({ ...form, short_description: e.target.value.slice(0, SUMMARY_MAX) })}
                 onBlur={() => setForm((prev) => ({ ...prev, short_description: normalizeSentence(prev.short_description) }))}
@@ -492,8 +479,7 @@ const AdminServicesPage = () => {
               <label className="text-sm text-[#555]">Descripcion</label>
               <textarea
                 required
-                ref={descriptionRef}
-                className="w-full border rounded-lg p-3 min-h-[140px] resize-none overflow-hidden"
+                className="w-full border rounded-lg p-3 min-h-[140px] resize-y overflow-auto"
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 onBlur={() => setForm((prev) => ({ ...prev, description: normalizeSentence(prev.description) }))}

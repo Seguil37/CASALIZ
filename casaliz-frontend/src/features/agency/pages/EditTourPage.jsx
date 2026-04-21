@@ -409,7 +409,7 @@ const EditTourPage = () => {
                   value={formData.summary}
                   onChange={(e) => handleChange('summary', e.target.value.slice(0, SUMMARY_MAX))}
                   onBlur={() => handleChange('summary', normalizeSentence(formData.summary))}
-                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-y overflow-auto"
                   placeholder="Resume en una frase que se hizo y para quien fue pensado el proyecto."
                   maxLength={SUMMARY_MAX}
                 />
@@ -421,7 +421,7 @@ const EditTourPage = () => {
                   value={formData.description}
                   onChange={(e) => handleChange('description', e.target.value)}
                   onBlur={() => handleChange('description', normalizeSentence(formData.description))}
-                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full min-h-[120px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-y overflow-auto"
                   placeholder="Describe el contexto, el objetivo del proyecto, la solucion propuesta y el resultado final."
                 />
                 {errors.description && <p className="text-sm text-red-600 mt-1">{errors.description}</p>}

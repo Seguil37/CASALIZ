@@ -31,12 +31,28 @@ class TramiteController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
+            $search = DataNormalizer::text($request->search);
+            $matchingStatuses = $this->matchingStatusesForSearch($search);
+
+            $query->where(function ($q) use ($search, $matchingStatuses) {
                 $q->where('code', 'like', "%{$search}%")
                     ->orWhere('project_name', 'like', "%{$search}%")
                     ->orWhere('client_name', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%");
+                    ->orWhere('property_name', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhereHas('type', function ($typeQuery) use ($search) {
+                        $typeQuery->where('code', 'like', "%{$search}%")
+                            ->orWhere('name', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('responsible', function ($responsibleQuery) use ($search) {
+                        $responsibleQuery->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+
+                if ($matchingStatuses !== []) {
+                    $q->orWhereIn('status', $matchingStatuses);
+                }
             });
         }
 
@@ -308,6 +324,29 @@ class TramiteController extends Controller
             Tramite::STATUS_OBSERVED,
             Tramite::STATUS_COMPLETED,
         ];
+    }
+
+    private function matchingStatusesForSearch(?string $search): array
+    {
+        $term = strtolower(str_replace('_', ' ', iconv('UTF-8', 'ASCII//TRANSLIT', $search ?? '') ?: ''));
+        $term = preg_replace('/\s+/', ' ', trim($term));
+
+        if ($term === '') {
+            return [];
+        }
+
+        $aliases = [
+            Tramite::STATUS_PENDING => ['pendiente', 'pending'],
+            Tramite::STATUS_IN_PROGRESS => ['en proceso', 'proceso', 'progress', 'in progress'],
+            Tramite::STATUS_OBSERVED => ['observado', 'observada', 'observed'],
+            Tramite::STATUS_COMPLETED => ['finalizado', 'finalizada', 'completado', 'completada', 'completed'],
+        ];
+
+        return collect($aliases)
+            ->filter(fn ($terms) => collect($terms)->contains(fn ($alias) => str_contains($alias, $term) || str_contains($term, $alias)))
+            ->keys()
+            ->values()
+            ->all();
     }
 
     private function normalizeTramiteData(array $data): array
