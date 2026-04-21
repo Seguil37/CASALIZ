@@ -119,6 +119,12 @@ const TramitesByClientPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!hasCompleteLocation(form)) {
+      alert('Completa departamento, provincia y distrito del tramite.');
+      return;
+    }
+
     setSaving(true);
 
     try {
@@ -438,7 +444,7 @@ const TramitesByClientPage = () => {
                             setDeletingId(tramite.id);
                             await tramitesApi.delete(tramite.id);
                             setTramites((prev) => prev.filter((item) => item.id !== tramite.id));
-                          } catch (error) {
+                          } catch {
                             alert('No se pudo eliminar el tramite');
                           } finally {
                             setDeletingId(null);
@@ -626,6 +632,11 @@ const TramitesByClientPage = () => {
               </button>
               <button
                 onClick={async () => {
+                  if (!hasCompleteLocation(editing)) {
+                    alert('Completa departamento, provincia y distrito del tramite.');
+                    return;
+                  }
+
                   try {
                     setUpdating(true);
                     setEditErrors({});
@@ -674,6 +685,13 @@ const buildLocation = (values) => {
 
   return parts.length ? parts.join(', ') : null;
 };
+
+const hasCompleteLocation = (values) =>
+  Boolean(
+    values.location_department?.trim() &&
+      values.location_province?.trim() &&
+      values.location_district?.trim()
+  );
 
 const normalizeTramiteCode = (value = '') =>
   value

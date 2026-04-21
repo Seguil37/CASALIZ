@@ -87,7 +87,7 @@ const TramiteTypesPage = () => {
       code: type.code,
       name: type.name,
       description: type.description || '',
-      is_active: type.is_active,
+      is_active: Boolean(type.is_active),
       phases:
         type.phases?.map((phase, phaseIndex) => ({
           name: phase.name,
@@ -243,6 +243,25 @@ const TramiteTypesPage = () => {
                 className={`${inputClass} min-h-[80px]`}
                 placeholder="Explica para que sirve este tipo de tramite y cuando se usa."
               />
+            </div>
+
+            <div className="flex items-center justify-between rounded-2xl border border-[#ebe7df] bg-[#fdfaf5] px-4 py-3">
+              <div>
+                <p className="text-sm font-semibold text-[#233274]">Estado del tipo</p>
+                <p className="text-xs text-[#9a98a0]">
+                  {form.is_active ? 'Disponible para nuevos tramites.' : 'Oculto para nuevas asignaciones.'}
+                </p>
+              </div>
+              <label className="relative inline-flex cursor-pointer items-center">
+                <input
+                  type="checkbox"
+                  checked={form.is_active}
+                  onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
+                  className="sr-only peer"
+                />
+                <div className="h-6 w-11 rounded-full bg-[#d8d4c7] transition-colors peer-checked:bg-[#e15f0b]"></div>
+                <div className="absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5"></div>
+              </label>
             </div>
 
             <div className="space-y-3">
