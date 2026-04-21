@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Eye, EyeOff, ShieldCheck, UserCog, UserRoundCog, X } from 'lucide-react';
 import { ROLES } from '../../../shared/constants/roles';
+import { normalizeEmail, toTitleCase } from '../../../shared/utils/formNormalization';
 
 const AdminUserForm = ({
   isOpen,
@@ -59,9 +60,11 @@ const AdminUserForm = ({
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
+                onBlur={() => handleChange('name', toTitleCase(formData.name))}
                 className="w-full px-4 py-3 rounded-xl border border-[#ebe7df] focus:outline-none focus:ring-2 focus:ring-[#e15f0b] bg-[#fdfaf5]"
                 placeholder="Ej: Ana Pérez"
               />
+              <p className="mt-1 text-xs text-[#9a98a0]">Usa nombre y apellidos completos; se corrige a formato titulo.</p>
               {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
             </div>
             <div>
@@ -70,6 +73,7 @@ const AdminUserForm = ({
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
+                onBlur={() => handleChange('email', normalizeEmail(formData.email))}
                 className="w-full px-4 py-3 rounded-xl border border-[#ebe7df] focus:outline-none focus:ring-2 focus:ring-[#e15f0b] bg-[#fdfaf5]"
                 placeholder="admin@empresa.com"
               />

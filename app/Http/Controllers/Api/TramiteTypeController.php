@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TramitePhase;
 use App\Models\TramiteSubphase;
 use App\Models\TramiteType;
+use App\Support\DataNormalizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +27,10 @@ class TramiteTypeController extends Controller
     {
         $this->ensureMaster();
 
+        $request->merge([
+            'code' => DataNormalizer::code($request->input('code')),
+        ]);
+
         $data = $request->validate([
             'code' => 'required|string|max:50|unique:tramite_types,code',
             'name' => 'required|string|max:255',
@@ -40,6 +45,8 @@ class TramiteTypeController extends Controller
             'phases.*.subphases.*.order' => 'nullable|integer|min:1',
             'phases.*.subphases.*.description' => 'nullable|string',
         ]);
+
+        $data = $this->normalizeTypeData($data);
 
         return DB::transaction(function () use ($data, $request) {
             $type = TramiteType::create([
@@ -67,6 +74,10 @@ class TramiteTypeController extends Controller
     {
         $this->ensureMaster();
 
+        $request->merge([
+            'code' => DataNormalizer::code($request->input('code')),
+        ]);
+
         $data = $request->validate([
             'code' => 'required|string|max:50|unique:tramite_types,code,' . $tramiteType->id,
             'name' => 'required|string|max:255',
@@ -81,6 +92,8 @@ class TramiteTypeController extends Controller
             'phases.*.subphases.*.order' => 'nullable|integer|min:1',
             'phases.*.subphases.*.description' => 'nullable|string',
         ]);
+
+        $data = $this->normalizeTypeData($data);
 
         return DB::transaction(function () use ($tramiteType, $data, $request) {
             $tramiteType->update([
@@ -151,5 +164,27 @@ class TramiteTypeController extends Controller
                 ]);
             }
         }
+    }
+
+    private function normalizeTypeData(array $data): array
+    {
+        $data['code'] = DataNormalizer::code($data['code']);
+        $data['name'] = DataNormalizer::title($data['name']);
+        $data['description'] = DataNormalizer::text($data['description'] ?? null);
+
+        $data['phases'] = array_map(function (array $phase): array {
+            $phase['name'] = DataNormalizer::title($phase['name']);
+            $phase['description'] = DataNormalizer::text($phase['description'] ?? null);
+            $phase['subphases'] = array_map(function (array $subphase): array {
+                $subphase['name'] = DataNormalizer::title($subphase['name']);
+                $subphase['description'] = DataNormalizer::text($subphase['description'] ?? null);
+
+                return $subphase;
+            }, $phase['subphases'] ?? []);
+
+            return $phase;
+        }, $data['phases'] ?? []);
+
+        return $data;
     }
 }

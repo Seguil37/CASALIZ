@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus, Mail, Lock, User, Phone, Eye, EyeOff, Loader2, AlertCircle, Shield } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
+import { normalizeEmail, normalizePhone, toTitleCase } from '../../../shared/utils/formNormalization';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -62,7 +63,12 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     clearError();
-    const result = await registerUser(formData);
+    const result = await registerUser({
+      ...formData,
+      name: toTitleCase(formData.name),
+      email: normalizeEmail(formData.email),
+      phone: normalizePhone(formData.phone),
+    });
 
     if (result.success) {
       navigate('/');

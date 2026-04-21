@@ -8,6 +8,7 @@ use App\Models\TramitePhase;
 use App\Models\TramitePhaseInstance;
 use App\Models\TramiteSubphaseInstance;
 use App\Models\TramiteType;
+use App\Support\DataNormalizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -46,6 +47,10 @@ class TramiteController extends Controller
     {
         $this->ensureMaster();
 
+        $request->merge([
+            'code' => DataNormalizer::code($request->input('code')),
+        ]);
+
         $data = $request->validate([
             'code' => 'required|string|max:50|unique:tramites,code',
             'tramite_type_id' => 'required|exists:tramite_types,id',
@@ -60,6 +65,8 @@ class TramiteController extends Controller
             'due_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
+
+        $data = $this->normalizeTramiteData($data);
 
         return DB::transaction(function () use ($data) {
             $tramite = Tramite::create([
@@ -100,6 +107,10 @@ class TramiteController extends Controller
     {
         $this->ensureCanManage($tramite);
 
+        $request->merge([
+            'code' => DataNormalizer::code($request->input('code')),
+        ]);
+
         $data = $request->validate([
             'code' => 'required|string|max:50|unique:tramites,code,' . $tramite->id,
             'client_id' => 'nullable|exists:users,id',
@@ -113,6 +124,8 @@ class TramiteController extends Controller
             'due_date' => 'nullable|date',
             'notes' => 'nullable|string',
         ]);
+
+        $data = $this->normalizeTramiteData($data);
 
         $tramite->update($data);
 
@@ -131,6 +144,10 @@ class TramiteController extends Controller
             'status' => ['required', Rule::in($this->statusList())],
             'notes' => 'nullable|string',
         ]);
+
+        if (array_key_exists('notes', $data)) {
+            $data['notes'] = DataNormalizer::text($data['notes']);
+        }
 
         $phaseInstance->update([
             'status' => $data['status'],
@@ -156,6 +173,10 @@ class TramiteController extends Controller
             'status' => ['required', Rule::in($this->statusList())],
             'notes' => 'nullable|string',
         ]);
+
+        if (array_key_exists('notes', $data)) {
+            $data['notes'] = DataNormalizer::text($data['notes']);
+        }
 
         $subphaseInstance->update([
             'status' => $data['status'],
@@ -189,6 +210,10 @@ class TramiteController extends Controller
             'notes' => 'nullable|string',
             'due_date' => 'nullable|date',
         ]);
+
+        if (array_key_exists('notes', $data)) {
+            $data['notes'] = DataNormalizer::text($data['notes']);
+        }
 
         $tramite->update([
             'notes' => $data['notes'] ?? $tramite->notes,
@@ -283,6 +308,29 @@ class TramiteController extends Controller
             Tramite::STATUS_OBSERVED,
             Tramite::STATUS_COMPLETED,
         ];
+    }
+
+    private function normalizeTramiteData(array $data): array
+    {
+        if (array_key_exists('code', $data)) {
+            $data['code'] = DataNormalizer::code($data['code']);
+        }
+
+        foreach (['client_name', 'project_name', 'property_name'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = DataNormalizer::title($data[$field]);
+            }
+        }
+
+        if (array_key_exists('location', $data)) {
+            $data['location'] = DataNormalizer::location($data['location']);
+        }
+
+        if (array_key_exists('notes', $data)) {
+            $data['notes'] = DataNormalizer::text($data['notes']);
+        }
+
+        return $data;
     }
 
     private function recalculateStatus(Tramite $tramite): void

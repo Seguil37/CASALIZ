@@ -4,9 +4,19 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, ImagePlus, PlusCircle, Trash2 } from 'lucide-react';
 import { projectsApi, toPublicUrl } from '../../../shared/utils/api';
+import { normalizeSentence, normalizeUrl, toTitleCase } from '../../../shared/utils/formNormalization';
 
 const emptyImage = { path: '', caption: '', file: null, preview: '' };
 const COUNTRIES = ['Peru'];
+const PROJECT_TYPES = [
+  'Residencial',
+  'Comercial',
+  'Industrial',
+  'Interiorismo',
+  'Habilitacion Urbana',
+  'Saneamiento Inmobiliario',
+  'Topografia',
+];
 const PERU_REGIONS = [
   'Amazonas',
   'Ancash',
@@ -163,30 +173,30 @@ const CreateTourPage = () => {
     setSubmitError('');
 
     const payload = new FormData();
-    payload.append('title', formData.title);
+    payload.append('title', toTitleCase(formData.title));
     if (formData.type) payload.append('type', formData.type);
-    if (formData.city) payload.append('city', formData.city);
-    if (formData.state) payload.append('state', formData.state);
-    if (formData.country) payload.append('country', formData.country);
+    if (formData.city) payload.append('city', toTitleCase(formData.city));
+    if (formData.state) payload.append('state', toTitleCase(formData.state));
+    if (formData.country) payload.append('country', toTitleCase(formData.country));
     payload.append('status', formData.status || 'published');
     payload.append('is_featured', formData.is_featured ? '1' : '0');
-    if (formData.summary) payload.append('summary', formData.summary);
-    if (formData.description) payload.append('description', formData.description);
+    if (formData.summary) payload.append('summary', normalizeSentence(formData.summary));
+    if (formData.description) payload.append('description', normalizeSentence(formData.description));
 
     if (formData.heroImageFile) {
       payload.append('hero_image_file', formData.heroImageFile);
     } else if (formData.hero_image.trim()) {
-      payload.append('hero_image', formData.hero_image.trim());
+      payload.append('hero_image', normalizeUrl(formData.hero_image));
     }
 
     formData.images.forEach((image, index) => {
       if (image.file) {
         payload.append(`images[${index}][file]`, image.file);
       } else if (image.path.trim()) {
-        payload.append(`images[${index}][path]`, image.path.trim());
+        payload.append(`images[${index}][path]`, normalizeUrl(image.path));
       }
       if (image.caption?.trim()) {
-        payload.append(`images[${index}][caption]`, image.caption.trim());
+        payload.append(`images[${index}][caption]`, normalizeSentence(image.caption));
       }
     });
 
@@ -244,6 +254,7 @@ const CreateTourPage = () => {
                   type="text"
                   value={formData.title}
                   onChange={(e) => handleChange('title', e.target.value)}
+                  onBlur={() => handleChange('title', toTitleCase(formData.title))}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Casa de campo en Cieneguilla"
                   minLength={4}
@@ -254,14 +265,19 @@ const CreateTourPage = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-[#233274] mb-1">Tipo de proyecto</label>
-                <input
-                  type="text"
+                <select
                   value={formData.type}
                   onChange={(e) => handleChange('type', e.target.value)}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Residencial, comercial, interiorismo..."
-                />
-                <p className="mt-1 text-xs text-[#9a98a0]">Puedes escribir el tipo libremente segun el proyecto.</p>
+                >
+                  <option value="">Selecciona un tipo</option>
+                  {PROJECT_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-[#9a98a0]">Campo controlado para evitar variaciones como residencial/residencia/vivienda.</p>
               </div>
 
               <div>
@@ -271,6 +287,7 @@ const CreateTourPage = () => {
                   list="project-city-suggestions"
                   value={formData.city}
                   onChange={(e) => handleChange('city', e.target.value)}
+                  onBlur={() => handleChange('city', toTitleCase(formData.city))}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Ej: Miraflores, San Isidro, Cusco"
                 />
@@ -309,6 +326,7 @@ const CreateTourPage = () => {
                   list="create-project-country-suggestions"
                   value={formData.country}
                   onChange={(e) => handleChange('country', e.target.value)}
+                  onBlur={() => handleChange('country', toTitleCase(formData.country))}
                   className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Ej: Peru"
                 />
@@ -359,6 +377,7 @@ const CreateTourPage = () => {
                   value={formData.summary}
                   ref={summaryRef}
                   onChange={(e) => handleChange('summary', e.target.value.slice(0, SUMMARY_MAX))}
+                  onBlur={() => handleChange('summary', normalizeSentence(formData.summary))}
                   className="w-full min-h-[140px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
                   placeholder="Resume en una frase que se hizo y para quien fue pensado el proyecto."
                   maxLength={SUMMARY_MAX}
@@ -371,6 +390,7 @@ const CreateTourPage = () => {
                   value={formData.description}
                   ref={descriptionRef}
                   onChange={(e) => handleChange('description', e.target.value)}
+                  onBlur={() => handleChange('description', normalizeSentence(formData.description))}
                   className="w-full min-h-[180px] rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
                   placeholder="Describe el contexto, el objetivo del proyecto, la solucion propuesta y el resultado final."
                 />
@@ -488,6 +508,7 @@ const CreateTourPage = () => {
                         type="text"
                         value={image.caption}
                         onChange={(e) => handleImageChange(index, 'caption', e.target.value)}
+                        onBlur={() => handleImageChange(index, 'caption', normalizeSentence(image.caption))}
                         className="w-full rounded-xl border border-[#ebe7df] px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
                         placeholder="Texto descriptivo de la imagen"
                       />

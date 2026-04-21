@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\DataNormalizer;
 use App\Support\ModuleAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -43,6 +44,10 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
+        $request->merge([
+            'email' => DataNormalizer::email($request->input('email')),
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -54,6 +59,8 @@ class UserController extends Controller
             'city' => 'nullable|string|max:100',
             'is_active' => 'boolean',
         ]);
+
+        $validated = $this->normalizeUserData($validated);
 
         $user = User::create([
             ...collect($validated)->except('password', 'is_active')->toArray(),
@@ -69,6 +76,12 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $this->authorize('update', $user);
+
+        if ($request->has('email')) {
+            $request->merge([
+                'email' => DataNormalizer::email($request->input('email')),
+            ]);
+        }
 
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
@@ -89,6 +102,8 @@ class UserController extends Controller
         if (!$authUser->isMasterAdmin()) {
             unset($validated['role'], $validated['is_active'], $validated['email']);
         }
+
+        $validated = $this->normalizeUserData($validated);
 
         $desiredRole = $validated['role'] ?? $user->role;
         $desiredActive = array_key_exists('is_active', $validated)
@@ -204,5 +219,28 @@ class UserController extends Controller
             ->keys()
             ->values()
             ->all();
+    }
+
+    private function normalizeUserData(array $data): array
+    {
+        foreach (['name', 'country', 'state', 'city'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = DataNormalizer::title($data[$field]);
+            }
+        }
+
+        if (array_key_exists('email', $data)) {
+            $data['email'] = DataNormalizer::email($data['email']);
+        }
+
+        if (array_key_exists('phone', $data)) {
+            $data['phone'] = DataNormalizer::phone($data['phone']);
+        }
+
+        if (array_key_exists('bio', $data)) {
+            $data['bio'] = DataNormalizer::text($data['bio']);
+        }
+
+        return $data;
     }
 }

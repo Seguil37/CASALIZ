@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\DataNormalizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -12,6 +13,10 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        $request->merge([
+            'email' => DataNormalizer::email($request->input('email')),
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -21,6 +26,8 @@ class AuthController extends Controller
             'state' => 'nullable|string|max:100',
             'city' => 'nullable|string|max:100',
         ]);
+
+        $validated = $this->normalizeProfileData($validated);
 
         $user = User::create([
             ...$validated,
@@ -88,6 +95,12 @@ class AuthController extends Controller
     {
         $user = $request->user();
 
+        if ($request->has('email')) {
+            $request->merge([
+                'email' => DataNormalizer::email($request->input('email')),
+            ]);
+        }
+
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
@@ -100,6 +113,8 @@ class AuthController extends Controller
             'current_password' => 'required_with:password|string',
             'password' => 'sometimes|string|min:8|confirmed',
         ]);
+
+        $validated = $this->normalizeProfileData($validated);
 
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
@@ -123,5 +138,28 @@ class AuthController extends Controller
             'message' => 'Perfil actualizado exitosamente',
             'user' => $user,
         ]);
+    }
+
+    private function normalizeProfileData(array $data): array
+    {
+        foreach (['name', 'country', 'state', 'city'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = DataNormalizer::title($data[$field]);
+            }
+        }
+
+        if (array_key_exists('email', $data)) {
+            $data['email'] = DataNormalizer::email($data['email']);
+        }
+
+        if (array_key_exists('phone', $data)) {
+            $data['phone'] = DataNormalizer::phone($data['phone']);
+        }
+
+        if (array_key_exists('bio', $data)) {
+            $data['bio'] = DataNormalizer::text($data['bio']);
+        }
+
+        return $data;
     }
 }

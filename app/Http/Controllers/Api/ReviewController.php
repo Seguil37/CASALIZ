@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\ProjectReview;
+use App\Support\DataNormalizer;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -28,6 +29,8 @@ class ReviewController extends Controller
             'rating' => 'nullable|integer|min:1|max:5',
             'comment' => 'required|string',
         ]);
+
+        $validated['comment'] = DataNormalizer::text($validated['comment']);
 
         $project = Project::findOrFail($validated['project_id']);
 

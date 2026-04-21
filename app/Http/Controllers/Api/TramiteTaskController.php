@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Tramite;
 use App\Models\TramiteTask;
 use App\Models\User;
+use App\Support\DataNormalizer;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -52,6 +53,7 @@ class TramiteTaskController extends Controller
             'observations' => 'nullable|string',
         ]);
 
+        $data = $this->normalizeTaskData($data);
         $data = $this->normalizePhaseSelection($tramite, $data);
 
         $task = $tramite->tasks()->create([
@@ -99,6 +101,7 @@ class TramiteTaskController extends Controller
             'observations' => 'nullable|string',
         ]);
 
+        $data = $this->normalizeTaskData($data);
         $data = $this->normalizePhaseSelection($tramite, $data, $task);
 
         $previousAssigneeId = $task->assigned_to;
@@ -250,6 +253,21 @@ class TramiteTaskController extends Controller
 
         $data['tramite_phase_instance_id'] = $phaseId ?: null;
         $data['tramite_subphase_instance_id'] = $subphaseId ?: null;
+
+        return $data;
+    }
+
+    private function normalizeTaskData(array $data): array
+    {
+        if (array_key_exists('title', $data)) {
+            $data['title'] = DataNormalizer::sentence($data['title']);
+        }
+
+        foreach (['description', 'observations'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = DataNormalizer::text($data[$field]);
+            }
+        }
 
         return $data;
     }

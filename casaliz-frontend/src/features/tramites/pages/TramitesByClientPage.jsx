@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, ClipboardList, Loader2, MapPin, Plus, UserCircle } from 'lucide-react';
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
+import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import { ROLES, isStaff } from '../../../shared/constants/roles';
 import useAuthStore from '../../../store/authStore';
 
@@ -57,6 +58,17 @@ const LOCATION_SUGGESTIONS = {
     districts: ['Piura', 'Castilla', 'Catacaos'],
   },
 };
+
+const TRAMITE_NAME_SUGGESTIONS = [
+  'Licencia de Obra',
+  'Declaratoria de Fabrica',
+  'Independizacion de Predio',
+  'Subdivision de Lote',
+  'Acumulacion de Lote',
+  'Prescripcion Adquisitiva',
+  'Saneamiento Fisico Legal',
+  'Regularizacion de Edificacion',
+];
 
 const emptyForm = {
   code: '',
@@ -193,7 +205,8 @@ const TramitesByClientPage = () => {
                 <input
                   className={inputClass}
                   value={form.code}
-                  onChange={(e) => setForm({ ...form, code: normalizeTramiteCode(e.target.value) })}
+                  onChange={(e) => setForm({ ...form, code: normalizeTramiteCodeDraft(e.target.value) })}
+                  onBlur={() => setForm((prev) => ({ ...prev, code: normalizeTramiteCode(prev.code) }))}
                   placeholder={codePlaceholder}
                   required
                 />
@@ -238,9 +251,10 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={form.client_name}
                   onChange={(e) => setForm({ ...form, client_name: e.target.value })}
-                  placeholder="Nombre completo"
+                  onBlur={() => setForm((prev) => ({ ...prev, client_name: toTitleCase(prev.client_name) }))}
+                  placeholder="Ej: Juan Perez Quispe"
                 />
-                <p className="mt-1 text-xs text-[#9a98a0]">Escribe el nombre tal como quieres verlo en el seguimiento.</p>
+                <p className="mt-1 text-xs text-[#9a98a0]">Usa nombre y apellidos completos. Se corrige a formato titulo al salir del campo.</p>
               </div>
 
               <div>
@@ -249,9 +263,17 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={form.project_name}
                   onChange={(e) => setForm({ ...form, project_name: e.target.value })}
+                  onBlur={() => setForm((prev) => ({ ...prev, project_name: normalizeSentence(prev.project_name) }))}
+                  list="tramite-name-suggestions"
                   placeholder="Ej: Licencia de obra de vivienda unifamiliar"
                   required
                 />
+                <datalist id="tramite-name-suggestions">
+                  {TRAMITE_NAME_SUGGESTIONS.map((name) => (
+                    <option key={name} value={name} />
+                  ))}
+                </datalist>
+                <p className="mt-1 text-xs text-[#9a98a0]">Elige una sugerencia si aplica; evita abreviaciones como lic., reg. o indep.</p>
               </div>
 
               <div>
@@ -260,8 +282,10 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={form.property_name}
                   onChange={(e) => setForm({ ...form, property_name: e.target.value })}
+                  onBlur={() => setForm((prev) => ({ ...prev, property_name: toTitleCase(prev.property_name) }))}
                   placeholder="Ej: Torre A, Local 102"
                 />
+                <p className="mt-1 text-xs text-[#9a98a0]">Usa una denominacion estable: manzana, lote, local o edificio si corresponde.</p>
               </div>
 
               <div className="space-y-3 rounded-2xl border border-[#f0e8dd] bg-[#fcfaf6] p-4">
@@ -293,6 +317,7 @@ const TramitesByClientPage = () => {
                     className={inputClass}
                     value={form.location_province}
                     onChange={(e) => setForm({ ...form, location_province: e.target.value })}
+                    onBlur={() => setForm((prev) => ({ ...prev, location_province: toTitleCase(prev.location_province) }))}
                     placeholder="Ej: Cusco"
                     list="tramite-province-suggestions"
                     required
@@ -310,6 +335,7 @@ const TramitesByClientPage = () => {
                     className={inputClass}
                     value={form.location_district}
                     onChange={(e) => setForm({ ...form, location_district: e.target.value })}
+                    onBlur={() => setForm((prev) => ({ ...prev, location_district: toTitleCase(prev.location_district) }))}
                     placeholder="Ej: San Sebastian"
                     list="tramite-district-suggestions"
                     required
@@ -482,8 +508,9 @@ const TramitesByClientPage = () => {
                   value={editing.code}
                   onChange={(e) => {
                     setEditErrors((prev) => ({ ...prev, code: '' }));
-                    setEditing({ ...editing, code: normalizeTramiteCode(e.target.value) });
+                    setEditing({ ...editing, code: normalizeTramiteCodeDraft(e.target.value) });
                   }}
+                  onBlur={() => setEditing((prev) => ({ ...prev, code: normalizeTramiteCode(prev.code) }))}
                 />
                 {editErrors.code && <p className="mt-1 text-sm text-red-600">{editErrors.code}</p>}
               </div>
@@ -510,6 +537,7 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={editing.client_name || ''}
                   onChange={(e) => setEditing({ ...editing, client_name: e.target.value })}
+                  onBlur={() => setEditing((prev) => ({ ...prev, client_name: toTitleCase(prev.client_name) }))}
                 />
               </div>
 
@@ -519,7 +547,14 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={editing.project_name || ''}
                   onChange={(e) => setEditing({ ...editing, project_name: e.target.value })}
+                  onBlur={() => setEditing((prev) => ({ ...prev, project_name: normalizeSentence(prev.project_name) }))}
+                  list="edit-tramite-name-suggestions"
                 />
+                <datalist id="edit-tramite-name-suggestions">
+                  {TRAMITE_NAME_SUGGESTIONS.map((name) => (
+                    <option key={name} value={name} />
+                  ))}
+                </datalist>
               </div>
 
               <div>
@@ -528,6 +563,7 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={editing.property_name || ''}
                   onChange={(e) => setEditing({ ...editing, property_name: e.target.value })}
+                  onBlur={() => setEditing((prev) => ({ ...prev, property_name: toTitleCase(prev.property_name) }))}
                 />
               </div>
 
@@ -558,6 +594,7 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={editing.location_province || ''}
                   onChange={(e) => setEditing({ ...editing, location_province: e.target.value })}
+                  onBlur={() => setEditing((prev) => ({ ...prev, location_province: toTitleCase(prev.location_province) }))}
                   list="edit-tramite-province-suggestions"
                 />
                 <datalist id="edit-tramite-province-suggestions">
@@ -573,6 +610,7 @@ const TramitesByClientPage = () => {
                   className={inputClass}
                   value={editing.location_district || ''}
                   onChange={(e) => setEditing({ ...editing, location_district: e.target.value })}
+                  onBlur={() => setEditing((prev) => ({ ...prev, location_district: toTitleCase(prev.location_district) }))}
                   list="edit-tramite-district-suggestions"
                 />
                 <datalist id="edit-tramite-district-suggestions">
@@ -678,9 +716,9 @@ const TramitesByClientPage = () => {
 
 const buildLocation = (values) => {
   const parts = [
-    values.location_district?.trim(),
-    values.location_province?.trim(),
-    values.location_department?.trim(),
+    toTitleCase(values.location_district),
+    toTitleCase(values.location_province),
+    toTitleCase(values.location_department),
   ].filter(Boolean);
 
   return parts.length ? parts.join(', ') : null;
@@ -694,11 +732,10 @@ const hasCompleteLocation = (values) =>
   );
 
 const normalizeTramiteCode = (value = '') =>
-  value
-    .toUpperCase()
-    .replace(/[^A-Z0-9-]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+  normalizeCode(value);
+
+const normalizeTramiteCodeDraft = (value = '') =>
+  normalizeCodeDraft(value);
 
 const buildTramiteCodeSuggestion = (types, typeId) => {
   const type = types.find((item) => String(item.id) === String(typeId));
@@ -708,11 +745,11 @@ const buildTramiteCodeSuggestion = (types, typeId) => {
 };
 
 const buildPayload = (values) => ({
-  code: values.code,
+  code: normalizeTramiteCode(values.code),
   tramite_type_id: values.tramite_type_id,
-  client_name: values.client_name,
-  project_name: values.project_name,
-  property_name: values.property_name,
+  client_name: toTitleCase(values.client_name),
+  project_name: normalizeSentence(values.project_name),
+  property_name: toTitleCase(values.property_name),
   location: buildLocation(values),
   due_date: values.due_date || null,
   responsible_id: values.responsible_id || null,

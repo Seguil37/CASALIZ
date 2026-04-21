@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Plus, Save, Layers, ListChecks, Trash2 } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
+import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
 
@@ -63,6 +64,18 @@ const TramiteTypesPage = () => {
       const payload = {
         ...form,
         code: normalizeTypeCode(form.code || codeSuggestion),
+        name: toTitleCase(form.name),
+        description: normalizeSentence(form.description),
+        phases: form.phases.map((phase) => ({
+          ...phase,
+          name: toTitleCase(phase.name),
+          description: normalizeSentence(phase.description),
+          subphases: (phase.subphases || []).map((subphase) => ({
+            ...subphase,
+            name: toTitleCase(subphase.name),
+            description: normalizeSentence(subphase.description),
+          })),
+        })),
       };
 
       if (editingId) {
@@ -205,7 +218,8 @@ const TramiteTypesPage = () => {
                 <label className={labelClass}>Codigo</label>
                 <input
                   value={form.code}
-                  onChange={(e) => setForm({ ...form, code: normalizeTypeCode(e.target.value) })}
+                  onChange={(e) => setForm({ ...form, code: normalizeTypeCodeDraft(e.target.value) })}
+                  onBlur={() => setForm((prev) => ({ ...prev, code: normalizeTypeCode(prev.code) }))}
                   className={inputClass}
                   placeholder={codeSuggestion || 'LIC-OBRA'}
                   required
@@ -228,6 +242,7 @@ const TramiteTypesPage = () => {
                 <input
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onBlur={() => setForm((prev) => ({ ...prev, name: toTitleCase(prev.name) }))}
                   className={inputClass}
                   placeholder="Ej: Licencia de obra"
                   required
@@ -240,6 +255,7 @@ const TramiteTypesPage = () => {
               <textarea
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
+                onBlur={() => setForm((prev) => ({ ...prev, description: normalizeSentence(prev.description) }))}
                 className={`${inputClass} min-h-[80px]`}
                 placeholder="Explica para que sirve este tipo de tramite y cuando se usa."
               />
@@ -299,6 +315,7 @@ const TramiteTypesPage = () => {
                       <input
                         value={phase.name}
                         onChange={(e) => handlePhaseChange(idx, 'name', e.target.value)}
+                        onBlur={() => handlePhaseChange(idx, 'name', toTitleCase(phase.name))}
                         className={inputClass}
                         placeholder="Ej: Recepcion documental"
                         required
@@ -317,6 +334,7 @@ const TramiteTypesPage = () => {
                       <input
                         value={phase.description}
                         onChange={(e) => handlePhaseChange(idx, 'description', e.target.value)}
+                        onBlur={() => handlePhaseChange(idx, 'description', normalizeSentence(phase.description))}
                         className={inputClass}
                         placeholder="Ej: Revision inicial de documentos y requisitos."
                       />
@@ -347,6 +365,7 @@ const TramiteTypesPage = () => {
                           <input
                             value={subphase.name}
                             onChange={(e) => handleSubphaseChange(idx, subIndex, 'name', e.target.value)}
+                            onBlur={() => handleSubphaseChange(idx, subIndex, 'name', toTitleCase(subphase.name))}
                             placeholder="Ej: Validacion de planos"
                             className={inputClass}
                           />
@@ -356,6 +375,7 @@ const TramiteTypesPage = () => {
                           <input
                             value={subphase.description}
                             onChange={(e) => handleSubphaseChange(idx, subIndex, 'description', e.target.value)}
+                            onBlur={() => handleSubphaseChange(idx, subIndex, 'description', normalizeSentence(subphase.description))}
                             placeholder="Descripcion opcional"
                             className={inputClass}
                           />
@@ -465,11 +485,10 @@ const TramiteTypesPage = () => {
 };
 
 const normalizeTypeCode = (value = '') =>
-  value
-    .toUpperCase()
-    .replace(/[^A-Z0-9-]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+  normalizeCode(value);
+
+const normalizeTypeCodeDraft = (value = '') =>
+  normalizeCodeDraft(value);
 
 const buildTypeCodeSuggestion = (name = '') => {
   const words = name

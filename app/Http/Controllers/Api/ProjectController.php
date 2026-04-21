@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Support\DataNormalizer;
 use App\Support\ModuleAccess;
 
 class ProjectController extends Controller
@@ -112,6 +113,8 @@ class ProjectController extends Controller
             'images.*.caption' => 'nullable|string|max:255',
         ]);
 
+        $validated = $this->normalizeProjectData($validated);
+
         return DB::transaction(function () use ($validated, $request) {
             $project = Project::create([
                 ...collect($validated)->except('images')->toArray(),
@@ -160,6 +163,8 @@ class ProjectController extends Controller
             'images.*.file' => 'nullable|image|mimes:jpg,jpeg,png,webp,avif|max:5120|required_without:images.*.path',
             'images.*.caption' => 'nullable|string|max:255',
         ]);
+
+        $validated = $this->normalizeProjectData($validated);
 
         return DB::transaction(function () use ($validated, $project, $request) {
             $project->update([
@@ -213,8 +218,8 @@ class ProjectController extends Controller
 
             ProjectImage::create([
                 'project_id' => $project->id,
-                'path' => $path,
-                'caption' => $image['caption'] ?? null,
+                'path' => DataNormalizer::url($path),
+                'caption' => DataNormalizer::text($image['caption'] ?? null),
                 'position' => $index,
             ]);
         }
@@ -257,5 +262,40 @@ class ProjectController extends Controller
         }
 
         return $slug;
+    }
+
+    protected function normalizeProjectData(array $data): array
+    {
+        foreach (['title', 'type', 'city', 'state', 'country'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = DataNormalizer::title($data[$field]);
+            }
+        }
+
+        foreach (['summary', 'description'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $data[$field] = DataNormalizer::text($data[$field]);
+            }
+        }
+
+        if (array_key_exists('hero_image', $data)) {
+            $data['hero_image'] = DataNormalizer::url($data['hero_image']);
+        }
+
+        if (array_key_exists('images', $data)) {
+            $data['images'] = array_map(function (array $image): array {
+                if (array_key_exists('path', $image)) {
+                    $image['path'] = DataNormalizer::url($image['path']);
+                }
+
+                if (array_key_exists('caption', $image)) {
+                    $image['caption'] = DataNormalizer::text($image['caption']);
+                }
+
+                return $image;
+            }, $data['images']);
+        }
+
+        return $data;
     }
 }

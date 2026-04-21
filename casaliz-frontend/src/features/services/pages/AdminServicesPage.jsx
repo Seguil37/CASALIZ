@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
+import { normalizeSentence, normalizeUrl, toTitleCase } from '../../../shared/utils/formNormalization';
 import {
   Plus,
   Pencil,
@@ -161,22 +162,22 @@ const AdminServicesPage = () => {
       if (image.file) {
         imagesPayload.push({ type: 'file', file: image.file, caption: image.caption, index });
       } else if (image.path.trim()) {
-        imagesPayload.push({ type: 'path', path: image.path.trim(), caption: image.caption, index });
+        imagesPayload.push({ type: 'path', path: normalizeUrl(image.path), caption: image.caption, index });
       }
     });
 
     const payload = new FormData();
-    payload.append('title', form.title);
-    if (form.category) payload.append('category', form.category);
-    if (form.short_description) payload.append('short_description', form.short_description);
-    if (form.description) payload.append('description', form.description);
+    payload.append('title', toTitleCase(form.title));
+    if (form.category) payload.append('category', toTitleCase(form.category));
+    if (form.short_description) payload.append('short_description', normalizeSentence(form.short_description));
+    if (form.description) payload.append('description', normalizeSentence(form.description));
     payload.append('status', form.status || 'published');
     payload.append('featured', form.featured ? '1' : '0');
 
     if (form.coverImageFile) {
       payload.append('cover_image_file', form.coverImageFile);
     } else if (form.cover_image.trim()) {
-      payload.append('cover_image', form.cover_image.trim());
+      payload.append('cover_image', normalizeUrl(form.cover_image));
     }
 
     imagesPayload.forEach((image) => {
@@ -186,7 +187,7 @@ const AdminServicesPage = () => {
         payload.append(`images[${image.index}][path]`, image.path);
       }
       if (image.caption?.trim()) {
-        payload.append(`images[${image.index}][caption]`, image.caption.trim());
+        payload.append(`images[${image.index}][caption]`, normalizeSentence(image.caption));
       }
     });
 
@@ -444,26 +445,31 @@ const AdminServicesPage = () => {
                 className="w-full border rounded-lg p-2"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
+                onBlur={() => setForm((prev) => ({ ...prev, title: toTitleCase(prev.title) }))}
                 placeholder="Ej: Apertura de carpeta predial"
               />
+              <p className="mt-1 text-xs text-[#9a98a0]">Usa un titulo unico y descriptivo. Se corrige a formato titulo.</p>
             </div>
 
             <div>
               <label className="text-sm text-[#555]">Categoria</label>
-              <input
+              <select
                 className="w-full border rounded-lg p-2"
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
-                list="service-category-suggestions"
-                placeholder="Selecciona o escribe una categoria"
-              />
-              <datalist id="service-category-suggestions">
+              >
+                <option value="">Selecciona una categoria</option>
+                {form.category && !SERVICE_CATEGORIES.includes(form.category) && (
+                  <option value={form.category}>{form.category}</option>
+                )}
                 {SERVICE_CATEGORIES.map((category) => (
-                  <option key={category} value={category} />
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
                 ))}
-              </datalist>
+              </select>
               <p className="mt-1 text-xs text-[#9a98a0]">
-                Usa una categoria consistente para que luego sea facil filtrar y agrupar.
+                Campo controlado: usa una categoria existente para que los reportes agrupen bien.
               </p>
             </div>
 
@@ -475,6 +481,7 @@ const AdminServicesPage = () => {
                 className="w-full border rounded-lg p-3 min-h-[100px] resize-none overflow-hidden"
                 value={form.short_description}
                 onChange={(e) => setForm({ ...form, short_description: e.target.value.slice(0, SUMMARY_MAX) })}
+                onBlur={() => setForm((prev) => ({ ...prev, short_description: normalizeSentence(prev.short_description) }))}
                 placeholder="Resume en una frase que problema resuelve el servicio y para quien es."
                 maxLength={SUMMARY_MAX}
               />
@@ -489,8 +496,10 @@ const AdminServicesPage = () => {
                 className="w-full border rounded-lg p-3 min-h-[140px] resize-none overflow-hidden"
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
+                onBlur={() => setForm((prev) => ({ ...prev, description: normalizeSentence(prev.description) }))}
                 placeholder="Explica que incluye el servicio, a quien va dirigido, que documentos pide y cual es el resultado esperado."
               />
+              <p className="mt-1 text-xs text-[#9a98a0]">Estructura recomendada: incluye, publico objetivo, requisitos y resultado esperado.</p>
             </div>
 
             <div>
@@ -601,6 +610,7 @@ const AdminServicesPage = () => {
                       className="w-full border rounded-lg p-2"
                       value={image.caption}
                       onChange={(e) => handleImageChange(index, 'caption', e.target.value)}
+                      onBlur={() => handleImageChange(index, 'caption', normalizeSentence(image.caption))}
                       placeholder="Detalle de la imagen"
                     />
                     {(image.preview || image.path.trim()) && (
