@@ -435,11 +435,11 @@ const AdminUsersPage = () => {
               Crea, edita y controla el acceso de los administradores. Solo los master admin pueden ver y usar este módulo.
             </p>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <AdminPanelBackButton />
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+            <AdminPanelBackButton className="min-h-[52px] sm:px-5" />
             <button
               onClick={openCreateModal}
-              className="inline-flex items-center justify-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl"
+              className="inline-flex min-h-[52px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-gradient-primary px-6 py-3 font-bold text-[#233274] shadow-lg hover:shadow-xl"
             >
               <Plus className="w-5 h-5" />
               Crear Admin

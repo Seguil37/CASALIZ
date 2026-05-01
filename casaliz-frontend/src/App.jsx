@@ -10,6 +10,7 @@ import ScrollToTop from './shared/components/ScrollToTop';
 
 // Layouts
 import MainLayout from './shared/components/Layout/MainLayout';
+import AdminWorkspaceLayout from './shared/components/Layout/AdminWorkspaceLayout';
 
 // Pages
 import HomePage from './features/tours/pages/HomePage';
@@ -111,55 +112,6 @@ function App() {
               }
             />
 
-            {/* Agency Routes */}
-            <Route
-              path="agency/dashboard"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
-                  <AgencyDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/tours"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
-                  <MyToursPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/services"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.SERVICES}>
-                  <AdminServicesPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/tours/create"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
-                  <CreateTourPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/tours/:id/edit"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
-                  <EditTourPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="agency/bookings"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
-                  <AgencyBookingsPage />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="booking/:id"
               element={
@@ -196,69 +148,125 @@ function App() {
             />
 
             <Route
-              path="admin/users"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.ADMIN_USERS}>
-                  <AdminUsersPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="admin/panel"
               element={
                 <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
-                  <AdminPanelPage />
+                  <AdminWorkspaceLayout />
                 </ProtectedRoute>
               }
-            />
-            <Route
-              path="tramites/tipos"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.TRAMITE_TYPES}>
-                  <TramiteTypesPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="tramites/gestion"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]} requiredModule={MODULES.TRAMITES_MANAGE}>
-                  <TramitesByClientPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="tramites/control"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
-                  <ControlBoardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="tramites/resumen-tareas"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
-                  <AssignedTasksSummaryPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="tramites/:id/tareas"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
-                  <TramiteTasksPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="tramites/:id/detalle"
-              element={
-                <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
-                  <TramiteDetailPage />
-                </ProtectedRoute>
-              }
-            />
+            >
+              <Route
+                path="agency/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                    <AgencyDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="agency/tours"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                    <MyToursPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="agency/services"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.SERVICES}>
+                    <AdminServicesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="agency/tours/create"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                    <CreateTourPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="agency/tours/:id/edit"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                    <EditTourPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="agency/bookings"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                    <AgencyBookingsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/users"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.ADMIN_USERS}>
+                    <AdminUsersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/panel"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                    <AdminPanelPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tramites/tipos"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.TRAMITE_TYPES}>
+                    <TramiteTypesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tramites/gestion"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]} requiredModule={MODULES.TRAMITES_MANAGE}>
+                    <TramitesByClientPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tramites/control"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
+                    <ControlBoardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tramites/resumen-tareas"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
+                    <AssignedTasksSummaryPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tramites/:id/tareas"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
+                    <TramiteTasksPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="tramites/:id/detalle"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
+                    <TramiteDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
