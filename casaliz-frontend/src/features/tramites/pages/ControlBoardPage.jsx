@@ -71,7 +71,7 @@ const ControlBoardPage = () => {
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom space-y-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex items-center gap-3">
             <ClipboardList className="h-6 w-6 text-[#e15f0b]" />
             <div>
@@ -79,7 +79,9 @@ const ControlBoardPage = () => {
               <p className="text-[#9a98a0]">Monitor de todos los clientes y tramites en tiempo real.</p>
             </div>
           </div>
-          <AdminPanelBackButton />
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap xl:justify-end">
+            <AdminPanelBackButton />
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-[#ebe7df] bg-white px-4 py-3 text-sm text-[#233274] shadow-sm">

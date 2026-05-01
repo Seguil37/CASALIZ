@@ -86,6 +86,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/favorites', [FavoriteController::class, 'store']);
         Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy']);
         Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::get('/notifications/preferences', [NotificationController::class, 'preferences']);
+        Route::put('/notifications/preferences', [NotificationController::class, 'updatePreferences']);
         Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
         Route::post('/notifications/{notificationId}/read', [NotificationController::class, 'markAsRead']);
 

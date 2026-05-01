@@ -81,7 +81,7 @@ const AssignedTasksSummaryPage = () => {
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom space-y-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="flex items-start gap-3">
             <ClipboardList className="w-6 h-6 text-[#e15f0b] mt-1" />
             <div>
@@ -93,11 +93,11 @@ const AssignedTasksSummaryPage = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap xl:justify-end">
             <AdminPanelBackButton />
             <Link
               to="/tramites/control"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-[#233274] text-[#233274] font-semibold hover:bg-[#233274] hover:text-white transition"
+              className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-[#233274] px-4 py-2 text-sm font-semibold leading-none text-[#233274] transition hover:bg-[#233274] hover:text-white"
             >
               Volver a control
             </Link>

@@ -9,6 +9,7 @@ use App\Models\TramitePhaseInstance;
 use App\Models\TramiteSubphaseInstance;
 use App\Models\TramiteType;
 use App\Support\DataNormalizer;
+use App\Support\TramiteNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -79,7 +80,7 @@ class TramiteController extends Controller
 
         $data = $this->normalizeTramiteData($data);
 
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data, $request) {
             $type = TramiteType::findOrFail($data['tramite_type_id']);
             $tramite = Tramite::create([
                 'code' => $this->generateTramiteCode($type),
@@ -97,6 +98,7 @@ class TramiteController extends Controller
             ]);
 
             $this->instantiatePhases($tramite);
+            app(TramiteNotificationService::class)->notifyTramiteAssigned($tramite, null, $request->user());
 
             return response()->json($tramite->load(['type', 'phases.subphases']), 201);
         });
@@ -133,6 +135,9 @@ class TramiteController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        $previousResponsibleId = $tramite->responsible_id;
+        $previousStatus = $tramite->status;
+        $previousNotes = $tramite->notes;
         $data = $this->normalizeTramiteData($data);
 
         if (array_key_exists('tramite_type_id', $data) && (int) $data['tramite_type_id'] !== (int) $tramite->tramite_type_id) {
@@ -142,8 +147,13 @@ class TramiteController extends Controller
         }
 
         $tramite->update($data);
+        $freshTramite = $tramite->fresh(['type', 'phases.subphases', 'responsible']);
+        $notifications = app(TramiteNotificationService::class);
+        $notifications->notifyTramiteAssigned($freshTramite, $previousResponsibleId, $request->user());
+        $notifications->notifyTramiteStatusChanged($freshTramite, $previousStatus, $request->user());
+        $notifications->notifyNoteAdded($freshTramite, $previousNotes, $request->user());
 
-        return $tramite->load(['type', 'phases.subphases']);
+        return $freshTramite;
     }
 
     public function updatePhaseStatus(Request $request, Tramite $tramite, TramitePhaseInstance $phaseInstance)
@@ -163,6 +173,9 @@ class TramiteController extends Controller
             $data['notes'] = DataNormalizer::text($data['notes']);
         }
 
+        $previousPhaseStatus = $phaseInstance->status;
+        $previousTramiteStatus = $tramite->status;
+
         $phaseInstance->update([
             'status' => $data['status'],
             'notes' => $data['notes'] ?? $phaseInstance->notes,
@@ -171,6 +184,10 @@ class TramiteController extends Controller
         ]);
 
         $this->recalculateStatus($tramite);
+        $freshTramite = $tramite->fresh();
+        $notifications = app(TramiteNotificationService::class);
+        $notifications->notifyPhaseStatusChanged($freshTramite, $phaseInstance->fresh(), $previousPhaseStatus, $request->user());
+        $notifications->notifyTramiteStatusChanged($freshTramite, $previousTramiteStatus, $request->user());
 
         return $phaseInstance->fresh('subphases');
     }
@@ -192,6 +209,9 @@ class TramiteController extends Controller
             $data['notes'] = DataNormalizer::text($data['notes']);
         }
 
+        $previousSubphaseStatus = $subphaseInstance->status;
+        $previousTramiteStatus = $tramite->status;
+
         $subphaseInstance->update([
             'status' => $data['status'],
             'notes' => $data['notes'] ?? $subphaseInstance->notes,
@@ -212,6 +232,10 @@ class TramiteController extends Controller
         }
 
         $this->recalculateStatus($tramite);
+        $freshTramite = $tramite->fresh();
+        $notifications = app(TramiteNotificationService::class);
+        $notifications->notifySubphaseStatusChanged($freshTramite, $subphaseInstance->fresh(), $previousSubphaseStatus, $request->user());
+        $notifications->notifyTramiteStatusChanged($freshTramite, $previousTramiteStatus, $request->user());
 
         return $subphaseInstance->fresh();
     }
@@ -229,12 +253,17 @@ class TramiteController extends Controller
             $data['notes'] = DataNormalizer::text($data['notes']);
         }
 
+        $previousNotes = $tramite->notes;
+
         $tramite->update([
             'notes' => $data['notes'] ?? $tramite->notes,
             'due_date' => array_key_exists('due_date', $data) ? $data['due_date'] : $tramite->due_date,
         ]);
 
-        return $tramite->fresh();
+        $freshTramite = $tramite->fresh();
+        app(TramiteNotificationService::class)->notifyNoteAdded($freshTramite, $previousNotes, $request->user());
+
+        return $freshTramite;
     }
 
     public function destroy(Tramite $tramite)

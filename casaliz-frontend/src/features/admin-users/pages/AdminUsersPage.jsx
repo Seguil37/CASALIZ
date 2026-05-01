@@ -427,21 +427,21 @@ const AdminUsersPage = () => {
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">
       <div className="container-custom space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="min-w-0">
             <p className="text-sm uppercase tracking-[0.2em] text-[#9a98a0] font-semibold">Panel de administración</p>
             <h1 className="text-3xl font-black text-[#233274] mt-2">Gestión de Administradores</h1>
             <p className="text-[#6c6b70] mt-2 max-w-3xl">
               Crea, edita y controla el acceso de los administradores. Solo los master admin pueden ver y usar este módulo.
             </p>
           </div>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <AdminPanelBackButton className="min-h-[52px] sm:px-5" />
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap xl:justify-end">
+            <AdminPanelBackButton />
             <button
               onClick={openCreateModal}
-              className="inline-flex min-h-[52px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-gradient-primary px-6 py-3 font-bold text-[#233274] shadow-lg hover:shadow-xl"
+              className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-gradient-primary px-4 py-2 text-sm font-bold leading-none text-[#233274] shadow-lg hover:shadow-xl"
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="h-4 w-4 shrink-0" />
               Crear Admin
             </button>
           </div>

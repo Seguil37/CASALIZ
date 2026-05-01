@@ -112,9 +112,11 @@ export const favoritesApi = {
 };
 
 export const notificationsApi = {
-  list: () => api.get('/notifications'),
+  list: (params) => api.get('/notifications', { params }),
   markAsRead: (id) => api.post(`/notifications/${id}/read`),
   markAllAsRead: () => api.post('/notifications/read-all'),
+  preferences: () => api.get('/notifications/preferences'),
+  updatePreferences: (preferences) => api.put('/notifications/preferences', { preferences }),
 };
 
 export const adminUsersApi = {

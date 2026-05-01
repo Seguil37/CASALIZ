@@ -1,6 +1,6 @@
 // src/shared/components/Layout/Header.jsx
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, User, Menu, X, Mail, Bell, Phone, LogOut } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
@@ -14,6 +14,7 @@ const Header = () => {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const notificationRef = useRef(null);
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
   const canAccessAnyInternalModule = [
@@ -56,6 +57,19 @@ const Header = () => {
     };
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (!notificationOpen) return;
+
+    const handlePointerDown = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setNotificationOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, [notificationOpen]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -80,7 +94,7 @@ const Header = () => {
       console.error('No se pudo marcar la notificación como leída', error);
     } finally {
       setNotificationOpen(false);
-      if (notification.data?.url) navigate(notification.data.url);
+      navigate(notification.data?.url || '/admin/notifications');
     }
   };
 
@@ -168,44 +182,60 @@ const Header = () => {
 	            {/* Usuario */}
 	            {isAuthenticated ? (
 	              <div className="flex items-center gap-2">
-	                <div className="relative">
-	                  <button
-	                    type="button"
-	                    onClick={() => {
-	                      setNotificationOpen((prev) => {
+	                <div className="relative group" ref={notificationRef}>
+		                  <button
+		                    type="button"
+		                    onClick={() => {
+		                      setNotificationOpen((prev) => {
 	                        const nextOpen = !prev;
 	                        if (nextOpen) setMobileMenuOpen(false);
 	                        return nextOpen;
 	                      });
 	                    }}
-	                    className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-white transition-all"
-	                  >
+		                    aria-expanded={notificationOpen}
+		                    aria-label="Notificaciones"
+		                    className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all ${
+		                      notificationOpen ? 'bg-white text-[#e15f0b]' : 'hover:bg-white'
+		                    }`}
+		                  >
 	                    <Bell className="w-5 h-5 text-[#233274]" />
 	                    {unreadCount > 0 && (
 	                      <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-[#e15f0b] text-white text-[11px] font-bold flex items-center justify-center">
 	                        {unreadCount > 9 ? '9+' : unreadCount}
 	                      </span>
 	                    )}
-	                  </button>
+		                  </button>
 
-		                  {notificationOpen && (
-		                    <div className="fixed left-4 right-4 top-24 z-[80] max-h-[70vh] overflow-hidden rounded-xl border border-[#9a98a0] bg-[#f8f5ef] shadow-xl lg:absolute lg:left-auto lg:right-0 lg:top-auto lg:mt-2 lg:w-[360px] lg:max-w-[90vw]">
+			                  <div
+			                    className={`fixed left-4 right-4 top-24 z-[80] max-h-[70vh] overflow-hidden rounded-xl border border-[#9a98a0] bg-[#f8f5ef] shadow-xl transition-all duration-200 lg:absolute lg:left-auto lg:right-0 lg:top-auto lg:mt-0 lg:w-[380px] lg:max-w-[90vw] ${
+			                      notificationOpen
+			                        ? 'pointer-events-auto opacity-100 visible translate-y-0'
+			                        : 'pointer-events-none opacity-0 invisible -translate-y-1 lg:translate-y-0 lg:group-hover:pointer-events-auto lg:group-hover:visible lg:group-hover:opacity-100'
+			                    }`}
+			                  >
 	                      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e5e2da]">
 	                        <div>
 	                          <p className="text-sm font-bold text-[#233274]">Notificaciones</p>
 	                          <p className="text-xs text-[#9a98a0]">Tareas pendientes y asignaciones</p>
 	                        </div>
-	                        {unreadCount > 0 && (
-	                          <button
-	                            type="button"
-	                            onClick={handleMarkAllNotificationsRead}
+		                        {unreadCount > 0 && (
+		                          <button
+		                            type="button"
+		                            onClick={handleMarkAllNotificationsRead}
 	                            className="text-xs font-semibold text-[#e15f0b] hover:underline"
 	                          >
-	                            Marcar todas
-	                          </button>
-	                        )}
-	                      </div>
-	                      <div className="max-h-[420px] overflow-y-auto">
+		                            Marcar todas
+		                          </button>
+		                        )}
+		                      </div>
+		                      <Link
+		                        to="/admin/notifications"
+		                        onClick={() => setNotificationOpen(false)}
+		                        className="block border-b border-[#e5e2da] px-4 py-2 text-xs font-bold text-[#233274] transition hover:bg-white"
+		                      >
+		                        Ver todas y configurar preferencias
+		                      </Link>
+		                      <div className="max-h-[420px] overflow-y-auto">
 	                        {notifications.length === 0 ? (
 	                          <div className="px-4 py-6 text-sm text-[#9a98a0]">No tienes notificaciones por ahora.</div>
 	                        ) : (
@@ -221,7 +251,7 @@ const Header = () => {
 	                              <div className="flex items-start justify-between gap-3">
 	                                <div className="space-y-1">
 	                                  <p className="text-sm font-semibold text-[#233274]">
-	                                    {notification.data?.task_title || 'Tarea asignada'}
+		                                    {notification.data?.task_title || notification.data?.label || 'Notificacion'}
 	                                  </p>
 	                                  <p className="text-xs text-[#4b4b4b]">
 	                                    {notification.data?.message || 'Tienes una tarea pendiente por revisar.'}
@@ -237,10 +267,9 @@ const Header = () => {
 	                            </button>
 	                          ))
 	                        )}
-	                      </div>
-	                    </div>
-	                  )}
-	                </div>
+		                      </div>
+		                    </div>
+		                </div>
 
 	                <div className="relative group">
 	                <button className="flex items-center gap-2 p-2 hover:bg-white rounded-full transition-all">
@@ -290,6 +319,14 @@ const Header = () => {
                       className="block px-4 py-3 bg-[#233274] text-white font-semibold transition-colors border-t border-[#233274] hover:bg-[#1b285c]"
                     >
                       Panel administrativo
+                    </Link>
+                  )}
+                  {canAccessAnyInternalModule && (
+                    <Link
+                      to="/admin/notifications"
+                      className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
+                    >
+                      Notificaciones
                     </Link>
                   )}
 

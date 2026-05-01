@@ -101,18 +101,18 @@ const AgencyDashboard = () => {
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-8">
       <div className="container-custom">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-          <div>
+        <div className="mb-8 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="min-w-0">
             <h1 className="text-3xl font-black text-[#233274] mb-2">Hola, {user?.name} 👋</h1>
             <p className="text-[#9a98a0]">Administra los proyectos del portafolio CASALIZ.</p>
           </div>
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row md:mt-0">
+          <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap xl:justify-end">
             <AdminPanelBackButton />
             <Link
               to="/agency/tours/create"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-primary text-[#233274] font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:shadow-xl"
+              className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-gradient-primary px-4 py-2 text-sm font-bold leading-none text-[#233274] shadow-lg transition-all hover:shadow-xl"
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="h-4 w-4 shrink-0" />
               Crear proyecto
             </Link>
           </div>

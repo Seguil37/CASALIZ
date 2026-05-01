@@ -289,9 +289,9 @@ const AdminServicesPage = () => {
     <div className="min-h-screen bg-[#f8f5ef] py-8">
       <div className="container-custom grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
             <h1 className="text-3xl font-black text-[#233274]">Servicios</h1>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:flex-nowrap xl:justify-end">
               <span className="text-sm text-[#9a98a0]">{filtered.length} servicios</span>
               <AdminPanelBackButton />
             </div>

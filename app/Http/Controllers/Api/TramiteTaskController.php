@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Tramite;
 use App\Models\TramiteTask;
-use App\Models\User;
 use App\Support\DataNormalizer;
-use Illuminate\Support\Facades\DB;
+use App\Support\TramiteNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -26,7 +25,6 @@ class TramiteTaskController extends Controller
         ])->orderByDesc('id');
 
         if ($user->isOperator()) {
-            // Si el operador es responsable general, ve todas; si no, solo las que le asignaron
             if ((int) $tramite->responsible_id !== (int) $user->id) {
                 $query->where('assigned_to', $user->id);
             }
@@ -69,7 +67,7 @@ class TramiteTaskController extends Controller
             'observations' => $data['observations'] ?? null,
         ]);
 
-        $this->notifyAssignee($tramite, $task, null, $request->user());
+        app(TramiteNotificationService::class)->notifyTaskAssigned($tramite, $task, null, $request->user());
 
         return response()->json($task->load(['assignee', 'creator', 'phase', 'subphase']), 201);
     }
@@ -105,6 +103,8 @@ class TramiteTaskController extends Controller
         $data = $this->normalizePhaseSelection($tramite, $data, $task);
 
         $previousAssigneeId = $task->assigned_to;
+        $previousStatus = $task->status;
+        $previousObservation = $task->observations;
 
         if ($user->isOperator()) {
             if (!$isOwner && !($isResponsible && $isCreator)) {
@@ -139,9 +139,13 @@ class TramiteTaskController extends Controller
             ]));
         }
 
-        $this->notifyAssignee($tramite, $task->fresh(), $previousAssigneeId, $user);
+        $freshTask = $task->fresh(['assignee', 'creator', 'phase', 'subphase']);
+        $notifications = app(TramiteNotificationService::class);
+        $notifications->notifyTaskAssigned($tramite, $freshTask, $previousAssigneeId, $user);
+        $notifications->notifyTaskStatusChanged($tramite, $freshTask, $previousStatus, $user);
+        $notifications->notifyTaskObservationChanged($tramite, $freshTask, $previousObservation, $user);
 
-        return $task->fresh(['assignee', 'creator', 'phase', 'subphase']);
+        return $freshTask;
     }
 
     public function destroy(Tramite $tramite, TramiteTask $task)
@@ -162,7 +166,6 @@ class TramiteTaskController extends Controller
         $user = auth()->user();
         if (!$user) abort(401);
 
-        // Permiten crear/gestionar tareas: master, admin o responsable del trámite (sin importar rol)
         if ($user->isAdmin() || $user->isMasterAdmin() || (int) $tramite->responsible_id === (int) $user->id) {
             return;
         }
@@ -180,47 +183,6 @@ class TramiteTaskController extends Controller
         ];
     }
 
-    private function notifyAssignee(Tramite $tramite, TramiteTask $task, ?int $previousAssigneeId, ?User $actor): void
-    {
-        if (!$task->assigned_to) {
-            return;
-        }
-
-        $assigneeChanged = $previousAssigneeId !== $task->assigned_to;
-        if (!$assigneeChanged) {
-            return;
-        }
-
-        $assignee = $task->assignee()->first();
-        if (!$assignee || ($actor && $assignee->id === $actor->id)) {
-            return;
-        }
-
-        $message = $previousAssigneeId
-            ? "Se te asignó la tarea pendiente '{$task->title}' en el trámite {$tramite->code}."
-            : "Tienes una nueva tarea pendiente '{$task->title}' en el trámite {$tramite->code}.";
-
-        DB::table('notifications')->insert([
-            'type' => 'task_assigned',
-            'notifiable_type' => User::class,
-            'notifiable_id' => $assignee->id,
-            'data' => json_encode([
-                'type' => 'task_assigned',
-                'tramite_id' => $tramite->id,
-                'tramite_code' => $tramite->code,
-                'tramite_project_name' => $tramite->project_name,
-                'task_id' => $task->id,
-                'task_title' => $task->title,
-                'task_status' => $task->status,
-                'message' => $message,
-                'url' => "/tramites/{$tramite->id}/tareas",
-            ], JSON_UNESCAPED_UNICODE),
-            'read_at' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-    }
-
     private function normalizePhaseSelection(Tramite $tramite, array $data, ?TramiteTask $task = null): array
     {
         $phaseId = array_key_exists('tramite_phase_instance_id', $data)
@@ -234,7 +196,7 @@ class TramiteTaskController extends Controller
         if ($phaseId) {
             $phase = $tramite->phases()->whereKey($phaseId)->first();
             if (!$phase) {
-                abort(422, 'La fase seleccionada no pertenece a este trámite.');
+                abort(422, 'La fase seleccionada no pertenece a este tramite.');
             }
         }
 
@@ -245,7 +207,7 @@ class TramiteTaskController extends Controller
                 ->first();
 
             if (!$subphase) {
-                abort(422, 'La subfase seleccionada no pertenece a este trámite.');
+                abort(422, 'La subfase seleccionada no pertenece a este tramite.');
             }
 
             $phaseId = $subphase->tramite_phase_instance_id;
