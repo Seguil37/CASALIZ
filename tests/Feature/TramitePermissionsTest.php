@@ -40,7 +40,6 @@ class TramitePermissionsTest extends TestCase
         ]);
 
         $payload = [
-            'code' => 'TR-ADM-001',
             'tramite_type_id' => $type->id,
             'client_name' => 'Cliente Demo',
             'project_name' => 'Licencia Vivienda',
@@ -56,7 +55,7 @@ class TramitePermissionsTest extends TestCase
 
         $createResponse->assertCreated();
         $this->assertDatabaseHas('tramites', [
-            'code' => 'TR-ADM-001',
+            'code' => 'LIC-OBRA-' . now()->format('Y') . '-001',
             'responsible_id' => $admin->id,
         ]);
         $this->assertDatabaseHas('tramite_instance_phases', [
@@ -70,7 +69,7 @@ class TramitePermissionsTest extends TestCase
 
         $deleteResponse->assertOk();
         $this->assertDatabaseMissing('tramites', [
-            'code' => 'TR-ADM-001',
+            'code' => 'LIC-OBRA-' . now()->format('Y') . '-001',
         ]);
     }
 
@@ -96,7 +95,6 @@ class TramitePermissionsTest extends TestCase
         $this
             ->actingAs($operator, 'sanctum')
             ->postJson('/api/v1/tramites', [
-                'code' => 'TR-OP-001',
                 'tramite_type_id' => $type->id,
                 'project_name' => 'Licencia Vivienda',
                 'location' => 'Cusco, Cusco, Cusco',
@@ -104,7 +102,7 @@ class TramitePermissionsTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseMissing('tramites', [
-            'code' => 'TR-OP-001',
+            'project_name' => 'Licencia Vivienda',
         ]);
     }
 }

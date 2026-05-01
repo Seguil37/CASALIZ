@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, ChevronLeft, ChevronRight, ClipboardList, Loader2, MapPin, Plus, Search, UserCircle } from 'lucide-react';
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
-import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
+import { normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import { ROLES, isStaff } from '../../../shared/constants/roles';
 import useAuthStore from '../../../store/authStore';
 import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
@@ -74,7 +74,6 @@ const TRAMITE_NAME_SUGGESTIONS = [
 ];
 
 const emptyForm = {
-  code: '',
   tramite_type_id: '',
   client_name: '',
   project_name: '',
@@ -97,7 +96,6 @@ const TramitesByClientPage = () => {
   const [editing, setEditing] = useState(null);
   const [updating, setUpdating] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
-  const [editErrors, setEditErrors] = useState({});
   const [searchDraft, setSearchDraft] = useState('');
   const [filters, setFilters] = useState({ search: '', status: '' });
   const [currentPage, setCurrentPage] = useState(1);
@@ -172,7 +170,6 @@ const TramitesByClientPage = () => {
   };
 
   const startEdit = (tramite) => {
-    setEditErrors({});
     setEditing({
       ...tramite,
       ...parseLocation(tramite.location),
@@ -208,7 +205,7 @@ const TramitesByClientPage = () => {
   const inputClass =
     'w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 text-[#233274] outline-none placeholder-[#9a98a0] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]';
   const labelClass = 'mb-1 block text-sm font-semibold text-[#233274]';
-  const codePlaceholder = form.tramite_type_id ? `Ej: ${buildTramiteCodeSuggestion(types, form.tramite_type_id)}` : 'Ej: TR-001';
+  const codePreview = form.tramite_type_id ? buildTramiteCodeSuggestion(types, form.tramite_type_id) : 'Se generara al guardar';
   const canCreateOrDelete = [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user?.role);
 
   return (
@@ -242,31 +239,13 @@ const TramitesByClientPage = () => {
 
             <form onSubmit={handleSubmit} className="space-y-3">
               <div>
-                <label className={labelClass}>Codigo / Identificador</label>
-                <input
-                  className={inputClass}
-                  value={form.code}
-                  onChange={(e) => setForm({ ...form, code: normalizeTramiteCodeDraft(e.target.value) })}
-                  onBlur={() => setForm((prev) => ({ ...prev, code: normalizeTramiteCode(prev.code) }))}
-                  placeholder={codePlaceholder}
-                  required
-                />
-                <div className="mt-1 flex items-center justify-between text-xs text-[#9a98a0]">
-                  <span>Usa un codigo corto y facil de rastrear.</span>
-                  <button
-                    type="button"
-                    className="font-semibold text-[#e15f0b]"
-                    onClick={() =>
-                      setForm((prev) => ({
-                        ...prev,
-                        code: buildTramiteCodeSuggestion(types, prev.tramite_type_id),
-                      }))
-                    }
-                    disabled={!form.tramite_type_id}
-                  >
-                    Sugerir codigo
-                  </button>
+                <label className={labelClass}>Codigo generado</label>
+                <div className="rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 font-semibold text-[#233274]">
+                  {codePreview}
                 </div>
+                <p className="mt-1 text-xs text-[#9a98a0]">
+                  El sistema asigna el codigo automaticamente segun el tipo, el año y el correlativo interno.
+                </p>
               </div>
 
               <div>
@@ -611,17 +590,13 @@ const TramitesByClientPage = () => {
 
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div>
-                <label className={labelClass}>Codigo</label>
-                <input
-                  className={`${inputClass} ${editErrors.code ? 'border-red-500 focus:border-red-500' : ''}`}
-                  value={editing.code}
-                  onChange={(e) => {
-                    setEditErrors((prev) => ({ ...prev, code: '' }));
-                    setEditing({ ...editing, code: normalizeTramiteCodeDraft(e.target.value) });
-                  }}
-                  onBlur={() => setEditing((prev) => ({ ...prev, code: normalizeTramiteCode(prev.code) }))}
-                />
-                {editErrors.code && <p className="mt-1 text-sm text-red-600">{editErrors.code}</p>}
+                <label className={labelClass}>Codigo actual</label>
+                <div className="rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 font-semibold text-[#233274]">
+                  {editing.code || 'Se generara automaticamente'}
+                </div>
+                <p className="mt-1 text-xs text-[#9a98a0]">
+                  Solo cambia si reasignas el tramite a otro tipo.
+                </p>
               </div>
 
               <div>
@@ -786,26 +761,20 @@ const TramitesByClientPage = () => {
 
                   try {
                     setUpdating(true);
-                    setEditErrors({});
 
                     const payload = buildPayload(editing);
 
-                    await tramitesApi.update(editing.id, payload);
+                    const { data } = await tramitesApi.update(editing.id, payload);
                     setTramites((prev) =>
                       prev.map((tramite) =>
                         tramite.id === editing.id
-                          ? { ...tramite, ...editing, location: payload.location, due_date: payload.due_date }
+                          ? { ...tramite, ...data }
                           : tramite
                       )
                     );
                     setEditing(null);
                   } catch (error) {
-                    const errors = error.response?.data?.errors;
-                    if (errors?.code?.length) {
-                      setEditErrors({ code: 'El codigo ya existe.' });
-                    } else {
-                      alert('No se pudo actualizar el tramite');
-                    }
+                    alert('No se pudo actualizar el tramite');
                   } finally {
                     setUpdating(false);
                   }
@@ -840,21 +809,14 @@ const hasCompleteLocation = (values) =>
       values.location_district?.trim()
   );
 
-const normalizeTramiteCode = (value = '') =>
-  normalizeCode(value);
-
-const normalizeTramiteCodeDraft = (value = '') =>
-  normalizeCodeDraft(value);
-
 const buildTramiteCodeSuggestion = (types, typeId) => {
   const type = types.find((item) => String(item.id) === String(typeId));
-  const base = normalizeTramiteCode(type?.code || 'TR');
+  const base = type?.code || 'TR';
   const year = new Date().getFullYear();
-  return `${base}-${year}`;
+  return `${base}-${year}-001`;
 };
 
 const buildPayload = (values) => ({
-  code: normalizeTramiteCode(values.code),
   tramite_type_id: values.tramite_type_id,
   client_name: toTitleCase(values.client_name),
   project_name: normalizeSentence(values.project_name),

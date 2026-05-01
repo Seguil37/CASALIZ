@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Save, Layers, ListChecks, Search, Trash2 } from 'lucide-react';
 import { tramitesApi } from '../../../shared/utils/api';
-import { normalizeCode, normalizeCodeDraft, normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
+import { normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
 import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
@@ -23,7 +23,6 @@ const TramiteTypesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [form, setForm] = useState({
-    code: '',
     name: '',
     description: '',
     is_active: true,
@@ -93,7 +92,6 @@ const TramiteTypesPage = () => {
   const resetForm = () => {
     setEditingId(null);
     setForm({
-      code: '',
       name: '',
       description: '',
       is_active: true,
@@ -108,7 +106,6 @@ const TramiteTypesPage = () => {
     try {
       const payload = {
         ...form,
-        code: normalizeTypeCode(form.code || codeSuggestion),
         name: toTitleCase(form.name),
         description: normalizeSentence(form.description),
         phases: form.phases.map((phase) => ({
@@ -142,7 +139,6 @@ const TramiteTypesPage = () => {
   const handleEdit = (type) => {
     setEditingId(type.id);
     setForm({
-      code: type.code,
       name: type.name,
       description: type.description || '',
       is_active: Boolean(type.is_active),
@@ -264,26 +260,13 @@ const TramiteTypesPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <label className={labelClass}>Codigo</label>
-                <input
-                  value={form.code}
-                  onChange={(e) => setForm({ ...form, code: normalizeTypeCodeDraft(e.target.value) })}
-                  onBlur={() => setForm((prev) => ({ ...prev, code: normalizeTypeCode(prev.code) }))}
-                  className={inputClass}
-                  placeholder={codeSuggestion || 'LIC-OBRA'}
-                  required
-                />
-                <div className="mt-1 flex items-center justify-between text-xs text-[#9a98a0]">
-                  <span>Usa un codigo corto y en mayusculas.</span>
-                  <button
-                    type="button"
-                    className="font-semibold text-[#e15f0b]"
-                    onClick={() => setForm((prev) => ({ ...prev, code: codeSuggestion }))}
-                    disabled={!codeSuggestion}
-                  >
-                    Usar sugerencia
-                  </button>
+                <label className={labelClass}>Codigo generado</label>
+                <div className="rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 font-semibold text-[#233274]">
+                  {codeSuggestion || 'Se generara al guardar'}
                 </div>
+                <p className="mt-1 text-xs text-[#9a98a0]">
+                  El sistema genera este codigo automaticamente a partir del nombre y evita duplicados.
+                </p>
               </div>
 
               <div>
@@ -577,12 +560,6 @@ const TramiteTypesPage = () => {
     </div>
   );
 };
-
-const normalizeTypeCode = (value = '') =>
-  normalizeCode(value);
-
-const normalizeTypeCodeDraft = (value = '') =>
-  normalizeCodeDraft(value);
 
 const buildTypeCodeSuggestion = (name = '') => {
   const words = name

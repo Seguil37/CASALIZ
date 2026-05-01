@@ -27,12 +27,7 @@ class TramiteTypeController extends Controller
     {
         $this->ensureMaster();
 
-        $request->merge([
-            'code' => DataNormalizer::code($request->input('code')),
-        ]);
-
         $data = $request->validate([
-            'code' => 'required|string|max:50|unique:tramite_types,code',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
@@ -50,7 +45,7 @@ class TramiteTypeController extends Controller
 
         return DB::transaction(function () use ($data, $request) {
             $type = TramiteType::create([
-                'code' => $data['code'],
+                'code' => $this->generateUniqueTypeCode($data['name']),
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
                 'is_active' => $data['is_active'] ?? true,
@@ -74,12 +69,7 @@ class TramiteTypeController extends Controller
     {
         $this->ensureMaster();
 
-        $request->merge([
-            'code' => DataNormalizer::code($request->input('code')),
-        ]);
-
         $data = $request->validate([
-            'code' => 'required|string|max:50|unique:tramite_types,code,' . $tramiteType->id,
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
@@ -97,7 +87,7 @@ class TramiteTypeController extends Controller
 
         return DB::transaction(function () use ($tramiteType, $data, $request) {
             $tramiteType->update([
-                'code' => $data['code'],
+                'code' => $this->generateUniqueTypeCode($data['name'], $tramiteType->id),
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
                 'is_active' => $data['is_active'] ?? $tramiteType->is_active,
@@ -168,7 +158,6 @@ class TramiteTypeController extends Controller
 
     private function normalizeTypeData(array $data): array
     {
-        $data['code'] = DataNormalizer::code($data['code']);
         $data['name'] = DataNormalizer::title($data['name']);
         $data['description'] = DataNormalizer::text($data['description'] ?? null);
 
@@ -186,5 +175,44 @@ class TramiteTypeController extends Controller
         }, $data['phases'] ?? []);
 
         return $data;
+    }
+
+    private function generateUniqueTypeCode(string $name, ?int $ignoreId = null): string
+    {
+        $baseCode = $this->buildTypeCodeBase($name);
+        $candidate = $baseCode;
+        $suffix = 2;
+
+        while ($this->typeCodeExists($candidate, $ignoreId)) {
+            $candidate = "{$baseCode}-{$suffix}";
+            $suffix++;
+        }
+
+        return $candidate;
+    }
+
+    private function buildTypeCodeBase(string $name): string
+    {
+        $words = preg_split('/\s+/', trim($name)) ?: [];
+        $segments = collect($words)
+            ->filter()
+            ->take(3)
+            ->map(function (string $word): string {
+                return substr(DataNormalizer::code($word) ?? '', 0, 4);
+            })
+            ->filter()
+            ->values();
+
+        return $segments->isNotEmpty()
+            ? $segments->implode('-')
+            : 'TRAM';
+    }
+
+    private function typeCodeExists(string $code, ?int $ignoreId = null): bool
+    {
+        return TramiteType::query()
+            ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
+            ->where('code', $code)
+            ->exists();
     }
 }

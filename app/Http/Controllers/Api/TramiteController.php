@@ -63,12 +63,7 @@ class TramiteController extends Controller
     {
         $this->ensureAdmin();
 
-        $request->merge([
-            'code' => DataNormalizer::code($request->input('code')),
-        ]);
-
         $data = $request->validate([
-            'code' => 'required|string|max:50|unique:tramites,code',
             'tramite_type_id' => 'required|exists:tramite_types,id',
             'client_id' => 'nullable|exists:users,id',
             'client_name' => 'nullable|string|max:255',
@@ -85,8 +80,9 @@ class TramiteController extends Controller
         $data = $this->normalizeTramiteData($data);
 
         return DB::transaction(function () use ($data) {
+            $type = TramiteType::findOrFail($data['tramite_type_id']);
             $tramite = Tramite::create([
-                'code' => $data['code'],
+                'code' => $this->generateTramiteCode($type),
                 'tramite_type_id' => $data['tramite_type_id'],
                 'client_id' => $data['client_id'] ?? null,
                 'client_name' => $data['client_name'] ?? null,
@@ -123,12 +119,8 @@ class TramiteController extends Controller
     {
         $this->ensureCanManage($tramite);
 
-        $request->merge([
-            'code' => DataNormalizer::code($request->input('code')),
-        ]);
-
         $data = $request->validate([
-            'code' => 'required|string|max:50|unique:tramites,code,' . $tramite->id,
+            'tramite_type_id' => 'sometimes|required|exists:tramite_types,id',
             'client_id' => 'nullable|exists:users,id',
             'client_name' => 'nullable|string|max:255',
             'project_name' => 'required|string|max:255',
@@ -142,6 +134,12 @@ class TramiteController extends Controller
         ]);
 
         $data = $this->normalizeTramiteData($data);
+
+        if (array_key_exists('tramite_type_id', $data) && (int) $data['tramite_type_id'] !== (int) $tramite->tramite_type_id) {
+            $data['code'] = $this->generateTramiteCode(
+                TramiteType::findOrFail($data['tramite_type_id'])
+            );
+        }
 
         $tramite->update($data);
 
@@ -343,10 +341,6 @@ class TramiteController extends Controller
 
     private function normalizeTramiteData(array $data): array
     {
-        if (array_key_exists('code', $data)) {
-            $data['code'] = DataNormalizer::code($data['code']);
-        }
-
         foreach (['client_name', 'project_name', 'property_name'] as $field) {
             if (array_key_exists($field, $data)) {
                 $data[$field] = DataNormalizer::title($data[$field]);
@@ -362,6 +356,26 @@ class TramiteController extends Controller
         }
 
         return $data;
+    }
+
+    private function generateTramiteCode(TramiteType $type): string
+    {
+        $baseCode = DataNormalizer::code($type->code) ?: 'TR';
+        $year = now()->format('Y');
+        $prefix = "{$baseCode}-{$year}";
+
+        $lastCode = Tramite::query()
+            ->where('code', 'like', "{$prefix}-%")
+            ->orderByDesc('id')
+            ->value('code');
+
+        $lastSequence = 0;
+
+        if ($lastCode && preg_match('/-(\d{3,})$/', $lastCode, $matches)) {
+            $lastSequence = (int) $matches[1];
+        }
+
+        return sprintf('%s-%03d', $prefix, $lastSequence + 1);
     }
 
     private function recalculateStatus(Tramite $tramite): void
