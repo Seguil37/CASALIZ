@@ -37,6 +37,8 @@ import TramiteTasksPage from './features/tramites/pages/TramiteTasksPage';
 import ControlBoardPage from './features/tramites/pages/ControlBoardPage';
 import TramiteDetailPage from './features/tramites/pages/TramiteDetailPage';
 import AssignedTasksSummaryPage from './features/tramites/pages/AssignedTasksSummaryPage';
+import PublicTramiteLookupPage from './features/tramites/pages/PublicTramiteLookupPage';
+import ClientTramitesPage from './features/tramites/pages/ClientTramitesPage';
 import NotificationsPage from './features/notifications/pages/NotificationsPage';
 
 // Agency Pages
@@ -100,6 +102,7 @@ function App() {
             <Route path="services" element={<ServicesPage />} />
             <Route path="services/:slug" element={<ServiceDetailPage />} />
             <Route path="about" element={<AboutPage />} />
+            <Route path="consulta-tramite" element={<PublicTramiteLookupPage />} />
 
             {/* Customer Routes */}
             <Route
@@ -144,6 +147,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={[ROLES.CLIENT]}>
                   <FavoritesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="cliente/tramites"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.CLIENT]}>
+                  <ClientTramitesPage />
                 </ProtectedRoute>
               }
             />

@@ -8,7 +8,9 @@ use App\Models\TramitePhase;
 use App\Models\TramitePhaseInstance;
 use App\Models\TramiteSubphaseInstance;
 use App\Models\TramiteType;
+use App\Models\User;
 use App\Support\DataNormalizer;
+use App\Support\TramiteClientPresenter;
 use App\Support\TramiteNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,7 +68,7 @@ class TramiteController extends Controller
 
         $data = $request->validate([
             'tramite_type_id' => 'required|exists:tramite_types,id',
-            'client_id' => 'nullable|exists:users,id',
+            'client_id' => ['nullable', Rule::exists('users', 'id')->where('role', 'client')],
             'client_name' => 'nullable|string|max:255',
             'project_name' => 'required|string|max:255',
             'property_name' => 'nullable|string|max:255',
@@ -79,6 +81,7 @@ class TramiteController extends Controller
         ]);
 
         $data = $this->normalizeTramiteData($data);
+        $data = $this->fillClientNameFromUser($data);
 
         return DB::transaction(function () use ($data, $request) {
             $type = TramiteType::findOrFail($data['tramite_type_id']);
@@ -117,13 +120,49 @@ class TramiteController extends Controller
         ]);
     }
 
+    public function publicShow(string $code, TramiteClientPresenter $presenter)
+    {
+        $tramite = Tramite::query()
+            ->where('code', DataNormalizer::code($code))
+            ->firstOrFail();
+
+        return response()->json($presenter->present($tramite));
+    }
+
+    public function clientIndex(Request $request, TramiteClientPresenter $presenter)
+    {
+        $user = $request->user();
+        if (!$user || !$user->isClient()) {
+            abort(403, 'Solo clientes pueden ver este apartado.');
+        }
+
+        $tramites = Tramite::query()
+            ->where('client_id', $user->id)
+            ->with(['type:id,name,code', 'phases.subphases', 'tasks'])
+            ->orderByRaw("status = ? desc", [Tramite::STATUS_IN_PROGRESS])
+            ->orderByDesc('registered_at')
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn (Tramite $tramite) => $presenter->present($tramite))
+            ->values();
+
+        return response()->json([
+            'data' => $tramites,
+            'summary' => [
+                'total' => $tramites->count(),
+                'active' => $tramites->whereIn('status', [Tramite::STATUS_PENDING, Tramite::STATUS_IN_PROGRESS, Tramite::STATUS_OBSERVED])->count(),
+                'completed' => $tramites->where('status', Tramite::STATUS_COMPLETED)->count(),
+            ],
+        ]);
+    }
+
     public function update(Request $request, Tramite $tramite)
     {
         $this->ensureCanManage($tramite);
 
         $data = $request->validate([
             'tramite_type_id' => 'sometimes|required|exists:tramite_types,id',
-            'client_id' => 'nullable|exists:users,id',
+            'client_id' => ['nullable', Rule::exists('users', 'id')->where('role', 'client')],
             'client_name' => 'nullable|string|max:255',
             'project_name' => 'required|string|max:255',
             'property_name' => 'nullable|string|max:255',
@@ -139,6 +178,7 @@ class TramiteController extends Controller
         $previousStatus = $tramite->status;
         $previousNotes = $tramite->notes;
         $data = $this->normalizeTramiteData($data);
+        $data = $this->fillClientNameFromUser($data);
 
         if (array_key_exists('tramite_type_id', $data) && (int) $data['tramite_type_id'] !== (int) $tramite->tramite_type_id) {
             $data['code'] = $this->generateTramiteCode(
@@ -382,6 +422,15 @@ class TramiteController extends Controller
 
         if (array_key_exists('notes', $data)) {
             $data['notes'] = DataNormalizer::text($data['notes']);
+        }
+
+        return $data;
+    }
+
+    private function fillClientNameFromUser(array $data): array
+    {
+        if (!empty($data['client_id']) && empty($data['client_name'])) {
+            $data['client_name'] = User::where('role', 'client')->whereKey($data['client_id'])->value('name');
         }
 
         return $data;

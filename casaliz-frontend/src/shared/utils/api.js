@@ -121,6 +121,7 @@ export const notificationsApi = {
 
 export const adminUsersApi = {
   list: (page = 1, search = '') => api.get('/users', { params: { page, search } }),
+  clients: (search = '') => api.get('/clients', { params: { search } }),
   create: (data) => api.post('/users', data),
   update: (id, data) => api.put(`/users/${id}`, data),
   delete: (id) => api.delete(`/users/${id}`),
@@ -169,6 +170,11 @@ export const tramitesApi = {
   // Vista general
   overview: () => api.get('/tramites-dashboard/overview'),
   assignedTasks: () => api.get('/tramites-dashboard/assigned-tasks'),
+};
+
+export const clientTramitesApi = {
+  publicShow: (code) => api.get(`/public/tramites/${encodeURIComponent(code)}`),
+  mine: () => api.get('/client/tramites'),
 };
 
 export default api;

@@ -36,6 +36,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/services/{service:slug}', [ServiceController::class, 'show']);
     Route::get('/reviews', [ReviewController::class, 'index']);
     Route::get('/settings/public', [SystemSettingsController::class, 'public']);
+    Route::get('/public/tramites/{code}', [TramiteController::class, 'publicShow']);
 
     // Rutas protegidas
     Route::middleware('auth:sanctum')->group(function () {
@@ -70,6 +71,10 @@ Route::prefix('v1')->group(function () {
             Route::get('/users', [UserController::class, 'index']);
         });
 
+        Route::middleware(['module:tramites_manage', 'can:viewAny,App\\Models\\User'])->group(function () {
+            Route::get('/clients', [UserController::class, 'clients']);
+        });
+
         Route::middleware(['module:admin_users', 'can:create,App\\Models\\User'])->group(function () {
             Route::post('/users', [UserController::class, 'store']);
         });
@@ -85,6 +90,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/favorites', [FavoriteController::class, 'index']);
         Route::post('/favorites', [FavoriteController::class, 'store']);
         Route::delete('/favorites/{project}', [FavoriteController::class, 'destroy']);
+        Route::get('/client/tramites', [TramiteController::class, 'clientIndex']);
         Route::get('/notifications', [NotificationController::class, 'index']);
         Route::get('/notifications/preferences', [NotificationController::class, 'preferences']);
         Route::put('/notifications/preferences', [NotificationController::class, 'updatePreferences']);

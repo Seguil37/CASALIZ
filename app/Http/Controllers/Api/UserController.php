@@ -40,6 +40,28 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    public function clients(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
+
+        $search = trim((string) $request->query('search', ''));
+
+        $clients = User::query()
+            ->where('role', 'client')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($innerQuery) use ($search) {
+                    $innerQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('name')
+            ->get(['id', 'name', 'email', 'phone', 'role', 'is_active']);
+
+        return response()->json($clients);
+    }
+
     public function store(Request $request)
     {
         $this->authorize('create', User::class);

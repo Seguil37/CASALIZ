@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, Menu, X, Mail, Bell, Phone, LogOut } from 'lucide-react';
+import { Search, User, Menu, X, Mail, Bell, Phone, LogOut, ClipboardList } from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import { notificationsApi } from '../../utils/api';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
@@ -155,6 +155,12 @@ const Header = () => {
                 Nuestros Servicios
               </Link>
               <Link
+                to="/consulta-tramite"
+                className="text-[#233274] hover:text-[#e15f0b] transition-colors"
+              >
+                Consulta tramite
+              </Link>
+              <Link
                 to="/projects"
                 className="text-[#233274] hover:text-[#e15f0b] transition-colors"
               >
@@ -305,11 +311,28 @@ const Header = () => {
 
                   {/* Favoritos - Solo para clientes */}
                   {user?.role === ROLES.CLIENT && (
+                    <>
+                      <Link
+                        to="/cliente/tramites"
+                        className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
+                      >
+                        Mis tramites
+                      </Link>
+                      <Link
+                        to="/favorites"
+                        className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
+                      >
+                        Favoritos
+                      </Link>
+                    </>
+                  )}
+
+                  {user?.role !== ROLES.CLIENT && (
                     <Link
-                      to="/favorites"
+                      to="/consulta-tramite"
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors"
                     >
-                      Favoritos
+                      Consulta tramite
                     </Link>
                   )}
 
@@ -449,6 +472,14 @@ const Header = () => {
                 Nuestros Servicios
               </Link>
               <Link
+                to="/consulta-tramite"
+                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <ClipboardList className="w-4 h-4 text-[#e15f0b]" />
+                Consulta tramite
+              </Link>
+              <Link
                 to="/projects"
                 className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                 onClick={() => setMobileMenuOpen(false)}
@@ -493,13 +524,22 @@ const Header = () => {
                       </button>
 
 	                    {user?.role === ROLES.CLIENT && (
-                      <Link
-                        to="/favorites"
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Favoritos
-                      </Link>
+                      <>
+                        <Link
+                          to="/cliente/tramites"
+                          className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Mis tramites
+                        </Link>
+                        <Link
+                          to="/favorites"
+                          className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Favoritos
+                        </Link>
+                      </>
                     )}
 
                     {canAccessAnyInternalModule && (

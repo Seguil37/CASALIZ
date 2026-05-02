@@ -75,6 +75,7 @@ const TRAMITE_NAME_SUGGESTIONS = [
 
 const emptyForm = {
   tramite_type_id: '',
+  client_id: '',
   client_name: '',
   project_name: '',
   property_name: '',
@@ -91,6 +92,7 @@ const TramitesByClientPage = () => {
   const [types, setTypes] = useState([]);
   const [tramites, setTramites] = useState([]);
   const [responsables, setResponsables] = useState([]);
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -118,9 +120,9 @@ const TramitesByClientPage = () => {
       ];
       const shouldLoadUsers = user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role);
 
-      if (shouldLoadUsers) promises.push(adminUsersApi.list());
+      if (shouldLoadUsers) promises.push(adminUsersApi.list(), adminUsersApi.clients());
 
-      const [typesRes, tramitesRes, usersRes] = await Promise.all(promises);
+      const [typesRes, tramitesRes, usersRes, clientsRes] = await Promise.all(promises);
 
       setTypes(typesRes.data);
       setTramites(tramitesRes.data.data || tramitesRes.data);
@@ -131,8 +133,10 @@ const TramitesByClientPage = () => {
 
       if (shouldLoadUsers && usersRes) {
         setResponsables((usersRes.data?.data || usersRes.data || []).filter((item) => isStaff(item.role)));
+        setClients(clientsRes?.data || []);
       } else {
         setResponsables([]);
+        setClients([]);
       }
     } catch (error) {
       console.error(error);
@@ -170,11 +174,12 @@ const TramitesByClientPage = () => {
   };
 
   const startEdit = (tramite) => {
-    setEditing({
-      ...tramite,
-      ...parseLocation(tramite.location),
-      due_date: tramite.due_date ? String(tramite.due_date).slice(0, 10) : '',
-    });
+      setEditing({
+        ...tramite,
+        client_id: tramite.client_id || '',
+        ...parseLocation(tramite.location),
+        due_date: tramite.due_date ? String(tramite.due_date).slice(0, 10) : '',
+      });
   };
 
   const applySearch = (event) => {
@@ -263,6 +268,32 @@ const TramitesByClientPage = () => {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <label className={labelClass}>Cliente registrado (opcional)</label>
+                <select
+                  className={inputClass}
+                  value={form.client_id}
+                  onChange={(e) => {
+                    const selectedClient = clients.find((client) => String(client.id) === e.target.value);
+                    setForm({
+                      ...form,
+                      client_id: e.target.value,
+                      client_name: selectedClient?.name || form.client_name,
+                    });
+                  }}
+                >
+                  <option value="">Sin cuenta vinculada</option>
+                  {clients.map((client) => (
+                    <option key={client.id} value={client.id}>
+                      {client.name} - {client.email}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-[#9a98a0]">
+                  Si eliges un cliente registrado, el tramite aparecera en su portal. Si lo dejas vacio, podra consultar solo con el codigo.
+                </p>
               </div>
 
               <div>
@@ -616,6 +647,29 @@ const TramitesByClientPage = () => {
               </div>
 
               <div>
+                <label className={labelClass}>Cliente registrado (opcional)</label>
+                <select
+                  className={inputClass}
+                  value={editing.client_id || ''}
+                  onChange={(e) => {
+                    const selectedClient = clients.find((client) => String(client.id) === e.target.value);
+                    setEditing({
+                      ...editing,
+                      client_id: e.target.value,
+                      client_name: selectedClient?.name || editing.client_name,
+                    });
+                  }}
+                >
+                  <option value="">Sin cuenta vinculada</option>
+                  {clients.map((client) => (
+                    <option key={client.id} value={client.id}>
+                      {client.name} - {client.email}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
                 <label className={labelClass}>Cliente</label>
                 <input
                   className={inputClass}
@@ -773,9 +827,9 @@ const TramitesByClientPage = () => {
                       )
                     );
                     setEditing(null);
-                  } catch (error) {
-                    alert('No se pudo actualizar el tramite');
-                  } finally {
+	                  } catch {
+	                    alert('No se pudo actualizar el tramite');
+	                  } finally {
                     setUpdating(false);
                   }
                 }}
@@ -818,6 +872,7 @@ const buildTramiteCodeSuggestion = (types, typeId) => {
 
 const buildPayload = (values) => ({
   tramite_type_id: values.tramite_type_id,
+  client_id: values.client_id || null,
   client_name: toTitleCase(values.client_name),
   project_name: normalizeSentence(values.project_name),
   property_name: toTitleCase(values.property_name),
