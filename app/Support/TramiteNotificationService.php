@@ -25,6 +25,7 @@ class TramiteNotificationService
         'tramite_status_changed',
         'note_added',
         'observation_added',
+        'client_tramite_updated',
     ];
 
     public static function labels(): array
@@ -42,6 +43,7 @@ class TramiteNotificationService
             'tramite_status_changed' => 'Cambio de estado del tramite',
             'note_added' => 'Nota agregada',
             'observation_added' => 'Observacion agregada',
+            'client_tramite_updated' => 'Actualizacion de tramite',
         ];
     }
 
@@ -78,6 +80,14 @@ class TramiteNotificationService
                 $actor,
                 $task
             );
+
+            $this->send(
+                'client_tramite_updated',
+                $this->clientRecipients($tramite),
+                $tramite,
+                "Tu tramite {$tramite->code} tiene un nuevo avance registrado.",
+                $actor
+            );
         }
 
         if ($task->status === TramiteTask::STATUS_BLOCKED) {
@@ -88,6 +98,14 @@ class TramiteNotificationService
                 "La tarea '{$task->title}' fue marcada como bloqueada en el tramite {$tramite->code}.",
                 $actor,
                 $task
+            );
+
+            $this->send(
+                'client_tramite_updated',
+                $this->clientRecipients($tramite),
+                $tramite,
+                "Tu tramite {$tramite->code} tiene una observacion en revision.",
+                $actor
             );
         }
 
@@ -152,6 +170,14 @@ class TramiteNotificationService
             "El tramite {$tramite->code} cambio de estado a {$this->statusLabel($tramite->status)}.",
             $actor
         );
+
+        $this->send(
+            'client_tramite_updated',
+            $this->clientRecipients($tramite),
+            $tramite,
+            "Tu tramite {$tramite->code} cambio a {$this->statusLabel($tramite->status)}.",
+            $actor
+        );
     }
 
     public function notifyPhaseStatusChanged(Tramite $tramite, TramitePhaseInstance $phase, ?string $previousStatus, ?User $actor): void
@@ -168,6 +194,14 @@ class TramiteNotificationService
             $actor,
             null,
             $phase
+        );
+
+        $this->send(
+            'client_tramite_updated',
+            $this->clientRecipients($tramite),
+            $tramite,
+            "La etapa '{$phase->name}' de tu tramite {$tramite->code} cambio a {$this->statusLabel($phase->status)}.",
+            $actor
         );
     }
 
@@ -186,6 +220,14 @@ class TramiteNotificationService
             null,
             null,
             $subphase
+        );
+
+        $this->send(
+            'client_tramite_updated',
+            $this->clientRecipients($tramite),
+            $tramite,
+            "La subetapa '{$subphase->name}' de tu tramite {$tramite->code} cambio a {$this->statusLabel($subphase->status)}.",
+            $actor
         );
     }
 
@@ -283,6 +325,10 @@ class TramiteNotificationService
                     $data['url'] = "/tramites/{$tramite->id}/detalle";
                 }
 
+                if ($user->isClient()) {
+                    $data['url'] = "/consulta-tramite?codigo={$tramite->code}";
+                }
+
                 if ($this->alreadySent($user, $type, $data)) {
                     return;
                 }
@@ -312,6 +358,17 @@ class TramiteNotificationService
     private function taskOwnerRecipients(Tramite $tramite, TramiteTask $task): Collection
     {
         return collect([$tramite->responsible, $task->assignee, $task->creator])->filter();
+    }
+
+    private function clientRecipients(Tramite $tramite): Collection
+    {
+        $client = $tramite->client()->first();
+
+        if (!$client || !$client->isClient() || !$client->is_active) {
+            return collect();
+        }
+
+        return collect([$client]);
     }
 
     private function isEnabled(User $user, string $type): bool

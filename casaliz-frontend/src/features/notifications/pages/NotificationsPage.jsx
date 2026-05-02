@@ -8,6 +8,7 @@ const typeTone = {
   task_due_soon: 'border-yellow-200 bg-yellow-50 text-yellow-700',
   task_completed: 'border-green-200 bg-green-50 text-green-700',
   tramite_status_changed: 'border-blue-200 bg-blue-50 text-blue-700',
+  client_tramite_updated: 'border-blue-200 bg-blue-50 text-blue-700',
 };
 
 const NotificationsPage = () => {

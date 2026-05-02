@@ -11,6 +11,7 @@ import {
   Menu,
   Settings2,
   ShieldCheck,
+  UserRound,
   Users,
   X,
 } from 'lucide-react';
@@ -36,6 +37,13 @@ const navGroups = [
         module: MODULES.TRAMITES_MANAGE,
         roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
         icon: Settings2,
+      },
+      {
+        label: 'Clientes',
+        to: '/admin/clientes',
+        module: MODULES.TRAMITES_MANAGE,
+        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+        icon: UserRound,
       },
       {
         label: 'Tipos de tramite',

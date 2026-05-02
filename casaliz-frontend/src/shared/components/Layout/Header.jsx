@@ -2,7 +2,21 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, User, Menu, X, Mail, Bell, Phone, LogOut, ClipboardList } from 'lucide-react';
+import {
+  Search,
+  User,
+  Menu,
+  X,
+  Mail,
+  Bell,
+  Phone,
+  LogOut,
+  ClipboardList,
+  BriefcaseBusiness,
+  FolderKanban,
+  Info,
+  Heart,
+} from 'lucide-react';
 import useAuthStore from '../../../store/authStore';
 import { notificationsApi } from '../../utils/api';
 import casalizLogo from '../../../assets/images/casaliz-logo.png';
@@ -26,6 +40,7 @@ const Header = () => {
     MODULES.TASKS_SUMMARY,
     MODULES.ADMIN_USERS,
   ].some((moduleKey) => canAccessModule(user, moduleKey));
+  const notificationsPath = canAccessAnyInternalModule ? '/admin/notifications' : '/notificaciones';
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -94,7 +109,7 @@ const Header = () => {
       console.error('No se pudo marcar la notificación como leída', error);
     } finally {
       setNotificationOpen(false);
-      navigate(notification.data?.url || '/admin/notifications');
+      navigate(notification.data?.url || notificationsPath);
     }
   };
 
@@ -235,7 +250,7 @@ const Header = () => {
 		                        )}
 		                      </div>
 		                      <Link
-		                        to="/admin/notifications"
+		                        to={notificationsPath}
 		                        onClick={() => setNotificationOpen(false)}
 		                        className="block border-b border-[#e5e2da] px-4 py-2 text-xs font-bold text-[#233274] transition hover:bg-white"
 		                      >
@@ -344,9 +359,9 @@ const Header = () => {
                       Panel administrativo
                     </Link>
                   )}
-                  {canAccessAnyInternalModule && (
+                  {isAuthenticated && (
                     <Link
-                      to="/admin/notifications"
+                      to={notificationsPath}
                       className="block px-4 py-3 hover:bg-white text-[#233274] transition-colors border-t"
                     >
                       Notificaciones
@@ -469,6 +484,7 @@ const Header = () => {
                 className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                 onClick={() => setMobileMenuOpen(false)}
               >
+                <BriefcaseBusiness className="w-4 h-4 text-[#e15f0b]" />
                 Nuestros Servicios
               </Link>
               <Link
@@ -484,6 +500,7 @@ const Header = () => {
                 className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                 onClick={() => setMobileMenuOpen(false)}
               >
+                <FolderKanban className="w-4 h-4 text-[#e15f0b]" />
                 Nuestros Proyectos
               </Link>
 	              <Link
@@ -491,6 +508,7 @@ const Header = () => {
 	                className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
 	                onClick={() => setMobileMenuOpen(false)}
 	              >
+	                <Info className="w-4 h-4 text-[#e15f0b]" />
 	                Nosotros
 	              </Link>
               <Link
@@ -510,6 +528,7 @@ const Header = () => {
                       className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                       onClick={() => setMobileMenuOpen(false)}
 	                    >
+	                      <User className="w-4 h-4 text-[#e15f0b]" />
 	                      Mi Perfil
 	                    </Link>
                       <button
@@ -530,6 +549,7 @@ const Header = () => {
                           className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                           onClick={() => setMobileMenuOpen(false)}
                         >
+                          <ClipboardList className="w-4 h-4 text-[#e15f0b]" />
                           Mis tramites
                         </Link>
                         <Link
@@ -537,6 +557,7 @@ const Header = () => {
                           className="flex items-center gap-2 px-4 py-2 hover:bg-white text-[#233274] rounded-lg transition-colors font-semibold"
                           onClick={() => setMobileMenuOpen(false)}
                         >
+                          <Heart className="w-4 h-4 text-[#e15f0b]" />
                           Favoritos
                         </Link>
                       </>

@@ -72,6 +72,7 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::middleware(['module:tramites_manage', 'can:viewAny,App\\Models\\User'])->group(function () {
+            Route::get('/clients/dashboard', [UserController::class, 'clientsDashboard']);
             Route::get('/clients', [UserController::class, 'clients']);
         });
 

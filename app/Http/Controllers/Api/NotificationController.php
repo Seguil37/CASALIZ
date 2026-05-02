@@ -68,10 +68,11 @@ class NotificationController extends Controller
             ->where('user_id', $request->user()->id)
             ->pluck('enabled', 'type');
 
-        $labels = TramiteNotificationService::labels();
+        $types = $this->preferenceTypesFor($request->user());
+        $labels = $this->preferenceLabelsFor($request->user());
 
         return response()->json([
-            'types' => collect(TramiteNotificationService::TYPES)
+            'types' => collect($types)
                 ->map(fn (string $type): array => [
                     'type' => $type,
                     'label' => $labels[$type] ?? $type,
@@ -83,9 +84,11 @@ class NotificationController extends Controller
 
     public function updatePreferences(Request $request)
     {
+        $allowedTypes = $this->preferenceTypesFor($request->user());
+
         $data = $request->validate([
             'preferences' => 'required|array',
-            'preferences.*.type' => 'required|string|in:' . implode(',', TramiteNotificationService::TYPES),
+            'preferences.*.type' => 'required|string|in:' . implode(',', $allowedTypes),
             'preferences.*.enabled' => 'required|boolean',
         ]);
 
@@ -104,5 +107,32 @@ class NotificationController extends Controller
         }
 
         return $this->preferences($request);
+    }
+
+    private function preferenceTypesFor($user): array
+    {
+        if ($user?->isClient()) {
+            return [
+                'client_tramite_updated',
+            ];
+        }
+
+        return collect(TramiteNotificationService::TYPES)
+            ->reject(fn (string $type) => $type === 'client_tramite_updated')
+            ->values()
+            ->all();
+    }
+
+    private function preferenceLabelsFor($user): array
+    {
+        $labels = TramiteNotificationService::labels();
+
+        if ($user?->isClient()) {
+            return [
+                'client_tramite_updated' => 'Actualizaciones de mis tramites',
+            ];
+        }
+
+        return $labels;
     }
 }

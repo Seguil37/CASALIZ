@@ -127,6 +127,10 @@ export const adminUsersApi = {
   delete: (id) => api.delete(`/users/${id}`),
 };
 
+export const adminClientsApi = {
+  dashboard: (params) => api.get('/clients/dashboard', { params }),
+};
+
 export const modulePermissionsApi = {
   list: () => api.get('/module-permissions'),
   update: (role, permissions) => api.put('/module-permissions', { role, permissions }),

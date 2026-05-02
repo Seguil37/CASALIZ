@@ -58,6 +58,20 @@ const adminItems = [
     glow: 'shadow-[0_20px_50px_rgba(31,111,120,0.16)]',
   },
   {
+    key: 'clients',
+    module: MODULES.TRAMITES_MANAGE,
+    group: 'operations',
+    title: 'Clientes',
+    description: 'Administra clientes registrados, vincula tramites, revisa historial y detecta oportunidades de seguimiento.',
+    eyebrow: 'Relacion comercial',
+    to: '/admin/clientes',
+    roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+    icon: UserRound,
+    accent: 'from-[#6b4a2f] via-[#9a6a43] to-[#c89662]',
+    badge: 'Clientes',
+    glow: 'shadow-[0_20px_50px_rgba(154,106,67,0.16)]',
+  },
+  {
     key: 'types',
     module: MODULES.TRAMITE_TYPES,
     group: 'operations',
@@ -134,14 +148,6 @@ const adminGroups = [
   },
 ];
 
-const futureClientBlock = {
-  title: 'Clientes',
-  eyebrow: 'Proximamente',
-  description:
-    'Espacio reservado para separar la experiencia de clientes de la administracion interna.',
-  icon: UserRound,
-};
-
 const roleCopy = {
   [ROLES.MASTER_ADMIN]: 'Acceso total a configuracion, usuarios y operacion.',
   [ROLES.ADMIN]: 'Accesos de gestion y seguimiento operativo.',
@@ -157,7 +163,6 @@ const AdminPanelPage = () => {
       items: items.filter((item) => item.group === group.key),
     }))
     .filter((group) => group.items.length > 0);
-  const FutureClientIcon = futureClientBlock.icon;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(35,50,116,0.14),_transparent_34%),linear-gradient(180deg,#fbf7f1_0%,#f6f1ea_100%)] py-8 md:py-10">
@@ -257,23 +262,6 @@ const AdminPanelPage = () => {
             </section>
           );
         })}
-
-        <section className="space-y-4">
-          <div className="flex flex-col gap-3 rounded-[24px] border border-dashed border-[#d8cfc3] bg-white/60 p-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-[#9a6a43]">
-                {futureClientBlock.eyebrow}
-              </p>
-              <h2 className="mt-2 text-2xl font-black text-[#233274]">{futureClientBlock.title}</h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-[#726c78]">
-                {futureClientBlock.description}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#f3eee5] text-[#7d6e57]">
-              <FutureClientIcon className="h-6 w-6" />
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );

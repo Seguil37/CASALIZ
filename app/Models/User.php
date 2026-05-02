@@ -46,6 +46,16 @@ class User extends Authenticatable
         return $this->hasMany(ProjectReview::class);
     }
 
+    public function tramites()
+    {
+        return $this->hasMany(Tramite::class, 'client_id');
+    }
+
+    public function latestTramite()
+    {
+        return $this->hasOne(Tramite::class, 'client_id')->latestOfMany();
+    }
+
     public function favorites()
     {
         return $this->hasMany(Favorite::class);

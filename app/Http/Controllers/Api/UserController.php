@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tramite;
 use App\Models\User;
 use App\Support\DataNormalizer;
 use App\Support\ModuleAccess;
@@ -60,6 +61,113 @@ class UserController extends Controller
             ->get(['id', 'name', 'email', 'phone', 'role', 'is_active']);
 
         return response()->json($clients);
+    }
+
+    public function clientsDashboard(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
+
+        $search = trim((string) $request->query('search', ''));
+        $filter = trim((string) $request->query('filter', 'all'));
+        $perPage = min(max((int) $request->query('per_page', 8), 1), 30);
+
+        $query = User::query()
+            ->where('role', 'client')
+            ->when($filter === 'with_tramites', fn ($query) => $query->has('tramites'))
+            ->when($filter === 'without_tramites', fn ($query) => $query->doesntHave('tramites'))
+            ->when($filter === 'active_tramites', function ($query) {
+                $query->whereHas('tramites', fn ($tramiteQuery) => $tramiteQuery->whereIn('status', [
+                    Tramite::STATUS_PENDING,
+                    Tramite::STATUS_IN_PROGRESS,
+                    Tramite::STATUS_OBSERVED,
+                ]));
+            })
+            ->when($filter === 'recurrent', fn ($query) => $query->has('tramites', '>=', 2))
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($innerQuery) use ($search) {
+                    $innerQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhereHas('tramites', function ($tramiteQuery) use ($search) {
+                            $tramiteQuery
+                                ->where('code', 'like', "%{$search}%")
+                                ->orWhere('project_name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->withCount([
+                'tramites',
+                'tramites as active_tramites_count' => fn ($query) => $query->whereIn('status', [
+                    Tramite::STATUS_PENDING,
+                    Tramite::STATUS_IN_PROGRESS,
+                    Tramite::STATUS_OBSERVED,
+                ]),
+                'tramites as completed_tramites_count' => fn ($query) => $query->where('status', Tramite::STATUS_COMPLETED),
+            ])
+            ->with([
+                'tramites' => fn ($query) => $query
+                    ->select('id', 'client_id', 'code', 'project_name', 'property_name', 'status', 'registered_at', 'due_date', 'updated_at')
+                    ->orderByDesc('registered_at')
+                    ->orderByDesc('id'),
+            ])
+            ->orderBy('name')
+            ->select(['id', 'name', 'email', 'phone', 'role', 'city', 'state', 'country', 'is_active', 'created_at']);
+
+        $paginator = $query->paginate($perPage)->withQueryString();
+        $clients = $paginator->getCollection();
+
+        $totalClients = User::where('role', 'client')->count();
+        $clientsWithActive = User::where('role', 'client')
+            ->whereHas('tramites', fn ($query) => $query->whereIn('status', [
+                Tramite::STATUS_PENDING,
+                Tramite::STATUS_IN_PROGRESS,
+                Tramite::STATUS_OBSERVED,
+            ]))
+            ->count();
+        $recurrentClients = User::where('role', 'client')
+            ->has('tramites', '>=', 2)
+            ->count();
+        $unlinkedTramites = Tramite::whereNull('client_id')->count();
+
+        return response()->json([
+            'summary' => [
+                'total_clients' => $totalClients,
+                'clients_with_active_tramites' => $clientsWithActive,
+                'recurrent_clients' => $recurrentClients,
+                'unlinked_tramites' => $unlinkedTramites,
+            ],
+            'clients' => $clients->map(function (User $client) {
+                $latestTramite = $client->tramites->sortByDesc('updated_at')->first();
+
+                return [
+                    'id' => $client->id,
+                    'name' => $client->name,
+                    'email' => $client->email,
+                    'phone' => $client->phone,
+                    'city' => $client->city,
+                    'state' => $client->state,
+                    'country' => $client->country,
+                    'is_active' => $client->is_active,
+                    'created_at' => optional($client->created_at)->toDateString(),
+                    'tramites_count' => $client->tramites_count,
+                    'active_tramites_count' => $client->active_tramites_count,
+                    'completed_tramites_count' => $client->completed_tramites_count,
+                    'latest_tramite' => $latestTramite ? $this->presentDashboardTramite($latestTramite) : null,
+                    'tramites' => $client->tramites
+                        ->take(6)
+                        ->map(fn (Tramite $tramite) => $this->presentDashboardTramite($tramite))
+                        ->values(),
+                    'opportunities' => $this->clientOpportunities($client),
+                ];
+            })->values(),
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'total' => $paginator->total(),
+                'per_page' => $paginator->perPage(),
+            ],
+        ]);
     }
 
     public function store(Request $request)
@@ -264,5 +372,55 @@ class UserController extends Controller
         }
 
         return $data;
+    }
+
+    private function tramiteStatusLabel(?string $status): string
+    {
+        return match ($status) {
+            Tramite::STATUS_IN_PROGRESS => 'En proceso',
+            Tramite::STATUS_OBSERVED => 'Observado',
+            Tramite::STATUS_COMPLETED => 'Finalizado',
+            default => 'Pendiente',
+        };
+    }
+
+    private function presentDashboardTramite(Tramite $tramite): array
+    {
+        return [
+            'id' => $tramite->id,
+            'code' => $tramite->code,
+            'project_name' => $tramite->project_name,
+            'property_name' => $tramite->property_name,
+            'status' => $tramite->status,
+            'status_label' => $this->tramiteStatusLabel($tramite->status),
+            'registered_at' => optional($tramite->registered_at)->toDateString(),
+            'due_date' => optional($tramite->due_date)->toDateString(),
+            'updated_at' => optional($tramite->updated_at)->toISOString(),
+        ];
+    }
+
+    private function clientOpportunities(User $client): array
+    {
+        $tramiteText = $client->tramites
+            ->map(fn (Tramite $tramite) => strtolower("{$tramite->project_name} {$tramite->code}"))
+            ->implode(' ');
+
+        if ($client->tramites_count >= 2) {
+            return ['Cliente recurrente: revisar beneficios, seguimiento preferente o paquete de servicios.'];
+        }
+
+        if (str_contains($tramiteText, 'licencia')) {
+            return ['Recomendar declaratoria de fabrica o regularizacion posterior a la licencia.'];
+        }
+
+        if (str_contains($tramiteText, 'saneamiento') || str_contains($tramiteText, 'compra')) {
+            return ['Recomendar revision documental, tasacion o saneamiento fisico legal complementario.'];
+        }
+
+        if ($client->active_tramites_count > 0) {
+            return ['Tiene tramites activos: mantener comunicacion y validar proximas fechas.'];
+        }
+
+        return ['Sin oportunidad automatica. Revisar historial antes de contactar.'];
     }
 }

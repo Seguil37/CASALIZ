@@ -27,6 +27,7 @@ import ContactPage from './features/contact/pages/ContactPage';
 import { ROLES, MODULES, canAccessModule } from './shared/constants/roles';
 import AdminUsersPage from './features/admin-users/pages/AdminUsersPage';
 import AdminPanelPage from './features/admin-users/pages/AdminPanelPage';
+import AdminClientsPage from './features/admin-users/pages/AdminClientsPage';
 import ServicesPage from './features/services/pages/ServicesPage';
 import ServiceDetailPage from './features/services/pages/ServiceDetailPage';
 import AdminServicesPage from './features/services/pages/AdminServicesPage';
@@ -159,6 +160,15 @@ function App() {
               }
             />
             <Route
+              path="notificaciones"
+              element={
+                <ProtectedRoute allowedRoles={[ROLES.CLIENT, ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
+                  <NotificationsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
               path="admin/notifications"
               element={
                 <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]}>
@@ -227,6 +237,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.ADMIN_USERS}>
                     <AdminUsersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin/clientes"
+                element={
+                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]} requiredModule={MODULES.TRAMITES_MANAGE}>
+                    <AdminClientsPage />
                   </ProtectedRoute>
                 }
               />
