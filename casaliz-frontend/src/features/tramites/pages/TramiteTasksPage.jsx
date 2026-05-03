@@ -5,6 +5,7 @@ import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
 import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
+import { normalizeSentence } from '../../../shared/utils/formNormalization';
 
 const taskStatusOptions = [
   { value: 'pending', label: 'Pendiente', color: 'bg-yellow-100 text-yellow-700' },
@@ -223,6 +224,7 @@ const TramiteTasksPage = () => {
                       className={inputClass}
                       value={form.title}
                       onChange={(e) => setForm({ ...form, title: e.target.value })}
+                      onBlur={() => setForm((prev) => ({ ...prev, title: normalizeSentence(prev.title) }))}
                       placeholder="Ej: Desarrollo de planos arquitectonicos"
                       required
                     />
@@ -234,6 +236,7 @@ const TramiteTasksPage = () => {
                       className={`${inputClass} min-h-[80px]`}
                       value={form.description}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
+                      onBlur={() => setForm((prev) => ({ ...prev, description: normalizeSentence(prev.description) }))}
                       placeholder="Detalla el entregable esperado y el alcance de esta tarea."
                     />
                   </div>
@@ -650,8 +653,8 @@ const TaskCard = ({
 };
 
 const normalizeTaskPayload = (values) => ({
-  title: values.title,
-  description: values.description || null,
+  title: normalizeSentence(values.title),
+  description: normalizeSentence(values.description) || null,
   tramite_phase_instance_id: values.tramite_phase_instance_id ? Number(values.tramite_phase_instance_id) : null,
   tramite_subphase_instance_id: values.tramite_subphase_instance_id ? Number(values.tramite_subphase_instance_id) : null,
   assigned_to: values.assigned_to ? Number(values.assigned_to) : null,

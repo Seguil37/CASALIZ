@@ -46,6 +46,10 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->merge([
+            'email' => DataNormalizer::email($request->input('email')),
+        ]);
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',

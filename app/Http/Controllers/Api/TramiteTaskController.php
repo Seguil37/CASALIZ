@@ -8,13 +8,14 @@ use App\Models\TramiteTask;
 use App\Support\DataNormalizer;
 use App\Support\TramiteNotificationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class TramiteTaskController extends Controller
 {
     public function index(Request $request, Tramite $tramite)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user) abort(401);
 
         $query = $tramite->tasks()->with([
@@ -74,7 +75,7 @@ class TramiteTaskController extends Controller
 
     public function update(Request $request, Tramite $tramite, TramiteTask $task)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         if ($task->tramite_id !== $tramite->id) {
             abort(404);
         }
@@ -163,7 +164,7 @@ class TramiteTaskController extends Controller
 
     private function ensureCanManage(Tramite $tramite): void
     {
-        $user = auth()->user();
+        $user = Auth::user();
         if (!$user) abort(401);
 
         if ($user->isAdmin() || $user->isMasterAdmin() || (int) $tramite->responsible_id === (int) $user->id) {
@@ -225,10 +226,12 @@ class TramiteTaskController extends Controller
             $data['title'] = DataNormalizer::sentence($data['title']);
         }
 
-        foreach (['description', 'observations'] as $field) {
-            if (array_key_exists($field, $data)) {
-                $data[$field] = DataNormalizer::text($data[$field]);
-            }
+        if (array_key_exists('description', $data)) {
+            $data['description'] = DataNormalizer::sentence($data['description']);
+        }
+
+        if (array_key_exists('observations', $data)) {
+            $data['observations'] = DataNormalizer::text($data['observations']);
         }
 
         return $data;

@@ -223,6 +223,21 @@ class TramiteController extends Controller
             'completed_at' => $data['status'] === Tramite::STATUS_COMPLETED ? now() : null,
         ]);
 
+        if ($data['status'] === Tramite::STATUS_COMPLETED) {
+            $completedAt = now();
+
+            $phaseInstance->subphases()
+                ->where('status', '!=', Tramite::STATUS_COMPLETED)
+                ->get()
+                ->each(function (TramiteSubphaseInstance $subphase) use ($completedAt): void {
+                    $subphase->update([
+                        'status' => Tramite::STATUS_COMPLETED,
+                        'started_at' => $subphase->started_at ?? $completedAt,
+                        'completed_at' => $completedAt,
+                    ]);
+                });
+        }
+
         $this->recalculateStatus($tramite);
         $freshTramite = $tramite->fresh();
         $notifications = app(TramiteNotificationService::class);

@@ -83,24 +83,14 @@ class TramiteClientPresenter
             return 100;
         }
 
-        $phaseProgress = $tramite->phases->isNotEmpty()
-            ? (int) round($tramite->phases->avg(fn ($phase) => $this->phaseProgress($phase)))
-            : null;
-
-        $taskProgress = $tramite->tasks->isNotEmpty()
-            ? (int) round($tramite->tasks->avg(fn ($task) => $this->taskProgress($task)))
-            : null;
-
-        if ($phaseProgress !== null && $taskProgress !== null) {
-            return (int) round(($phaseProgress + $taskProgress) / 2);
+        if ($tramite->phases->isNotEmpty()) {
+            return (int) round(($tramite->phases->where('status', Tramite::STATUS_COMPLETED)->count() / $tramite->phases->count()) * 100);
         }
 
-        if ($phaseProgress !== null) {
-            return $phaseProgress;
-        }
+        $subphases = $tramite->phases->flatMap(fn ($phase) => $phase->subphases);
 
-        if ($taskProgress !== null) {
-            return $taskProgress;
+        if ($subphases->isNotEmpty()) {
+            return (int) round(($subphases->where('status', Tramite::STATUS_COMPLETED)->count() / $subphases->count()) * 100);
         }
 
         return $this->statusProgress($tramite->status);
@@ -124,19 +114,6 @@ class TramiteClientPresenter
         }
 
         return $this->statusProgress($phase->status);
-    }
-
-    private function taskProgress(TramiteTask $task): int
-    {
-        if ($task->status === TramiteTask::STATUS_DONE) {
-            return 100;
-        }
-
-        if ($task->status === TramiteTask::STATUS_BLOCKED) {
-            return max(0, min(100, $task->progress ?: 25));
-        }
-
-        return max(0, min(100, (int) $task->progress));
     }
 
     private function statusProgress(?string $status): int

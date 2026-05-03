@@ -35,7 +35,7 @@ const useAuthStore = create(
         
         try {
           const response = await api.post('/auth/login', { 
-            email, 
+            email: String(email || '').trim().toLowerCase(),
             password 
           });
 
