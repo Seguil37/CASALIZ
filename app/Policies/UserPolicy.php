@@ -34,6 +34,10 @@ class UserPolicy
 
     public function delete(User $user, User $model): bool
     {
+        if ($user->isOperator()) {
+            return false;
+        }
+
         if (!ModuleAccess::can($user, ModuleAccess::ADMIN_USERS)) {
             return false;
         }

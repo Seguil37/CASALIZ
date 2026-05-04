@@ -32,6 +32,7 @@ const STATUS_STYLES = {
 const AdminUsersPage = () => {
   const { user: authUser } = useAuthStore();
   const canManageMasterUsers = authUser?.role === ROLES.MASTER_ADMIN;
+  const canDeleteUsers = [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(authUser?.role);
   const [users, setUsers] = useState([]);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, total: 0 });
   const [loading, setLoading] = useState(true);
@@ -313,6 +314,11 @@ const AdminUsersPage = () => {
   };
 
   const handleDelete = async (user) => {
+    if (!canDeleteUsers) {
+      alert('Los operativos no pueden eliminar usuarios.');
+      return;
+    }
+
     if (!canManageMasterUsers && user.role === ROLES.MASTER_ADMIN) {
       alert('Solo el Master puede eliminar usuarios Master.');
       return;
@@ -611,7 +617,7 @@ const AdminUsersPage = () => {
                               <KeyRound className="h-5 w-5" />
                             </button>
                           )}
-	                          {authUser?.id !== u.id && (canManageMasterUsers || u.role !== ROLES.MASTER_ADMIN) && (
+	                          {canDeleteUsers && authUser?.id !== u.id && (canManageMasterUsers || u.role !== ROLES.MASTER_ADMIN) && (
                             <button
                               onClick={() => handleDelete(u)}
                               title="Eliminar"

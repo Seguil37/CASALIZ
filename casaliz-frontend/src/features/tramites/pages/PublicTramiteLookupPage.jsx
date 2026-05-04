@@ -69,7 +69,7 @@ const PublicTramiteLookupPage = () => {
                   id="tramite-code"
                   value={code}
                   onChange={(event) => setCode(event.target.value)}
-                  placeholder="Ejemplo: LIC-2026-001"
+                  placeholder=""
                   className="min-h-[48px] flex-1 rounded-lg border border-[#d8d1c6] bg-white px-4 text-[#233274] outline-none transition focus:border-[#e15f0b]"
                 />
                 <button
