@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { AlertCircle, CheckCircle, ClipboardCheck, Loader2, PlayCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, ClipboardCheck, Loader2, PlayCircle, Trash2 } from 'lucide-react';
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
@@ -140,6 +140,18 @@ const TramiteTasksPage = () => {
     }
   };
 
+  const handleDelete = async (taskId) => {
+    if (!window.confirm('¿Eliminar esta tarea? Esta accion no se puede deshacer.')) return;
+
+    try {
+      await tramitesApi.deleteTask(id, taskId);
+      await loadData();
+    } catch (requestError) {
+      console.error(requestError);
+      alert(requestError.response?.data?.message || 'No se pudo eliminar la tarea.');
+    }
+  };
+
   const inputClass =
     'w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 text-[#233274] outline-none placeholder-[#9a98a0] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]';
   const labelClass = 'mb-1 block text-sm font-semibold text-[#233274]';
@@ -198,11 +210,13 @@ const TramiteTasksPage = () => {
                       task={task}
                       inputClass={inputClass}
                       onUpdate={handleUpdate}
+                      onDelete={handleDelete}
                       isOperator={user?.role === ROLES.OPERATOR}
                       userId={user?.id}
                       staff={staff}
                       canManageAssignments={canCreate && canViewStaff}
                       canManageTaskPlanning={canCreate}
+                      canDeleteTask={canCreate}
                       phases={tramite?.phases || []}
                     />
                   ))}
@@ -407,20 +421,22 @@ const TaskCard = ({
   task,
   inputClass,
   onUpdate,
+  onDelete,
   isOperator,
   userId,
   staff,
   canManageAssignments,
   canManageTaskPlanning,
+  canDeleteTask,
   phases,
 }) => {
   const isAssignedToCurrentUser = task.assignee?.id && userId && String(task.assignee.id) === String(userId);
-  const isCreatedByCurrentUser = task.creator?.id && userId && String(task.creator.id) === String(userId);
-  const locked = isOperator && !isAssignedToCurrentUser;
-  const canEditProgressFields = !locked;
-  const canEditPlanningFields =
-    canManageTaskPlanning && (!isOperator || isCreatedByCurrentUser || isAssignedToCurrentUser);
+  const canEditPlanningFields = canManageTaskPlanning;
+  const canEditProgressFields = !isOperator || isAssignedToCurrentUser || canEditPlanningFields;
+  const locked = !canEditProgressFields;
   const [local, setLocal] = useState({
+    title: task.title || '',
+    description: task.description || '',
     status: task.status,
     progress: task.progress,
     observations: task.observations || '',
@@ -433,6 +449,8 @@ const TaskCard = ({
 
   useEffect(() => {
     setLocal({
+      title: task.title || '',
+      description: task.description || '',
       status: task.status,
       progress: task.progress,
       observations: task.observations || '',
@@ -447,7 +465,7 @@ const TaskCard = ({
     const payload = normalizeTaskUpdatePayload(local, {
       includeProgress: canEditProgressFields,
       includePlanning: canEditPlanningFields,
-      includeAssignment: canManageAssignments && !isOperator,
+      includeAssignment: canManageAssignments,
     });
 
     onUpdate(task.id, payload);
@@ -460,7 +478,7 @@ const TaskCard = ({
   return (
     <div className="space-y-2 rounded-xl border border-[#ebe7df] bg-[#fdfaf5] p-4">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="min-w-0 flex-1">
           <p className="text-xs font-semibold text-[#e15f0b]">
             {task.phase?.name || 'Sin fase'}
             {task.subphase?.name ? ` / ${task.subphase.name}` : ''}
@@ -475,6 +493,32 @@ const TaskCard = ({
       </div>
 
       <div className="grid grid-cols-1 items-center gap-3 md:grid-cols-3">
+        {canEditPlanningFields && (
+          <>
+            <div>
+              <label className="text-xs font-semibold text-[#233274]">Titulo</label>
+              <input
+                className={inputClass}
+                value={local.title}
+                onChange={(e) => handleChange('title', e.target.value)}
+                onBlur={() => handleChange('title', normalizeSentence(local.title))}
+                required
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="text-xs font-semibold text-[#233274]">Descripcion</label>
+              <input
+                className={inputClass}
+                value={local.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                onBlur={() => handleChange('description', normalizeSentence(local.description))}
+                placeholder="Sin descripcion"
+              />
+            </div>
+          </>
+        )}
+
         <div>
           <label className="text-xs font-semibold text-[#233274]">Estado</label>
           <select
@@ -613,7 +657,7 @@ const TaskCard = ({
           />
         </div>
 
-        {canManageAssignments && !isOperator && (
+        {canManageAssignments && (
           <div>
             <label className="text-xs font-semibold text-[#233274]">Asignado a</label>
             <select
@@ -639,8 +683,19 @@ const TaskCard = ({
       )}
 
       {(canEditProgressFields || canEditPlanningFields) && (
-        <div className="flex justify-end">
+        <div className="flex flex-wrap justify-end gap-2">
+          {canDeleteTask && (
+            <button
+              type="button"
+              onClick={() => onDelete(task.id)}
+              className="inline-flex items-center gap-2 rounded-lg border border-red-200 px-4 py-2 font-semibold text-red-600 transition hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4" />
+              Eliminar
+            </button>
+          )}
           <button
+            type="button"
             onClick={handleSave}
             className="rounded-lg border border-[#233274] px-4 py-2 font-semibold text-[#233274] transition hover:bg-[#233274] hover:text-white"
           >
@@ -674,6 +729,8 @@ const normalizeTaskUpdatePayload = (values, options = {}) => {
   }
 
   if (options.includePlanning) {
+    payload.title = normalizeSentence(values.title);
+    payload.description = normalizeSentence(values.description) || null;
     payload.tramite_phase_instance_id = values.tramite_phase_instance_id
       ? Number(values.tramite_phase_instance_id)
       : null;

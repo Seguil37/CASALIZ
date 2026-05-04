@@ -82,7 +82,6 @@ class TramiteTaskController extends Controller
 
         $isOwner = $user && $task->assigned_to && (int) $task->assigned_to === (int) $user->id;
         $isResponsible = $user && (int) $tramite->responsible_id === (int) $user->id;
-        $isCreator = $user && (int) $task->created_by === (int) $user->id;
 
         if (!$user || (!$user->isAdmin() && !$isOwner && !$isResponsible)) {
             abort(403);
@@ -108,13 +107,13 @@ class TramiteTaskController extends Controller
         $previousObservation = $task->observations;
 
         if ($user->isOperator()) {
-            if (!$isOwner && !($isResponsible && $isCreator)) {
+            if (!$isOwner && !$isResponsible) {
                 abort(403);
             }
 
             $updates = [];
 
-            if ($isOwner) {
+            if ($isOwner || $isResponsible) {
                 $nextStatus = $data['status'] ?? $task->status;
                 $updates = [
                     'status' => $nextStatus,
@@ -124,9 +123,21 @@ class TramiteTaskController extends Controller
                 ];
             }
 
-            if ($isResponsible && ($isCreator || $isOwner)) {
+            if ($isResponsible) {
+                if (array_key_exists('title', $data)) {
+                    $updates['title'] = $data['title'];
+                }
+
+                if (array_key_exists('description', $data)) {
+                    $updates['description'] = $data['description'];
+                }
+
                 $updates['tramite_phase_instance_id'] = $data['tramite_phase_instance_id'];
                 $updates['tramite_subphase_instance_id'] = $data['tramite_subphase_instance_id'];
+
+                if (array_key_exists('assigned_to', $data)) {
+                    $updates['assigned_to'] = $data['assigned_to'];
+                }
 
                 if (array_key_exists('due_date', $data)) {
                     $updates['due_date'] = $data['due_date'];
