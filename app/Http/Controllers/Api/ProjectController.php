@@ -45,7 +45,7 @@ class ProjectController extends Controller
 
         $user = $request->user('sanctum');
 
-        if (!$user || !$user->isAdmin() || !ModuleAccess::can($user, ModuleAccess::PROJECTS)) {
+        if (!ModuleAccess::can($user, ModuleAccess::PROJECTS)) {
             $query->where('status', 'published');
         }
 
@@ -75,8 +75,7 @@ class ProjectController extends Controller
 
         // Permitir ver si: está publicado O el usuario es admin O el usuario es el creador
         $canSeeInternalProject = $user
-            && ModuleAccess::can($user, ModuleAccess::PROJECTS)
-            && ($user->isAdmin() || $project->created_by === $user->id);
+            && ModuleAccess::can($user, ModuleAccess::PROJECTS);
 
         if ($project->status !== 'published' && !$canSeeInternalProject) {
             abort(404);

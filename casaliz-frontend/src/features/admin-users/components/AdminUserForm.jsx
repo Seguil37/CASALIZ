@@ -13,6 +13,7 @@ const AdminUserForm = ({
   errors = {},
   isEditing,
   saving,
+  canManageMaster = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
@@ -43,7 +44,7 @@ const AdminUserForm = ({
                 {isEditing ? 'Editar administrador' : 'Nuevo administrador'}
               </p>
               <h3 className="text-xl font-black text-[#233274]">
-                {isEditing ? 'Actualiza datos y permisos' : 'Crea un usuario admin o master'}
+                {isEditing ? 'Actualiza datos y permisos' : canManageMaster ? 'Crea un usuario admin o master' : 'Crea un usuario interno'}
               </h3>
             </div>
           </div>
@@ -145,17 +146,19 @@ const AdminUserForm = ({
                   />
                   <UserCog className="w-4 h-4" /> Admin
                 </label>
-                <label className={`admin-role-pill ${formData.role === ROLES.MASTER_ADMIN ? 'active' : ''}`}>
-                  <input
-                    type="radio"
-                    name="role"
-                    value={ROLES.MASTER_ADMIN}
-                    checked={formData.role === ROLES.MASTER_ADMIN}
-                    onChange={() => handleChange('role', ROLES.MASTER_ADMIN)}
-                    className="hidden"
-                  />
-                  <ShieldCheck className="w-4 h-4" /> Master Admin
-                </label>
+                {canManageMaster && (
+                  <label className={`admin-role-pill ${formData.role === ROLES.MASTER_ADMIN ? 'active' : ''}`}>
+                    <input
+                      type="radio"
+                      name="role"
+                      value={ROLES.MASTER_ADMIN}
+                      checked={formData.role === ROLES.MASTER_ADMIN}
+                      onChange={() => handleChange('role', ROLES.MASTER_ADMIN)}
+                      className="hidden"
+                    />
+                    <ShieldCheck className="w-4 h-4" /> Master Admin
+                  </label>
+                )}
                 <label className={`admin-role-pill ${formData.role === ROLES.OPERATOR ? 'active' : ''}`}>
                   <input
                     type="radio"

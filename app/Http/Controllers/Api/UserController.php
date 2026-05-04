@@ -190,6 +190,12 @@ class UserController extends Controller
             'is_active' => 'boolean',
         ]);
 
+        if (!$request->user()->isMasterAdmin() && $validated['role'] === 'master_admin') {
+            throw ValidationException::withMessages([
+                'role' => 'Solo el Master puede crear usuarios Master.',
+            ]);
+        }
+
         $validated = $this->normalizeUserData($validated);
 
         $user = User::create([
@@ -229,7 +235,7 @@ class UserController extends Controller
 
         $authUser = $request->user();
 
-        if (!$authUser->isMasterAdmin()) {
+        if (!$authUser->isMasterAdmin() && !ModuleAccess::can($authUser, ModuleAccess::ADMIN_USERS)) {
             unset($validated['role'], $validated['is_active'], $validated['email']);
         }
 
@@ -239,6 +245,12 @@ class UserController extends Controller
         $desiredActive = array_key_exists('is_active', $validated)
             ? (bool) $validated['is_active']
             : $user->is_active;
+
+        if (!$authUser->isMasterAdmin() && ($user->role === 'master_admin' || $desiredRole === 'master_admin')) {
+            throw ValidationException::withMessages([
+                'role' => 'Solo el Master puede administrar usuarios Master.',
+            ]);
+        }
 
         if ($authUser->id === $user->id) {
             if ($user->is_active && !$desiredActive) {

@@ -31,6 +31,7 @@ const STATUS_STYLES = {
 
 const AdminUsersPage = () => {
   const { user: authUser } = useAuthStore();
+  const canManageMasterUsers = authUser?.role === ROLES.MASTER_ADMIN;
   const [users, setUsers] = useState([]);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, total: 0 });
   const [loading, setLoading] = useState(true);
@@ -170,6 +171,11 @@ const AdminUsersPage = () => {
   };
 
   const openEditModal = (user) => {
+    if (!canManageMasterUsers && user.role === ROLES.MASTER_ADMIN) {
+      alert('Solo el Master puede editar usuarios Master.');
+      return;
+    }
+
     setFormData({
       name: user.name || '',
       email: user.email || '',
@@ -259,6 +265,11 @@ const AdminUsersPage = () => {
   };
 
   const handleToggleActive = async (user) => {
+    if (!canManageMasterUsers && user.role === ROLES.MASTER_ADMIN) {
+      alert('Solo el Master puede administrar usuarios Master.');
+      return;
+    }
+
     if (authUser?.id === user.id && user.is_active) {
       alert('No puedes desactivar tu propia cuenta.');
       return;
@@ -277,6 +288,11 @@ const AdminUsersPage = () => {
   };
 
   const handleToggleRole = async (user) => {
+    if (!canManageMasterUsers) {
+      alert('Solo el Master puede cambiar usuarios a Master.');
+      return;
+    }
+
     const nextRole = user.role === ROLES.MASTER_ADMIN ? ROLES.ADMIN : ROLES.MASTER_ADMIN;
 
     if (authUser?.id === user.id && nextRole !== ROLES.MASTER_ADMIN) {
@@ -297,6 +313,11 @@ const AdminUsersPage = () => {
   };
 
   const handleDelete = async (user) => {
+    if (!canManageMasterUsers && user.role === ROLES.MASTER_ADMIN) {
+      alert('Solo el Master puede eliminar usuarios Master.');
+      return;
+    }
+
     if (!window.confirm(`¿Seguro que deseas eliminar a ${user.name}? Esta acción no se puede deshacer.`)) {
       return;
     }
@@ -432,7 +453,7 @@ const AdminUsersPage = () => {
             <p className="text-sm uppercase tracking-[0.2em] text-[#9a98a0] font-semibold">Panel de administración</p>
             <h1 className="text-3xl font-black text-[#233274] mt-2">Gestión de Administradores</h1>
             <p className="text-[#6c6b70] mt-2 max-w-3xl">
-              Crea, edita y controla el acceso de los administradores. Solo los master admin pueden ver y usar este módulo.
+              Crea, edita y controla el acceso de usuarios internos segun los permisos asignados por el Master.
             </p>
           </div>
           <div className="flex w-full flex-wrap gap-2 sm:w-auto sm:flex-nowrap xl:justify-end">
@@ -486,12 +507,16 @@ const AdminUsersPage = () => {
             <span className="inline-flex items-center gap-1">
               <UserMinus className="h-4 w-4 text-red-700" /> Desactivar
             </span>
-            <span className="inline-flex items-center gap-1">
-              <Crown className="h-4 w-4 text-[#b55600]" /> Hacer/Quitar Master
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <KeyRound className="h-4 w-4 text-[#233274]" /> Permisos
-            </span>
+            {canManageMasterUsers && (
+              <>
+                <span className="inline-flex items-center gap-1">
+                  <Crown className="h-4 w-4 text-[#b55600]" /> Hacer/Quitar Master
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <KeyRound className="h-4 w-4 text-[#233274]" /> Permisos
+                </span>
+              </>
+            )}
             <span className="inline-flex items-center gap-1">
               <Trash2 className="h-4 w-4 text-red-700" /> Eliminar
             </span>
@@ -566,15 +591,17 @@ const AdminUsersPage = () => {
                           >
                             {u.is_active ? <UserMinus className="h-5 w-5" /> : <UserPlus className="h-5 w-5" />}
                           </button>
-                          <button
-                            onClick={() => handleToggleRole(u)}
-                            title={u.role === ROLES.MASTER_ADMIN ? 'Quitar Master' : 'Hacer Master'}
-                            aria-label={`${u.role === ROLES.MASTER_ADMIN ? 'Quitar Master' : 'Hacer Master'} a ${u.name}`}
-                            className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#f3d6b8] text-[#b55600] hover:bg-[#fff3e5]"
-                          >
-                            <Crown className="h-5 w-5" />
-                          </button>
-                          {authUser?.role === ROLES.MASTER_ADMIN && u.role !== ROLES.MASTER_ADMIN && (
+	                          {canManageMasterUsers && (
+	                            <button
+	                              onClick={() => handleToggleRole(u)}
+	                              title={u.role === ROLES.MASTER_ADMIN ? 'Quitar Master' : 'Hacer Master'}
+	                              aria-label={`${u.role === ROLES.MASTER_ADMIN ? 'Quitar Master' : 'Hacer Master'} a ${u.name}`}
+	                              className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-[#f3d6b8] text-[#b55600] hover:bg-[#fff3e5]"
+	                            >
+	                              <Crown className="h-5 w-5" />
+	                            </button>
+	                          )}
+	                          {canManageMasterUsers && u.role !== ROLES.MASTER_ADMIN && (
                             <button
                               onClick={() => openUserPermissions(u)}
                               title="Permisos"
@@ -584,7 +611,7 @@ const AdminUsersPage = () => {
                               <KeyRound className="h-5 w-5" />
                             </button>
                           )}
-                          {authUser?.role === ROLES.MASTER_ADMIN && authUser?.id !== u.id && (
+	                          {authUser?.id !== u.id && (canManageMasterUsers || u.role !== ROLES.MASTER_ADMIN) && (
                             <button
                               onClick={() => handleDelete(u)}
                               title="Eliminar"
@@ -761,6 +788,7 @@ const AdminUsersPage = () => {
         errors={formErrors}
         isEditing={isEditing}
         saving={saving}
+        canManageMaster={canManageMasterUsers}
       />
 
       {selectedPermissionUser && (

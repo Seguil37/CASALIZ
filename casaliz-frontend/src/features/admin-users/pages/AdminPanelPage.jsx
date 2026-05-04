@@ -14,6 +14,8 @@ import {
 import useAuthStore from '../../../store/authStore';
 import { ROLES, MODULES, canAccessModule } from '../../../shared/constants/roles';
 
+const STAFF_ROLES = [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR];
+
 const adminItems = [
   {
     key: 'projects',
@@ -23,7 +25,7 @@ const adminItems = [
     description: 'Administra los proyectos visibles en la web y su contenido comercial.',
     eyebrow: 'Anuncios',
     to: '/agency/dashboard',
-    roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+    roles: STAFF_ROLES,
     icon: FolderKanban,
     accent: 'from-[#233274] via-[#31469a] to-[#425cc2]',
     badge: 'Proyectos',
@@ -37,7 +39,7 @@ const adminItems = [
     description: 'Administra los servicios publicados y sus contenidos.',
     eyebrow: 'Anuncios',
     to: '/agency/services',
-    roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+    roles: STAFF_ROLES,
     icon: BriefcaseBusiness,
     accent: 'from-[#e15f0b] via-[#ef7d2b] to-[#f6a45c]',
     badge: 'Servicios',
@@ -51,7 +53,7 @@ const adminItems = [
     description: 'Crea, organiza y controla los tramites registrados.',
     eyebrow: 'Operacion',
     to: '/tramites/gestion',
-    roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+    roles: STAFF_ROLES,
     icon: Settings2,
     accent: 'from-[#1f6f78] via-[#2e8f99] to-[#58b2bb]',
     badge: 'Control',
@@ -65,7 +67,7 @@ const adminItems = [
     description: 'Administra clientes registrados, vincula tramites, revisa historial y detecta oportunidades de seguimiento.',
     eyebrow: 'Relacion comercial',
     to: '/admin/clientes',
-    roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+    roles: STAFF_ROLES,
     icon: UserRound,
     accent: 'from-[#6b4a2f] via-[#9a6a43] to-[#c89662]',
     badge: 'Clientes',
@@ -79,7 +81,7 @@ const adminItems = [
     description: 'Configura fases, subfases y estructuras de tramite.',
     eyebrow: 'Configuracion',
     to: '/tramites/tipos',
-    roles: [ROLES.MASTER_ADMIN],
+    roles: STAFF_ROLES,
     icon: Layers3,
     accent: 'from-[#5b3f99] via-[#7153b7] to-[#9274d8]',
     badge: 'Plantillas',
@@ -93,7 +95,7 @@ const adminItems = [
     description: 'Supervisa el avance global de todos los tramites.',
     eyebrow: 'Seguimiento',
     to: '/tramites/control',
-    roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR],
+    roles: STAFF_ROLES,
     icon: ClipboardList,
     accent: 'from-[#0f4c81] via-[#246ca8] to-[#4b93d6]',
     badge: 'Monitoreo',
@@ -107,7 +109,7 @@ const adminItems = [
     description: 'Consulta tareas asignadas por proyecto, usuario y estado.',
     eyebrow: 'Productividad',
     to: '/tramites/resumen-tareas',
-    roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR],
+    roles: STAFF_ROLES,
     icon: ListTodo,
     accent: 'from-[#8b3d16] via-[#b85a24] to-[#dc7d3f]',
     badge: 'Tareas',
@@ -121,7 +123,7 @@ const adminItems = [
     description: 'Controla cuentas internas, roles y accesos.',
     eyebrow: 'Equipo',
     to: '/admin/users',
-    roles: [ROLES.MASTER_ADMIN],
+    roles: STAFF_ROLES,
     icon: Users,
     accent: 'from-[#285c3a] via-[#3d8751] to-[#6cb47f]',
     badge: 'Usuarios',

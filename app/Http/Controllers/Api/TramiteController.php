@@ -10,6 +10,7 @@ use App\Models\TramiteSubphaseInstance;
 use App\Models\TramiteType;
 use App\Models\User;
 use App\Support\DataNormalizer;
+use App\Support\ModuleAccess;
 use App\Support\TramiteClientPresenter;
 use App\Support\TramiteNotificationService;
 use Illuminate\Http\Request;
@@ -158,7 +159,7 @@ class TramiteController extends Controller
 
     public function update(Request $request, Tramite $tramite)
     {
-        $this->ensureCanManage($tramite);
+        $this->ensureCanManageRecord();
 
         $data = $request->validate([
             'tramite_type_id' => 'sometimes|required|exists:tramite_types,id',
@@ -355,8 +356,16 @@ class TramiteController extends Controller
     private function ensureAdmin(): void
     {
         $user = auth()->user();
-        if (!$user || !$user->isAdmin()) {
+        if (!ModuleAccess::can($user, ModuleAccess::TRAMITES_MANAGE)) {
             abort(403, 'Solo administradores pueden acceder a los trámites.');
+        }
+    }
+
+    private function ensureCanManageRecord(): void
+    {
+        $user = auth()->user();
+        if (!ModuleAccess::can($user, ModuleAccess::TRAMITES_MANAGE)) {
+            abort(403, 'No tienes permiso para gestionar tramites.');
         }
     }
 

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Building2, ChevronLeft, ChevronRight, ClipboardList, Loader2, MapPin, Plus, Search, UserCircle } from 'lucide-react';
 import { tramitesApi, adminUsersApi } from '../../../shared/utils/api';
 import { normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
-import { ROLES, isStaff } from '../../../shared/constants/roles';
+import { MODULES, canAccessModule, isStaff } from '../../../shared/constants/roles';
 import useAuthStore from '../../../store/authStore';
 import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
@@ -105,6 +105,7 @@ const TramitesByClientPage = () => {
   const [form, setForm] = useState(emptyForm);
   const provinceHints = LOCATION_SUGGESTIONS[form.location_department]?.provinces || [];
   const districtHints = LOCATION_SUGGESTIONS[form.location_department]?.districts || [];
+  const canManageTramites = canAccessModule(user, MODULES.TRAMITES_MANAGE);
 
   const loadInitial = useCallback(async (page = currentPage) => {
     try {
@@ -118,7 +119,7 @@ const TramitesByClientPage = () => {
           status: filters.status || undefined,
         }),
       ];
-      const shouldLoadUsers = user && [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role);
+      const shouldLoadUsers = canManageTramites;
 
       if (shouldLoadUsers) promises.push(adminUsersApi.list(), adminUsersApi.clients());
 
@@ -144,7 +145,7 @@ const TramitesByClientPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, filters.search, filters.status, user]);
+  }, [canManageTramites, currentPage, filters.search, filters.status, user]);
 
   useEffect(() => {
     loadInitial(currentPage);
@@ -199,10 +200,10 @@ const TramitesByClientPage = () => {
     setCurrentPage(1);
   };
 
-  if (!user || !user.role || ![ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user.role)) {
+  if (!canManageTramites) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f8f5ef] font-semibold text-[#233274]">
-        Solo el Administrador puede gestionar tramites por cliente/proyecto.
+        No tienes permiso para gestionar tramites por cliente/proyecto.
       </div>
     );
   }
@@ -211,7 +212,7 @@ const TramitesByClientPage = () => {
     'w-full rounded-xl border border-[#ebe7df] bg-[#f8f5ef] px-4 py-2 text-[#233274] outline-none placeholder-[#9a98a0] focus:border-[#e15f0b] focus:ring-2 focus:ring-[#f6b17a]';
   const labelClass = 'mb-1 block text-sm font-semibold text-[#233274]';
   const codePreview = form.tramite_type_id ? buildTramiteCodeSuggestion(types, form.tramite_type_id) : 'Se generara al guardar';
-  const canCreateOrDelete = [ROLES.MASTER_ADMIN, ROLES.ADMIN].includes(user?.role);
+  const canCreateOrDelete = canManageTramites;
 
   return (
     <div className="min-h-screen bg-[#f8f5ef] py-10">

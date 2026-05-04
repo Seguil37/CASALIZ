@@ -19,6 +19,7 @@ import useAuthStore from '../../../store/authStore';
 import { MODULES, ROLES, canAccessModule, roleLabels } from '../../constants/roles';
 
 const STORAGE_KEY = 'admin-sidebar-collapsed';
+const STAFF_ROLES = [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR];
 
 const navGroups = [
   {
@@ -28,49 +29,49 @@ const navGroups = [
       {
         label: 'Panel principal',
         to: '/admin/panel',
-        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR],
+        roles: STAFF_ROLES,
         icon: LayoutDashboard,
       },
       {
         label: 'Gestion de tramites',
         to: '/tramites/gestion',
         module: MODULES.TRAMITES_MANAGE,
-        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+        roles: STAFF_ROLES,
         icon: Settings2,
       },
       {
         label: 'Clientes',
         to: '/admin/clientes',
         module: MODULES.TRAMITES_MANAGE,
-        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+        roles: STAFF_ROLES,
         icon: UserRound,
       },
       {
         label: 'Tipos de tramite',
         to: '/tramites/tipos',
         module: MODULES.TRAMITE_TYPES,
-        roles: [ROLES.MASTER_ADMIN],
+        roles: STAFF_ROLES,
         icon: Layers3,
       },
       {
         label: 'Vista general',
         to: '/tramites/control',
         module: MODULES.TRAMITES_CONTROL,
-        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR],
+        roles: STAFF_ROLES,
         icon: ClipboardList,
       },
       {
         label: 'Resumen de tareas',
         to: '/tramites/resumen-tareas',
         module: MODULES.TASKS_SUMMARY,
-        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR],
+        roles: STAFF_ROLES,
         icon: ListTodo,
       },
       {
         label: 'Administradores',
         to: '/admin/users',
         module: MODULES.ADMIN_USERS,
-        roles: [ROLES.MASTER_ADMIN],
+        roles: STAFF_ROLES,
         icon: Users,
       },
     ],
@@ -83,14 +84,14 @@ const navGroups = [
         label: 'Proyectos',
         to: '/agency/dashboard',
         module: MODULES.PROJECTS,
-        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+        roles: STAFF_ROLES,
         icon: FolderKanban,
       },
       {
         label: 'Servicios',
         to: '/agency/services',
         module: MODULES.SERVICES,
-        roles: [ROLES.MASTER_ADMIN, ROLES.ADMIN],
+        roles: STAFF_ROLES,
         icon: BriefcaseBusiness,
       },
     ],

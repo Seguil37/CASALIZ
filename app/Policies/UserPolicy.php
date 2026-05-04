@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Support\ModuleAccess;
 
 class UserPolicy
 {
@@ -19,7 +20,7 @@ class UserPolicy
 
     public function create(User $user): bool
     {
-        return $user->isMasterAdmin();
+        return ModuleAccess::can($user, ModuleAccess::ADMIN_USERS);
     }
 
     public function update(User $user, User $model): bool
@@ -28,15 +29,15 @@ class UserPolicy
             return true;
         }
 
-        return $user->isAdmin() && $user->id === $model->id;
+        return ModuleAccess::can($user, ModuleAccess::ADMIN_USERS) && !$model->isMasterAdmin();
     }
 
     public function delete(User $user, User $model): bool
     {
-        if (!$user->isMasterAdmin()) {
+        if (!ModuleAccess::can($user, ModuleAccess::ADMIN_USERS)) {
             return false;
         }
 
-        return $user->id !== $model->id;
+        return $user->id !== $model->id && ($user->isMasterAdmin() || !$model->isMasterAdmin());
     }
 }

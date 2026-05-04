@@ -1,7 +1,7 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useAuthStore from './store/authStore';
 import './App.css';
 
@@ -59,6 +59,8 @@ const queryClient = new QueryClient({
   },
 });
 
+const STAFF_ROLES = [ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR];
+
 // Protected Route
 const ProtectedRoute = ({ children, allowedRoles = [], requiredModule = null }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -80,10 +82,23 @@ const ProtectedRoute = ({ children, allowedRoles = [], requiredModule = null }) 
 
 function App() {
   const { checkAuth } = useAuthStore();
+  const [authReady, setAuthReady] = useState(false);
 
   useEffect(() => {
-    checkAuth();
+    let active = true;
+
+    Promise.resolve(checkAuth()).finally(() => {
+      if (active) setAuthReady(true);
+    });
+
+    return () => {
+      active = false;
+    };
   }, [checkAuth]);
+
+  if (!authReady) {
+    return null;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -187,7 +202,7 @@ function App() {
               <Route
                 path="agency/dashboard"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.PROJECTS}>
                     <AgencyDashboard />
                   </ProtectedRoute>
                 }
@@ -195,7 +210,7 @@ function App() {
               <Route
                 path="agency/tours"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.PROJECTS}>
                     <MyToursPage />
                   </ProtectedRoute>
                 }
@@ -203,7 +218,7 @@ function App() {
               <Route
                 path="agency/services"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.SERVICES}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.SERVICES}>
                     <AdminServicesPage />
                   </ProtectedRoute>
                 }
@@ -211,7 +226,7 @@ function App() {
               <Route
                 path="agency/tours/create"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.PROJECTS}>
                     <CreateTourPage />
                   </ProtectedRoute>
                 }
@@ -219,7 +234,7 @@ function App() {
               <Route
                 path="agency/tours/:id/edit"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.PROJECTS}>
                     <EditTourPage />
                   </ProtectedRoute>
                 }
@@ -227,7 +242,7 @@ function App() {
               <Route
                 path="agency/bookings"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MASTER_ADMIN]} requiredModule={MODULES.PROJECTS}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.PROJECTS}>
                     <AgencyBookingsPage />
                   </ProtectedRoute>
                 }
@@ -235,7 +250,7 @@ function App() {
               <Route
                 path="admin/users"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.ADMIN_USERS}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.ADMIN_USERS}>
                     <AdminUsersPage />
                   </ProtectedRoute>
                 }
@@ -243,7 +258,7 @@ function App() {
               <Route
                 path="admin/clientes"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]} requiredModule={MODULES.TRAMITES_MANAGE}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.TRAMITES_MANAGE}>
                     <AdminClientsPage />
                   </ProtectedRoute>
                 }
@@ -259,7 +274,7 @@ function App() {
               <Route
                 path="tramites/tipos"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN]} requiredModule={MODULES.TRAMITE_TYPES}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.TRAMITE_TYPES}>
                     <TramiteTypesPage />
                   </ProtectedRoute>
                 }
@@ -267,7 +282,7 @@ function App() {
               <Route
                 path="tramites/gestion"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN]} requiredModule={MODULES.TRAMITES_MANAGE}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.TRAMITES_MANAGE}>
                     <TramitesByClientPage />
                   </ProtectedRoute>
                 }
@@ -275,7 +290,7 @@ function App() {
               <Route
                 path="tramites/control"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.TRAMITES_CONTROL}>
                     <ControlBoardPage />
                   </ProtectedRoute>
                 }
@@ -283,7 +298,7 @@ function App() {
               <Route
                 path="tramites/resumen-tareas"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.TASKS_SUMMARY}>
                     <AssignedTasksSummaryPage />
                   </ProtectedRoute>
                 }
@@ -291,7 +306,7 @@ function App() {
               <Route
                 path="tramites/:id/tareas"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TASKS_SUMMARY}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.TASKS_SUMMARY}>
                     <TramiteTasksPage />
                   </ProtectedRoute>
                 }
@@ -299,7 +314,7 @@ function App() {
               <Route
                 path="tramites/:id/detalle"
                 element={
-                  <ProtectedRoute allowedRoles={[ROLES.MASTER_ADMIN, ROLES.ADMIN, ROLES.OPERATOR]} requiredModule={MODULES.TRAMITES_CONTROL}>
+                  <ProtectedRoute allowedRoles={STAFF_ROLES} requiredModule={MODULES.TRAMITES_CONTROL}>
                     <TramiteDetailPage />
                   </ProtectedRoute>
                 }

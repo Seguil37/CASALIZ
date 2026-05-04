@@ -7,6 +7,7 @@ use App\Models\TramitePhase;
 use App\Models\TramiteSubphase;
 use App\Models\TramiteType;
 use App\Support\DataNormalizer;
+use App\Support\ModuleAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +15,7 @@ class TramiteTypeController extends Controller
 {
     public function index()
     {
-        $this->ensureAdminOrMaster();
+        $this->ensureCanViewTypes();
 
         $types = TramiteType::with(['phases.subphases'])
             ->orderBy('name')
@@ -25,7 +26,7 @@ class TramiteTypeController extends Controller
 
     public function store(Request $request)
     {
-        $this->ensureMaster();
+        $this->ensureCanManageTypes();
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -60,14 +61,14 @@ class TramiteTypeController extends Controller
 
     public function show(TramiteType $tramiteType)
     {
-        $this->ensureAdminOrMaster();
+        $this->ensureCanViewTypes();
 
         return $tramiteType->load('phases.subphases');
     }
 
     public function update(Request $request, TramiteType $tramiteType)
     {
-        $this->ensureMaster();
+        $this->ensureCanManageTypes();
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -104,7 +105,7 @@ class TramiteTypeController extends Controller
 
     public function destroy(TramiteType $tramiteType)
     {
-        $this->ensureMaster();
+        $this->ensureCanManageTypes();
 
         if ($tramiteType->tramites()->exists()) {
             return response()->json([
@@ -115,6 +116,25 @@ class TramiteTypeController extends Controller
         $tramiteType->delete();
 
         return response()->json(['message' => 'Tipo de trámite eliminado.']);
+    }
+
+    private function ensureCanManageTypes(): void
+    {
+        $user = auth()->user();
+        if (!ModuleAccess::can($user, ModuleAccess::TRAMITE_TYPES)) {
+            abort(403, 'No tienes permiso para gestionar tipos de tramite.');
+        }
+    }
+
+    private function ensureCanViewTypes(): void
+    {
+        $user = auth()->user();
+        if (
+            !ModuleAccess::can($user, ModuleAccess::TRAMITE_TYPES)
+            && !ModuleAccess::can($user, ModuleAccess::TRAMITES_MANAGE)
+        ) {
+            abort(403, 'No tienes permiso para ver tipos de tramite.');
+        }
     }
 
     private function ensureMaster(): void

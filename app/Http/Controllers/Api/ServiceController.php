@@ -28,7 +28,7 @@ class ServiceController extends Controller
 
         $user = $request->user('sanctum');
 
-        if (!$user || !$user->isAdmin() || !ModuleAccess::can($user, ModuleAccess::SERVICES)) {
+        if (!ModuleAccess::can($user, ModuleAccess::SERVICES)) {
             $query->where('status', 'published');
         } elseif ($request->filled('status') && $request->input('status') !== 'all') {
             $query->where('status', $request->input('status'));
@@ -45,7 +45,7 @@ class ServiceController extends Controller
     {
         $user = $request->user('sanctum');
 
-        if ($service->status !== 'published' && (!$user || !$user->isAdmin() || !ModuleAccess::can($user, ModuleAccess::SERVICES))) {
+        if ($service->status !== 'published' && !ModuleAccess::can($user, ModuleAccess::SERVICES)) {
             abort(404);
         }
 

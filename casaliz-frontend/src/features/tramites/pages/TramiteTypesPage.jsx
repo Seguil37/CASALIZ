@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Plus, Save, Layers, ListChecks, Search, Tras
 import { tramitesApi } from '../../../shared/utils/api';
 import { normalizeSentence, toTitleCase } from '../../../shared/utils/formNormalization';
 import useAuthStore from '../../../store/authStore';
-import { ROLES } from '../../../shared/constants/roles';
+import { MODULES, canAccessModule } from '../../../shared/constants/roles';
 import AdminPanelBackButton from '../../../shared/components/AdminPanelBackButton';
 
 const emptyPhase = (order = 1) => ({ name: '', order, description: '', subphases: [] });
@@ -231,10 +231,10 @@ const TramiteTypesPage = () => {
     setForm({ ...form, phases: updated });
   };
 
-  if (user?.role !== ROLES.MASTER_ADMIN) {
+  if (!canAccessModule(user, MODULES.TRAMITE_TYPES)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f8f5ef] font-semibold text-[#233274]">
-        Solo el Administrador Master puede acceder a Gestion de Tramites.
+        No tienes permiso para administrar tipos de tramite.
       </div>
     );
   }
