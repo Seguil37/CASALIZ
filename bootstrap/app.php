@@ -9,6 +9,7 @@ use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\CheckAgencyOwnership;
 use App\Http\Middleware\TrackActivity;
 use App\Http\Middleware\CheckModulePermission;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->prepend(HandleCors::class);
+
         // Registrar alias de middleware personalizados
         $middleware->alias([
             'role' => CheckRole::class,
