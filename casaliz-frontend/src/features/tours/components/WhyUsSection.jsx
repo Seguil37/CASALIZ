@@ -15,11 +15,11 @@ const features = [
     icon: ShieldCheck,
     title: 'Tu proyecto, nuestra prioridad',
     description:
-      'Acompanamos cada etapa: idea, diseno, planos y obra. El resultado se alinea con tu estilo, presupuesto y necesidades reales.',
+      'Acompañamos cada etapa: idea, diseño, planos y obra. El resultado se alinea con tu estilo, presupuesto y necesidades reales.',
   },
   {
     icon: DraftingCompass,
-    title: 'Diseno funcional y estetico',
+    title: 'Diseño funcional y estético',
     description:
       'Ordenamos iluminacion, circulacion, materiales y detalle constructivo para lograr espacios utiles, durables y coherentes.',
   },
@@ -33,7 +33,7 @@ const features = [
 
 const stats = [
   { icon: Award, value: '98%', label: 'Proyectos entregados a tiempo' },
-  { icon: Users, value: '120+', label: 'Proyectos disenados y ejecutados' },
+  { icon: Users, value: '120+', label: 'Proyectos diseñados y ejecutados' },
   { icon: Clock3, value: '10+ anos', label: 'Experiencia en arquitectura y construccion' },
 ];
 

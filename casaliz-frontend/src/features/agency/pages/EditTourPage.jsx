@@ -491,7 +491,7 @@ const EditTourPage = () => {
                   onClick={addImageField}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[#ebe7df] text-[#233274] hover:border-primary"
                 >
-                  <PlusCircle className="w-4 h-4" /> Anadir imagen
+                  <PlusCircle className="w-4 h-4" /> Añadir imagen
                 </button>
               </div>
 

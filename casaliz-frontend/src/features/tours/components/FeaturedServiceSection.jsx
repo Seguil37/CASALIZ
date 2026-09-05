@@ -13,7 +13,7 @@ import expedientesTecnicosImg from '../../../assets/images/servicios-principales
 const fallbackServices = [
   {
     id: 'srv-1',
-    title: 'Diseno arquitectonico residencial',
+    title: 'Diseño arquitectónico residencial',
     category: 'Arquitectura',
     fallback_image: viviendasImg,
     short_description: 'Planos, renders y expediente de licencia para tu vivienda.',
@@ -29,7 +29,7 @@ const fallbackServices = [
   },
   {
     id: 'srv-3',
-    title: 'Diseno de interiores y visualizacion 3D',
+    title: 'Diseño de interiores y visualización 3D',
     category: 'Interiores',
     fallback_image: interiores3dImg,
     short_description: 'Modelado, materialidad e iluminacion para validar el espacio antes de obra.',

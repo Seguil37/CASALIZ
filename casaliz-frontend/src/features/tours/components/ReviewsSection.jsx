@@ -77,7 +77,7 @@ const ReviewsSection = ({ projectId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isAuthenticated || !isClient) {
-      setError('Debes iniciar sesion como cliente para dejar una resena.');
+      setError('Debes iniciar sesion como cliente para dejar una reseña.');
       return;
     }
 
@@ -110,7 +110,7 @@ const ReviewsSection = ({ projectId }) => {
 
       setForm({ rating: 5, comment: '' });
     } catch (err) {
-      setError(err.response?.data?.message || 'No se pudo guardar tu resena.');
+      setError(err.response?.data?.message || 'No se pudo guardar tu reseña.');
     } finally {
       setSubmitting(false);
     }
@@ -124,7 +124,7 @@ const ReviewsSection = ({ projectId }) => {
             <MessageCircle className="w-5 h-5 text-[#d14a00]" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-[#233274]">Resenas</h3>
+            <h3 className="text-xl font-black text-[#233274]">Reseñas</h3>
             <p className="text-sm text-[#9a98a0]">Comparte tu experiencia con este proyecto.</p>
           </div>
         </div>
@@ -137,7 +137,7 @@ const ReviewsSection = ({ projectId }) => {
       </div>
 
       {loading ? (
-        <p className="text-[#9a98a0]">Cargando resenas...</p>
+        <p className="text-[#9a98a0]">Cargando reseñas...</p>
       ) : reviews.length === 0 ? (
         <p className="text-[#233274]">Se el primero en dejar un comentario.</p>
       ) : (
@@ -158,7 +158,7 @@ const ReviewsSection = ({ projectId }) => {
               </div>
               <p className="text-[#4b4b4b] leading-relaxed">{review.comment}</p>
               {review.user_id === user?.id && (
-                <span className="inline-block mt-1 text-xs font-semibold text-[#e15f0b]">Tu resena</span>
+                <span className="inline-block mt-1 text-xs font-semibold text-[#e15f0b]">Tu reseña</span>
               )}
             </div>
           ))}
@@ -166,9 +166,9 @@ const ReviewsSection = ({ projectId }) => {
       )}
 
       <div className="border-t border-[#ebe7df] pt-4">
-        <h4 className="text-lg font-bold text-[#233274] mb-2">Escribe una resena</h4>
+        <h4 className="text-lg font-bold text-[#233274] mb-2">Escribe una reseña</h4>
         {!isClient && (
-          <p className="text-sm text-[#9a98a0] mb-3">Solo los clientes pueden dejar resenas.</p>
+          <p className="text-sm text-[#9a98a0] mb-3">Solo los clientes pueden dejar reseñas.</p>
         )}
         {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -196,7 +196,7 @@ const ReviewsSection = ({ projectId }) => {
             disabled={!isClient || submitting}
             className="bg-gradient-to-r from-[#e15f0b] to-[#d14a00] disabled:opacity-60 text-[#f8f5ef] font-bold px-4 py-3 rounded-full shadow-md hover:shadow-lg transition-all"
           >
-            {submitting ? 'Guardando...' : myReview ? 'Actualizar resena' : 'Publicar resena'}
+            {submitting ? 'Guardando...' : myReview ? 'Actualizar reseña' : 'Publicar reseña'}
           </button>
         </form>
       </div>

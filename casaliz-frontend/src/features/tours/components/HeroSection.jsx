@@ -59,10 +59,10 @@ const HeroSection = () => {
     'Oficina comercial',
   ];
   const serviceSuggestions = [
-    'Diseno, Construccion y Regularizacion Inmobiliaria',
+    'Diseño, Construcción y Regularización Inmobiliaria',
     'Servicios Inmobiliarios',
     'Tramites y Regularizacion Inmobiliaria',
-    'Diseno de interiores',
+    'Diseño de interiores',
     'Topografia',
   ];
 
@@ -70,7 +70,7 @@ const HeroSection = () => {
   const inputLabel = mode === 'services' ? 'Servicio o palabra clave' : 'Proyecto, zona o referencia';
   const inputPlaceholder =
     mode === 'services'
-      ? 'Licencias, diseno, topografia...'
+      ? 'Licencias, diseño, topografía...'
       : 'Cusco, vivienda, remodelacion...';
   const suggestions = mode === 'services' ? serviceSuggestions : projectSuggestions;
   const value = mode === 'services' ? serviceQuery : projectQuery;
@@ -107,8 +107,8 @@ const HeroSection = () => {
           </MotionTitle>
 
           <p className="mt-5 max-w-2xl text-base leading-8 text-white/82 sm:text-lg">
-            Disenamos, regularizamos y ejecutamos proyectos residenciales y comerciales con
-            acompanamiento tecnico desde la primera idea hasta la entrega.
+            Diseñamos, regularizamos y ejecutamos proyectos residenciales y comerciales con
+            acompañamiento técnico desde la primera idea hasta la entrega.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -133,7 +133,7 @@ const HeroSection = () => {
           <div className="mt-9 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
             {[
               { icon: Star, text: 'Clientes que confian en CasaLiz', count: '98%' },
-              { icon: Building2, text: 'Proyectos disenados y construidos', count: '120+' },
+              { icon: Building2, text: 'Proyectos diseñados y construidos', count: '120+' },
               { icon: Users, text: 'Anos de experiencia combinada', count: '10+' },
             ].map((item) => {
               const Icon = item.icon;
@@ -182,7 +182,7 @@ const HeroSection = () => {
                   Equipo integral
                 </p>
                 <h2 className="mt-2 text-3xl font-black leading-tight text-[#233274]">
-                  Una sola ruta para diseno, permisos y obra.
+                  Una sola ruta para diseño, permisos y obra.
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-[#5b6472]">
                   Arquitectos e ingenieros coordinan la documentacion, el expediente tecnico,

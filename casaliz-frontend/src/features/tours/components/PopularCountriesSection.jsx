@@ -27,7 +27,7 @@ gsap.registerPlugin(Draggable);
 const services = [
   {
     name: 'Viviendas unifamiliares y multifamiliares',
-    subtitle: 'Diseno y proyectos residenciales',
+    subtitle: 'Diseño y proyectos residenciales',
     image: viviendasImg,
     projectsCount: 45,
     rating: 4.9,
@@ -40,7 +40,7 @@ const services = [
     rating: 4.8,
   },
   {
-    name: 'Diseno de interiores con vistas en 3D',
+    name: 'Diseño de interiores con vistas en 3D',
     subtitle: 'Visualizacion precisa',
     image: interiores3dImg,
     projectsCount: 32,

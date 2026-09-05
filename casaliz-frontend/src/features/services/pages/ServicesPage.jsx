@@ -189,7 +189,7 @@ const ServicesPage = () => {
               Soluciones de diseño, construccion e inmobiliaria en un solo equipo.
             </h1>
             <p className="text-lg max-w-2xl text-white/90 transition-colors duration-500 hover:text-white">
-              Conecta con el servicio que necesitas: licencias, diseño, obra y gestion comercial. Te acompanamos desde la
+              Conecta con el servicio que necesitas: licencias, diseño, obra y gestion comercial. Te acompañamos desde la
               idea hasta la entrega final.
             </p>
             <div className="flex flex-wrap gap-4">
