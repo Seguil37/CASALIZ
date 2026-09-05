@@ -7,23 +7,27 @@ import PopularLocationsSection from '../components/PopularLocationsSection';
 import FeaturedToursSection from '../components/FeaturedToursSection';
 import FeaturedServiceSection from '../components/FeaturedServiceSection';
 import PopularCountriesSection from '../components/PopularCountriesSection';
-import ReferenceContentSection from '../components/ReferenceContentSection';
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#f6f1e8]" data-motion-page>
       <HeroSection />
       <PopularCountriesSection />
-      <CTASection />
-      <FeaturedServiceSection />
-      <FeaturedToursSection />
-      <WhyUsSection />
-      <PopularLocationsSection />
-
-      
-      
-      
-      
+      <div data-motion-section>
+        <CTASection />
+      </div>
+      <div data-motion-section>
+        <FeaturedServiceSection />
+      </div>
+      <div data-motion-section>
+        <FeaturedToursSection />
+      </div>
+      <div data-motion-section>
+        <WhyUsSection />
+      </div>
+      <div data-motion-section>
+        <PopularLocationsSection />
+      </div>
     </div>
   );
 };

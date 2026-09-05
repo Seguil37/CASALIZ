@@ -1,47 +1,48 @@
 // src/features/tours/components/PopularLocationsSection.jsx
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { TrendingUp, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2, MapPin, Star, TrendingUp } from 'lucide-react';
+import MotionTitle from '../../../shared/motion/MotionTitle';
 import cuscoImg from '../../../assets/images/zonas/cusco.png';
 import sanJeronimoImg from '../../../assets/images/zonas/san-jeronimo.png';
 import sanSebastianImg from '../../../assets/images/zonas/san-sebastian.png';
 import santiagoImg from '../../../assets/images/zonas/santiago.png';
 
+const projectLocations = [
+  {
+    name: 'Cusco Centro',
+    subtitle: 'Proyectos de vivienda e interiores',
+    image: cuscoImg,
+    projects: 32,
+    rating: 4.8,
+  },
+  {
+    name: 'San Sebastian',
+    subtitle: 'Casas unifamiliares y multifamiliares',
+    image: sanSebastianImg,
+    projects: 28,
+    rating: 4.7,
+  },
+  {
+    name: 'San Jeronimo',
+    subtitle: 'Casas de campo y proyectos residenciales',
+    image: sanJeronimoImg,
+    projects: 22,
+    rating: 4.6,
+  },
+  {
+    name: 'Santiago',
+    subtitle: 'Vivienda y comercio local',
+    image: santiagoImg,
+    projects: 18,
+    rating: 4.6,
+  },
+];
+
 const PopularLocationsSection = () => {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const projectLocations = [
-    {
-      name: 'Cusco Centro',
-      subtitle: 'Proyectos de vivienda e interiores',
-      image: cuscoImg,
-      projects: 32,
-      rating: 4.8,
-    },
-    {
-      name: 'San Sebastian',
-      subtitle: 'Casas unifamiliares y multifamiliares',
-      image: sanSebastianImg,
-      projects: 28,
-      rating: 4.7,
-    },
-    {
-      name: 'San Jeronimo',
-      subtitle: 'Casas de campo y proyectos residenciales',
-      image: sanJeronimoImg,
-      projects: 22,
-      rating: 4.6,
-    },
-    {
-      name: 'Santiago',
-      subtitle: 'Vivienda y comercio local',
-      image: santiagoImg,
-      projects: 18,
-      rating: 4.6,
-    },
-  ];
 
   useEffect(() => {
     setLocations(projectLocations);
@@ -50,10 +51,10 @@ const PopularLocationsSection = () => {
 
   if (loading) {
     return (
-      <section className="py-20 bg-[#f8f5ef]">
+      <section className="bg-[#f6f1e8] py-20">
         <div className="container-custom">
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-12 h-12 text-[#e15f0b] animate-spin" />
+            <Loader2 className="h-12 w-12 animate-spin text-[#e15f0b]" />
           </div>
         </div>
       </section>
@@ -65,83 +66,67 @@ const PopularLocationsSection = () => {
   }
 
   return (
-    <section className="py-20 bg-[#f8f5ef]">
+    <section className="bg-[#f6f1e8] py-16 sm:py-20">
       <div className="container-custom">
-        <div className="flex items-center gap-3 mb-12 animate-fade-in">
-          <TrendingUp className="w-8 h-8 text-[#e15f0b]" />
-          <h2 className="text-4xl lg:text-5xl font-black text-[#233274]">
-            Zonas donde mas diseñamos
-          </h2>
+        <div className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-black uppercase tracking-[0.18em] text-[#0f766e] shadow-sm">
+              <TrendingUp className="h-4 w-4" />
+              Zonas frecuentes
+            </div>
+            <MotionTitle
+              as="h2"
+              className="text-3xl font-black leading-tight text-[#233274] sm:text-4xl lg:text-5xl"
+            >
+              Lugares donde desarrollamos vivienda, obra y regularizacion.
+            </MotionTitle>
+          </div>
+
+          <Link
+            to="/projects"
+            className="inline-flex items-center gap-2 self-start rounded-lg border border-[#d8cbb9] bg-white px-5 py-3 text-sm font-bold text-[#233274] transition hover:border-[#e15f0b]/40 hover:text-[#d14a00] lg:self-auto"
+          >
+            Ver todos los proyectos
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {locations.map((location, index) => (
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {locations.map((location) => (
             <Link
-              key={index}
+              key={location.name}
               to={`/projects?search=${encodeURIComponent(location.name)}`}
-              className="group bg-[#f8f5ef] rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1 animate-fade-in"
-              style={{ animationDelay: `${index * 0.05}s` }}
+              className="group overflow-hidden rounded-lg border border-[#e2d6c6] bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#e15f0b]/35 hover:shadow-xl"
+              data-motion-card
             >
-              <div className="relative h-56 overflow-hidden">
+              <div className="relative h-56 overflow-hidden bg-[#efe6d8]">
                 <img
                   src={location.image}
                   alt={location.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
-                  }}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/15 to-transparent" />
+                <div className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/92 px-3 py-1 text-xs font-black text-[#233274] shadow-sm">
+                  <Star className="h-3.5 w-3.5 fill-[#f6a24a] text-[#f6a24a]" />
+                  {location.rating}
+                </div>
               </div>
 
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-[#233274] mb-2 group-hover:text-[#e15f0b] transition-colors">
+              <div className="p-5">
+                <div className="mb-3 flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-[#0f766e]">
+                  <MapPin className="h-4 w-4" />
+                  {location.projects}+ proyectos
+                </div>
+                <h3 className="text-2xl font-black text-[#233274] transition group-hover:text-[#d14a00]">
                   {location.name}
                 </h3>
-                <p className="text-[#9a98a0] mb-3">{location.subtitle}</p>
-                <div className="flex items-center justify-start">
-                  <div className="flex items-center gap-1 text-[#e15f0b] opacity-80 group-hover:opacity-100 transition-opacity">
-                    <span className="text-sm font-semibold">Ver proyectos</span>
-                    <svg
-                      className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
-                </div>
+                <p className="mt-2 text-sm leading-6 text-[#667085]">{location.subtitle}</p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-[#233274]">
+                  Ver proyectos
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                </span>
               </div>
             </Link>
           ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold px-8 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
-          >
-            Ver todos los proyectos
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </Link>
         </div>
       </div>
     </section>

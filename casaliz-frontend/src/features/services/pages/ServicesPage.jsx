@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, Briefcase } from 'lucide-react';
 import { servicesApi, toPublicUrl } from '../../../shared/utils/api';
+import { usePublicMotion } from '../../../shared/motion/publicMotionContext';
 
 const SERVICES_PER_PAGE = 12;
 
@@ -25,6 +26,16 @@ const ServicesPage = () => {
     searchParams.get('featured') === '1' || searchParams.get('featured') === 'true'
   );
   const [currentPage, setCurrentPage] = useState(1);
+  const { scrollTo } = usePublicMotion();
+
+  const scrollToResults = useCallback(() => {
+    setTimeout(() => {
+      const resultsElement = document.getElementById('servicios-listado');
+      if (resultsElement) {
+        scrollTo(resultsElement);
+      }
+    }, 50);
+  }, [scrollTo]);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -55,16 +66,7 @@ const ServicesPage = () => {
     if (!loading && location.hash === '#servicios-listado') {
       scrollToResults();
     }
-  }, [loading, location.hash]);
-
-  const scrollToResults = () => {
-    setTimeout(() => {
-      document.getElementById('servicios-listado')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }, 50);
-  };
+  }, [loading, location.hash, scrollToResults]);
 
   const applyFiltersToQuery = (nextSearchTerm, nextCategory, nextFeatured) => {
     const params = new URLSearchParams();
@@ -171,14 +173,14 @@ const ServicesPage = () => {
   }
 
   return (
-    <div className="bg-[#f8f5ef] min-h-screen pb-12">
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16">
+    <div className="bg-[#f8f5ef] min-h-screen pb-12" data-motion-page>
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16" data-motion-hero>
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute -left-16 -top-10 w-64 h-64 rounded-full bg-white/30 blur-3xl" />
           <div className="absolute right-0 bottom-0 w-72 h-72 rounded-full bg-white/20 blur-3xl" />
         </div>
         <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="space-y-5">
+          <div className="space-y-5" data-motion-item>
             <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/15 rounded-full text-sm font-semibold uppercase tracking-wide border border-white/25 transition-transform duration-500 hover:translate-x-1">
               <span className="h-2 w-2 rounded-full bg-[#fbbf24] transition-transform duration-500 hover:scale-125" />
               Servicios CASALIZ
@@ -207,7 +209,7 @@ const ServicesPage = () => {
             </div>
           </div>
 
-          <div className="bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
+          <div className="bg-white/10 border border-white/20 rounded-2xl p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15" data-motion-item>
             <div className="flex items-center gap-2 text-sm font-semibold uppercase text-white/80 mb-4">
               <Briefcase className="w-5 h-5 transition-transform duration-500 hover:scale-110 hover:rotate-6" />
               Encuentra tu servicio
@@ -276,7 +278,7 @@ const ServicesPage = () => {
       </div>
 
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 -mt-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 -mt-8 relative z-10" data-motion-section>
           <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg border border-[#ebe7df] p-4 space-y-3 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_22px_45px_rgba(35,50,116,0.08)]">
             <div className="flex items-center justify-between">
               <div>
@@ -324,6 +326,7 @@ const ServicesPage = () => {
                   key={service.id}
                   to={`/services/${service.slug}`}
                   className="group relative rounded-2xl shadow-lg overflow-hidden block h-full bg-gradient-to-br from-[#1b274f] via-[#1f2f63] to-[#0f193a] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(15,25,58,0.26)]"
+                  data-motion-card
                 >
                   <div className="p-4 pb-0">
                     <div className="flex items-center gap-2 flex-wrap">

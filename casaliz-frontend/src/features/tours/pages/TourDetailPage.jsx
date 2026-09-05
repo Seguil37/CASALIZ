@@ -7,6 +7,7 @@ import ReviewsSection from '../components/ReviewsSection';
 import useFavoriteStore from '../../../store/favoriteStore';
 import useAuthStore from '../../../store/authStore';
 import { ROLES } from '../../../shared/constants/roles';
+import { usePublicMotion } from '../../../shared/motion/publicMotionContext';
 const TourDetailPage = () => {
   const { id } = useParams();
   const [project, setProject] = useState(null);
@@ -18,6 +19,7 @@ const TourDetailPage = () => {
   const gallerySectionRef = useRef(null);
   const { favorites, toggleFavorite, fetchFavorites } = useFavoriteStore();
   const { isAuthenticated, user } = useAuthStore();
+  const { scrollTo } = usePublicMotion();
   useEffect(() => {
     const fetchProject = async () => {
       setLoading(true);
@@ -82,12 +84,14 @@ const TourDetailPage = () => {
     setLightboxImage(project.images[newIndex]);
   };
   const scrollToGallery = () => {
-    gallerySectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (gallerySectionRef.current) {
+      scrollTo(gallerySectionRef.current);
+    }
   };
   return (
-    <div className="bg-gradient-to-b from-[#f6f2e8] via-white to-[#f6f2e8] min-h-screen">
+    <div className="bg-gradient-to-b from-[#f6f2e8] via-white to-[#f6f2e8] min-h-screen" data-motion-page>
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0f1b35] via-[#1e2f5f] to-[#233274]">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0f1b35] via-[#1e2f5f] to-[#233274]" data-motion-hero>
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <div className="absolute -left-32 top-0 w-80 h-80 rounded-full bg-[#e15f0b]/20 blur-3xl" />
           <div className="absolute right-[-6rem] bottom-[-4rem] w-96 h-96 rounded-full bg-[#f59e0b]/20 blur-3xl" />
@@ -99,7 +103,7 @@ const TourDetailPage = () => {
           </Link>
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             {/* CONTENIDO HERO */}
-            <div className="space-y-6 order-2 lg:order-1">
+            <div className="space-y-6 order-2 lg:order-1" data-motion-item>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-4 py-2 rounded-full bg-gradient-to-r from-[#e15f0b]/20 to-[#f59e0b]/20 backdrop-blur border border-[#e15f0b]/40 text-[#fbbf24] text-xs uppercase tracking-widest font-bold">
                   ✨ Proyecto Destacado
@@ -143,7 +147,7 @@ const TourDetailPage = () => {
               )}
             </div>
             {/* IMAGEN HERO */}
-            <div className="order-1 lg:order-2">
+            <div className="order-1 lg:order-2" data-motion-item>
               <div className="relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#e15f0b] to-[#f59e0b] rounded-3xl blur-2xl opacity-30" />
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square">
@@ -162,16 +166,16 @@ const TourDetailPage = () => {
         </div>
       </section>
       {/* STATS SECTION */}
-      <section className="container-custom -mt-8 mb-12 relative z-20">
+      <section className="container-custom -mt-8 mb-12 relative z-20" data-motion-section>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow" data-motion-card>
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Ubicación</p>
             <p className="text-lg font-bold text-[#233274] mt-2">
               {project.city}
               {project.state ? `, ${project.state}` : ''}
             </p>
           </div>
-          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow" data-motion-card>
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Tipo de Proyecto</p>
             <p className="text-lg font-bold text-[#233274] mt-2">{project.type || 'Residencial'}</p>
           </div>
@@ -179,6 +183,7 @@ const TourDetailPage = () => {
             type="button"
             onClick={scrollToGallery}
             className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 text-left hover:-translate-y-1 hover:shadow-xl transition"
+            data-motion-card
           >
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Galería</p>
             <p className="text-lg font-bold text-[#233274] mt-2">{project.images?.length || 0} imagen(es)</p>
@@ -186,7 +191,7 @@ const TourDetailPage = () => {
         </div>
       </section>
       {/* MAIN CONTENT */}
-      <section className="container-custom pb-16 space-y-12">
+      <section className="container-custom pb-16 space-y-12" data-motion-section>
         {/* DESCRIPCION */}
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-3xl p-8 shadow-lg border-2 border-[#ebe7df]">
@@ -202,7 +207,7 @@ const TourDetailPage = () => {
         </div>
         {/* GALERÍA DE IMÁGENES MEJORADA */}
         {project.images?.length > 0 && (
-          <div ref={gallerySectionRef} className="space-y-8 scroll-mt-24">
+          <div ref={gallerySectionRef} className="space-y-8 scroll-mt-24" data-motion-section>
             <div className="max-w-6xl mx-auto">
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-2">
@@ -223,6 +228,7 @@ const TourDetailPage = () => {
                     key={image.id}
                     onClick={() => openImage(image, index)}
                     className="group relative w-full h-64 overflow-hidden border-2 border-[#ebe7df] bg-[#f8f5ef] focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                    data-motion-card
                   >
                     <img
                       src={toPublicUrl(image.path)}
@@ -242,7 +248,7 @@ const TourDetailPage = () => {
       </section>
 
         {/* LLAMADA A ACCION FINAL */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-[#0f1b35] to-[#1e2f5f]">
+        <section className="relative overflow-hidden bg-gradient-to-r from-[#0f1b35] to-[#1e2f5f]" data-motion-section>
           <div className="absolute inset-0 pointer-events-none opacity-30">
             <div className="absolute right-[-4rem] top-[-2rem] w-96 h-96 rounded-full bg-[#e15f0b]/20 blur-3xl" />
           </div>
@@ -275,7 +281,7 @@ const TourDetailPage = () => {
           </div>
         </section>
 
-      <section className="container-custom pb-16">
+      <section className="container-custom pb-16" data-motion-section>
         {/* LAYOUT CON SIDEBAR */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* SIDEBAR INFO */}
@@ -346,8 +352,9 @@ const TourDetailPage = () => {
           role="button"
           tabIndex={0}
           aria-label="Cerrar imagen ampliada"
+          data-lenis-prevent
         >
-          <div className="relative max-w-5xl w-full h-full flex flex-col justify-center" onClick={(e) => e.stopPropagation()}>
+          <div className="relative max-w-5xl w-full h-full flex flex-col justify-center" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
             <button
               type="button"
               onClick={closeImage}

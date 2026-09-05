@@ -44,15 +44,15 @@ const socialLinks = [
 
 const ContactPage = () => {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(35,50,116,0.12),_transparent_30%),linear-gradient(180deg,#fbf7f1_0%,#f6f1ea_100%)] pb-14">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(35,50,116,0.12),_transparent_30%),linear-gradient(180deg,#fbf7f1_0%,#f6f1ea_100%)] pb-14" data-motion-page>
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16" data-motion-hero>
         <div className="absolute inset-0 opacity-15" aria-hidden>
           <div className="absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#fbbf24] blur-3xl" />
           <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-white/20 blur-3xl" />
         </div>
 
         <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="space-y-5">
+          <div className="space-y-5" data-motion-item>
             <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#f9d29f] transition-transform duration-500 hover:translate-x-1">
               <Sparkles className="h-4 w-4 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
               Contacto Casaliz
@@ -86,7 +86,7 @@ const ContactPage = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
+          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15" data-motion-item>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#f9d29f]">Atención directa</p>
             <div className="mt-5 space-y-3">
               {[
@@ -108,7 +108,7 @@ const ContactPage = () => {
         </div>
       </section>
 
-      <section className="container-custom -mt-8 relative z-10 space-y-10 px-4 sm:px-6 lg:px-8">
+      <section className="container-custom -mt-8 relative z-10 space-y-10 px-4 sm:px-6 lg:px-8" data-motion-section>
         <div className="grid gap-6 md:grid-cols-3">
           {contactChannels.map((item) => {
             const Icon = item.icon;
@@ -117,6 +117,7 @@ const ContactPage = () => {
               <article
                 key={item.title}
                 className="group overflow-hidden rounded-[30px] border border-white/80 bg-white shadow-[0_24px_60px_rgba(77,58,31,0.10)] transition-all duration-500 hover:-translate-y-2"
+                data-motion-card
               >
                 <div className={`h-24 bg-gradient-to-br ${item.accent} px-6 py-5 text-white`}>
                   <div className="flex items-center justify-between">
@@ -150,6 +151,7 @@ const ContactPage = () => {
         <div
           id="ubicacion"
           className="overflow-hidden rounded-[34px] border border-[#e5ddd1] bg-white shadow-[0_25px_70px_rgba(77,58,31,0.08)]"
+          data-motion-section
         >
           <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
             <div className="bg-[linear-gradient(180deg,#fffdf9_0%,#f7f1e8_100%)] p-8 md:p-10">

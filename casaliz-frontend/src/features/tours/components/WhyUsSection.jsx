@@ -1,99 +1,106 @@
 // src/features/tours/components/WhyUsSection.jsx
 
-import { Shield, Gift, Calendar, Award, Users, Clock } from 'lucide-react';
+import {
+  Award,
+  ClipboardCheck,
+  Clock3,
+  DraftingCompass,
+  ShieldCheck,
+  Users,
+} from 'lucide-react';
+import MotionTitle from '../../../shared/motion/MotionTitle';
+
+const features = [
+  {
+    icon: ShieldCheck,
+    title: 'Tu proyecto, nuestra prioridad',
+    description:
+      'Acompanamos cada etapa: idea, diseno, planos y obra. El resultado se alinea con tu estilo, presupuesto y necesidades reales.',
+  },
+  {
+    icon: DraftingCompass,
+    title: 'Diseno funcional y estetico',
+    description:
+      'Ordenamos iluminacion, circulacion, materiales y detalle constructivo para lograr espacios utiles, durables y coherentes.',
+  },
+  {
+    icon: ClipboardCheck,
+    title: 'Gestion integral y transparente',
+    description:
+      'Coordinamos especialistas, expediente, permisos y ejecucion para que el avance tecnico sea claro en todo momento.',
+  },
+];
+
+const stats = [
+  { icon: Award, value: '98%', label: 'Proyectos entregados a tiempo' },
+  { icon: Users, value: '120+', label: 'Proyectos disenados y ejecutados' },
+  { icon: Clock3, value: '10+ anos', label: 'Experiencia en arquitectura y construccion' },
+];
 
 const WhyUsSection = () => {
-  const features = [
-    {
-      icon: Shield,
-      title: 'Tu proyecto, nuestra prioridad',
-      description:
-        'Acompañamos cada etapa: idea, diseño, planos y obra. Nos enfocamos en que el resultado se ajuste a tu estilo, presupuesto y necesidades reales.',
-      color: 'from-[#233274] to-[#1a2555]',
-    },
-    {
-      icon: Gift,
-      title: 'Diseño funcional y estético',
-      description:
-        'Creamos espacios que se ven bien, se sienten bien y funcionan mejor: iluminación, circulación, materiales y cada detalle pensado para el uso diario.',
-      color: 'from-[#233274] to-[#1a2555]',
-    },
-    {
-      icon: Calendar,
-      title: 'Gestión integral y transparente',
-      description:
-        'Coordinamos con ingenieros, proveedores y constructores. Tú ves el avance, nosotros nos encargamos de la complejidad técnica.',
-      color: 'from-[#233274] to-[#3a4c9c]',
-    },
-  ];
-
-  const stats = [
-    { icon: Award, value: '98%', label: 'Proyectos entregados a tiempo' },
-    { icon: Users, value: '120+', label: 'Proyectos diseñados y ejecutados' },
-    { icon: Clock, value: '10+ años', label: 'Experiencia en arquitectura y construcción' },
-  ];
-
   return (
-    <section id="nosotros" className="py-20 bg-gradient-to-br from-[#f8f5ef] to-[#f8f5ef]">
+    <section id="nosotros" className="bg-white py-16 sm:py-20">
       <div className="container-custom">
-        {/* Título */}
-        <div className="text-center mb-16 animate-fade-in transition-transform duration-500 hover:-translate-y-1">
-          <h2 className="text-4xl lg:text-5xl font-black text-[#233274] mb-4 transition-transform duration-500 hover:scale-[1.01]">
-            ¿Por qué diseñar tu proyecto con Casaliz?
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-[#e15f0b] to-[#d14a00] mx-auto rounded-full transition-all duration-500 hover:w-32"></div>
-        </div>
+        <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div className="lg:sticky lg:top-24" data-motion-card>
+            <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-[#e15f0b]">
+              Metodo CasaLiz
+            </p>
+            <MotionTitle
+              as="h2"
+              className="text-3xl font-black leading-tight text-[#233274] sm:text-4xl lg:text-5xl"
+            >
+              Un equipo tecnico para decisiones importantes.
+            </MotionTitle>
+            <p className="mt-4 text-base leading-8 text-[#667085]">
+              Integramos arquitectura, ingenieria y gestion para que cada decision avance con
+              sustento tecnico, presupuesto claro y documentacion ordenada.
+            </p>
+          </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div
-                key={index}
-                className="group bg-[#f8f5ef] rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                {/* Icono con gradiente */}
-                <div className="mb-6">
-                  <div
-                    className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-lg`}
-                  >
-                    <Icon className="w-8 h-8 text-[#f8f5ef]" />
+          <div className="grid gap-5">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={feature.title}
+                  className="group grid gap-5 rounded-lg border border-[#e2d6c6] bg-[#fdfbf7] p-5 shadow-sm transition hover:-translate-y-1 hover:border-[#e15f0b]/35 hover:shadow-xl sm:grid-cols-[64px_1fr] sm:p-6"
+                  data-motion-card
+                >
+                  <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-[#233274] text-white shadow-lg shadow-[#233274]/15">
+                    <Icon className="h-7 w-7" />
+                  </div>
+                  <div>
+                    <div className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-[#0f766e]">
+                      0{index + 1}
+                    </div>
+                    <h3 className="text-2xl font-black text-[#233274] transition group-hover:text-[#d14a00]">
+                      {feature.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-[#667085]">
+                      {feature.description}
+                    </p>
                   </div>
                 </div>
-
-                {/* Título */}
-                <h3 className="text-2xl font-bold text-[#233274] mb-4 group-hover:text-[#e15f0b] transition-colors">
-                  {feature.title}
-                </h3>
-
-                {/* Descripción */}
-                <p className="text-[#9a98a0] leading-relaxed">{feature.description}</p>
-
-                {/* Línea decorativa */}
-                <div className="mt-6 h-1 w-0 group-hover:w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] transition-all duration-500 rounded-full"></div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
-        {/* Estadísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {stats.map((stat, index) => {
+        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {stats.map((stat) => {
             const Icon = stat.icon;
             return (
               <div
-                key={index}
-                className="relative overflow-hidden bg-gradient-to-br from-[#233274] via-[#2f3f8c] to-[#d67a2b] rounded-2xl p-8 text-center animate-fade-in shadow-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_55px_rgba(35,50,116,0.20)]"
-                style={{ animationDelay: `${0.6 + index * 0.1}s` }}
+                key={stat.label}
+                className="rounded-lg border border-[#d8cbb9] bg-[#101828] p-6 text-white shadow-sm"
+                data-motion-card
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/10 pointer-events-none" />
-                <div className="relative w-16 h-16 bg-gradient-to-br from-[#f59e0b] to-[#d14a00] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg transition-transform duration-500 hover:scale-110">
-                  <Icon className="w-8 h-8 text-white" />
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-white text-[#233274]">
+                  <Icon className="h-6 w-6" />
                 </div>
-                <div className="relative text-4xl font-black text-white drop-shadow mb-2">{stat.value}</div>
-                <div className="relative text-white/90 font-medium">{stat.label}</div>
+                <div className="text-4xl font-black text-white">{stat.value}</div>
+                <div className="mt-2 text-sm leading-6 text-white/72">{stat.label}</div>
               </div>
             );
           })}

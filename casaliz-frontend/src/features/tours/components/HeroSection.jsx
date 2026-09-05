@@ -2,9 +2,24 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Search, Star, Users } from 'lucide-react';
-import heroImage from '../../../assets/images/logo/logo.png';
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  MapPin,
+  Search,
+  Sparkles,
+  Star,
+  Users,
+} from 'lucide-react';
+import MotionTitle from '../../../shared/motion/MotionTitle';
+import heroImage from '../../../assets/images/servicios-principales/viviendas_unifamiliares_multifamiliares.png';
 
+const modeOptions = [
+  { value: 'services', label: 'Servicios' },
+  { value: 'projects', label: 'Proyectos' },
+  { value: 'about', label: 'Empresa' },
+];
 
 const HeroSection = () => {
   const [mode, setMode] = useState('services');
@@ -37,162 +52,215 @@ const HeroSection = () => {
   };
 
   const projectSuggestions = [
-    'Edificio Multifamiliar Ecológica Plaza',
+    'Edificio Multifamiliar Ecologica Plaza',
     'Casa de Campo Zurite',
     'Vivienda unifamiliar',
-    'Remodelación integral',
+    'Remodelacion integral',
     'Oficina comercial',
   ];
   const serviceSuggestions = [
-    'Diseño, Construcción y Regularización Inmobiliaria',
+    'Diseno, Construccion y Regularizacion Inmobiliaria',
     'Servicios Inmobiliarios',
-    'Trámites y Regularización Inmobiliaria',
-    'Diseño de interiores',
-    'Topografía',
+    'Tramites y Regularizacion Inmobiliaria',
+    'Diseno de interiores',
+    'Topografia',
   ];
 
   const isAbout = mode === 'about';
-  const inputLabel = mode === 'services' ? 'Servicio o palabra clave' : 'Ciudad o destino';
-  const inputPlaceholder = mode === 'services'
-    ? 'Licencias, diseño, topografia...'
-    : 'Ciudad, tipo de proyecto o referencia';
+  const inputLabel = mode === 'services' ? 'Servicio o palabra clave' : 'Proyecto, zona o referencia';
+  const inputPlaceholder =
+    mode === 'services'
+      ? 'Licencias, diseno, topografia...'
+      : 'Cusco, vivienda, remodelacion...';
   const suggestions = mode === 'services' ? serviceSuggestions : projectSuggestions;
   const value = mode === 'services' ? serviceQuery : projectQuery;
   const onChange = mode === 'services' ? setServiceQuery : setProjectQuery;
 
   return (
-    <section className="relative min-h-[760px] lg:min-h-[820px] flex items-center justify-center overflow-hidden px-3 sm:px-6 py-10">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/70 z-10" />
+    <section
+      className="relative overflow-hidden bg-[#101828] text-white"
+      data-motion-hero
+    >
+      <div className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Hero background"
-          className="w-full h-full object-cover animate-slow-zoom"
+          alt="Proyecto arquitectonico residencial"
+          className="h-full w-full object-cover opacity-75"
+          data-motion-parallax="8"
         />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,24,40,0.96)_0%,rgba(16,24,40,0.82)_42%,rgba(16,24,40,0.36)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#f6f1e8] to-transparent" />
       </div>
 
-      <div className="container-custom relative z-20 text-center">
-        <div className="animate-fade-in">
-          <div className="mb-6">
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black text-[#f8f5ef] mb-4 tracking-tight leading-tight transition-transform duration-500 hover:-translate-y-1">
-              Diseñamos espacios que hablan por ti.
-            </h1>
-            <p className="text-base sm:text-lg lg:text-2xl text-[#f8f5ef] font-semibold tracking-wide transition-colors duration-500 hover:text-white">
-              Arquitectura y gestion de proyectos para viviendas, oficinas y espacios comerciales.
-            </p>
+      <div className="container-custom relative z-10 grid gap-8 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center lg:py-16 xl:py-20">
+        <div className="max-w-3xl" data-motion-item>
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[#f8f5ef] backdrop-blur">
+            <Sparkles className="h-4 w-4 text-[#f6a24a]" />
+            Arquitectura, obra y gestion inmobiliaria
           </div>
 
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-4">
-            {['services', 'projects', 'about'].map((value) => (
+          <MotionTitle
+            as="h1"
+            className="max-w-4xl text-4xl font-black leading-[1.03] tracking-tight text-[#f8f5ef] sm:text-5xl lg:text-6xl"
+          >
+            CasaLiz Arquitectos e Ingenieros
+          </MotionTitle>
+
+          <p className="mt-5 max-w-2xl text-base leading-8 text-white/82 sm:text-lg">
+            Disenamos, regularizamos y ejecutamos proyectos residenciales y comerciales con
+            acompanamiento tecnico desde la primera idea hasta la entrega.
+          </p>
+
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => navigate('/projects')}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#f26b1d] px-6 py-3 text-sm font-bold text-white shadow-xl shadow-black/20 transition hover:bg-[#d14a00] hover:-translate-y-0.5"
+            >
+              Ver proyectos
+              <ArrowRight className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/services')}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-white/25 bg-white/10 px-6 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20 hover:-translate-y-0.5"
+            >
+              Explorar servicios
+              <Building2 className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="mt-9 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+            {[
+              { icon: Star, text: 'Clientes que confian en CasaLiz', count: '98%' },
+              { icon: Building2, text: 'Proyectos disenados y construidos', count: '120+' },
+              { icon: Users, text: 'Anos de experiencia combinada', count: '10+' },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.text}
+                  className="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur"
+                  data-motion-item
+                >
+                  <div className="mb-1 flex items-center gap-2">
+                    <Icon className="h-5 w-5 text-[#f6a24a]" />
+                    <span className="text-2xl font-black text-white">{item.count}</span>
+                  </div>
+                  <p className="text-sm leading-5 text-white/74">{item.text}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div
+          className="rounded-lg border border-white/20 bg-[#f8f5ef] p-4 text-[#233274] shadow-2xl shadow-black/30 sm:p-5"
+          data-motion-item
+        >
+          <div className="grid grid-cols-3 gap-1 rounded-lg bg-[#e8dfd1] p-1">
+            {modeOptions.map((option) => (
               <button
-                key={value}
+                key={option.value}
                 type="button"
-                onClick={() => setMode(value)}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-all border ${
-                  mode === value
-                    ? 'bg-white text-[#233274] border-white shadow-lg'
-                    : 'bg-white/10 text-white border-white/20 hover:bg-white/20 hover:-translate-y-0.5'
+                onClick={() => setMode(option.value)}
+                className={`rounded-md px-2 py-2 text-xs font-black transition sm:text-sm ${
+                  mode === option.value
+                    ? 'bg-white text-[#233274] shadow-sm'
+                    : 'text-[#6c6258] hover:bg-white/60'
                 }`}
               >
-                {value === 'projects' && 'Proyectos'}
-                {value === 'services' && 'Servicios'}
-                {value === 'about' && 'Empresa'}
+                {option.label}
               </button>
             ))}
           </div>
 
           {isAbout ? (
-            <div className="max-w-5xl mx-auto bg-[#0f1b35]/80 border border-white/30 rounded-3xl p-8 text-white shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:bg-[#0f1b35]/85">
-              <p className="text-3xl md:text-4xl font-black mb-3">10+ años de experiencia combinada</p>
-              <p className="text-white/85 mb-6 text-lg max-w-3xl mx-auto">
-                Equipo de arquitectos e ingenieros que lidera licencias, diseño, construccion y supervision.
-                Cuentanos tu idea y la llevamos a proyecto ejecutable.
-              </p>
-              <div className="flex flex-wrap justify-center gap-3">
+            <div className="mt-5 space-y-5">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#e15f0b]">
+                  Equipo integral
+                </p>
+                <h2 className="mt-2 text-3xl font-black leading-tight text-[#233274]">
+                  Una sola ruta para diseno, permisos y obra.
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-[#5b6472]">
+                  Arquitectos e ingenieros coordinan la documentacion, el expediente tecnico,
+                  la supervision y la ejecucion para reducir fricciones en cada etapa.
+                </p>
+              </div>
+
+              <div className="grid gap-2">
+                {['Planificacion tecnica', 'Gestion municipal', 'Control de calidad'].map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-sm font-semibold text-[#344054]">
+                    <CheckCircle2 className="h-4 w-4 text-[#0f766e]" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <button
                   type="button"
                   onClick={() => navigate('/contacto')}
-                  className="px-6 py-3 rounded-full bg-white text-[#233274] font-bold shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#233274] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1a2555]"
                 >
                   Hablemos ahora
+                  <ArrowRight className="h-4 w-4" />
                 </button>
                 <a
                   href="#nosotros"
-                  className="px-6 py-3 rounded-full border border-white/60 text-white font-bold transition-all duration-300 hover:-translate-y-1 hover:bg-white/10"
+                  className="inline-flex flex-1 items-center justify-center rounded-lg border border-[#d9cbb7] bg-white px-5 py-3 text-sm font-bold text-[#233274] transition hover:border-[#e15f0b]/40 hover:text-[#d14a00]"
                 >
                   Ver fortalezas
                 </a>
               </div>
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="max-w-5xl mx-auto mt-8 bg-[#f8f5ef] rounded-2xl shadow-2xl p-4 lg:p-6 animate-slide-up transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_28px_55px_rgba(15,27,53,0.20)]"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_auto] gap-4 items-end">
-                <div className="text-left">
-                  <label className="block text-sm font-semibold text-[#233274] mb-2">{inputLabel}</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a98a0] w-5 h-5" />
-                    <input
-                      type="text"
-                      placeholder={inputPlaceholder}
-                      value={value}
-                      onChange={(e) => onChange(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-[#9a98a0] focus:border-[#e15f0b] focus:outline-none transition-all text-[#233274] font-medium hover:border-[#e15f0b]/60"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-end">
-                  <button
-                    type="submit"
-                    className="w-full bg-gradient-to-r from-[#e15f0b] to-[#d14a00] hover:from-[#f26b1d] hover:to-[#e15f0b] text-[#f8f5ef] font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2 group"
-                  >
-                    <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    {mode === 'services' ? 'Buscar servicios' : 'Buscar proyectos'}
-                  </button>
+            <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-black text-[#233274]">
+                  {inputLabel}
+                </label>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#e15f0b]" />
+                  <input
+                    type="text"
+                    placeholder={inputPlaceholder}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="h-14 w-full rounded-lg border border-[#d8cbb9] bg-white pl-12 pr-4 text-sm font-semibold text-[#233274] outline-none transition placeholder:text-[#8f8478] focus:border-[#e15f0b] focus:ring-4 focus:ring-[#e15f0b]/20"
+                  />
                 </div>
               </div>
 
-              <div className="mt-3 flex flex-wrap items-center gap-2 text-left">
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#9a98a0]">
-                    Prueba con:
+              <button
+                type="submit"
+                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-lg bg-[#e15f0b] px-6 text-sm font-black text-white shadow-lg shadow-[#e15f0b]/20 transition hover:bg-[#d14a00] hover:-translate-y-0.5"
+              >
+                <Search className="h-5 w-5" />
+                {mode === 'services' ? 'Buscar servicios' : 'Buscar proyectos'}
+              </button>
+
+              <div className="space-y-2">
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#8f8478]">
+                  Prueba con
                 </span>
-                {suggestions.slice(0, 4).map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => onChange(item)}
-                    className="rounded-full border border-[#eadfce] bg-white px-3 py-1 text-xs font-semibold text-[#7a6e61] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#e15f0b]/30 hover:text-[#d14a00]"
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-
-              
-            </form>  
-          )}
-
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {[{ icon: Star, text: 'Clientes que confian en Casaliz', count: '98%' }, { icon: Star, text: 'Proyectos disenados y construidos', count: '120+' }, { icon: Users, text: 'Años de experiencia combinada', count: '10+' }].map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-[#f8f5ef]/10 backdrop-blur-sm rounded-lg p-4 text-[#f8f5ef] animate-fade-in transition-all duration-500 hover:-translate-y-1 hover:bg-[#f8f5ef]/15"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Icon className="w-5 h-5 text-[#e15f0b] fill-current" />
-                    <span className="text-2xl font-bold">{item.count}</span>
-                  </div>
-                  <p className="text-sm">{item.text}</p>
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.slice(0, 4).map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => onChange(item)}
+                      className="rounded-full border border-[#dfd2bf] bg-white px-3 py-1.5 text-xs font-bold text-[#665f57] transition hover:border-[#e15f0b]/40 hover:text-[#d14a00]"
+                    >
+                      {item}
+                    </button>
+                  ))}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </section>

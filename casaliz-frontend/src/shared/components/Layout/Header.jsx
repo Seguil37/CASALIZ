@@ -233,6 +233,7 @@ const Header = () => {
 			                        ? 'pointer-events-auto opacity-100 visible translate-y-0'
 			                        : 'pointer-events-none opacity-0 invisible -translate-y-1 lg:translate-y-0 lg:group-hover:pointer-events-auto lg:group-hover:visible lg:group-hover:opacity-100'
 			                    }`}
+                          data-lenis-prevent
 			                  >
 	                      <div className="flex items-center justify-between px-4 py-3 border-b border-[#e5e2da]">
 	                        <div>
@@ -256,7 +257,7 @@ const Header = () => {
 		                      >
 		                        Ver todas y configurar preferencias
 		                      </Link>
-		                      <div className="max-h-[420px] overflow-y-auto">
+		                      <div className="max-h-[420px] overflow-y-auto" data-lenis-prevent>
 	                        {notifications.length === 0 ? (
 	                          <div className="px-4 py-6 text-sm text-[#9a98a0]">No tienes notificaciones por ahora.</div>
 	                        ) : (
@@ -316,7 +317,7 @@ const Header = () => {
 	                  </button>
 
 	                {/* Dropdown Menu */}
-                <div className="absolute right-0 mt-2 w-48 bg-[#f8f5ef] rounded-xl shadow-xl border border-[#9a98a0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="absolute right-0 mt-2 w-48 bg-[#f8f5ef] rounded-xl shadow-xl border border-[#9a98a0] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200" data-lenis-prevent>
                   <Link
                     to="/profile"
                     className="block px-4 py-3 hover:bg-white text-[#233274] rounded-t-xl transition-colors"
@@ -477,7 +478,7 @@ const Header = () => {
 
         {/* Mobile Menu */}
 	      {mobileMenuOpen && (
-	        <div className="lg:hidden max-h-[calc(100vh-5rem)] overflow-y-auto pb-4 animate-fade-in">
+	        <div className="lg:hidden max-h-[calc(100vh-5rem)] overflow-y-auto pb-4 animate-fade-in" data-lenis-prevent>
 	          <div className="flex flex-col gap-2">
               <Link
                 to="/services"

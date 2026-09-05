@@ -52,9 +52,9 @@ const ServiceDetailPage = () => {
     'https://via.placeholder.com/800x500';
 
   return (
-    <div className="bg-gradient-to-b from-[#f6f2e8] via-white to-[#f6f2e8] min-h-screen pb-16">
+    <div className="bg-gradient-to-b from-[#f6f2e8] via-white to-[#f6f2e8] min-h-screen pb-16" data-motion-page>
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0f1b35] via-[#1e2f5f] to-[#233274] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0f1b35] via-[#1e2f5f] to-[#233274] text-white" data-motion-hero>
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <div className="absolute -left-32 top-0 w-80 h-80 rounded-full bg-[#e15f0b]/20 blur-3xl" />
           <div className="absolute right-[-6rem] bottom-[-4rem] w-96 h-96 rounded-full bg-[#f59e0b]/20 blur-3xl" />
@@ -63,7 +63,7 @@ const ServiceDetailPage = () => {
         <div className="container-custom py-16 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* CONTENIDO */}
-            <div className="space-y-8 order-2 lg:order-1">
+            <div className="space-y-8 order-2 lg:order-1" data-motion-item>
               <div className="space-y-4">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#e15f0b]/20 border border-[#e15f0b]/40 backdrop-blur">
                   <Zap className="w-4 h-4 text-[#fbbf24]" />
@@ -98,7 +98,7 @@ const ServiceDetailPage = () => {
             </div>
 
             {/* IMAGEN HERO */}
-            <div className="order-1 lg:order-2">
+            <div className="order-1 lg:order-2" data-motion-item>
               <div className="relative group">
                 <img
                   src={coverImage}
@@ -112,24 +112,24 @@ const ServiceDetailPage = () => {
       </section>
 
       {/* INFORMACION DESTACADA */}
-      <section className="container-custom -mt-8 mb-16 relative z-20">
+      <section className="container-custom -mt-8 mb-16 relative z-20" data-motion-section>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow" data-motion-card>
             <CheckCircle className="w-8 h-8 text-[#e15f0b] mb-3" />
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Profesional</p>
             <p className="text-lg font-bold text-[#233274] mt-2">Equipo Experto</p>
           </div>
-          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow" data-motion-card>
             <Zap className="w-8 h-8 text-[#e15f0b] mb-3" />
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">RApido</p>
             <p className="text-lg font-bold text-[#233274] mt-2">Entrega Agil</p>
           </div>
-          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow" data-motion-card>
             <CheckCircle className="w-8 h-8 text-[#e15f0b] mb-3" />
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Calidad</p>
             <p className="text-lg font-bold text-[#233274] mt-2">Garantizado</p>
           </div>
-          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-2xl border-2 border-[#ebe7df] shadow-lg p-6 hover:shadow-xl transition-shadow" data-motion-card>
             <Zap className="w-8 h-8 text-[#e15f0b] mb-3" />
             <p className="text-xs uppercase tracking-widest text-[#9a98a0] font-bold">Soporte</p>
             <p className="text-lg font-bold text-[#233274] mt-2">24/7 Disponible</p>
@@ -139,7 +139,7 @@ const ServiceDetailPage = () => {
 
       {/* GALERIA MEJORADA */}
       {service.gallery?.length > 0 && (
-        <section className="container-custom mb-16">
+        <section className="container-custom mb-16" data-motion-section>
           <div className="space-y-8">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -158,6 +158,7 @@ const ServiceDetailPage = () => {
                     setCurrentImageIndex(index);
                   }}
                   className="group relative w-full overflow-hidden rounded-2xl border-2 border-[#ebe7df] shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50"
+                  data-motion-card
                 >
                   <img
                     src={toPublicUrl(image.path)}
@@ -183,7 +184,7 @@ const ServiceDetailPage = () => {
       )}
 
       {/* LLAMADA A ACCION FINAL */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-[#0f1b35] to-[#1e2f5f]">
+      <section className="relative overflow-hidden bg-gradient-to-r from-[#0f1b35] to-[#1e2f5f]" data-motion-section>
         <div className="absolute inset-0 pointer-events-none opacity-30">
           <div className="absolute right-[-4rem] top-[-2rem] w-96 h-96 rounded-full bg-[#e15f0b]/20 blur-3xl" />
         </div>
@@ -224,10 +225,12 @@ const ServiceDetailPage = () => {
           role="button"
           tabIndex={0}
           aria-label="Cerrar imagen"
+          data-lenis-prevent
         >
           <div
             className="relative max-w-4xl w-full"
             onClick={(e) => e.stopPropagation()}
+            data-lenis-prevent
           >
             <button
               onClick={() => setLightboxImage(null)}

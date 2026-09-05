@@ -6,6 +6,7 @@ import TourCard from '../components/TourCard';
 import SearchBar from '../components/SearchBar';
 import FilterSidebar from '../components/FilterSidebar';
 import api from '../../../shared/utils/api';
+import { usePublicMotion } from '../../../shared/motion/publicMotionContext';
 
 const ToursPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,6 +14,7 @@ const ToursPage = () => {
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [pagination, setPagination] = useState({ total: 0, currentPage: 1, lastPage: 1 });
+  const { scrollTo } = usePublicMotion();
 
   const defaultFilters = {
     search: searchParams.get('search') || '',
@@ -78,10 +80,10 @@ const ToursPage = () => {
 
   const scrollToResults = () => {
     setTimeout(() => {
-      document.getElementById('projects-results')?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
+      const resultsElement = document.getElementById('projects-results');
+      if (resultsElement) {
+        scrollTo(resultsElement);
+      }
     }, 50);
   };
 
@@ -111,15 +113,15 @@ const ToursPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f5ef]">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16">
+    <div className="min-h-screen bg-[#f8f5ef]" data-motion-page>
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16" data-motion-hero>
         <div className="absolute inset-0 opacity-15" aria-hidden>
           <div className="absolute -left-16 top-0 h-72 w-72 rounded-full bg-[#fbbf24] blur-3xl" />
           <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-white/20 blur-3xl" />
         </div>
 
         <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="space-y-5">
+          <div className="space-y-5" data-motion-item>
             <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#f9d29f] transition-transform duration-500 hover:translate-x-1">
               <Sparkles className="h-4 w-4 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
               Portafolio Casaliz
@@ -148,7 +150,7 @@ const ToursPage = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15">
+          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15" data-motion-item>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#f9d29f]">Resumen</p>
             <div className="mt-5 space-y-3">
               {[
@@ -197,6 +199,7 @@ const ToursPage = () => {
             <div
               id="projects-results"
               className="mb-4 rounded-[28px] border border-[#e5ddd1] bg-white p-6 shadow-[0_18px_45px_rgba(77,58,31,0.07)] transition-all duration-500 hover:-translate-y-1 scroll-mt-32"
+              data-motion-section
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -244,7 +247,9 @@ const ToursPage = () => {
               <>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
                   {projects.map((project) => (
-                    <TourCard key={project.id} tour={project} />
+                    <div key={project.id} data-motion-card>
+                      <TourCard tour={project} />
+                    </div>
                   ))}
                 </div>
 
@@ -289,8 +294,8 @@ const ToursPage = () => {
       </div>
 
       {showFilters && (
-        <div className="fixed inset-0 z-50 flex bg-black/50 lg:hidden">
-          <div className="w-80 overflow-y-auto bg-white p-4">
+        <div className="fixed inset-0 z-50 flex bg-black/50 lg:hidden" data-lenis-prevent>
+          <div className="w-80 overflow-y-auto bg-white p-4" data-lenis-prevent>
             <FilterSidebar
               filters={filters}
               onFilterChange={handleFilterChange}
