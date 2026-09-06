@@ -21,20 +21,20 @@ const features = [
     icon: DraftingCompass,
     title: 'Diseño funcional y estético',
     description:
-      'Ordenamos iluminacion, circulacion, materiales y detalle constructivo para lograr espacios utiles, durables y coherentes.',
+      'Ordenamos iluminación, circulación, materiales y detalle constructivo para lograr espacios útiles, durables y coherentes.',
   },
   {
     icon: ClipboardCheck,
-    title: 'Gestion integral y transparente',
+    title: 'Gestión integral y transparente',
     description:
-      'Coordinamos especialistas, expediente, permisos y ejecucion para que el avance tecnico sea claro en todo momento.',
+      'Coordinamos especialistas, expediente, permisos y ejecución para que el avance técnico sea claro en todo momento.',
   },
 ];
 
 const stats = [
   { icon: Award, value: '98%', label: 'Proyectos entregados a tiempo' },
   { icon: Users, value: '120+', label: 'Proyectos diseñados y ejecutados' },
-  { icon: Clock3, value: '10+ anos', label: 'Experiencia en arquitectura y construccion' },
+  { icon: Clock3, value: '10+ años', label: 'Experiencia en arquitectura y construcción' },
 ];
 
 const WhyUsSection = () => {
@@ -53,8 +53,8 @@ const WhyUsSection = () => {
               Un equipo tecnico para decisiones importantes.
             </MotionTitle>
             <p className="mt-4 text-base leading-8 text-[#667085]">
-              Integramos arquitectura, ingenieria y gestion para que cada decision avance con
-              sustento tecnico, presupuesto claro y documentacion ordenada.
+              Integramos arquitectura, ingeniería y gestión para que cada decisión avance con
+              sustento técnico, presupuesto claro y documentación ordenada.
             </p>
           </div>
 
