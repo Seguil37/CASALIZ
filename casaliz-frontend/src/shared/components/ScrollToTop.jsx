@@ -1,24 +1,27 @@
-import { useEffect } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { usePublicMotion } from '../motion/publicMotionContext';
 
 const ScrollToTop = () => {
-  const { pathname, search, hash } = useLocation();
+  const { pathname, hash } = useLocation();
   const { scrollTo } = usePublicMotion();
+  const previousPath = useRef(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const changedPage = previousPath.current !== pathname;
+    previousPath.current = pathname;
     if (hash) {
-      requestAnimationFrame(() => {
-        const element = document.querySelector(hash);
-        if (element) {
-          scrollTo(element);
-        }
-      });
+      let id;
+      try { id = decodeURIComponent(hash.slice(1)); }
+      catch { id = hash.slice(1); }
+      const element = document.getElementById(id);
+      if (element) scrollTo(element, { immediate: changedPage });
+      else if (changedPage) scrollTo(0, { immediate: true });
       return;
     }
 
-    scrollTo(0, { immediate: true });
-  }, [pathname, search, hash, scrollTo]);
+    if (changedPage) scrollTo(0, { immediate: true });
+  }, [pathname, hash, scrollTo]);
 
   return null;
 };

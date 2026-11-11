@@ -1,0 +1,32 @@
+.cz-route-content {
+    view-transition-name: cz-content;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+::view-transition-group(cz-content) {
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-old(cz-content) {
+    animation: cz-page-out 0.24s ease-out both;
+}
+::view-transition-new(cz-content) {
+    animation: cz-page-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes cz-page-out {
+    to { opacity: 0; }
+}
+@keyframes cz-page-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}

@@ -1,0 +1,590 @@
+.cz-service-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+}
+.cz-service-form > label:not(.cz-checkbox) {
+    font-size: 11px;
+    color: var(--cz-muted);
+}
+.cz-input {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    border: 1px solid var(--cz-line);
+    background: #fff9;
+    padding: 0 15px;
+    min-height: 53px;
+}
+.cz-input > svg {
+    flex-shrink: 0;
+    color: var(--cz-muted);
+}
+.cz-input input {
+    width: 100%;
+    min-width: 0;
+    background: transparent;
+    border: 0;
+    padding: 16px 0;
+    font-size: 12px;
+    color: var(--cz-ink);
+}
+.cz-input:focus-within {
+    outline: 2px solid var(--cz-accent);
+    outline-offset: 2px;
+}
+.cz-input input:focus-visible {
+    outline: none;
+}
+.cz-checkbox {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 11px;
+    padding-block: 7px;
+}
+.cz-checkbox input {
+    accent-color: var(--cz-accent);
+    width: 16px;
+    height: 16px;
+}
+.cz-reset {
+    font-size: 11px;
+    padding: 8px;
+    color: var(--cz-muted);
+}
+.cz-service-suggestions {
+    border-top: 1px solid var(--cz-line);
+    padding-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+}
+.cz-service-suggestions > span {
+    width: 100%;
+    font-size: 8px;
+    letter-spacing: 0.16em;
+    color: var(--cz-muted);
+}
+.cz-service-suggestions button {
+    font-size: 10px;
+    text-align: left;
+    color: var(--cz-muted);
+}
+.cz-service-suggestions button:hover {
+    color: var(--cz-accent);
+}
+.cz-service-note {
+    margin-top: 22px !important;
+    font-size: 10px;
+    line-height: 1.8;
+    color: var(--cz-muted);
+}
+.cz-service-results {
+    scroll-margin-top: 110px;
+}
+.cz-results-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+.cz-results-heading h2 {
+    font-size: clamp(35px, 4.5vw, 65px);
+    margin: 20px 0 15px;
+}
+.cz-results-heading p[role="status"] {
+    font-size: 11px;
+    color: var(--cz-muted);
+}
+.cz-service-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+}
+.cz-service-card {
+    overflow: hidden;
+    background: #f2f2f2;
+    display: block;
+}
+.cz-service-card article {
+    position: relative;
+    aspect-ratio: 4/3;
+}
+.cz-service-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.6s;
+}
+.cz-service-card:hover img {
+    transform: scale(1.025);
+}
+.cz-service-overlay {
+    position: absolute;
+    inset: 0;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    background: linear-gradient(0deg, #171717ee, #17171766);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.cz-service-card:hover .cz-service-overlay,
+.cz-service-card:focus-visible .cz-service-overlay {
+    opacity: 1;
+}
+.cz-service-overlay > span {
+    font-size: 10px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+.cz-service-overlay h3 {
+    font-size: clamp(24px, 2.6vw, 39px);
+    margin: 20px 0;
+}
+.cz-service-overlay p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+}
+.cz-no-image,
+.cz-skeleton {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4/3;
+    background: #eeeeee;
+    padding: 30px;
+}
+.cz-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+.cz-pagination button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 15px;
+    border: 1px solid var(--cz-line);
+    font-size: 12px;
+}
+.cz-pagination button[aria-current="page"] {
+    background: var(--cz-ink);
+    color: white;
+    border-color: var(--cz-ink);
+}
+.cz-pagination button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.cz-service-specialties {
+    padding-bottom: 90px;
+}
+.cz-service-specialties > div:not(.cz-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 25px;
+    border-top: 1px solid var(--cz-line);
+    padding-top: 25px;
+    margin-top: 25px;
+    font-size: 12px;
+    color: var(--cz-muted);
+}
+.cz-service-specialties .cz-actions {
+    margin-top: 35px;
+}
+.cz-empty {
+    border-top: 1px solid var(--cz-line);
+    padding-block: 45px;
+}
+.cz-empty h3 {
+    font-size: 30px;
+    margin-bottom: 18px;
+}
+.cz-empty p {
+    font-size: 13px;
+    color: var(--cz-muted);
+    margin-bottom: 25px;
+}
+.cz-catalog-intro {
+    padding-block: 45px 30px;
+}
+.cz-catalog-intro-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 8%;
+    align-items: center;
+    margin-top: 45px;
+}
+.cz-catalog-intro h1 {
+    font-size: clamp(46px, 5.8vw, 92px);
+    line-height: 1.02;
+    letter-spacing: -0.07em;
+}
+.cz-catalog-intro-grid > div > p {
+    font-size: 13px;
+    line-height: 1.9;
+    max-width: 410px;
+    color: var(--cz-muted);
+    margin: 27px 0;
+}
+.cz-catalog-intro-grid figure {
+    height: 460px;
+    position: relative;
+}
+.cz-catalog-intro-grid figcaption {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 35px 20px 18px;
+    background: linear-gradient(transparent, #171717a0);
+    color: #fff;
+    font-size: 9px;
+}
+.cz-catalog-intro-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 40px;
+    padding-top: 23px;
+    border-top: 1px solid var(--cz-line);
+    font-size: 11px;
+    color: var(--cz-muted);
+}
+.cz-catalog-intro-foot button {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+.cz-projects > .container-custom {
+    padding-block: 50px 90px;
+}
+.cz-projects aside > div {
+    position: sticky;
+    top: 110px;
+}
+.cz-projects #projects-results {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--cz-line);
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0 0 25px;
+    margin-bottom: 30px;
+    transform: none;
+}
+.cz-projects #projects-results h2 {
+    color: var(--cz-ink);
+    font-size: 36px;
+    font-weight: 400;
+}
+.cz-project-card {
+    display: block;
+    border-top: 1px solid var(--cz-line);
+    padding-top: 14px;
+}
+.cz-project-card figure {
+    aspect-ratio: 4/3;
+    background: #eeeeee;
+    overflow: hidden;
+}
+.cz-project-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s;
+}
+.cz-project-card:hover img {
+    transform: scale(1.025);
+}
+.cz-project-card > div {
+    padding-block: 22px;
+}
+.cz-project-card h3 {
+    font-size: 29px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 13px 0;
+}
+.cz-project-card h3 svg {
+    flex-shrink: 0;
+}
+.cz-project-card small {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #b54400;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.cz-project-card p {
+    font-size: 11px;
+    color: var(--cz-muted);
+}
+.cz-project-card-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-top: 1px solid #d5d5d5;
+    padding-top: 16px;
+    margin-top: 20px;
+    color: #171717;
+    font-size: 12px;
+    font-weight: 600;
+}
+.cz-projects [role="dialog"] {
+    z-index: 90;
+}
+.cz-project-cover {
+    background: #171717;
+    color: #eeeeee;
+}
+.cz-project-cover .cz-catalog-intro-foot {
+    margin-top: 0;
+    padding-block: 22px;
+    color: #eeeeee;
+    border-color: #cccccc45;
+}
+.cz-hero .cz-input {
+    background: #ffffff;
+    border-color: #cccccc;
+}
+.cz-project-no-image {
+    aspect-ratio: 4/3;
+    background: #262626;
+    color: #eeeeee;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+.cz-project-no-image::after {
+    content: "";
+    position: absolute;
+    inset: 12% 14%;
+    border: 1px solid #cccccc50;
+    border-right: 8px double #cccccc50;
+    pointer-events: none;
+}
+.cz-project-no-image > span {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    position: relative;
+    z-index: 1;
+}
+.cz-project-no-image > strong {
+    font-family: "DM Sans", Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    font-size: clamp(28px, 3vw, 45px);
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+}
+@media (max-width: 1100px) {
+    .cz-catalog-intro-grid {
+        gap: 5%;
+    }
+    .cz-catalog-intro-grid figure {
+        height: 420px;
+    }
+}
+@media (max-width: 760px) {
+    .cz-service-grid {
+        gap: 25px;
+        grid-template-columns: 1fr;
+    }
+    .cz-service-overlay {
+        padding: 25px;
+    }
+    .cz-results-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .cz-results-heading h2 {
+        font-size: 36px;
+    }
+    .cz-service-specialties {
+        padding-bottom: 55px;
+    }
+    .cz-catalog-intro {
+        padding-top: 30px;
+    }
+    .cz-catalog-intro-grid {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        margin-top: 35px;
+    }
+    .cz-catalog-intro h1 {
+        font-size: 11vw;
+    }
+    .cz-catalog-intro-grid figure {
+        height: 320px;
+    }
+    .cz-catalog-intro-foot {
+        font-size: 10px;
+    }
+    .cz-projects > .container-custom {
+        padding-block: 30px 60px;
+    }
+    .cz-project-card h3 {
+        font-size: 26px;
+    }
+    .cz-projects #projects-results h2 {
+        font-size: 30px;
+    }
+}
+@media (hover: none) {
+    .cz-service-overlay {
+        opacity: 1;
+        background: linear-gradient(0deg, #171717e8, transparent 65%);
+        padding: 22px;
+    }
+    .cz-service-overlay > span {
+        display: none;
+    }
+    .cz-service-overlay h3 {
+        font-size: 24px;
+        margin: 10px 0;
+    }
+    .cz-service-overlay p {
+        font-size: 10px;
+    }
+}
+
+/* Original catalog surfaces, independent from the Home editorial collage. */
+.cz-projects .cz-catalog-project-card {
+    border-radius: 0;
+    background: #f8f5ef;
+    border: 1px solid #9a98a0;
+    box-shadow: 0 4px 12px #17171712;
+    transition: transform 0.45s ease, box-shadow 0.45s ease;
+}
+.cz-projects .cz-catalog-project-card h3 {
+    color: #233274;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+.cz-projects .cz-catalog-project-card:hover {
+    translate: 0 -3px;
+    box-shadow: 0 14px 28px #17171718;
+}
+.cz-projects .cz-project-search input {
+    font-size: 14px;
+}
+.cz-services .cz-hero .cz-hero-panel {
+    background: #fffffff7;
+    border: 1px solid #dedede;
+    border-radius: 0;
+    color: #171717;
+    padding: 28px;
+}
+.cz-original-service-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+.cz-services .cz-service-note {
+    color: #5b5b5b;
+}
+.cz-services .cz-original-service-form > button[type="submit"] {
+    background: #bd4500;
+    color: #fff;
+}
+.cz-services .cz-original-service-form input {
+    font-size: 14px;
+    background: #f5f5f5;
+    border-color: #c6c6c6;
+    color: #171717;
+    border-radius: 0;
+}
+.cz-services .cz-original-service-form input::placeholder {
+    color: #626262;
+}
+.cz-services .cz-original-service-form :is(svg, .cz-checkbox svg) {
+    color: #b54400;
+}
+.cz-services .cz-original-service-form > button,
+.cz-services .cz-original-service-form > div > button {
+    border-radius: 0;
+}
+.cz-services .cz-original-service-form > button[type="button"] {
+    color: #171717;
+    border-color: #bfbfbf;
+    background: transparent;
+}
+.cz-services .cz-original-service-form > div:last-child {
+    color: #5b5b5b;
+}
+.cz-services .cz-original-service-form > div:last-child button {
+    color: #393939;
+    background: #ededed;
+    border-color: #d4d4d4;
+    text-align: left;
+    line-height: 1.6;
+}
+.cz-services .cz-original-service-form > div:last-child button:hover {
+    background: #e1e1e1;
+}
+.cz-services .cz-original-service-form > button[type="submit"]:hover {
+    background: #a83c00;
+}
+.cz-services .cz-original-service-form .cz-checkbox {
+    color: #393939;
+    font-size: 14px;
+}
+.cz-services .cz-original-service-form .cz-checkbox input {
+    accent-color: #bd4500;
+}
+.cz-service-cards-target {
+    scroll-margin-top: 112px;
+}
+.cz-services .cz-original-service-card {
+    border-radius: 0;
+    background: #1b274f;
+    box-shadow: 0 5px 15px #17171717;
+}
+.cz-services .cz-original-service-card h3 {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+}
+.cz-services .cz-original-service-card:hover {
+    translate: 0 -3px;
+}
+.cz-services .cz-original-service-card:hover img {
+    transform: scale(1.04);
+}
+@media (hover: none) {
+    .cz-original-service-card .absolute.inset-0 {
+        opacity: 1;
+        justify-content: end;
+        padding-bottom: 24px;
+        background: linear-gradient(0deg, #101828e8, transparent 75%);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .cz-projects .cz-catalog-project-card:hover,
+    .cz-services .cz-original-service-card:hover,
+    .cz-services .cz-original-service-card:hover img {
+        transform: none;
+    }
+}

@@ -1,7 +1,8 @@
 // src/features/tours/pages/TourDetailPage.jsx
 import { useEffect, useRef, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { MapPin, Home, ArrowLeft, Heart, X, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { useParams, useLocation, Link } from 'react-router-dom';
+import { MapPin, Home, ArrowLeft, Heart, ChevronRight } from 'lucide-react';
+import ProjectGallery from '../components/ProjectGallery';
 import api, { toPublicUrl } from '../../../shared/utils/api';
 import ReviewsSection from '../components/ReviewsSection';
 import useFavoriteStore from '../../../store/favoriteStore';
@@ -10,12 +11,11 @@ import { ROLES } from '../../../shared/constants/roles';
 import { usePublicMotion } from '../../../shared/motion/publicMotionContext';
 const TourDetailPage = () => {
   const { id } = useParams();
+  const { hash } = useLocation();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [favoriteError, setFavoriteError] = useState('');
-  const [lightboxImage, setLightboxImage] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const gallerySectionRef = useRef(null);
   const { favorites, toggleFavorite, fetchFavorites } = useFavoriteStore();
   const { isAuthenticated, user } = useAuthStore();
@@ -39,6 +39,11 @@ const TourDetailPage = () => {
       fetchFavorites();
     }
   }, [fetchFavorites, isAuthenticated, user?.role]);
+  useEffect(() => {
+    if (!loading && hash === '#galeria' && gallerySectionRef.current) {
+      scrollTo(gallerySectionRef.current);
+    }
+  }, [loading, hash, scrollTo]);
   if (loading) {
     return <div className="container-custom py-16 text-center">Cargando proyecto...</div>;
   }
@@ -65,23 +70,6 @@ const TourDetailPage = () => {
           : 'No se pudo actualizar tu lista de favoritos.'
       );
     }
-  };
-  const openImage = (image, index) => {
-    setLightboxImage(image);
-    setCurrentImageIndex(index);
-  };
-  const closeImage = () => setLightboxImage(null);
-  const showPrevImage = () => {
-    if (!project?.images?.length) return;
-    const newIndex = (currentImageIndex - 1 + project.images.length) % project.images.length;
-    setCurrentImageIndex(newIndex);
-    setLightboxImage(project.images[newIndex]);
-  };
-  const showNextImage = () => {
-    if (!project?.images?.length) return;
-    const newIndex = (currentImageIndex + 1) % project.images.length;
-    setCurrentImageIndex(newIndex);
-    setLightboxImage(project.images[newIndex]);
   };
   const scrollToGallery = () => {
     if (gallerySectionRef.current) {
@@ -193,6 +181,7 @@ const TourDetailPage = () => {
       {/* MAIN CONTENT */}
       <section className="container-custom pb-16 space-y-12" data-motion-section>
         {/* DESCRIPCION */}
+        {!project.images?.length && (
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-3xl p-8 shadow-lg border-2 border-[#ebe7df]">
             <div className="flex items-center gap-3 mb-6">
@@ -205,45 +194,9 @@ const TourDetailPage = () => {
             </p>
           </div>
         </div>
-        {/* GALERÍA DE IMÁGENES MEJORADA */}
+        )}
         {project.images?.length > 0 && (
-          <div ref={gallerySectionRef} className="space-y-8 scroll-mt-24" data-motion-section>
-            <div className="max-w-6xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <div className="space-y-2">
-                  <p className="text-sm uppercase tracking-widest text-[#e15f0b] font-bold flex items-center gap-2">
-                    <Zap className="w-4 h-4" /> Galería
-                  </p>
-                  <h3 className="text-3xl font-black text-[#233274]">Recorrido Visual</h3>
-                </div>
-                <div className="px-6 py-3 rounded-full bg-gradient-to-r from-[#e15f0b]/10 to-[#f59e0b]/10 border-2 border-[#e15f0b]/20">
-                  <span className="text-sm font-bold text-[#e15f0b]">{project.images.length} imagen(es)</span>
-                </div>
-              </div>
-              {/* GRID DE IMÁGENES */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {project.images.map((image, index) => (
-                  <button
-                    type="button"
-                    key={image.id}
-                    onClick={() => openImage(image, index)}
-                    className="group relative w-full h-64 overflow-hidden border-2 border-[#ebe7df] bg-[#f8f5ef] focus:outline-none focus:ring-4 focus:ring-[#e15f0b]/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-                    data-motion-card
-                  >
-                    <img
-                      src={toPublicUrl(image.path)}
-                      alt={image.caption || project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/35 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
-                    <span className="absolute bottom-4 right-4 text-sm font-bold text-white px-4 py-2 rounded-full bg-[#0f172a]/85 border border-white/25 shadow-lg shadow-black/40 backdrop-blur-sm flex items-center gap-2 transition-transform duration-300">
-                      Ver grande <ChevronRight className="w-4 h-4" />
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+          <ProjectGallery ref={gallerySectionRef} images={project.images} title={project.title} description={project.description || project.summary} />
         )}
       </section>
 
@@ -344,63 +297,6 @@ const TourDetailPage = () => {
         </div>
       </section>
 
-      {/* LIGHTBOX MEJORADO */}
-      {lightboxImage && (
-        <div
-          className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center px-4 py-8"
-          onClick={closeImage}
-          role="button"
-          tabIndex={0}
-          aria-label="Cerrar imagen ampliada"
-          data-lenis-prevent
-        >
-          <div className="relative max-w-5xl w-full h-full flex flex-col justify-center" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
-            <button
-              type="button"
-              onClick={closeImage}
-              className="absolute -top-8 right-0 text-white hover:text-[#fbbf24] transition-colors z-10"
-              aria-label="Cerrar"
-            >
-              <X className="w-8 h-8" />
-            </button>
-            <div className="overflow-hidden bg-[#0d0d0d] border-2 border-[#e15f0b]/40 shadow-2xl">
-              <div className="relative bg-black">
-                <img
-                  src={toPublicUrl(lightboxImage.path)}
-                  alt={lightboxImage.caption || project.title}
-                  className="w-full max-h-[75vh] object-contain"
-                />
-                {/* CONTROLES NAVEGACIÓN */}
-                <button
-                  type="button"
-                  onClick={showPrevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-[#e15f0b]/80 hover:bg-[#e15f0b] text-white transition-all duration-300 hover:scale-110 shadow-lg"
-                  aria-label="Imagen anterior"
-                >
-                  <ChevronLeft className="w-7 h-7" />
-                </button>
-                <button
-                  type="button"
-                  onClick={showNextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-[#e15f0b]/80 hover:bg-[#e15f0b] text-white transition-all duration-300 hover:scale-110 shadow-lg"
-                  aria-label="Imagen siguiente"
-                >
-                  <ChevronRight className="w-7 h-7" />
-                </button>
-                {/* INDICADOR DE PROGRESO */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full bg-black/60 border border-white/20 text-white text-sm font-semibold">
-                  {currentImageIndex + 1} / {project.images.length}
-                </div>
-              </div>
-              {lightboxImage.caption && (
-                <p className="text-base text-white/90 px-6 py-4 border-t-2 border-[#e15f0b]/30 font-light bg-gradient-to-r from-black to-black/80">
-                  {lightboxImage.caption}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

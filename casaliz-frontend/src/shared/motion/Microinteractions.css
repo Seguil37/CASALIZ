@@ -1,0 +1,191 @@
+/* Match the published site's ease-in-out curve, with smaller travel distances. */
+.casaliz-public,
+.cz-gallery-lightbox {
+    --cz-ease-hover: cubic-bezier(0.4, 0, 0.2, 1);
+    --cz-hover-duration: 500ms;
+}
+.casaliz-public :is(a, button, input, select, textarea),
+.cz-gallery-lightbox button {
+    transition-property: color, background-color, border-color, box-shadow,
+        opacity, translate, scale;
+    transition-duration: 350ms;
+    transition-timing-function: var(--cz-ease-hover);
+}
+.casaliz-public .cz-route-content :is(.cz-hover-card, .cz-gallery-tile),
+.casaliz-public .cz-route-content .cz-project-pair-grid > a {
+    transition-property: translate, box-shadow, border-color, background-color;
+    transition-duration: var(--cz-hover-duration);
+    transition-timing-function: var(--cz-ease-hover);
+}
+.casaliz-public .cz-route-content .cz-hover-card img,
+.casaliz-public .cz-route-content .cz-gallery-tile img,
+.casaliz-public .cz-route-content .cz-project-pair-grid img {
+    transition: scale 700ms var(--cz-ease-hover);
+}
+.casaliz-public .cz-route-content .cz-hover-card img,
+.casaliz-public .cz-route-content .cz-hover-card:is(:hover, :focus-visible) img {
+    transform: none;
+    scale: 1;
+}
+.casaliz-public :is(.cz-button, .cz-link) > svg,
+.casaliz-public .cz-project-card-action > svg,
+.casaliz-public .cz-gallery-expand > svg,
+.casaliz-public .cz-project-hover svg {
+    transition: translate 500ms var(--cz-ease-hover),
+        rotate 500ms var(--cz-ease-hover),
+        color 350ms var(--cz-ease-hover);
+}
+.casaliz-public :is(.cz-button, .cz-link):is(:hover, :focus-visible) > svg {
+    transform: none;
+    translate: 1px -1px;
+}
+.casaliz-public :is(.cz-button, .cz-link)[href^="#"]:is(:hover, :focus-visible) > svg {
+    translate: 0 1px;
+}
+.casaliz-public .cz-card-reveal {
+    pointer-events: none;
+    transition: opacity 400ms var(--cz-ease-hover);
+}
+.casaliz-public .cz-card-reveal > :is(h3, p, span),
+.casaliz-public .cz-card-reveal [data-hover-detail] {
+    transition: translate 500ms var(--cz-ease-hover);
+}
+.casaliz-public .cz-project-hover {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 24px;
+    color: #fff;
+    background: linear-gradient(0deg, #101828d9, transparent);
+}
+.casaliz-public .cz-project-hover > span {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+}
+.casaliz-public :is(.cz-button, .cz-link):focus-visible,
+.casaliz-public .cz-route-content .cz-hover-card:focus-visible {
+    outline: 2px solid #d65208;
+    outline-offset: 5px;
+}
+.casaliz-public .cz-route-content .cz-hover-card:focus-visible .cz-card-reveal {
+    opacity: 1;
+}
+.casaliz-public .cz-route-content .cz-hover-card:focus-visible .cz-card-reveal > *,
+.casaliz-public .cz-route-content .cz-hover-card:focus-visible [data-hover-detail] {
+    opacity: 1;
+    translate: 0;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .casaliz-public .cz-route-content :is(.cz-hover-card, .cz-gallery-tile) {
+        translate: 0 0;
+    }
+    .casaliz-public .cz-route-content :is(.cz-hover-card, .cz-gallery-tile):hover {
+        translate: 0 -1px;
+        box-shadow: 0 8px 20px #10182812;
+    }
+    .casaliz-public .cz-route-content .cz-project-pair-grid > a:hover img {
+        scale: 1.012;
+    }
+    .casaliz-public .cz-route-content .cz-hover-card .cz-card-reveal {
+        opacity: 0;
+    }
+    .casaliz-public .cz-route-content .cz-hover-card .cz-card-reveal > *,
+    .casaliz-public .cz-route-content .cz-hover-card [data-hover-detail] {
+        translate: 0 4px;
+        transition-delay: 0ms;
+    }
+    .casaliz-public .cz-route-content .cz-hover-card:is(:hover, :focus-visible) .cz-card-reveal {
+        opacity: 1;
+    }
+    .casaliz-public .cz-route-content .cz-hover-card:is(:hover, :focus-visible) .cz-card-reveal > *,
+    .casaliz-public .cz-route-content .cz-hover-card:is(:hover, :focus-visible) [data-hover-detail] {
+        opacity: 1;
+        translate: 0;
+        transition-delay: 0ms;
+    }
+    .casaliz-public .cz-route-content :is(.cz-hover-card, .cz-gallery-tile):is(:hover, :focus-visible) :is(.cz-project-card-action, .cz-gallery-expand) > svg {
+        translate: 1px -1px;
+    }
+    .casaliz-public :is(.cz-button, .cz-pagination button):not(:disabled):hover {
+        translate: 0 0;
+        box-shadow: 0 4px 12px #10182812;
+    }
+    .casaliz-public :is(.cz-button, .cz-pagination button):not(:disabled):active {
+        translate: 0 0;
+        scale: 0.995;
+    }
+    .casaliz-public .cz-footer nav a:hover,
+    .casaliz-public .cz-footer-contact > a:hover {
+        translate: 1px 0;
+    }
+}
+
+/* Touch users can discover every action without requiring a first hover tap. */
+@media (hover: none), (pointer: coarse) {
+    .casaliz-public .cz-route-content .cz-hover-card:hover {
+        translate: none;
+    }
+    .casaliz-public .cz-route-content .cz-hover-card .cz-card-reveal {
+        opacity: 1;
+    }
+    .casaliz-public .cz-route-content .cz-hover-card .cz-card-reveal > *,
+    .casaliz-public .cz-route-content .cz-hover-card [data-hover-detail] {
+        opacity: 1;
+        translate: none;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .casaliz-public *,
+    .cz-gallery-lightbox * {
+        transition: none !important;
+        animation: none !important;
+    }
+    .casaliz-public .cz-route-content :is(.cz-hover-card, .cz-gallery-tile),
+    .casaliz-public :is(.cz-button, .cz-link) > svg,
+    .casaliz-public .cz-card-reveal > *,
+    .casaliz-public .cz-card-reveal [data-hover-detail] {
+        translate: none !important;
+        scale: none !important;
+    }
+}
+
+/* GSAP interpolates these values before the cursor reaches the hit area.
+   CSS transitions exclude the interpolated properties to avoid a second lag. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .casaliz-public.cz-proximity-enabled .cz-route-content [data-cz-proximity="card"] {
+        translate: 0 calc(-2px * var(--cz-near, 0));
+        box-shadow: 0 calc(3px + 9px * var(--cz-near, 0))
+            calc(10px + 18px * var(--cz-near, 0))
+            rgb(16 24 40 / calc(0.025 + 0.065 * var(--cz-near, 0)));
+        transition-property: color, background-color, border-color;
+    }
+    .casaliz-public.cz-proximity-enabled :is(a, button)[data-cz-proximity="button"]:not(:disabled) {
+        translate: var(--cz-near-x, 0px) var(--cz-near-y, 0px);
+        scale: 1;
+        box-shadow: 0 calc(2px + 4px * var(--cz-near, 0))
+            calc(6px + 10px * var(--cz-near, 0))
+            rgb(16 24 40 / calc(0.02 + 0.07 * var(--cz-near, 0)));
+        transition-property: color, background-color, border-color;
+    }
+    .casaliz-public.cz-proximity-enabled .cz-route-content [data-cz-proximity="card"] .cz-card-reveal {
+        opacity: var(--cz-near-reveal, 0);
+        transition: none;
+    }
+    .casaliz-public.cz-proximity-enabled .cz-route-content [data-cz-proximity="card"] .cz-card-reveal > *,
+    .casaliz-public.cz-proximity-enabled .cz-route-content [data-cz-proximity="card"] [data-hover-detail] {
+        opacity: 1;
+        translate: 0 calc(4px * (1 - var(--cz-near-reveal, 0)));
+        transition: none;
+    }
+    .casaliz-public.cz-proximity-enabled .cz-route-content [data-cz-proximity="card"]:focus-visible .cz-card-reveal {
+        opacity: 1;
+    }
+    .casaliz-public.cz-proximity-enabled .cz-route-content [data-cz-proximity="card"]:focus-visible .cz-card-reveal > *,
+    .casaliz-public.cz-proximity-enabled :is(a, button)[data-cz-proximity="button"]:focus-visible {
+        translate: 0;
+    }
+}

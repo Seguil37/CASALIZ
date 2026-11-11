@@ -1,236 +1,271 @@
-// src/features/about/pages/AboutPage.jsx
+import { useRef } from "react";
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
+import {
+    StudioHero,
+    StudioImage,
+    StudioLabel,
+    StudioClosing,
+} from "../../../shared/studio/StudioElements";
+import useStudioMotion from "../../../shared/studio/useStudioMotion";
+import "./AboutPage.css";
 
-import { Building2, Compass, Eye, Handshake, Layers, Sparkles, Target } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-const experienceHighlights = [
-  {
-    title: '10+ años de experiencia combinada',
-    description:
-      'Equipo de arquitectos e ingenieros que lidera el ciclo completo: idea, diseño, gestión de licencias, construcción y supervisión.',
-    icon: Building2,
-  },
-  {
-    title: 'Arquitectura con propósito',
-    description:
-      'Proponemos soluciones habitables, eficientes y sostenibles que reflejan la identidad del cliente y cumplen normativas locales.',
-    icon: Compass,
-  },
-  {
-    title: 'Ejecución integral',
-    description:
-      'Coordinamos especialidades, proveedores y cronogramas para que cada proyecto avance con trazabilidad y control de calidad.',
-    icon: Layers,
-  },
+const disciplines = [
+    {
+        number: "01",
+        title: "Arquitectura",
+        headline: "Imaginar nuevas formas de vivir.",
+        text: "Diseño y conceptualización, anteproyecto, modelado 3D e interiorismo. Espacios habitables, eficientes y alineados con la identidad de cada cliente.",
+        asset: "countryResidence",
+        alt: "Render de vivienda de campo del archivo visual de CasaLiz",
+        caption: "ARQUITECTURA RESIDENCIAL / ARCHIVO VISUAL CASALIZ",
+        className: "",
+    },
+    {
+        number: "02",
+        title: "Ingeniería",
+        headline: "La precisión también se diseña.",
+        text: "Coordinación de especialidades, expedientes técnicos y gestión de licencias. Criterio técnico y normativo para dar sustento a cada decisión.",
+        asset: "technical",
+        alt: "Planos arquitectónicos del repertorio visual de servicios CasaLiz",
+        caption: "DOCUMENTACIÓN TÉCNICA / ARCHIVO VISUAL CASALIZ",
+        className: "cz-discipline-plan",
+    },
+    {
+        number: "03",
+        title: "Ejecución",
+        headline: "Una visión que acompaña cada etapa.",
+        text: "Dirección de obra y supervisión. Seguimiento en campo, control de avances, seguridad y coordinación de proveedores para una ejecución integral.",
+        asset: "building",
+        alt: "Visualización de edificio y estructura en construcción del archivo CasaLiz",
+        caption: "DISEÑO Y CONSTRUCCIÓN / VISUALIZACIÓN ARQUITECTÓNICA",
+        className: "cz-discipline-section",
+    },
 ];
 
-const capabilityPillars = [
-  {
-    title: 'Diseño y conceptualización',
-    detail: 'Anteproyecto, modelado 3D y experiencia espacial centrada en el usuario.',
-  },
-  {
-    title: 'Gestión técnica y licencias',
-    detail: 'Habilitaciones urbanas, expedientes técnicos y respuesta ágil a observaciones.',
-  },
-  {
-    title: 'Dirección de obra y supervisión',
-    detail: 'Seguimiento en campo, control de avances, seguridad y estándares constructivos.',
-  },
-];
-
-const companyPrinciples = [
-  {
-    key: 'mission',
-    title: 'Lo que hacemos',
-    summary: 'Misión',
-    description:
-      'Transformar ideas en espacios funcionales, estéticos y viables, acompañando a cada cliente desde la estrategia inicial hasta la ejecución final con rigor técnico, transparencia y sensibilidad arquitectónica.',
-    accent: 'from-[#233274] via-[#31469a] to-[#425cc2]',
-    ring: 'shadow-[0_24px_60px_rgba(35,50,116,0.18)]',
-    icon: Target,
-  },
-  {
-    key: 'vision',
-    title: 'Hacia dónde vamos',
-    summary: 'Visión',
-    description:
-      'Consolidarnos como un estudio referente en arquitectura y gestión integral de proyectos, reconocido por crear soluciones sostenibles, humanas y bien ejecutadas que generen valor real para las personas y su entorno.',
-    accent: 'from-[#e15f0b] via-[#ef7d2b] to-[#f6a45c]',
-    ring: 'shadow-[0_24px_60px_rgba(225,95,11,0.18)]',
-    icon: Eye,
-  },
-];
-
-const AboutPage = () => {
-  return (
-    <div className="bg-[#f8f5ef] text-[#233274]" data-motion-page>
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1e2a63] via-[#243883] to-[#f59e0b] text-white py-16" data-motion-hero>
-        <div className="absolute inset-0 opacity-10" aria-hidden>
-          <div className="absolute -left-12 -top-12 h-72 w-72 rounded-full bg-[#fbbf24] blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-[#e15f0b] blur-3xl" />
-        </div>
-
-        <div className="container-custom relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="space-y-5" data-motion-item>
-            <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.2em] text-[#f9c991] transition-transform duration-500 hover:translate-x-1">
-              <Sparkles className="h-5 w-5 transition-transform duration-500 hover:scale-110 hover:rotate-12" />
-              <span>Arquitectura con años de experiencia</span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl font-black leading-tight transition-transform duration-500 hover:translate-x-1">
-              Diseñamos, habilitamos y construimos proyectos con visión integral.
-            </h1>
-
-            <p className="text-lg max-w-2xl text-white/85 transition-colors duration-500 hover:text-white">
-              Casaliz coordina cada etapa con precisión: conceptualización, gestión normativa, dirección de obra e interiorismo. Nos
-              enfocamos en resultados habitables, eficientes y alineados a la identidad de cada cliente.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link
-                to="/contacto"
-                className="rounded-full bg-white px-6 py-3 font-bold text-[#233274] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
-              >
-                Agenda una reunión
-              </Link>
-              <a
-                href="#metodologia"
-                className="inline-flex items-center rounded-full border border-white/35 bg-white/10 px-6 py-3 font-bold text-white shadow-lg backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-white/55 hover:bg-white/18"
-              >
-                Conoce nuestra metodología
-              </a>
-            </div>
-          </div>
-
-          <div className="w-full rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:bg-white/15" data-motion-item>
-            <p className="mb-3 text-sm uppercase tracking-[0.3em] text-[#f9c991]">Credenciales clave</p>
-            <div className="space-y-3">
-              {[
-                { label: 'Proyectos diseñados y ejecutados', value: '120+' },
-                { label: 'Años de experiencia combinada', value: '10+' },
-                { label: 'Tasa de satisfacción', value: '98%' },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3 transition-all duration-300 hover:translate-x-1 hover:bg-white/10">
-                  <span className="text-sm text-white/80">{item.label}</span>
-                  <span className="text-2xl font-black text-white">{item.value}</span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 rounded-2xl border border-white/20 bg-white/15 p-4">
-              <p className="text-sm text-white/85">
-                Acompañamos a empresas y familias en proyectos residenciales, corporativos y comerciales, asegurando trazabilidad y
-                decisiones informadas en cada hito.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="nosotros" className="container-custom space-y-10 py-16 lg:py-20" data-motion-section>
-        <div className="space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#d14a00] transition-transform duration-500 hover:translate-x-1">Nuestra esencia</p>
-          <h2 className="max-w-4xl text-3xl font-black text-[#0f1b35] transition-transform duration-500 hover:translate-x-1 lg:text-4xl">
-            Diseñamos proyectos que conectan estrategia, identidad y ejecución real.
-          </h2>
-          <p className="max-w-3xl text-lg text-[#4a4b57] transition-colors duration-500 hover:text-[#233274]">
-            En Casaliz entendemos la arquitectura como una herramienta para ordenar, proyectar y mejorar la forma en que las personas
-            habitan y usan sus espacios. Combinamos criterio técnico, visión creativa y una gestión cercana para convertir cada etapa
-            del proyecto en decisiones claras, viables y bien sustentadas.
-          </p>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          {companyPrinciples.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <article
-                key={item.key}
-                className={`group relative overflow-hidden rounded-[32px] border border-white/80 bg-white ${item.ring} transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[0_30px_70px_rgba(35,50,116,0.16)]`}
-                data-motion-card
-              >
-                <div className={`relative flex h-32 items-center justify-center bg-gradient-to-br ${item.accent} px-7 py-5 text-white transition-all duration-500 group-hover:brightness-110`}>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.25),transparent_30%)]" />
-                  <div className="absolute right-7 top-5 z-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm transition-colors duration-500 group-hover:bg-white/25">
-                      <Icon className="h-7 w-7" />
-                    </div>
-                  </div>
-                  <h3 className="relative z-10 text-center text-4xl font-black leading-none text-white transition-transform duration-500 group-hover:-translate-y-1 md:text-5xl">
-                    {item.summary}
-                  </h3>
-                </div>
-
-                <div className="relative flex min-h-[260px] flex-col p-7">
-                  <span className="inline-flex w-fit rounded-full bg-[#f3eee5] px-3 py-1 text-xs font-bold text-[#7d6e57]">
-                    {item.title}
-                  </span>
-                  <p className="mt-4 text-base leading-7 text-[#6f6874]">{item.description}</p>
-                  <div className="mt-auto pt-6">
-                    <div className="h-1.5 w-24 rounded-full bg-gradient-to-r from-[#233274] to-[#e15f0b]" />
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-3">
-          {experienceHighlights.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div key={item.title} className="space-y-3 rounded-2xl border border-[#e2dfd7] bg-white p-6 shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_24px_50px_rgba(225,95,11,0.16)]" data-motion-card>
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#e15f0b] to-[#d14a00] text-white shadow-md transition-transform duration-500 hover:scale-110 hover:rotate-3">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <h3 className="text-xl font-black text-[#0f1b35]">{item.title}</h3>
-                <p className="text-base text-[#4a4b57]">{item.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section id="metodologia" className="border-y border-[#e2dfd7] bg-white" data-motion-section>
-        <div className="container-custom grid items-center gap-10 py-16 lg:grid-cols-[1.1fr_auto] lg:py-20">
-          <div className="space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#d14a00] transition-transform duration-500 hover:translate-x-1">Metodología</p>
-            <h2 className="text-3xl font-black text-[#0f1b35] transition-transform duration-500 hover:translate-x-1 lg:text-4xl">Arquitectura informada por datos y territorio</h2>
-            <p className="max-w-3xl text-lg text-[#4a4b57] transition-colors duration-500 hover:text-[#233274]">
-              Analizamos contexto urbano, condicionantes técnicas y normativas locales para definir estrategias de implantación,
-              circulaciones y materialidad. Cada entregable busca anticipar riesgos y viabilizar licencias sin perder la identidad
-              arquitectónica.
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {capabilityPillars.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-[#e2dfd7] bg-[#f8f5ef] p-5 shadow-sm transition-all duration-500 hover:-translate-y-1 hover:bg-white hover:shadow-[0_20px_40px_rgba(35,50,116,0.08)]" data-motion-card>
-                  <div className="mb-2 flex items-center gap-2">
-                    <Handshake className="h-4 w-4 text-[#d14a00]" />
-                    <h3 className="text-lg font-bold text-[#0f1b35]">{item.title}</h3>
-                  </div>
-                  <p className="text-sm text-[#4a4b57]">{item.detail}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="w-full max-w-md rounded-3xl border border-[#233274]/40 bg-[#0f1b35] p-8 text-white shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_28px_60px_rgba(15,27,53,0.28)]" data-motion-card>
-            <h3 className="mb-4 text-2xl font-black">¿Listo para conversar tu proyecto?</h3>
-            <p className="mb-6 text-white/80">
-              Revisamos viabilidad, elaboramos cronogramas y preparamos rutas de licenciamiento para que construyas con confianza.
-            </p>
-            <Link
-              to="/contacto"
-              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 font-bold text-[#233274] shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02]"
+export default function AboutPage() {
+    const rootRef = useRef(null);
+    useStudioMotion(rootRef);
+    return (
+        <div className="cz-page cz-about" ref={rootRef}>
+            <StudioHero
+                eyebrow="EL ESTUDIO / NOSOTROS"
+                lines={["DISEÑAMOS", "FORMAS DE", "HABITAR."]}
+                description="Arquitectura, ingeniería y gestión inmobiliaria. Conectamos ideas, personas y espacios con una mirada integral."
+                asset="residential"
+                imageAlt="Render de vivienda contemporánea del repertorio de CasaLiz"
+                target="nosotros"
+                browseLabel="Conocer el estudio"
+            />
+            <section
+                className="cz-wrap cz-section cz-intro"
+                aria-labelledby="studio-intro"
             >
-              Coordinar una llamada
-            </Link>
-          </div>
+                <StudioLabel number="01">QUIÉNES SOMOS</StudioLabel>
+                <div className="cz-intro-heading" id="nosotros">
+                    <h2 id="studio-intro" data-cz-reveal>
+                        Cada espacio
+                        <br />
+                        comienza con <em>una idea.</em>
+                    </h2>
+                    <span className="cz-drawing-mark" aria-hidden="true">
+                        ↗
+                    </span>
+                </div>
+                <div className="cz-intro-grid">
+                    <figure data-cz-image>
+                        <StudioImage
+                            asset="interior"
+                            alt="Comedor e interior residencial del repertorio visual de CasaLiz"
+                        />
+                        <figcaption>DISEÑO / LUZ / ESPACIO</figcaption>
+                    </figure>
+                    <div className="cz-intro-copy">
+                        <p className="cz-lead" data-cz-reveal>
+                            Diseñar es entender
+                            <br />
+                            cómo quieres habitar.
+                        </p>
+                        <p data-cz-reveal>
+                            En CasaLiz entendemos la arquitectura como una
+                            herramienta para ordenar, proyectar y mejorar la
+                            forma en que las personas habitan y usan sus
+                            espacios.
+                        </p>
+                        <p data-cz-reveal>
+                            Combinamos criterio técnico, visión creativa y una
+                            gestión cercana. Integramos arquitectura,
+                            ingeniería, ejecución de proyectos y gestión
+                            inmobiliaria: desde la conceptualización y la
+                            gestión normativa hasta la dirección de obra y el
+                            interiorismo.
+                        </p>
+                        <Link to="/services" className="cz-link">
+                            Conoce nuestras especialidades
+                            <ArrowUpRight size={18} aria-hidden="true" />
+                        </Link>
+                        <div className="cz-intro-signature">
+                            <span>DISEÑO CON SENSIBILIDAD.</span>
+                            <span>PRECISIÓN EN CADA DECISIÓN.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                className="cz-manifesto cz-wrap cz-section"
+                aria-labelledby="philosophy-title"
+            >
+                <div className="cz-rule" data-cz-line />
+                <StudioLabel number="02">
+                    EL ESPACIO COMO EXPERIENCIA
+                </StudioLabel>
+                <h2 id="philosophy-title">
+                    <span>
+                        No diseñamos
+                        <br />
+                        únicamente edificios.
+                    </span>
+                    <span>Diseñamos experiencias</span>
+                    <span>
+                        <em>que acompañan la vida.</em>
+                    </span>
+                </h2>
+                <div className="cz-manifesto-foot">
+                    <span>PERSONAS / ESPACIO / ENTORNO</span>
+                    <span aria-hidden="true">+ &nbsp; + &nbsp; +</span>
+                </div>
+            </section>
+            <section
+                className="cz-disciplines cz-section"
+                aria-labelledby="disciplines-title"
+            >
+                <div className="cz-wrap">
+                    <div className="cz-section-heading">
+                        <StudioLabel number="03">NUESTRA ESENCIA</StudioLabel>
+                        <h2 id="disciplines-title" data-cz-reveal>
+                            Libertad para imaginar.
+                            <br />
+                            <em>Rigor para resolver.</em>
+                        </h2>
+                    </div>
+                    {disciplines.map((item) => (
+                        <article
+                            className={`cz-discipline ${item.className}`}
+                            key={item.number}
+                        >
+                            <div className="cz-discipline-title" data-cz-reveal>
+                                <span>{item.number}</span>
+                                <h3>{item.title}</h3>
+                            </div>
+                            <div className="cz-discipline-content">
+                                <figure data-cz-image>
+                                    <StudioImage
+                                        asset={item.asset}
+                                        alt={item.alt}
+                                    />
+                                    <figcaption>{item.caption}</figcaption>
+                                </figure>
+                                <div
+                                    className="cz-discipline-copy"
+                                    data-cz-reveal
+                                >
+                                    <h4>{item.headline}</h4>
+                                    <p>{item.text}</p>
+                                </div>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </section>
+            <section
+                className="cz-project-pair cz-wrap cz-section"
+                aria-labelledby="archive-title"
+            >
+                <div className="cz-section-heading">
+                    <StudioLabel number="04">DEL ARCHIVO CASALIZ</StudioLabel>
+                    <h2 id="archive-title" data-cz-reveal>
+                        Dos contextos.
+                        <br />
+                        <em>Una mirada integral.</em>
+                    </h2>
+                </div>
+                <div className="cz-project-pair-grid">
+                    <Link to="/services?search=Viviendas#servicios-listado">
+                        <figure data-cz-image>
+                            <StudioImage
+                                asset="declaration"
+                                alt="Fachada de edificio residencial del repertorio de CasaLiz"
+                            />
+                        </figure>
+                        <div>
+                            <span>01 / RESIDENCIAL URBANO</span>
+                            <h3>
+                                Arquitectura residencial
+                                <ArrowUpRight size={23} aria-hidden="true" />
+                            </h3>
+                            <p>Archivo visual CasaLiz · Diseño de viviendas</p>
+                        </div>
+                    </Link>
+                    <Link to="/projects/1">
+                        <figure data-cz-image>
+                            <StudioImage
+                                asset="side"
+                                alt="Render de fachada lateral de Casa de Campo Zurite"
+                            />
+                        </figure>
+                        <div>
+                            <span>02 / CASA DE CAMPO</span>
+                            <h3>
+                                Casa de Campo Zurite
+                                <ArrowUpRight size={23} aria-hidden="true" />
+                            </h3>
+                            <p>Zurite, Cusco · Visualización arquitectónica</p>
+                        </div>
+                    </Link>
+                </div>
+            </section>
+            <section className="cz-principles cz-section">
+                <div className="cz-wrap">
+                    <StudioLabel number="05">LO QUE NOS GUÍA</StudioLabel>
+                    <article data-cz-reveal>
+                        <span className="cz-principle-number">01</span>
+                        <h2>
+                            Nuestra
+                            <br />
+                            <em>misión.</em>
+                        </h2>
+                        <p>
+                            Transformar ideas en espacios funcionales, estéticos
+                            y viables, acompañando a cada cliente desde la
+                            estrategia inicial hasta la ejecución final con
+                            rigor técnico, transparencia y sensibilidad
+                            arquitectónica.
+                        </p>
+                    </article>
+                    <article data-cz-reveal>
+                        <span className="cz-principle-number">02</span>
+                        <h2>
+                            Nuestra
+                            <br />
+                            <em>visión.</em>
+                        </h2>
+                        <p>
+                            Consolidarnos como un estudio referente en
+                            arquitectura y gestión integral de proyectos,
+                            reconocido por crear soluciones sostenibles, humanas
+                            y bien ejecutadas que generen valor real para las
+                            personas y su entorno.
+                        </p>
+                    </article>
+                    <div className="cz-values">
+                        <span>Rigor técnico</span>
+                        <span>Transparencia</span>
+                        <span>Sensibilidad arquitectónica</span>
+                        <span>Sostenibilidad</span>
+                    </div>
+                </div>
+            </section>
+            <StudioClosing asset="urban" imageAlt="Render de edificio residencial del repertorio visual de CasaLiz" />
         </div>
-      </section>
-    </div>
-  );
-};
-
-export default AboutPage;
+    );
+}

@@ -1,211 +1,119 @@
-// src/shared/components/Layout/Footer.jsx
-import { Link } from 'react-router-dom';
-import {
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Mail,
-  Phone,
-  MapPin,
-  Clock,
-  Send,
-} from 'lucide-react';
-import casalizLogo from '../../../assets/images/casaliz-logo.png';
+import { Link } from "react-router-dom";
+import { ArrowUp, ArrowUpRight } from "lucide-react";
+import { usePublicMotion } from "../../motion/publicMotionContext";
+import logo from "../../../assets/images/casaliz-logo.png";
 
-
-const Footer = () => {
-  return (
-    <footer className="bg-[#233274] text-[#9a98a0]">
-      <div className="container-custom py-16">
-        {/* Primera fila con 4 columnas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Columna 1: Marca */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-white rounded-xl shadow-lg border border-white/40 px-4 py-3">
-                <div className="h-14 md:h-16 lg:h-20 max-w-[220px] flex items-center">
-                  <img
-                    src={casalizLogo}
-                    alt="CasaLiz Arquitectos Ingenieros"
-                    className="h-full w-auto max-w-full object-contain"
-                  />
+export default function Footer() {
+    const { scrollTo } = usePublicMotion();
+    return (
+        <footer className="cz-footer">
+            <div className="cz-wrap">
+                <div className="cz-footer-top">
+                    <h2>
+                        Una idea merece
+                        <br />
+                        un buen comienzo.
+                    </h2>
+                    <Link className="cz-link" to="/contacto">
+                        Conversemos sobre tu proyecto
+                        <ArrowUpRight size={20} aria-hidden="true" />
+                    </Link>
                 </div>
-              </div>
+                <div className="cz-footer-columns">
+                    <div>
+                        <Link className="cz-footer-brand" to="/" aria-label="CasaLiz, inicio">
+                            <img
+                                className="cz-footer-logo"
+                                src={logo}
+                                alt="CasaLiz Arquitectos e Ingenieros"
+                                width="1280"
+                                height="600"
+                                loading="lazy"
+                            />
+                        </Link>
+                        <p>
+                            Arquitectura, ingeniería y gestión inmobiliaria.
+                            <br />
+                            Espacios pensados para las personas.
+                        </p>
+                    </div>
+                    <div>
+                        <h3>Especialidades</h3>
+                        <nav aria-label="Servicios del pie de página">
+                            {[
+                                "Diseño arquitectónico",
+                                "Licencias",
+                                "Expedientes técnicos",
+                                "Consultorías y supervisión",
+                            ].map((label) => (
+                                <Link to="/services" key={label}>
+                                    {label}
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                    <div>
+                        <h3>Explora CasaLiz</h3>
+                        <nav aria-label="Navegación del pie de página">
+                            <Link to="/">Inicio</Link>
+                            <Link to="/about">El estudio</Link>
+                            <Link to="/projects">Proyectos y categorías</Link>
+                            <Link to="/contacto">Contacto</Link>
+                        </nav>
+                    </div>
+                    <div>
+                        <h3>El estudio / Cusco, Perú</h3>
+                        <div className="cz-footer-contact">
+                            <a href="tel:+51984696802">+51 984 696 802 ↗</a>
+                            <a href="mailto:lissyosores@hotmail.com">
+                                lissyosores@hotmail.com ↗
+                            </a>
+                            <Link to="/contacto#ubicacion">
+                                <address>
+                                    Av. Lloque Yupanqui, Edificio Ecological
+                                    Plaza
+                                    <br />
+                                    2do. nivel, Of. 202 · Wanchaq, Cusco
+                                </address>
+                            </Link>
+                            <p>Lun – Vie: 9:00 AM – 6:00 PM</p>
+                            <nav aria-label="Redes sociales">
+                                <a
+                                    href="https://www.facebook.com/CASALIZEIRL"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Facebook ↗
+                                </a>
+                                <a
+                                    href="https://instagram.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Instagram ↗
+                                </a>
+                                <a
+                                    href="https://tinyurl.com/CasalizArquitectura"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    WhatsApp ↗
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div className="cz-footer-bottom">
+                    <span>
+                        © {new Date().getFullYear()} CasaLiz Arquitectos e
+                        Ingenieros. Todos los derechos reservados.
+                    </span>
+                    <button type="button" onClick={() => scrollTo(0)}>
+                        Volver arriba
+                        <ArrowUp size={16} aria-hidden="true" />
+                    </button>
+                </div>
             </div>
-            <p className="text-sm text-[#c7c6cc] mb-6 leading-relaxed">
-              Arquitectos e ingenieros especializados en soluciones a medida para proyectos
-              residenciales, comerciales y corporativos.
-            </p>
-            <div className="flex gap-3">
-              <a
-                href="https://www.facebook.com/CASALIZEIRL"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-[#1a2555] hover:bg-gradient-to-r hover:from-[#e15f0b] hover:to-[#d14a00] rounded-full flex items-center justify-center transition-all group"
-              >
-                <Facebook className="w-5 h-5 text-[#9a98a0] group-hover:text-[#f8f5ef]" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-[#1a2555] hover:bg-gradient-to-r hover:from-[#e15f0b] hover:to-[#d14a00] rounded-full flex items-center justify-center transition-all group"
-              >
-                <Instagram className="w-5 h-5 text-[#9a98a0] group-hover:text-[#f8f5ef]" />
-              </a>
-              
-            </div>
-          </div>
-
-          {/* Columna 2: Nuestros Servicios */}
-          <div>
-            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Nuestros Servicios</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  to="/services"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Diseño arquitectónico
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Licencias
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Expedientes tecnicos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Consultorías y supervisión
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Columna 3: Proyectos / Empresa */}
-          <div>
-            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Proyectos</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  to="/projects"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Galería de proyectos
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="http://localhost:5173/about"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Nosotros
-                </a>
-              </li>
-              <li>
-                <Link
-                  to="/"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services"
-                  className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors inline-flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 bg-[#e15f0b] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                  Servicios
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Columna 4: Contáctanos */}
-          <div>
-            <h3 className="text-[#f8f5ef] font-bold text-lg mb-4">Contáctanos</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-                <a href="tel:+51984696802" className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors">
-                  984 696802
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-                <a href="mailto:lissyosores@hotmail.com" className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors">
-                  lissyosores@hotmail.com
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-                <span className="text-[#9a98a0]">
-                  Av. Lloque Yupanqui, Edificio Ecological Plaza 2do. nivel Of. 202<br />
-                  Wanchaq - Cusco - Cusco
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-[#e15f0b] flex-shrink-0 mt-0.5" />
-                <span className="text-[#9a98a0]">Lun - Vie: 9:00 AM - 6:00 PM</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Línea divisoria */}
-        <div className="border-t border-[#1a2555] pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-[#9a98a0] text-sm">
-              © 2025 CasaLiz Arquitectos Ingenieros. Todos los derechos reservados.
-            </p>
-            <div className="flex gap-6 text-sm">
-              <Link
-                to="/"
-                className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
-              >
-                Inicio
-              </Link>
-              <Link
-                to="/services"
-                className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
-              >
-                Servicios
-              </Link>
-              <Link
-                to="/projects"
-                className="text-[#9a98a0] hover:text-[#e15f0b] transition-colors"
-              >
-                Proyectos
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-};
-
-export default Footer;
+        </footer>
+    );
+}

@@ -1,0 +1,413 @@
+.cz-intro > .cz-label {
+    margin-bottom: 40px;
+}
+.cz-intro-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 35px;
+    align-items: center;
+    margin-bottom: 60px;
+    scroll-margin-top: 120px;
+}
+.cz-intro-heading h2 {
+    font-size: clamp(44px, 6vw, 92px);
+}
+.cz-drawing-mark {
+    font-size: 140px;
+    font-weight: 200;
+    color: #a44818;
+    line-height: 1;
+}
+.cz-intro-grid {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 8%;
+    align-items: center;
+}
+.cz-intro-grid > figure {
+    height: 610px;
+    position: relative;
+}
+.cz-intro-grid figcaption {
+    position: absolute;
+    bottom: 0;
+    inset-inline: 0;
+    padding: 35px 22px 20px;
+    background: linear-gradient(transparent, #000a);
+    color: white;
+}
+.cz-intro-copy .cz-lead {
+    font-family: "DM Sans", Arial, sans-serif;
+    font-size: clamp(25px, 2.5vw, 38px);
+    line-height: 1.2;
+    letter-spacing: -0.04em;
+    color: var(--cz-ink);
+    margin-bottom: 30px;
+}
+.cz-intro-copy > p {
+    font-size: 13px;
+    line-height: 1.95;
+    color: var(--cz-muted);
+    margin-bottom: 23px;
+}
+.cz-intro-copy .cz-link {
+    margin-top: 8px;
+}
+.cz-intro-signature {
+    margin-top: 45px;
+    padding-top: 25px;
+    border-top: 1px solid var(--cz-line);
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--cz-accent);
+}
+.cz-manifesto {
+    position: relative;
+    padding-top: 35px;
+}
+.cz-rule {
+    height: 1px;
+    background: var(--cz-line);
+    position: absolute;
+    inset: 0 0 auto;
+}
+.cz-manifesto h2 {
+    font-size: clamp(40px, 6.3vw, 96px);
+    margin-block: 65px;
+    line-height: 1.14;
+}
+.cz-manifesto h2 > span {
+    display: block;
+}
+.cz-manifesto-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--cz-muted);
+}
+.cz-disciplines {
+    background: #f5f5f5;
+}
+.cz-section-heading {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 45px;
+    margin-bottom: 70px;
+    align-items: start;
+}
+.cz-section-heading h2 {
+    font-size: clamp(38px, 4.8vw, 72px);
+}
+.cz-discipline {
+    border-top: 1px solid #d8d8d8;
+    padding-top: 35px;
+    margin-top: 55px;
+}
+.cz-discipline-title {
+    display: flex;
+    gap: 35px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.cz-discipline-title > span {
+    color: var(--cz-accent);
+    font-size: 13px;
+}
+.cz-discipline h3 {
+    font-size: clamp(34px, 4.2vw, 64px);
+}
+.cz-discipline-content {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 7%;
+    align-items: end;
+}
+.cz-discipline-content figure {
+    height: 440px;
+    position: relative;
+}
+.cz-discipline-content figcaption {
+    position: absolute;
+    bottom: 0;
+    inset-inline: 0;
+    background: linear-gradient(transparent, #000b);
+    padding: 35px 20px 16px;
+    color: white;
+    font-size: 9px;
+}
+.cz-discipline-copy {
+    padding-bottom: 25px;
+}
+.cz-discipline-copy h4 {
+    font-family: "DM Sans", Arial, sans-serif;
+    font-weight: 400;
+    font-size: clamp(25px, 2.7vw, 40px);
+    letter-spacing: -0.045em;
+    line-height: 1.2;
+    margin: 0 0 20px;
+}
+.cz-discipline-copy p {
+    font-size: 13px;
+    line-height: 1.95;
+    color: var(--cz-muted);
+    max-width: 400px;
+}
+.cz-discipline-plan .cz-discipline-content {
+    grid-template-columns: 1fr 1.55fr;
+}
+.cz-discipline-plan figure {
+    grid-column: 2;
+    grid-row: 1;
+}
+.cz-discipline-plan .cz-discipline-copy {
+    grid-column: 1;
+    grid-row: 1;
+}
+.cz-discipline-section figure img {
+    object-fit: contain;
+}
+.cz-project-pair-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6%;
+    align-items: start;
+}
+.cz-project-pair-grid > a:nth-child(2) {
+    padding-top: 100px;
+}
+.cz-project-pair figure {
+    height: 520px;
+    overflow: hidden;
+}
+.cz-project-pair-grid > a:nth-child(2) figure {
+    height: 400px;
+}
+.cz-project-pair-grid > a > div {
+    padding-top: 22px;
+}
+.cz-project-pair-grid span {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--cz-accent);
+}
+.cz-project-pair h3 {
+    font-size: 30px;
+    margin: 15px 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+.cz-project-pair h3 svg {
+    flex-shrink: 0;
+    transition: transform 0.25s;
+}
+.cz-project-pair a:hover svg {
+    transform: translate(4px, -4px);
+}
+.cz-project-pair p {
+    font-size: 11px;
+    color: var(--cz-muted);
+}
+.cz-principles {
+    background: #ffffff;
+}
+.cz-principles .cz-label {
+    margin-bottom: 55px;
+}
+.cz-principles article {
+    display: grid;
+    grid-template-columns: 0.3fr 1fr 1.1fr;
+    gap: 40px;
+    border-top: 1px solid #d8d8d8;
+    padding-block: 45px 55px;
+}
+.cz-principle-number {
+    font-family: "DM Sans", Arial, sans-serif;
+    font-size: 65px;
+    letter-spacing: -0.07em;
+    color: #a44818;
+    line-height: 1;
+}
+.cz-principles h2 {
+    font-size: clamp(38px, 4.5vw, 68px);
+}
+.cz-principles article > p {
+    font-size: 14px;
+    line-height: 1.95;
+    max-width: 510px;
+}
+.cz-values {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+    font-size: 10px;
+    color: var(--cz-muted);
+    padding-top: 30px;
+    border-top: 1px solid #d8d8d8;
+}
+.cz-manifesto {
+    isolation: isolate;
+    color: #ffffff;
+    --cz-accent: #ff751f;
+    padding-top: 80px;
+}
+.cz-manifesto::before {
+    content: "";
+    position: absolute;
+    inset: 0 calc((100% - 100vw) / 2);
+    background: #222222;
+    z-index: -1;
+}
+.cz-manifesto .cz-rule {
+    background: #cccccc55;
+}
+.cz-manifesto-foot {
+    color: #cccccc;
+}
+.cz-discipline-section figure img {
+    object-fit: cover;
+}
+@media (max-width: 1100px) {
+    .cz-intro-grid {
+        gap: 5%;
+    }
+    .cz-intro-grid > figure {
+        height: 550px;
+    }
+    .cz-intro-copy > p {
+        font-size: 12px;
+    }
+    .cz-discipline-content {
+        gap: 5%;
+    }
+    .cz-discipline-content figure {
+        height: 360px;
+    }
+    .cz-project-pair figure {
+        height: 450px;
+    }
+    .cz-project-pair-grid > a:nth-child(2) figure {
+        height: 330px;
+    }
+}
+@media (max-width: 760px) {
+    .cz-intro > .cz-label {
+        margin-bottom: 30px;
+    }
+    .cz-intro-heading {
+        margin-bottom: 35px;
+    }
+    .cz-intro-heading h2 {
+        font-size: 10vw;
+    }
+    .cz-drawing-mark {
+        display: none;
+    }
+    .cz-intro-grid {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+    .cz-intro-grid > figure {
+        height: 380px;
+    }
+    .cz-intro-copy .cz-lead {
+        font-size: 31px;
+        margin-bottom: 25px;
+    }
+    .cz-intro-signature {
+        margin-top: 30px;
+    }
+    .cz-manifesto h2 {
+        font-size: 9.5vw;
+        margin-block: 40px;
+    }
+    .cz-manifesto-foot {
+        font-size: 8px;
+    }
+    .cz-section-heading {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        margin-bottom: 35px;
+    }
+    .cz-section-heading h2 {
+        font-size: 9vw;
+    }
+    .cz-discipline {
+        padding-top: 25px;
+        margin-top: 35px;
+    }
+    .cz-discipline-title {
+        gap: 22px;
+        margin-bottom: 25px;
+    }
+    .cz-discipline h3 {
+        font-size: 36px;
+    }
+    .cz-discipline .cz-discipline-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    .cz-discipline-content figure {
+        height: 300px;
+    }
+    .cz-discipline-plan figure,
+    .cz-discipline-plan .cz-discipline-copy {
+        grid-column: auto;
+        grid-row: auto;
+    }
+    .cz-discipline-copy {
+        padding-bottom: 0;
+    }
+    .cz-discipline-copy h4 {
+        font-size: 29px;
+        margin-bottom: 15px;
+    }
+    .cz-discipline-copy p {
+        font-size: 12px;
+    }
+    .cz-project-pair-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .cz-project-pair-grid > a:nth-child(2) {
+        padding-top: 0;
+    }
+    .cz-project-pair figure {
+        height: 470px;
+    }
+    .cz-project-pair-grid > a:nth-child(2) figure {
+        height: 300px;
+    }
+    .cz-project-pair h3 {
+        font-size: 27px;
+    }
+    .cz-principles .cz-label {
+        margin-bottom: 30px;
+    }
+    .cz-principles article {
+        grid-template-columns: 45px 1fr;
+        gap: 20px;
+        padding-block: 30px;
+    }
+    .cz-principle-number {
+        font-size: 42px;
+    }
+    .cz-principles h2 {
+        font-size: 43px;
+    }
+    .cz-principles article > p {
+        grid-column: 2;
+        font-size: 12px;
+    }
+    .cz-values {
+        justify-content: start;
+        gap: 18px 25px;
+    }
+}
